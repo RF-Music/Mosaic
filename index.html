@@ -104,7 +104,7 @@ nav button[aria-current="true"]{color:var(--ink);border-color:var(--pop)}
 .rate button{background:none;border:0;font-size:26px;cursor:pointer;color:var(--line);padding:0;transition:transform .08s}
 .rate button:active{transform:scale(.85)}
 .rate button.on{color:var(--star)}
-dialog{border:0;border-radius:10px;padding:18px;width:min(480px,94vw);background:var(--surface);color:var(--ink);box-shadow:0 18px 50px rgba(0,0,0,.4)}
+dialog{border:0;border-radius:10px;padding:18px;width:min(640px,94vw);background:var(--surface);color:var(--ink);box-shadow:0 18px 50px rgba(0,0,0,.4)}
 dialog::backdrop{background:rgba(10,12,20,.55)}
 @media (max-width:520px){.rev{grid-template-columns:60px 1fr}.cover{width:60px;font-size:10px}.two{grid-template-columns:1fr}}
 .cover{position:relative}
@@ -159,7 +159,7 @@ dialog::backdrop{background:rgba(10,12,20,.55)}
 /* colour */
 :root{--teal:#1fb5a3;--violet:#8b6cff;--sun:#ffb43a}
 body{background:radial-gradient(900px 520px at 6% -8%,color-mix(in srgb,var(--pop) 15%,transparent),transparent 62%),radial-gradient(800px 520px at 100% 0%,color-mix(in srgb,var(--violet) 15%,transparent),transparent 62%),radial-gradient(800px 520px at 50% 115%,color-mix(in srgb,var(--teal) 13%,transparent),transparent 62%),var(--bg);background-attachment:fixed}
-header.top h2,.brand{background:linear-gradient(90deg,var(--pop),var(--violet));-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+header.top .wm,.brand{background:linear-gradient(90deg,var(--pop),var(--violet));-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
 nav button[aria-current="true"]{border-image:linear-gradient(90deg,var(--pop),var(--violet)) 1}
 .btn:not(.ghost):not(.pop){background:linear-gradient(135deg,#7a5cf5,#c04fd8);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 2px 0 #4b3aa8}
 .btn:not(.ghost):not(.pop):active{box-shadow:inset 0 1px 2px rgba(0,0,0,.25),0 0 0 transparent}
@@ -170,6 +170,23 @@ nav button[aria-current="true"]{border-image:linear-gradient(90deg,var(--pop),va
 .stab[aria-selected="true"]{border-color:var(--teal)}
 .chip{border-color:color-mix(in srgb,var(--violet) 45%,var(--line))}
 .empty{border-color:color-mix(in srgb,var(--violet) 40%,var(--line))}
+
+/* profile boxes: no coloured lining */
+.rev{border-left:1px solid var(--line)}
+.prof::before{display:none}
+.wm{background:linear-gradient(90deg,var(--pop),var(--violet));-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;border:0;padding:0;font:inherit;letter-spacing:inherit;cursor:pointer}
+header.top h2{margin-right:10px}
+.ri.click{cursor:pointer;transition:border-color .12s,transform .08s}
+.ri.click:hover{border-color:var(--pop)}.ri.click:active{transform:translateY(1px)}
+/* review layout: art left, text right */
+.rvh{grid-column:1/-1}
+.rvgrid.split{display:grid;grid-template-columns:minmax(150px,240px) 1fr;gap:12px 24px;align-items:start}
+.pickbig .cover{width:100%;max-width:240px;font-size:16px;padding:10px}
+.pickbig b{display:block;margin-top:10px;font-size:16px;font-weight:600}
+.pickbig .btn{margin-top:8px}
+.rvgrid.split textarea{min-height:180px}
+.page>.card,#rvhost{max-width:900px}
+@media (max-width:600px){.rvgrid.split{display:block}.pickbig{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:6px}.pickbig .cover{width:96px}.pickbig b{margin-top:0}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
@@ -279,7 +296,7 @@ var items=S.res[k];
 if(items===null)return '<div class="empty">Search isn\'t available right now. Profiles still work.</div>';
 if(!items.length)return '<div class="empty">No '+k+' found for “'+q+'”.</div>';
 if(k==="artists")return dbn+items.map(function(a,i){return '<div class="ri"><span class="av big" style="width:48px;height:48px;font-weight:600;color:var(--mute)">'+esc(a.name.charAt(0).toUpperCase())+'</span><div class="rt"><b>'+esc(a.name)+'</b><span class="meta">'+esc(a.genre)+'</span></div><button type="button" class="btn ghost sm" data-seeq="'+esc(a.name)+'">See reviews</button></div>'}).join("");
-return dbn+items.map(function(it,i){var c=revCount(it);return '<div class="ri">'+rimg(it)+'<div class="rt"><b>'+esc(it.title)+'</b><span class="meta">'+esc(it.artist)+(it.album?' · '+esc(it.album):'')+(c?' · '+pl(c,"review")+' on Mosaic':'')+'</span></div><button type="button" class="btn sm" data-rv="'+k+':'+i+'">Review</button></div>'}).join("")}
+return dbn+items.map(function(it,i){var c=revCount(it);return '<div class="ri click" role="button" tabindex="0" data-rv="'+k+':'+i+'">'+rimg(it)+'<div class="rt"><b>'+esc(it.title)+'</b><span class="meta">'+esc(it.artist)+(it.album?' · '+esc(it.album):'')+(c?' · '+pl(c,"review")+' on Mosaic':'')+'</span></div></div>'}).join("")}
 function doSearch(q){if(q.length<2)return;S.sq=q;S.q="";S.sopen=true;S.tab="search";S.stab=S.stab||"songs";S.res=null;S.shut=true;S.tk=(S.tk||0)+1;var tk=S.tk;appView();
 searchItunes(q).then(function(r){if(S.tk!==tk||S.tab!=="search")return;S.demo=false;if(!REMOTE&&r.every(function(x){return x===null})){S.res=demoNorm(q);S.demo=true}else S.res=normRes(r);var el=$("#sres");if(el){el.innerHTML=resultsHTML();bind()}})}
 
@@ -323,7 +340,7 @@ else if(S.tab==="account"){body='<section class="page"><h2>Privacy and account</
 else{body=(prof?'<section class="prof">'+avatar(a,"big")+'<div><h2>'+nm+'</h2>'+est(a)+'<p class="meta" style="margin:2px 0 12px">'+pl(cnt,"review")+' · '+pl(nFollowers(S.user),"follower")+' · '+((a&&a.following||[]).filter(acct).length)+' following</p><div class="row2"><button class="btn ghost sm" id="chg">Change picture</button>'+(a&&a.pic?'<button class="btn ghost sm" id="rmp">Remove picture</button>':'')+'</div><input id="pic" type="file" accept="image/*" hidden></div></section>'+chips():'')+
 (S.tab==="feed"&&S.q?'<div class="chips"><span class="meta">Showing reviews for</span><button type="button" class="chip" id="clq">'+esc(S.q)+' ×</button></div>':'')+'<div class="tools"><button class="btn" id="add">Add review</button>'+(S.tab==="feed"?'<select id="sc" aria-label="Show"><option value="all">Everyone</option><option value="fol">People I follow</option></select>':'')+'<select id="t" aria-label="Type"><option>All</option><option>Album</option><option>Song</option></select><select id="s" aria-label="Sort"><option value="new">Newest</option><option value="top">Highest rated</option></select></div>'+
 '<div class="list" id="list">'+listHTML()+'</div>'}
-$("#app").innerHTML='<div class="wrap"><header class="top"><h2>Mosaic</h2><nav><button data-tab="feed" aria-current="'+(S.tab==="feed")+'">Recommended</button><button data-tab="review" aria-current="'+(S.tab==="review")+'">Review</button></nav>'+
+$("#app").innerHTML='<div class="wrap"><header class="top"><h2><button type="button" class="wm" data-tab="feed" aria-label="Mosaic home">Mosaic</button></h2><nav><button data-tab="feed" aria-current="'+(S.tab==="feed")+'">Recommended</button><button data-tab="review" aria-current="'+(S.tab==="review")+'">Review</button></nav>'+
 '<div class="sw"><button class="ib" id="sb" aria-label="Search" type="button">'+mag+'</button><input id="q" type="search" placeholder="Search songs to review" aria-label="Search songs" autocomplete="off" value="'+esc(S.tab==="search"?S.sq:"")+'"><div class="sug" id="sug" hidden></div></div>'+
 '<div class="right"><div class="mew"><button class="me" aria-haspopup="menu" aria-current="'+mcur+'" aria-label="Your account menu">'+avatar(a)+'<span class="nm">'+nm+'</span></button>'+
 '<div class="menu"><div class="box" role="menu"><button role="menuitem" data-tab="profile">My Mosaic</button><button role="menuitem" data-tab="likes">My likes and comments</button><button role="menuitem" data-tab="account">Privacy and account</button><hr><button role="menuitem" id="so">Sign out</button></div></div></div>'+
@@ -378,22 +395,22 @@ document.querySelectorAll("[data-edit]").forEach(function(b){b.onclick=function(
 openForm(S.reviews.filter(function(r){return r.id==b.dataset.edit})[0])}});
 document.querySelectorAll("[data-u]").forEach(function(b){b.onclick=function(){var u=b.dataset.u;S.view=u;S.tab=u===S.user?"profile":"user";S.shut=true;appView()}});
 document.querySelectorAll("[data-st]").forEach(function(b){b.onclick=function(){S.stab=b.dataset.st;appView()}});
-document.querySelectorAll("[data-rv]").forEach(function(b){b.onclick=function(){var x=b.dataset.rv.split(":"),it=S.res&&S.res[x[0]]&&S.res[x[0]][+x[1]];if(it){S.pre=it;S.tab="review";appView()}}});
+document.querySelectorAll("[data-rv]").forEach(function(b){var go=function(){var x=b.dataset.rv.split(":"),it=S.res&&S.res[x[0]]&&S.res[x[0]][+x[1]];if(it){S.pre=it;S.tab="review";appView()}};b.onclick=go;b.onkeydown=function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();go()}}});
 document.querySelectorAll("[data-seeq]").forEach(function(b){b.onclick=function(){S.q=b.dataset.seeq;S.tab="feed";S.sopen=true;appView()}});
 document.querySelectorAll("[data-fol]").forEach(function(b){b.onclick=function(){api.toggleFol(b.dataset.fol).then(function(){appView()})}})}
 
 function okArt(u){return typeof u==="string"&&/^https:\/\/[\w.-]+\.mzstatic\.com\//.test(u)}
-document.addEventListener("error",function(e){var t=e.target;if(t&&t.tagName==="IMG"&&t.closest&&t.closest(".cover,.res,.pick"))t.remove()},true);
+document.addEventListener("error",function(e){var t=e.target;if(t&&t.tagName==="IMG"&&t.closest&&t.closest(".cover,.res,.pickbig"))t.remove()},true);
 
 function openForm(r,host,pre){
 var d=host||$("#dlg"),rating=r?rnum(r.rating):0,results=[],tm=null,ac=null;
 var chosen=r&&r.art&&okArt(r.art)?{title:r.title,artist:r.artist,art:r.art,tid:r.tid,type:r.type}:null;
 if(!chosen&&!r&&pre&&(okArt(pre.art)||pre.demo))chosen={title:pre.title,artist:pre.artist,art:pre.art,tid:pre.tid,type:pre.type};
 var manual=!!r&&!chosen,mv={title:r?r.title:"",artist:r?r.artist:"",type:r?r.type:"Song"};
-d.innerHTML='<form id="rf" method="dialog">'+(host?'':'<h2 style="font-size:20px">'+(r?"Edit review":"Add a review")+'</h2>')+'<div id="sel"></div>'+
+d.innerHTML='<form id="rf" method="dialog" class="rvgrid">'+(host?'':'<h2 class="rvh" style="font-size:20px">'+(r?"Edit review":"Add a review")+'</h2>')+'<div id="sel" class="rvl"></div><div class="rvr">'+
 '<label id="rl">Rating</label><div class="rate" role="group" aria-labelledby="rl"></div>'+
 '<label for="tx">Your thoughts</label><textarea id="tx" rows="4" maxlength="600">'+(r?esc(r.text):"")+'</textarea>'+
-'<p class="err" id="re" role="alert"></p><div style="display:flex;gap:10px;justify-content:flex-end;margin-top:8px"><button type="button" class="btn ghost" id="cx">Cancel</button><button class="btn" id="sv" value="x">Save review</button></div></form>';
+'<p class="err" id="re" role="alert"></p><div style="display:flex;gap:10px;justify-content:flex-end;margin-top:8px"><button type="button" class="btn ghost" id="cx">Cancel</button><button class="btn" id="sv" value="x">Save review</button></div></div></form>';
 function err(t){$("#re",d).textContent=t}
 function setS(t){var e=$("#ss",d);if(e)e.textContent=t}
 function drawRes(){var el=$("#sr",d);if(!el)return;
@@ -406,7 +423,8 @@ fetch("https://itunes.apple.com/search?media=music&entity=song&limit=8&term="+en
 drawRes();setS(results.length?"":"No songs found. Try a different spelling.")})
 .catch(function(e){if(e&&e.name==="AbortError")return;if(!REMOTE){results=demoSongs(q);drawRes();setS(results.length?"Demo results. Live song search isn't available in this preview.":"No demo songs match. Try Bowie, Radiohead or Queen.");return}results=[];drawRes();setS("Song search isn't available right now. You can enter the song yourself.")})}
 function renderSel(){var el=$("#sel",d);
-if(chosen){el.innerHTML='<label>Song</label><div class="pick">'+cover(chosen)+'<div style="flex:1;min-width:0"><b>'+esc(chosen.title)+'</b><div class="meta">'+esc(chosen.artist)+'</div></div><button type="button" class="btn ghost sm" id="chs">Change</button></div>';
+$("#rf",d).classList.toggle("split",!!chosen);
+if(chosen){el.innerHTML='<div class="pickbig">'+cover(chosen)+'<b>'+esc(chosen.title)+'</b><div class="meta">'+esc(chosen.artist)+'</div><button type="button" class="btn ghost sm" id="chs">Change</button></div>';
 $("#chs",d).onclick=function(){chosen=null;manual=false;results=[];renderSel();$("#sq",d).focus()};return}
 if(manual){el.innerHTML='<div class="two"><div><label for="ti">Title</label><input id="ti" maxlength="80" value="'+esc(mv.title)+'"></div><div><label for="ar">Artist</label><input id="ar" maxlength="80" value="'+esc(mv.artist)+'"></div></div><label for="ty">Type</label><select id="ty"><option>Song</option><option>Album</option></select><button type="button" class="linkbtn" id="bk">Search for a song instead</button>';
 $("#ty",d).value=mv.type;
