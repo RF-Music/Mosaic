@@ -161,8 +161,8 @@ dialog::backdrop{background:rgba(10,12,20,.55)}
 body{background:radial-gradient(900px 520px at 6% -8%,color-mix(in srgb,var(--pop) 15%,transparent),transparent 62%),radial-gradient(800px 520px at 100% 0%,color-mix(in srgb,var(--violet) 15%,transparent),transparent 62%),radial-gradient(800px 520px at 50% 115%,color-mix(in srgb,var(--teal) 13%,transparent),transparent 62%),var(--bg);background-attachment:fixed}
 header.top .wm,.brand{background:linear-gradient(90deg,var(--pop),var(--violet));-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
 nav button[aria-current="true"]{border-image:linear-gradient(90deg,var(--pop),var(--violet)) 1}
-.btn:not(.ghost):not(.pop){background:linear-gradient(135deg,#7a5cf5,#c04fd8);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 2px 0 #4b3aa8}
-.btn:not(.ghost):not(.pop):active{box-shadow:inset 0 1px 2px rgba(0,0,0,.25),0 0 0 transparent}
+.btn:not(.ghost):not(.pop):not(.fp){background:linear-gradient(135deg,#7a5cf5,#c04fd8);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 2px 0 #4b3aa8}
+.btn:not(.ghost):not(.pop):not(.fp):active{box-shadow:inset 0 1px 2px rgba(0,0,0,.25),0 0 0 transparent}
 .rev{border-left:4px solid hsl(var(--h,300) 70% 55%)}
 .tag.sng{color:var(--teal);border-color:var(--teal)}.tag.alb{color:var(--violet);border-color:var(--violet)}
 .prof,.auth .card{position:relative;overflow:hidden}
@@ -223,9 +223,9 @@ header.top h2{margin-right:10px}
 
 .fol-on{min-width:96px}.fol-on .fb{display:none}
 .fol-on:hover .fa,.fol-on:focus-visible .fa{display:none}.fol-on:hover .fb,.fol-on:focus-visible .fb{display:inline}
-.btn.pop[data-fol]{background:#2ea66a;color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 2px 0 #1f7a4c}
-.btn.pop[data-fol]:active{box-shadow:inset 0 1px 2px rgba(0,0,0,.25),0 0 0 transparent}
-.btn.fol-on{background:color-mix(in srgb,var(--mute) 18%,var(--surface));color:var(--mute);border:1px solid transparent;box-shadow:none}
+.btn.fp{background:#a39b55;color:#1c1a10;border-radius:0;box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 2px 0 #6f6934;font-weight:500}
+.btn.fp:active{box-shadow:inset 0 1px 2px rgba(0,0,0,.25),0 0 0 transparent}
+.btn.fol-on{background:color-mix(in srgb,var(--mute) 18%,var(--surface));color:var(--mute);border:1px solid transparent;border-radius:0;box-shadow:none}
 .btn.fol-on:hover{color:var(--ink)}
 .row2 .btn{min-width:110px}
 
@@ -239,7 +239,7 @@ header.top h2{margin-right:10px}
 .prof.ig .av.big{width:88px;height:88px}
 .igm{flex:1;min-width:0}
 .igt{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:12px}
-.igt .btn{min-width:120px;padding:7px 22px}
+.igt .btn{width:150px;height:46px;padding:0 22px;font-size:15px}
 .igs{display:flex;gap:26px;flex-wrap:wrap;margin-bottom:8px}
 .igs span{color:var(--mute);font-size:14px}.igs b{color:var(--ink);font-weight:600;font-size:16px;margin-right:2px}
 @media (max-width:520px){.prof.ig{gap:14px;padding:16px}.prof.ig .av.big{width:64px;height:64px}.igs{gap:16px}.igt .btn{width:100%}}
@@ -326,7 +326,7 @@ function pl(n,w){return n+" "+w+(n===1?"":"s")}
 function uname(n){return acct(n)?'<button type="button" class="ulink" data-u="'+esc(n)+'">'+esc(n)+'</button>':esc(n)}
 function toast(t){var e=document.createElement("div");e.className="toast";e.setAttribute("role","status");e.textContent=t;document.body.appendChild(e);setTimeout(function(){e.remove()},7000)}
 function igStats(rv,fl,fg){return '<div class="igs"><span><b>'+rv+'</b> '+(rv===1?"review":"reviews")+'</span><span><b>'+fl+'</b> '+(fl===1?"follower":"followers")+'</span><span><b>'+fg+'</b> following</span></div>'}
-function folBtn(n,big){var sz=big?"":" sm";return isFol(n)?'<button type="button" class="btn ghost'+sz+' fol-on" data-fol="'+esc(n)+'" aria-pressed="true" aria-label="Unfollow '+esc(n)+'"><span class="fa">Following</span><span class="fb">Unfollow</span></button>':'<button type="button" class="btn'+sz+' pop" data-fol="'+esc(n)+'" aria-pressed="false" aria-label="Follow '+esc(n)+'">Follow</button>'}
+function folBtn(n,big){var sz=big?"":" sm";return isFol(n)?'<button type="button" class="btn ghost'+sz+' fol-on" data-fol="'+esc(n)+'" aria-pressed="true" aria-label="Unfollow '+esc(n)+'"><span class="fa">Following</span><span class="fb">Unfollow</span></button>':'<button type="button" class="btn'+sz+' fp" data-fol="'+esc(n)+'" aria-pressed="false" aria-label="Follow '+esc(n)+'">Follow</button>'}
 function chips(){var a=me(),l=((a&&a.following)||[]).filter(acct);if(!l.length)return "";return '<div class="chips"><span class="meta">Following</span>'+l.map(function(n){return '<button type="button" class="chip" data-u="'+esc(n)+'">'+esc(n)+'</button>'}).join("")+'</div>'}
 function toggleFol(n){var a=me(),t=acct(n);if(!a||!t||n===S.user)return;a.following=a.following||[];var i=a.following.indexOf(n);
 if(i>-1){a.following.splice(i,1)}else{a.following.push(n);t.notes=(t.notes||[]).filter(function(x){return x.by!==S.user});t.notes.unshift({by:S.user,date:new Date().toISOString().slice(0,10),read:false});t.notes=t.notes.slice(0,30)}
@@ -378,7 +378,7 @@ if(!l.length)return '<div class="empty">'+(S.tab==="profile"?"You haven't review
 return l.map(function(r){return '<article class="rev" style="--h:'+hue(r.title+r.artist)+'">'+cover(r)+'<div>'+(r.via?'<div class="meta via">↻ '+esc(r.via)+' reposted</div>':'')+'<h3>'+esc(r.title)+'</h3><div class="meta">'+esc(r.artist)+'</div>'+
 '<div class="row"><span class="stars" style="--p:'+(rnum(r.rating)*20)+'%" role="img" aria-label="'+rnum(r.rating).toFixed(1)+' out of 5">★★★★★</span><b class="rv">'+rnum(r.rating).toFixed(1)+'</b><span class="tag '+(r.type==="Album"?"alb":"sng")+'">'+esc(r.type)+'</span><span class="meta rby"><button type="button" class="avbtn" data-u="'+esc(r.user)+'" aria-label="'+esc(r.user)+'\'s profile">'+avatar(acct(r.user),"xs")+'</button>'+uname(r.user)+', '+r.date+'</span></div>'+
 (r.text?'<p>'+esc(r.text)+'</p>':'')+
-(r.user===S.user&&!r.via?'<div class="row"><button class="btn ghost sm" data-edit="'+r.id+'">Edit</button><button class="btn ghost sm" data-del="'+r.id+'">Delete</button></div>':(acct(r.user)&&r.user!==S.user?'<div class="row">'+folBtn(r.user)+'</div>':''))+actsHTML(r)+'</div></article>'}).join("")}
+(r.user===S.user&&!r.via?'<div class="row"><button class="btn ghost sm" data-edit="'+r.id+'">Edit</button><button class="btn ghost sm" data-del="'+r.id+'">Delete</button></div>':'')+actsHTML(r)+'</div></article>'}).join("")}
 
 var IC={link:'<path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/>',like:'<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/>',
 cmt:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
