@@ -220,6 +220,11 @@ header.top h2{margin-right:10px}
 .avs.sent .ok{display:grid}
 .tnone{font-size:12px;padding:0 4px}
 @media (max-width:520px){.tray .avs:nth-child(n+7){display:none}}
+
+.fol-on{min-width:96px}.fol-on .fb{display:none}
+.fol-on:hover .fa,.fol-on:focus-visible .fa{display:none}.fol-on:hover .fb,.fol-on:focus-visible .fb{display:inline}
+.fol-on:hover{color:var(--bad);border-color:var(--bad)}
+.row2 .btn{min-width:110px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
@@ -300,7 +305,7 @@ function isFol(n){var a=me();return !!a&&(a.following||[]).indexOf(n)>-1}
 function nFollowers(n){return accts.filter(function(x){return (x.following||[]).indexOf(n)>-1}).length}
 function pl(n,w){return n+" "+w+(n===1?"":"s")}
 function uname(n){return acct(n)?'<button type="button" class="ulink" data-u="'+esc(n)+'">'+esc(n)+'</button>':esc(n)}
-function folBtn(n){return isFol(n)?'<button type="button" class="btn ghost sm" data-fol="'+esc(n)+'" aria-pressed="true">Following</button>':'<button type="button" class="btn sm pop" data-fol="'+esc(n)+'" aria-pressed="false">Follow</button>'}
+function folBtn(n,big){var sz=big?"":" sm";return isFol(n)?'<button type="button" class="btn ghost'+sz+' fol-on" data-fol="'+esc(n)+'" aria-pressed="true" aria-label="Unfollow '+esc(n)+'"><span class="fa">Following</span><span class="fb">Unfollow</span></button>':'<button type="button" class="btn'+sz+' pop" data-fol="'+esc(n)+'" aria-pressed="false" aria-label="Follow '+esc(n)+'">Follow</button>'}
 function chips(){var a=me(),l=((a&&a.following)||[]).filter(acct);if(!l.length)return "";return '<div class="chips"><span class="meta">Following</span>'+l.map(function(n){return '<button type="button" class="chip" data-u="'+esc(n)+'">'+esc(n)+'</button>'}).join("")+'</div>'}
 function toggleFol(n){var a=me(),t=acct(n);if(!a||!t||n===S.user)return;a.following=a.following||[];var i=a.following.indexOf(n);
 if(i>-1){a.following.splice(i,1)}else{a.following.push(n);t.notes=(t.notes||[]).filter(function(x){return x.by!==S.user});t.notes.unshift({by:S.user,date:new Date().toISOString().slice(0,10),read:false});t.notes=t.notes.slice(0,30)}
@@ -399,7 +404,7 @@ var chat=ic+'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2
 var body;
 if(S.tab==="review"){body='<section class="page"><h2>Write a review</h2><div class="card" id="rvhost"></div></section>'}
 else if(S.tab==="user"&&acct(S.view)){var vu=S.view,va=acct(vu),vc=S.reviews.filter(function(r){return r.user===vu}).length;
-body='<button type="button" class="linkbtn" data-tab="feed" style="margin-bottom:8px">Back to Recommended</button><section class="prof">'+avatar(va,"big")+'<div><h2>'+esc(vu)+'</h2>'+est(va)+'<p class="meta" style="margin:2px 0 12px">'+pl(vc,"review")+' · '+pl(nFollowers(vu),"follower")+' · '+((va.following||[]).filter(acct).length)+' following</p><div class="row2">'+folBtn(vu)+'</div></div></section><div class="list" id="list">'+listHTML()+'</div>'}
+body='<button type="button" class="linkbtn" data-tab="feed" style="margin-bottom:8px">Back to Recommended</button><section class="prof">'+avatar(va,"big")+'<div><h2>'+esc(vu)+'</h2>'+est(va)+'<p class="meta" style="margin:2px 0 12px">'+pl(vc,"review")+' · '+pl(nFollowers(vu),"follower")+' · '+((va.following||[]).filter(acct).length)+' following</p><div class="row2">'+(vu!==S.user?folBtn(vu,true):'')+'</div></div></section><div class="list" id="list">'+listHTML()+'</div>'}
 else if(S.tab==="search"){var stabs=[["songs","Songs"],["albums","Albums"],["profiles","Profiles"],["artists","Artists"]].map(function(t){return '<button type="button" class="stab" role="tab" data-st="'+t[0]+'" aria-selected="'+((S.stab||"songs")===t[0])+'">'+t[1]+'</button>'}).join("");
 body='<section class="page"><h2>Results for “'+esc(S.sq||"")+'”</h2><div class="stabs" role="tablist">'+stabs+'</div><div class="list" id="sres">'+resultsHTML()+'</div></section>'}
 else if(S.tab==="likes"){body='<section class="page"><h2>My likes and comments</h2><div class="empty">Reviews you like or comment on will show up here.</div></section>'}
