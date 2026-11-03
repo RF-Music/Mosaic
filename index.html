@@ -187,7 +187,6 @@ header.top h2{margin-right:10px}
 .rvgrid.split textarea{min-height:180px}
 .page>.card,#rvhost{max-width:900px}
 @media (max-width:600px){.rvgrid.split{display:block}.pickbig{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:6px}.pickbig .cover{width:96px}.pickbig b{margin-top:0}}
-.sw.open:not(:hover):not(:focus-within) #sb::after{content:"";position:absolute;top:9px;right:9px;width:5px;height:5px;border-radius:50%;background:var(--mute);opacity:.55}
 
 /* review actions */
 .rev .meta.via{margin-bottom:2px}
@@ -204,6 +203,23 @@ header.top h2{margin-right:10px}
 .cm .cx{background:none;border:0;color:var(--mute);cursor:pointer;font-size:16px;line-height:1;padding:0 4px}
 .cm .cx:hover{color:var(--bad)}
 .cmf{display:flex;gap:6px;margin-top:2px}.cmf input{flex:1;min-width:0}
+
+/* send tray */
+.sendw{position:relative;display:inline-flex}
+.tray{position:absolute;left:100%;top:50%;margin-left:6px;transform:translate(-6px,-50%);display:flex;gap:6px;align-items:center;padding:4px 8px;background:var(--surface);border:1px solid var(--line);border-radius:999px;box-shadow:0 6px 18px rgba(0,0,0,.25);opacity:0;visibility:hidden;transition:opacity .18s,transform .18s,visibility 0s .18s;z-index:6;white-space:nowrap}
+.tray::before{content:"";position:absolute;left:-10px;top:0;bottom:0;width:10px}
+.sendw.open .tray{opacity:1;visibility:visible;transform:translate(0,-50%);transition-delay:0s}
+.avs{position:relative;display:grid;place-items:center;width:30px;height:30px;padding:0;border:0;border-radius:50%;background:none;cursor:pointer;color:var(--mute);transition:transform .1s}
+.avs:hover,.avs:focus-visible{transform:translateY(-2px)}
+.avs .av{width:30px;height:30px}
+.avs.lnk{border:1px solid var(--line);background:var(--surface)}
+.avs.lnk:hover{color:var(--pop);border-color:var(--pop)}
+.avs::after{content:attr(data-name);position:absolute;bottom:calc(100% + 8px);left:50%;transform:translate(-50%,3px);background:var(--ink);color:var(--bg);font-size:12px;font-weight:400;padding:3px 8px;border-radius:6px;opacity:0;pointer-events:none;transition:opacity .12s,transform .12s;white-space:nowrap}
+.avs:hover::after,.avs:focus-visible::after,.avs.flash::after{opacity:1;transform:translate(-50%,0)}
+.avs .ok{display:none;position:absolute;inset:0;border-radius:50%;background:color-mix(in srgb,var(--teal) 88%,transparent);color:#fff;font-style:normal;font-size:14px;place-items:center}
+.avs.sent .ok{display:grid}
+.tnone{font-size:12px;padding:0 4px}
+@media (max-width:520px){.tray .avs:nth-child(n+7){display:none}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
@@ -220,7 +236,7 @@ var SUPABASE_URL="https://akzscmkkdzikwfrgfmxz.supabase.co",SUPABASE_KEY="sb_pub
 var sb=(SUPABASE_URL&&SUPABASE_KEY&&window.supabase)?window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY):null;
 var REMOTE=!!sb;
 var S={user:REMOTE?null:store.get("ln_user",null),reviews:REMOTE?[]:(store.get("ln_reviews",null)||[]).filter(function(r){return [1,2,3].indexOf(r.id)<0}),tab:"feed",q:"",type:"All",sort:"new"};
-var soc=REMOTE?{}:store.get("ln_social",{});S.likes=soc.likes||{};S.reposts=soc.reposts||{};S.comments=soc.comments||{};S.cm={};S.draft={};S.social=!REMOTE;
+var soc=REMOTE?{}:store.get("ln_social",{});S.likes=soc.likes||{};S.reposts=soc.reposts||{};S.comments=soc.comments||{};S.cm={};S.draft={};S.social=!REMOTE;S.msgOK=!REMOTE;S.sent={};
 function saveSoc(){store.set("ln_social",{likes:S.likes,reposts:S.reposts,comments:S.comments})}
 function save(){store.set("ln_reviews",S.reviews)}
 function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
@@ -338,7 +354,7 @@ return l.map(function(r){return '<article class="rev" style="--h:'+hue(r.title+r
 (r.text?'<p>'+esc(r.text)+'</p>':'')+
 (r.user===S.user&&!r.via?'<div class="row"><button class="btn ghost sm" data-edit="'+r.id+'">Edit</button><button class="btn ghost sm" data-del="'+r.id+'">Delete</button></div>':(acct(r.user)&&r.user!==S.user?'<div class="row">'+folBtn(r.user)+'</div>':''))+actsHTML(r)+'</div></article>'}).join("")}
 
-var IC={like:'<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/>',
+var IC={link:'<path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/>',like:'<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/>',
 cmt:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
 rp:'<path d="m17 1 4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="m7 23-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>',
 send:'<path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/>'};
@@ -349,22 +365,31 @@ if(S.social){
 h+='<button type="button" class="act'+(liked?' on':'')+'" data-like="'+id+'" aria-pressed="'+liked+'" aria-label="Like">'+ico("like")+(lk.length?'<span>'+lk.length+'</span>':'')+'</button>';
 h+='<button type="button" class="act'+(S.cm[id]?' on':'')+'" data-cmt="'+id+'" aria-expanded="'+!!S.cm[id]+'" aria-label="Comments">'+ico("cmt")+(cm.length?'<span>'+cm.length+'</span>':'')+'</button>';
 h+='<button type="button" class="act'+(reposted?' on':'')+'" data-rp="'+id+'" aria-pressed="'+reposted+'" aria-label="Repost"'+(own?' disabled title="You can\'t repost your own review"':'')+'>'+ico("rp")+(rp.length?'<span>'+rp.length+'</span>':'')+'</button>'}
-h+='<button type="button" class="act" data-send="'+id+'" aria-label="Send">'+ico("send")+'</button></div>';
+h+='<span class="sendw" data-sw="'+id+'"><button type="button" class="act" data-send="'+id+'" aria-label="Send" aria-haspopup="true">'+ico("send")+'</button><span class="tray" role="group" aria-label="Send to">'+trayHTML(id)+'</span></span></div>';
 if(S.social&&S.cm[id]){h+='<div class="cmts">'+cm.map(function(c){return '<div class="cm"><span><b>'+uname(c.user)+'</b> '+esc(c.text)+' <span class="meta">'+esc(c.date)+'</span></span>'+(c.user===S.user?'<button type="button" class="cx" data-dcm="'+c.id+'" data-rid="'+id+'" aria-label="Delete comment">×</button>':'')+'</div>'}).join("")+
 '<form class="cmf" data-cf="'+id+'"><input id="cmi'+id+'" maxlength="300" placeholder="Add a comment" autocomplete="off" value="'+esc(S.draft[id]||"")+'"><button class="btn sm">Post</button></form></div>'}
 return h}
+function friends(){var a=me();if(!a)return [];var fol=(a.following||[]).filter(acct),fb=accts.filter(function(x){return x.name!==S.user&&(x.following||[]).indexOf(S.user)>-1}).map(function(x){return x.name}),all=[];
+fol.concat(fb).forEach(function(n){if(n!==S.user&&all.indexOf(n)<0)all.push(n)});
+all.sort(function(x,y){return (fol.indexOf(y)>-1&&fb.indexOf(y)>-1)-(fol.indexOf(x)>-1&&fb.indexOf(x)>-1)});return all}
+function trayHTML(id){var h='<button type="button" class="avs lnk" data-name="Copy link" data-copy="'+id+'" aria-label="Copy link">'+ico("link")+'</button>';
+if(S.msgOK){var fr=friends();if(!fr.length)h+='<span class="meta tnone">Follow people to send them reviews</span>';
+fr.slice(0,8).forEach(function(n){h+='<button type="button" class="avs'+(S.sent[id+":"+n]?" sent":"")+'" data-name="'+esc(n)+'" data-to="'+esc(n)+'" data-rid="'+id+'" aria-label="Send to '+esc(n)+'">'+avatar(acct(n))+'<i class="ok">✓</i></button>'})}
+return h}
 function refreshList(fid){var el=$("#list");if(!el)return;el.innerHTML=listHTML();bind();if(fid){var f=document.getElementById(fid);if(f)f.focus()}}
 function sendText(r){return '“'+r.title+'” by '+r.artist+', rated '+rnum(r.rating).toFixed(1)+'/5 on Mosaic'}
-async function sendReview(r,btn){var text=sendText(r),url=location.href.split("#")[0],ok=false;
+async function copyReview(r,btn){var text=sendText(r),url=location.href.split("#")[0],msg="Copied";
 try{if(navigator.share){await navigator.share({title:"Mosaic",text:text,url:url});return}}catch(e){if(e&&e.name==="AbortError")return}
-try{await navigator.clipboard.writeText(text+" "+url);ok=true}catch(e){}
-var old=btn.innerHTML;btn.innerHTML=ico("send")+'<span>'+(ok?"Copied":"Couldn\'t copy")+'</span>';setTimeout(function(){btn.innerHTML=old},1600)}
+try{await navigator.clipboard.writeText(text+" "+url)}catch(e){msg="Couldn't copy"}
+btn.dataset.name=msg;btn.classList.add("flash");setTimeout(function(){btn.dataset.name="Copy link";btn.classList.remove("flash")},1600)}
 function mutSoc(kind,rid){var a=S[kind][rid]=S[kind][rid]||[],i=a.indexOf(S.user);if(i>-1){a.splice(i,1);return false}a.push(S.user);return true}
 
 function appView(){
 var a=me(),nm=esc(S.user||""),prof=S.tab==="profile",mcur=prof||S.tab==="likes"||S.tab==="account";
 var cnt=S.reviews.filter(function(r){return r.user===S.user}).length;
 var notes=(a&&a.notes)||[],unread=notes.filter(function(n){return !n.read}).length;
+var msgs=(a&&a.msgs)||[],munread=msgs.filter(function(n){return !n.read}).length;
+var msgsHTML=msgs.length?msgs.slice(0,8).map(function(n){var r=S.reviews.filter(function(x){return String(x.id)===String(n.rid)})[0];return '<div class="note"><button type="button" class="ulink" data-u="'+esc(n.by)+'">'+esc(n.by)+'</button> sent you '+(r?'<button type="button" class="ulink" data-gorv="'+esc(r.title)+'">“'+esc(r.title)+'”</button> by '+esc(r.artist):'a review')+' <span class="meta">'+esc(n.date)+'</span></div>'}).join(""):'<p class="meta" style="margin:0">No messages yet.</p>';
 var notesHTML=notes.length?notes.slice(0,8).map(function(n){var rv=n.rid!=null?S.reviews.filter(function(r){return r.id==n.rid})[0]:null,what=n.kind==="like"?"liked":n.kind==="comment"?"commented on":n.kind==="repost"?"reposted":"";
 return '<div class="note"><button type="button" class="ulink" data-u="'+esc(n.by)+'">'+esc(n.by)+'</button> '+(what?what+" your review"+(rv?" of "+esc(rv.title):""):"started following you")+' <span class="meta">'+esc(n.date)+'</span></div>'}).join(""):'<p class="meta" style="margin:0">Nothing new yet.</p>';
 var ic='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">';
@@ -387,7 +412,7 @@ $("#app").innerHTML='<div class="wrap"><header class="top"><h2><button type="but
 '<div class="right"><div class="mew"><button class="me" aria-haspopup="menu" aria-current="'+mcur+'" aria-label="Your account menu">'+avatar(a)+'<span class="nm">'+nm+'</span></button>'+
 '<div class="menu"><div class="box" role="menu"><button role="menuitem" data-tab="profile">My Mosaic</button><button role="menuitem" data-tab="likes">My likes and comments</button><button role="menuitem" data-tab="account">Privacy and account</button><hr><button role="menuitem" id="so">Sign out</button></div></div></div>'+
 '<div class="ibw"><button class="ib" id="nb" aria-label="Notifications" aria-expanded="false">'+bell+(unread?'<i class="dot"></i>':'')+'</button><div class="pop" id="np" hidden><h3>Notifications</h3>'+notesHTML+'</div></div>'+
-'<div class="ibw"><button class="ib" id="mb" aria-label="Messages" aria-expanded="false">'+chat+'</button><div class="pop" id="mp" hidden><h3>Messages</h3><p class="meta" style="margin:0">No messages yet.</p></div></div></div></header>'+body+'</div>';
+'<div class="ibw"><button class="ib" id="mb" aria-label="Messages" aria-expanded="false">'+chat+(munread?'<i class="dot"></i>':'')+'</button><div class="pop" id="mp" hidden><h3>Messages</h3>'+msgsHTML+'</div></div></div></header>'+body+'</div>';
 var mew=$(".mew");if(S.shut){mew.classList.add("shut");S.shut=false}
 mew.onmouseleave=function(){mew.classList.remove("shut")};
 $(".me").onclick=function(e){e.stopPropagation();mew.classList.toggle("open")};
@@ -395,6 +420,8 @@ document.querySelectorAll("[data-tab]").forEach(function(b){b.onclick=function()
 $("#so").onclick=async function(){await api.signOut();S.tab="feed";S.q="";authView()};
 wirePop($("#nb"),$("#np"));
 $("#nb").addEventListener("click",function(){var a2=me();if(a2&&a2.notes&&a2.notes.some(function(n){return !n.read})){a2.notes.forEach(function(n){n.read=true});api.markRead();var dt=this.querySelector(".dot");if(dt)dt.remove()}});wirePop($("#mb"),$("#mp"));
+$("#mb").addEventListener("click",function(){var a3=me();if(a3&&a3.msgs&&a3.msgs.some(function(n){return !n.read})){a3.msgs.forEach(function(n){n.read=true});api.markMsgsRead();var d2=this.querySelector(".dot");if(d2)d2.remove()}});
+document.querySelectorAll("[data-gorv]").forEach(function(b){b.onclick=function(){S.q=b.dataset.gorv;S.tab="feed";S.shut=true;appView()}});
 var sw=$(".sw"),qi=$("#q"),sug=$("#sug"),sugs=[],sh=-1,stm=null,stk=0;
 searchHover=false;
 function clearSearch(){clearTimeout(stm);stk++;S.sv="";sw.classList.remove("open");qi.value="";qi.blur();qi.readOnly=true;sugs=[];sh=-1;sug.hidden=true;sug.innerHTML=""}
@@ -444,7 +471,16 @@ function rv(id){return S.reviews.filter(function(r){return String(r.id)===String
 document.querySelectorAll("[data-like]").forEach(function(b){b.onclick=function(){var id=b.dataset.like,add=mutSoc("likes",id);refreshList();api.persistToggle("likes",id,add).then(function(){refreshList()})}});
 document.querySelectorAll("[data-rp]").forEach(function(b){b.onclick=function(){var id=b.dataset.rp,r=rv(id);if(!r||r.user===S.user)return;var add=mutSoc("reposts",id);refreshList();api.persistToggle("reposts",id,add).then(function(){refreshList()})}});
 document.querySelectorAll("[data-cmt]").forEach(function(b){b.onclick=function(){var id=b.dataset.cmt;S.cm[id]=!S.cm[id];refreshList(S.cm[id]?"cmi"+id:null)}});
-document.querySelectorAll("[data-send]").forEach(function(b){b.onclick=function(){var r=rv(b.dataset.send);if(r)sendReview(r,b)}});
+document.querySelectorAll(".sendw").forEach(function(w){var ot=null,ct=null,touch=false,btn=w.querySelector("[data-send]");
+function open(){clearTimeout(ct);w.classList.add("open")}function close(){clearTimeout(ot);w.classList.remove("open")}
+w.onmouseenter=function(){clearTimeout(ct);ot=setTimeout(open,170)};
+w.onmouseleave=function(){clearTimeout(ot);ct=setTimeout(close,150)};
+w.addEventListener("focusin",open);w.addEventListener("focusout",function(e){if(!w.contains(e.relatedTarget))close()});
+btn.onpointerdown=function(e){touch=e.pointerType==="touch"};
+btn.onclick=function(){if(touch&&w.classList.contains("open"))close();else open()};
+w.onkeydown=function(e){if(e.key==="Escape"){close();btn.focus()}}});
+document.querySelectorAll("[data-copy]").forEach(function(b){b.onclick=function(){var r=rv(b.dataset.copy);if(r)copyReview(r,b)}});
+document.querySelectorAll("[data-to]").forEach(function(b){b.onclick=function(){var id=b.dataset.rid,to=b.dataset.to;if(S.sent[id+":"+to])return;S.sent[id+":"+to]=true;b.classList.add("sent");api.sendReview(id,to).then(function(res){if(res&&res.error){S.sent[id+":"+to]=false;b.classList.remove("sent");b.dataset.name="Couldn't send";setTimeout(function(){b.dataset.name=to},1600)}})}});
 document.querySelectorAll(".cmf").forEach(function(f){var id=f.dataset.cf,i=f.querySelector("input");i.oninput=function(){S.draft[id]=i.value};
 f.onsubmit=function(e){e.preventDefault();var t=i.value.trim();if(!t)return;i.disabled=true;api.addComment(id,t).then(function(res){S.draft[id]="";refreshList("cmi"+id)}).catch(function(){i.disabled=false})}});
 document.querySelectorAll("[data-dcm]").forEach(function(b){b.onclick=function(){api.delComment(b.dataset.dcm,b.dataset.rid).then(function(){refreshList()})}})}
@@ -520,6 +556,8 @@ async delReview(id){S.reviews=S.reviews.filter(function(r){return r.id!=id});sav
 async setPic(url){var ac=me();if(ac){if(url)ac.pic=url;else delete ac.pic;store.set("ln_accounts",accts)}},
 async toggleFol(n){toggleFol(n)},
 async markRead(){store.set("ln_accounts",accts)},
+async sendReview(rid,to){var t=acct(to);if(!t)return {error:"x"};t.msgs=(t.msgs||[]).filter(function(m){return !(m.by===S.user&&String(m.rid)===String(rid))});t.msgs.unshift({id:Date.now(),by:S.user,rid:rid,date:new Date().toISOString().slice(0,10),read:false});t.msgs=t.msgs.slice(0,30);store.set("ln_accounts",accts);return {}},
+async markMsgsRead(){store.set("ln_accounts",accts)},
 async persistToggle(kind,rid,add){saveSoc();if(add)notifyLocal(kind==="likes"?"like":"repost",rid)},
 async addComment(rid,text){var a=S.comments[rid]=S.comments[rid]||[];a.push({id:Date.now(),user:S.user,text:text,date:new Date().toISOString().slice(0,10)});saveSoc();notifyLocal("comment",rid)},
 async delComment(cid,rid){S.comments[rid]=(S.comments[rid]||[]).filter(function(c){return String(c.id)!==String(cid)||c.user!==S.user});saveSoc()}
@@ -534,6 +572,9 @@ accts=(rs[0].data||[]).map(function(x){var o={id:x.id,name:x.username,created:x.
 S.reviews=(rs[1].data||[]).map(function(x){return {id:x.id,title:x.title,artist:x.artist,type:x.type,art:x.art||"",tid:x.tid,rating:rnum(x.rating),text:x.body||"",user:by[x.user_id]?by[x.user_id].name:"Unknown",date:String(x.created_at).slice(0,10)}});
 var m=by[S.uid];S.user=m?m.name:null;
 if(m){m.email=S.email;m.notes=(rs[3].data||[]).map(function(n){return {id:n.id,by:by[n.actor_id]?by[n.actor_id].name:"Someone",date:String(n.created_at).slice(0,10),read:n.read}})}
+S.msgOK=false;
+try{var mr=await sb.from("messages").select("id,sender,review_id,read,created_at").eq("recipient",S.uid).order("created_at",{ascending:false}).limit(30);
+if(!mr.error){S.msgOK=true;if(m)m.msgs=(mr.data||[]).map(function(x){return {id:x.id,by:by[x.sender]?by[x.sender].name:"Someone",rid:x.review_id,date:String(x.created_at).slice(0,10),read:x.read}})}}catch(e){S.msgOK=false}
 S.social=false;S.likes={};S.reposts={};S.comments={};
 try{var sr=await Promise.all([sb.from("review_likes").select("review_id,user_id"),sb.from("review_reposts").select("review_id,user_id"),sb.from("review_comments").select("id,review_id,user_id,body,created_at").order("created_at",{ascending:true}),sb.from("notifications").select("id,kind,review_id")]);
 if(!sr[0].error&&!sr[1].error&&!sr[2].error){S.social=true;
@@ -568,6 +609,8 @@ async toggleFol(n){var t=acct(n);if(!t||!S.uid)return;
 if(isFol(n)){await sb.from("follows").delete().eq("follower",S.uid).eq("following",t.id)}else{await sb.from("follows").insert({following:t.id})}
 await loadRemote()},
 async markRead(){await sb.from("notifications").update({read:true}).eq("read",false)},
+async sendReview(rid,to){var t=acct(to);if(!t||!S.uid)return {error:"x"};var r=await sb.from("messages").insert({recipient:t.id,review_id:rid});return r.error?{error:r.error.message}:{}},
+async markMsgsRead(){await sb.from("messages").update({read:true}).eq("read",false)},
 async persistToggle(kind,rid,add){if(!S.uid)return;var tb=kind==="likes"?"review_likes":"review_reposts";
 if(add)await sb.from(tb).insert({review_id:rid});else await sb.from(tb).delete().eq("review_id",rid).eq("user_id",S.uid);await loadRemote()},
 async addComment(rid,text){var r=await sb.from("review_comments").insert({review_id:rid,body:text});await loadRemote();return r.error?{error:r.error.message}:{}},
