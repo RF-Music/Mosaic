@@ -34,7 +34,9 @@ label{display:block;font-weight:400;font-size:13px;margin:10px 0 3px}
 /* auth */
 .auth{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:48px;max-width:860px;margin:0 auto;padding:72px 16px 32px}
 .brand{position:absolute;top:18px;left:20px;font:600 21px/1 "Montserrat",sans-serif;letter-spacing:-.02em}
-.auth h1{font-size:clamp(28px,4vw,42px);font-weight:600;letter-spacing:-.02em}
+.auth h1{font-size:clamp(28px,4vw,42px);font-weight:600;letter-spacing:-.02em;line-height:1.2}
+.auth h1 span{display:block}
+.auth section{text-align:center}
 .auth p{color:var(--mute);max-width:34ch;margin:10px 0 0}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px;box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 8px 24px rgba(0,0,0,.14)}
 .full{width:100%}.pwbox{position:relative}.pwbox input{padding-right:40px}.eye{position:absolute;right:4px;top:50%;transform:translateY(-50%);background:none;border:0;padding:5px;border-radius:6px;color:var(--mute);cursor:pointer;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;display:grid}.eye.on{color:var(--pop)}
@@ -730,7 +732,7 @@ document.body.appendChild(w)
 function authView(){
 var mode="in",sel=[];
 function draw(){
-$("#app").innerHTML='<main class="auth"><div class="brand">Mosaic</div><section><h1>Every listen has a story.</h1><p>Rate and review the albums and songs you love.</p></section>'+
+$("#app").innerHTML='<main class="auth"><div class="brand">Mosaic</div><section><h1><span>Five words</span><span>Choose wisely</span><span>Mosaic.</span></h1></section>'+
 '<form class="card" id="f" novalidate><h2 style="font-size:22px">'+(mode==="up"?"Create your account":"Welcome back")+'</h2>'+
 (mode==="up"?'<label for="dn">Username <span class="meta">(3 to 5 characters)</span></label><input id="dn" autocomplete="username" maxlength="5">':'')+
 (mode==="up"?'<label for="em">Email</label><input id="em" type="email" autocomplete="email">':'<label for="em">Email or username</label><input id="em" type="text" autocomplete="username" autocapitalize="none" spellcheck="false">')+'<label for="pw">Password</label><div class="pwbox"><input id="pw" type="password" autocomplete="'+(mode==="up"?"new-password":"current-password")+'"><button type="button" class="eye" id="eye" aria-label="Show password while hovering"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg></button></div>'+
