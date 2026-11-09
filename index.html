@@ -384,6 +384,8 @@ header.top h2{margin-right:10px}
 #wave i{display:block;background:var(--surface);box-shadow:inset 0 0 0 .5px var(--line);animation:wv .3s ease-in var(--d,0ms) both}
 @keyframes wv{0%{transform:perspective(500px) rotateX(0);visibility:visible}99%{visibility:visible}100%{transform:perspective(500px) rotateX(90deg);visibility:hidden}}
 @media (prefers-reduced-motion:reduce){#wave{display:none}}
+#tflip{position:fixed;left:0;top:0;z-index:300;display:block;touch-action:none}
+@media (prefers-reduced-motion:reduce){#tflip{display:none}}
 /* listen later */
 .act.later{margin-left:auto}
 .act[data-later].on svg,.later-btn.on svg{fill:currentColor}
@@ -561,6 +563,158 @@ function rnum(v){v=Number(v);return isFinite(v)?Math.min(5,Math.max(0,Math.round
 
 var accts=REMOTE?[]:store.get("ln_accounts",[]);
 async function hash(pw,salt){var b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(salt+pw));return Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,"0")}).join("")}
+/* sign in / sign out: the screen breaks into about 400 small tiles. Each tile carries its slice of the page you are leaving and flips over to show the same slice of the page you are arriving on. Both pages are photographed once (an SVG snapshot of the page itself) and the flip is drawn on one canvas, which keeps it light. If a photo can't be taken, the plain tiles run instead. */
+var TF=(function(){
+var N=400,FLIP=800,SPREAD=950,FADE=240,MAXPX=5.6e6,FONTP=null,ART={},PEND={},BAD={},nART=0,cur=null;
+function wait(ms,v){return new Promise(function(r){setTimeout(function(){r(v)},ms)})}
+function nul(){return null}
+function can(){try{
+if(!window.matchMedia||matchMedia("(prefers-reduced-motion: reduce)").matches)return false;
+var u=navigator.userAgent||"";
+/* Safari and everything on iOS (all WebKit) can't be trusted to draw page snapshots: they get the plain tiles */
+if(/iPad|iPhone|iPod/.test(u)||(/Macintosh/.test(u)&&navigator.maxTouchPoints>1)||(/Safari\//.test(u)&&!/Chrome|Chromium|Edg|OPR|Android|Firefox/.test(u)))return false;
+return !!(window.CanvasRenderingContext2D&&window.XMLSerializer&&window.FileReader&&window.fetch&&window.requestAnimationFrame)
+}catch(e){return false}}
+function dataURL(u){return fetch(u,{mode:"cors",credentials:"omit"}).then(function(r){if(!r.ok)throw 0;return r.blob()}).then(function(b){return new Promise(function(ok,no){var f=new FileReader();f.onload=function(){ok(f.result)};f.onerror=no;f.readAsDataURL(b)})})}
+/* a cover picture as data, plus a tiny copy for the blurred glow behind each card */
+function shrink(d,n){return new Promise(function(ok){var im=new Image();im.onload=function(){try{var c=document.createElement("canvas");c.width=c.height=n;c.getContext("2d").drawImage(im,0,0,n,n);ok(c.toDataURL("image/jpeg",.8))}catch(x){ok(d)}};im.onerror=function(){ok(d)};im.src=d})}
+function art(u){
+if(ART[u])return Promise.resolve(ART[u]);
+if(BAD[u])return Promise.resolve(null);
+if(PEND[u])return PEND[u];
+return PEND[u]=dataURL(u).then(function(d){return shrink(d,72).then(function(g){delete PEND[u];if(++nART>150){ART={};nART=1}return ART[u]={f:d,g:g}})}).catch(function(){delete PEND[u];BAD[u]=1;return null})}
+/* the page's own Montserrat, fetched once and embedded in the photo (a photo can't load fonts by itself) */
+function fonts(){
+if(FONTP)return FONTP;
+var l=document.querySelector('link[href*="fonts.googleapis.com/css"]');
+if(!l)return (FONTP=Promise.resolve(""));
+FONTP=fetch(l.href,{mode:"cors",credentials:"omit"}).then(function(r){if(!r.ok)throw 0;return r.text()}).then(function(css){
+var re=/(?:\/\*\s*([\w-]+)\s*\*\/\s*)?@font-face\s*\{([^}]*)\}/g,m,F={},ks=[];
+while((m=re.exec(css))){
+if(m[1]&&m[1]!=="latin"&&m[1]!=="latin-ext")continue;
+var b=m[2],u=/url\(\s*["']?([^"')\s]+)["']?\s*\)/.exec(b);if(!u)continue;
+var fam=/font-family:\s*([^;]+);/.exec(b),sty=/font-style:\s*([^;]+);/.exec(b),wt=/font-weight:\s*([^;]+);/.exec(b),rg=/unicode-range:\s*([^;]+);/.exec(b),fm=/format\(\s*["']?([\w-]+)["']?\s*\)/.exec(b),k=u[1]+"|"+(rg?rg[1]:"");
+if(!F[k]){F[k]={u:u[1],fam:fam?fam[1].trim():'"Montserrat"',sty:sty?sty[1].trim():"normal",rg:rg?rg[1].trim():"",fm:fm?fm[1]:"woff2",w:[]};ks.push(k)}
+(wt?wt[1].trim():"400").split(/\s+/).forEach(function(x){var n=parseFloat(x);if(isFinite(n))F[k].w.push(n)})}
+return Promise.all(ks.map(function(k){return dataURL(F[k].u).then(function(d){F[k].d=d})})).then(function(){
+return ks.map(function(k){var f=F[k],lo=Math.min.apply(null,f.w),hi=Math.max.apply(null,f.w);
+return "@font-face{font-family:"+f.fam+";font-style:"+f.sty+";font-weight:"+(lo===hi?lo:lo+" "+hi)+";src:url("+f.d+") format(\""+f.fm+"\");"+(f.rg?"unicode-range:"+f.rg+";":"")+"}"}).join("")})
+}).catch(function(){FONTP=null;return ""});
+return FONTP}
+function theme(){var t=document.documentElement.getAttribute("data-theme");if(t==="dark"||t==="light")return t;try{return matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"}catch(e){return "light"}}
+/* what 100vh is on this screen (phones: taller than what is showing while the address bar is out) */
+function lvh(){try{var p=document.createElement("div");p.style.cssText="position:fixed;left:0;top:0;width:0;height:100vh;visibility:hidden;pointer-events:none";document.body.appendChild(p);var h=p.offsetHeight;document.body.removeChild(p);return h>0?h:innerHeight}catch(e){return innerHeight}}
+/* everything about the screen that has to be read while the page is still showing */
+function env(){
+var IW=innerWidth||document.documentElement.clientWidth,H=innerHeight,s=Math.min(devicePixelRatio||1,2);
+if(IW*H*s*s>MAXPX)s=Math.sqrt(MAXPX/(IW*H));
+var css=[].map.call(document.querySelectorAll("style"),function(x){return x.textContent}).join("\n"),lv=lvh();
+/* a photo doesn't know this screen's touch, hover or colour settings, so every media query is settled here and written back as all / not all */
+css=css.replace(/@media\s*([^{]+)\{/g,function(_,q){var y=false;try{y=matchMedia(q.trim()).matches}catch(x){}return "@media "+(y?"all":"not all")+"{"});
+if(Math.abs(lv-H)>1)css=css.replace(/([\d.]+)vh\b/g,function(_,n){return "calc("+(parseFloat(n)*lv/100)+"px)"});
+var rs=getComputedStyle(document.documentElement),bg=getComputedStyle(document.body).backgroundColor;
+if(!bg||/rgba\([^)]*,\s*0\)$/.test(bg)||bg==="transparent")bg="#fff";
+return {W:document.documentElement.clientWidth||IW,IW:IW,H:H,s:s,css:css,th:theme(),pt:rs.paddingTop||"0px",pb:rs.paddingBottom||"0px",bg:bg}}
+function svgOf(e,xml,fc){
+return '<svg xmlns="http://www.w3.org/2000/svg" width="'+e.W+'" height="'+e.H+'" data-theme="'+e.th+'"><style><![CDATA['+(fc+e.css).replace(/\]\]>/g,"]]]]><![CDATA[>")+']]></style><foreignObject x="0" y="0" width="'+e.W+'" height="'+e.H+'"><body xmlns="http://www.w3.org/1999/xhtml" style="min-height:'+e.H+'px;padding:'+e.pt+" 0 "+e.pb+'">'+xml+'</body></foreignObject></svg>'}
+function raster(svg,e,after){
+return new Promise(function(ok,no){
+var im=new Image();
+im.onload=function(){try{var c=document.createElement("canvas");c.width=Math.round(e.IW*e.s);c.height=Math.round(e.H*e.s);
+var g=c.getContext("2d");g.fillStyle=e.bg;g.fillRect(0,0,c.width,c.height);g.drawImage(im,0,0,Math.round(e.W*e.s),c.height);if(after)after(g);ok(c)}catch(x){no(x)}};
+im.onerror=function(){no(new Error("photo"))};
+im.src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(svg)})}
+/* photograph the page as it is right now. The copy is taken immediately; fonts and pictures are added to it afterwards */
+function shoot(menu){
+var app=document.getElementById("app");if(!app)return Promise.resolve(null);
+var e=env(),clone=app.cloneNode(true),A,B,i,j,a,b,need={},cand=[];
+A=app.querySelectorAll("input,textarea,select");B=clone.querySelectorAll("input,textarea,select");
+for(i=0;i<A.length&&i<B.length;i++){a=A[i];b=B[i];
+if(a.tagName==="TEXTAREA")b.textContent=a.value;
+else if(a.tagName==="SELECT"){for(j=0;j<b.options.length;j++){if(a.options[j]&&a.options[j].selected)b.options[j].setAttribute("selected","selected");else b.options[j].removeAttribute("selected")}}
+else if(a.type==="checkbox"||a.type==="radio"){if(a.checked)b.setAttribute("checked","checked");else b.removeAttribute("checked")}
+else if(a.type==="password")b.setAttribute("value",new Array(a.value.length+1).join("x"));/* same number of dots, never the password itself */
+else if(a.type!=="file")b.setAttribute("value",a.value)}
+A=app.querySelectorAll("img");B=clone.querySelectorAll("img");
+for(i=0;i<A.length&&i<B.length;i++){a=A[i];b=B[i];var src=a.currentSrc||a.src||"";
+b.removeAttribute("srcset");b.removeAttribute("sizes");b.removeAttribute("loading");
+if(/^data:/.test(src))continue;
+var r=a.getBoundingClientRect();
+if(!src||BAD[src]||r.bottom<0||r.top>e.H||r.right<0||r.left>e.IW||!r.width){b.removeAttribute("src");continue}
+b.setAttribute("data-s",src);need[src]=1;
+if(!(a.closest&&a.closest(".glow")))cand.push({el:a,x:r.left,y:r.top,w:r.width,h:r.height,src:src,rad:parseFloat(getComputedStyle(a.parentNode||a).borderTopLeftRadius)||0})}
+/* long lists: whatever is below the fold stays out of the photo */
+A=app.querySelectorAll(".list");B=clone.querySelectorAll(".list");
+for(i=0;i<A.length&&i<B.length;i++){var K=A[i].children,KC=B[i].children;
+for(j=K.length-1;j>=0;j--){if(K[j].getBoundingClientRect().top>e.H+80&&KC[j])B[i].removeChild(KC[j]);else break}}
+if(menu){var mw=clone.querySelector(".mew");if(mw){mw.classList.remove("open");mw.classList.add("shut")}}
+var urls=Object.keys(need);
+return Promise.all([fonts(),Promise.all(urls.map(function(u){return Promise.race([art(u),wait(220,null)])}))]).then(function(R){
+[].forEach.call(clone.querySelectorAll("img[data-s]"),function(im){var u=im.getAttribute("data-s"),v=ART[u],gl=im.closest&&im.closest(".glow");im.removeAttribute("data-s");
+if(v)im.setAttribute("src",gl?v.g:v.f);
+else{im.removeAttribute("src");if(gl&&im.parentNode&&im.parentNode.parentNode===gl)gl.removeChild(im.parentNode)}});
+return raster(svgOf(e,new XMLSerializer().serializeToString(clone),R[0]),e,function(g){
+/* a picture that couldn't be embedded (the host refused) but is on screen: paint it straight from the page */
+cand.forEach(function(c){if(ART[c.src])return;var el=c.el,nw=el.naturalWidth,nh=el.naturalHeight;if(!el.complete||!nw||!nh)return;
+var k=Math.max(c.w/nw,c.h/nh),sw=c.w/k,sh=c.h/k,s=e.s;g.save();g.beginPath();
+if(g.roundRect)g.roundRect(c.x*s,c.y*s,c.w*s,c.h*s,c.rad*s);else g.rect(c.x*s,c.y*s,c.w*s,c.h*s);
+g.clip();g.drawImage(el,(nw-sw)/2,(nh-sh)/2,sw,sh,c.x*s,c.y*s,c.w*s,c.h*s);g.restore()})})})}
+/* the bare page background (no content), for the gaps that open while tiles are turning */
+function shootBg(){var e=env();return raster(svgOf(e,'<div id="app"></div>',""),e)}
+function warm(){if(can())fonts()}
+function begin(menu){
+if(!can())return null;
+try{if(menu&&window.scrollY>0)window.scrollTo(0,0);var o={p:shoot(menu).catch(nul)};o.b=shootBg().catch(nul);return o}catch(x){return null}}
+async function run(pre,dir,swap){
+var old=null,e=null;
+try{if(pre&&pre.p)old=await Promise.race([pre.p,wait(800,null)])}catch(x){old=null}
+try{e=env()}catch(x){e=null}
+if(!old||!e||!can()||old.width!==Math.round(e.IW*e.s)||old.height!==Math.round(e.H*e.s)){swap();flipWave(dir);return}
+if(cur)cur.kill();
+var cv=document.createElement("canvas"),g=cv.getContext("2d"),dead=false,raf=0,safe=0,fade=0,nu=null,bh=null,w0=innerWidth,h0=innerHeight,job={kill:kill};
+cv.id="tflip";cv.width=old.width;cv.height=old.height;cv.setAttribute("aria-hidden","true");cv.style.width=e.IW+"px";cv.style.height=e.H+"px";
+function kill(){if(dead)return;dead=true;cancelAnimationFrame(raf);clearTimeout(safe);clearTimeout(fade);
+window.removeEventListener("resize",onrz);document.removeEventListener("visibilitychange",onvis);
+if(cv.parentNode)cv.parentNode.removeChild(cv);cv.width=cv.height=1;old.width=old.height=1;if(nu)nu.width=nu.height=1;if(bh)bh.width=bh.height=1;if(cur===job)cur=null}
+function onrz(){if(Math.abs(innerWidth-w0)>2||Math.abs(innerHeight-h0)>120)kill()}
+function onvis(){if(document.hidden)kill()}
+g.drawImage(old,0,0);document.body.appendChild(cv);
+cur=job;window.addEventListener("resize",onrz);document.addEventListener("visibilitychange",onvis);
+safe=setTimeout(kill,SPREAD+FLIP+5000);
+try{swap()}catch(x){kill();throw x}
+go();
+async function go(){try{
+var R=await Promise.all([Promise.race([shoot(false).catch(nul),wait(900,null)]),Promise.race([pre.b||shootBg().catch(nul),wait(900,null)])]);
+if(dead)return;
+nu=R[0];bh=R[1];
+if(nu&&(nu.width!==cv.width||nu.height!==cv.height))nu=null;
+if(bh&&(bh.width!==cv.width||bh.height!==cv.height))bh=null;
+var Wd=cv.width,Hd=cv.height,cols=Math.max(8,Math.min(40,Math.round(Math.sqrt(N*Wd/Hd)))),rows=Math.max(8,Math.round(N/cols)),T=[],mx=0,bg=env().bg,ln=(getComputedStyle(document.documentElement).getPropertyValue("--line")||"").trim()||"rgba(128,128,128,.4)",c,r;
+for(r=0;r<rows;r++)for(c=0;c<cols;c++){
+var x0=Math.round(c*Wd/cols),x1=Math.round((c+1)*Wd/cols),y0=Math.round(r*Hd/rows),y1=Math.round((r+1)*Hd/rows),
+u=(dir>0?c:cols-1-c)/(cols-1),v=r/(rows-1),dl=Math.round((u*.86+v*.14)*SPREAD+((c*7+r*13)%5)*10);
+if(dl>mx)mx=dl;T.push({x:x0,y:y0,w:x1-x0,h:y1-y0,d:dl})}
+var end=mx+FLIP,t0=-1;
+function paint(t){
+g.clearRect(0,0,Wd,Hd);g.drawImage(old,0,0);
+for(var i=0;i<T.length;i++){var q=T[i],p=(t-q.d)/FLIP;
+if(p<=0)continue;
+if(p>=1){if(nu)g.drawImage(nu,q.x,q.y,q.w,q.h,q.x,q.y,q.w,q.h);else g.clearRect(q.x,q.y,q.w,q.h);continue}
+if(nu){if(bh)g.drawImage(bh,q.x,q.y,q.w,q.h,q.x,q.y,q.w,q.h);else{g.fillStyle=bg;g.fillRect(q.x,q.y,q.w,q.h)}}else g.clearRect(q.x,q.y,q.w,q.h);
+var a=Math.PI*(.5-.5*Math.cos(Math.PI*p)),k=Math.abs(Math.cos(a)),face=a<1.5707963?old:nu;
+if(face&&k>.01){var h=q.h*k,y=q.y+(q.h-h)/2;g.drawImage(face,q.x,q.y,q.w,q.h,q.x,y,q.w,h);g.fillStyle="rgba(0,0,0,"+(.07*(1-k)).toFixed(3)+")";g.fillRect(q.x,y,q.w,h);g.globalAlpha=Math.min(1,p*6,(1-p)*6);g.strokeStyle=ln;g.strokeRect(q.x+.5,y+.5,q.w-1,Math.max(h-1,0));g.globalAlpha=1}}}
+function tick(now){
+if(dead)return;
+if(t0<0)t0=now;
+var t=now-t0;
+try{paint(t>=end?end+1:t)}catch(x){kill();return}
+if(t<end){raf=requestAnimationFrame(tick);return}
+if(nu){cv.style.pointerEvents="none";cv.style.transition="opacity "+FADE+"ms ease";cv.style.opacity="0";fade=setTimeout(kill,FADE+80)}else kill()}
+raf=requestAnimationFrame(tick)
+}catch(x){kill()}}
+}
+setTimeout(warm,1200);
+return {begin:begin,run:run,warm:warm}})();
 function flipWave(dir){
 try{
 if(!window.matchMedia||window.matchMedia("(prefers-reduced-motion: reduce)").matches)return;
@@ -598,7 +752,7 @@ $("#f").onsubmit=async function(ev){ev.preventDefault();var E=$("#e"),em=$("#em"
 if(mode==="up"&&!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)){E.textContent="Enter a valid email address.";return}
 if(mode==="in"&&!em){E.textContent="Enter your email or username.";return}
 if(!pw){E.textContent="Enter your password.";return}
-var sbtn=$("#f button.btn");sbtn.disabled=true;
+var pre=TF.begin(),sbtn=$("#f button.btn");sbtn.disabled=true;
 try{
 if(mode==="up"){var dn=$("#dn").value.trim();
 if(dn.length<3||dn.length>5){$("#dn").classList.add("bad");E.textContent="Username must be 3 to 5 characters.";return}
@@ -606,7 +760,7 @@ if(pw.length<6){E.textContent="Password must be at least 6 characters.";return}
 var r=await api.signUp(dn,em,pw,sel);
 if(r.error){if(r.field==="dn")$("#dn").classList.add("bad");E.textContent=r.error;return}}
 else{var r2=await api.signIn(em,pw);if(r2.error){E.textContent=r2.error;return}}
-S.tab="feed";S.q="";appView();flipWave(1)
+await TF.run(pre,1,function(){S.tab="feed";S.q="";appView()})
 }catch(ex){E.textContent="Couldn't reach the server. Check your connection and try again."}
 finally{sbtn.disabled=false}}}
 draw()}
@@ -882,7 +1036,7 @@ var mew=$(".mew");if(S.shut){mew.classList.add("shut");S.shut=false}
 mew.onmouseleave=function(){mew.classList.remove("shut")};
 $(".me").onclick=function(e){e.stopPropagation();if(mew.classList.contains("open")){mew.classList.remove("open");mew.classList.add("shut")}else{mew.classList.remove("shut");mew.classList.add("open")}};
 document.querySelectorAll("[data-tab]").forEach(function(b){b.onclick=function(){S.tab=b.dataset.tab;S.q="";S.stack=[];S.shut=keepShut();appView()}});
-$("#so").onclick=async function(){await api.signOut();S.tab="feed";S.q="";authView();flipWave(-1)};
+$("#so").onclick=async function(){var pre=TF.begin(true);await api.signOut();await TF.run(pre,-1,function(){S.tab="feed";S.q="";authView()})};
 wirePop($("#nb"),$("#np"));
 $("#nb").addEventListener("click",function(){var a2=me();if(a2&&a2.notes&&a2.notes.some(function(n){return !n.read})){a2.notes.forEach(function(n){n.read=true});api.markRead();var dt=this.querySelector(".dot");if(dt)dt.remove()}});wirePop($("#mb"),$("#mp"));
 $("#mb").addEventListener("click",function(){var a3=me();if(a3&&a3.msgs&&a3.msgs.some(function(n){return !n.read})){a3.msgs.forEach(function(n){n.read=true});api.markMsgsRead();var d2=this.querySelector(".dot");if(d2)d2.remove()}});
