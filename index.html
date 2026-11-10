@@ -293,6 +293,27 @@ header.top h2{margin-right:10px}
 .orb svg{display:block;fill:var(--pc)}
 .orb.dk svg{fill:var(--ink)}
 @media (max-width:520px){.pav{--avs:64px;--is:22px}.orb svg{width:13px;height:13px}}
+button.orb{padding:0;font:inherit;color:var(--ink);cursor:pointer;transition:border-color .12s,color .12s}
+button.orb:hover,button.orb:focus-visible{border-color:var(--pop);color:var(--pop)}
+/* name over the picture; stats to its right; the mosaic stays on the far right */
+.pmain{flex:1;min-width:0;display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-areas:"nm nm" "pv st";column-gap:18px;row-gap:12px;align-items:center}
+.pmain .pnm{grid-area:nm;margin:0 0 8px;font-size:22px;font-weight:600;letter-spacing:-.01em;overflow-wrap:anywhere}
+.pmain .pav{grid-area:pv}
+.pmain .igm{grid-area:st}
+.pmain .igs{margin-bottom:6px}
+@media (max-width:520px){.pmain{column-gap:12px}}
+/* edit profile page */
+.dash .dsec{margin-bottom:12px}
+.dash .dsec h3{margin:0 0 10px;font-size:16px;font-weight:600}
+.dpic{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.dpic .av.big{width:72px;height:72px}
+.dline{display:flex;gap:8px;align-items:center}
+.dline input{flex:1;min-width:0}
+.dash .err{min-height:0;margin:6px 0 0}
+.dfoot{display:flex;justify-content:flex-end;margin-top:8px}
+.dash .plp{margin:0}
+.dacct{display:grid;grid-template-columns:max-content 1fr;gap:6px 18px;margin:0}
+.dacct dt{color:var(--mute)}.dacct dd{margin:0;overflow-wrap:anywhere}
 .prof.ig .av.big{width:88px;height:88px}
 .igm{flex:1;min-width:0}
 .igt{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:12px}
@@ -651,7 +672,7 @@ function saveMos(){store.set("ln_mosaic",S.mos)}
 async function loadMosaic(){try{var r=await sb.from("mosaic_tiles").select("user_id,pos,title,artist,type,art,tid");if(r.error)return false;var by={},m={};accts.forEach(function(a){by[a.id]=a.name});
 (r.data||[]).forEach(function(x){var n=by[x.user_id];if(!n||!(x.pos>=0&&x.pos<30))return;var k="u:"+n;(m[k]=m[k]||[])[x.pos]={title:x.title,artist:x.artist,type:x.type==="Album"?"Album":"Song",art:okArt(x.art)?x.art:"",tid:x.tid}});S.mos=m;return true}catch(e){return false}}
 function mimg(t){return t.art&&okArt(t.art)?'<img src="'+esc(t.art.replace(/\/\d+x\d+bb\./,"/100x100bb."))+'" alt="" loading="lazy" draggable="false">':'<span class="mi">'+esc(String(t.title).charAt(0).toUpperCase())+'</span>'}
-function mosaicHTML(n,own){if(!S.mosOK)return "";var t=mosOf(n);if(!own&&!t.some(Boolean))return "";
+function mosaicHTML(n,own){if(!S.mosOK)return "";var t=mosOf(n);
 var plus='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',h='<div class="mos'+(own?' own':'')+'" role="group" aria-label="'+(own?'Your mosaic (drag a tile to move it)':esc(n)+'’s mosaic')+'">';
 for(var i=0;i<30;i++){var it=t[i];
 if(it){var hu=hue(it.title+it.artist);h+='<div class="mt on" data-mi="'+i+'"><button type="button" class="mto" data-mo="'+i+'" data-mu="'+esc(n)+'" style="background:linear-gradient(135deg,hsl('+hu+',70%,50%),hsl('+((hu+60)%360)+',75%,38%))" title="'+esc(it.title)+' · '+esc(it.artist)+'" aria-label="'+esc(it.title)+' by '+esc(it.artist)+'">'+mimg(it)+'</button>'+(own?'<button type="button" class="mtx" data-mx="'+i+'" aria-label="Remove '+esc(it.title)+' from your mosaic" title="Remove">×</button>':'')+'</div>'}
@@ -736,10 +757,23 @@ function sync(){var full=sel.length>=4;[].forEach.call(bs,function(x){x.classLis
 [].forEach.call(bs,function(b){b.onclick=function(){var id=b.dataset.p,i=sel.indexOf(id);
 if(i<0&&sel.length>=4){if(hint){hint.textContent="You can pick up to four. Tap one you've picked to swap it out.";hint.classList.add("warn")}return}
 if(i>-1)sel.splice(i,1);else sel.push(id);b.setAttribute("aria-pressed",String(i<0));sync()}});sync()}
-function orbitHTML(ids){ids=validPlats(ids);var n=ids.length;if(!n)return "";
-return '<span class="orbit" role="group" aria-label="Listens on">'+ids.map(function(id,i){var p=PLATIDX[id],a=(i-(n-1)/2)*30*Math.PI/180;
-return '<span class="orb'+(p.k?" "+p.k:"")+'" style="--pc:'+p.c+';--x:'+Math.cos(a).toFixed(4)+';--y:'+Math.sin(a).toFixed(4)+'" role="img" aria-label="'+p.n+'" title="'+p.n+'">'+plLogo(id,15)+'</span>'}).join("")+'</span>'}
-function pavHTML(a,ids){var o=orbitHTML(ids);return '<div class="pav'+(o?' has':'')+'">'+avatar(a,"big")+o+'</div>'}
+function orbitHTML(ids,own){ids=validPlats(ids);var n=ids.length+(own?1:0);if(!n)return "";var st=n>4?27:30;
+function pos(i){var a=(i-(n-1)/2)*st*Math.PI/180;return '--x:'+Math.cos(a).toFixed(4)+';--y:'+Math.sin(a).toFixed(4)}
+var h=ids.map(function(id,i){var p=PLATIDX[id];return '<span class="orb'+(p.k?" "+p.k:"")+'" style="--pc:'+p.c+';'+pos(i)+'" role="img" aria-label="Listens on '+p.n+'" title="'+p.n+'">'+plLogo(id,15)+'</span>'}).join("");
+if(own)h+='<button type="button" class="orb ed" id="edprof" style="'+pos(n-1)+'" aria-label="Edit profile" title="Edit profile"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>';
+return '<span class="orbit">'+h+'</span>'}
+function pavHTML(a,ids,own){var o=orbitHTML(ids,own);return '<div class="pav'+(o?' has':'')+'">'+avatar(a,"big")+o+'</div>'}
+function editHTML(){var a=me()||{};
+return '<button type="button" class="linkbtn" data-tab="profile" style="margin-bottom:8px">← Back to My Mosaic</button><section class="page dash"><h2>Edit profile</h2>'+
+'<div class="card dsec"><h3>Profile picture</h3><div class="dpic">'+avatar(a,"big")+'<div class="row2"><button type="button" class="btn ghost sm" id="chg">Change picture</button>'+(a.pic?'<button type="button" class="btn ghost sm" id="rmp">Remove picture</button>':'')+'</div><input id="pic" type="file" accept="image/*" hidden></div></div>'+
+'<div class="card dsec"><h3>Username</h3><form id="dnf" class="dline" novalidate><input id="dnn" value="'+esc(S.user||"")+'" autocomplete="username" aria-label="Username" spellcheck="false" autocapitalize="none"><button class="btn sm" id="dns">Save</button></form><p class="err" id="dne" role="alert"></p></div>'+
+(S.platOK?'<div class="card dsec" id="dplat"><h3>Listening apps</h3>'+platPicker(S.plats)+'<p class="err" id="dpe" role="alert"></p><div class="dfoot"><button type="button" class="btn sm" id="dps">Save listening apps</button></div></div>':'')+
+'<div class="card dsec"><h3>Account</h3><dl class="dacct"><dt>Email</dt><dd>'+esc(a.email||S.email||"")+'</dd>'+(since(a)?'<dt>Joined</dt><dd>'+since(a)+'</dd>':'')+'</dl></div></section>'}
+function wireEdit(){var f=$("#dnf");if(f)f.onsubmit=function(e){e.preventDefault();var v=$("#dnn").value.trim(),E=$("#dne"),b=$("#dns");E.textContent="";
+if(!v){E.textContent="Choose a username.";return}if(v.length>200){E.textContent="That username is too long.";return}if(v===S.user){E.textContent="That's already your username.";return}
+b.disabled=true;api.setName(v).then(function(r){b.disabled=false;if(r&&r.error){E.textContent=r.error;return}toast("Username saved");appView()}).catch(function(){b.disabled=false;E.textContent="Couldn't save. Check your connection and try again."})};
+var ps=$("#dps");if(ps){var sel=S.plats.slice();wirePlatPicker($("#dplat"),sel);ps.onclick=function(){var E=$("#dpe");E.textContent="";ps.disabled=true;
+api.setPlats(sel).then(function(r){ps.disabled=false;if(r&&r.error){E.textContent="Couldn't save. Check your connection and try again.";return}toast("Listening apps saved");appView()}).catch(function(){ps.disabled=false;E.textContent="Couldn't save. Check your connection and try again."})}}}
 function platRow(){if(!S.platOK)return "";return '<div class="prow"><button type="button" class="linkbtn" id="edpl">'+(S.plats.length?"Edit listening apps":"Choose where you listen")+'</button></div>'}
 function openPlatDlg(){var d=$("#dlg"),sel=S.plats.slice();d.className="plpd";
 d.innerHTML='<form method="dialog" id="pdf">'+platPicker(sel)+'<p class="err" id="pe" role="alert"></p><div style="display:flex;gap:10px;justify-content:flex-end;margin-top:12px"><button type="button" class="btn ghost" id="pcx">Cancel</button><button class="btn" id="psv" value="x">Save</button></div></form>';
@@ -1011,10 +1045,12 @@ function uname(n){return acct(n)?'<button type="button" class="ulink" data-u="'+
 function toast(t){var e=document.createElement("div");e.className="toast";e.setAttribute("role","status");e.textContent=t;document.body.appendChild(e);setTimeout(function(){e.remove()},7000)}
 var CAR='<svg class="car" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>';
 function ddRows(list){return list.map(function(n){return '<button type="button" class="fr" role="menuitem" data-u="'+esc(n)+'" data-fr="'+esc(n)+'">'+avatar(acct(n),"xs")+'<span class="frn">'+esc(n)+'</span></button>'}).join("")}
-function ddHTML(k,n,list){var w=k==="fg"?"following":(n===1?"follower":"followers"),t='<b>'+n+'</b> '+w;
+function ddHTML(k,n,list,cf){var w=k==="fg"?"following":(n===1?"follower":"followers"),t='<b>'+n+'</b> '+w;
 if(!list||!list.length)return t;
-return '<span class="fdd '+k+'" data-k="'+k+'"><button type="button" class="fddb" aria-haspopup="true" aria-expanded="false">'+(k==="fl"?CAR+'<span>'+t+'</span>':'<span>'+t+'</span>'+CAR)+'</button><span class="fddw" hidden><span class="fddm" role="menu">'+ddRows(list)+'</span><span class="fcard" hidden></span></span></span>'}
-function igStats(rv,fg,fgl,fl,fll,plus){return '<div class="igs"><span><b>'+rv+'</b> '+(rv===1?"review":"reviews")+'</span><span class="ff'+(fgl&&fgl.length&&fll&&fll.length?' pair':'')+'"><span class="fgs">'+ddHTML("fg",fg,fgl)+'</span><span class="fls">'+ddHTML("fl",fl,fll)+(plus||"")+'</span></span></div>'}
+return '<span class="fdd '+k+'" data-k="'+k+'"><button type="button" class="fddb" aria-haspopup="true" aria-expanded="false">'+(cf?CAR+'<span>'+t+'</span>':'<span>'+t+'</span>'+CAR)+'</button><span class="fddw" hidden><span class="fddm" role="menu">'+ddRows(list)+'</span><span class="fcard" hidden></span></span></span>'}
+function igStats(n,a,plus){var rs=S.reviews.filter(function(r){return r.user===n}),rv=rs.length,avg=rv?rs.reduce(function(x,r){return x+rnum(r.rating)},0)/rv:0,lk=rs.reduce(function(x,r){return x+(S.likes[r.id]||[]).length},0),fgl=((a&&a.following)||[]).filter(acct),fll=followersOf(n);
+return '<div class="igs"><span><b>'+rv+'</b> '+(rv===1?"review":"reviews")+'</span><span><b>'+(rv?avg.toFixed(1):"–")+'</b> avg rating</span></div>'+
+'<div class="igs"><span><b>'+lk+'</b> '+(lk===1?"like":"likes")+'</span><span class="ff'+(fgl.length&&fll.length?' pair':'')+'"><span class="fls">'+ddHTML("fl",fll.length,fll)+'</span><span class="fgs">'+ddHTML("fg",fgl.length,fgl,1)+'</span></span>'+(plus||"")+'</div>'}
 function limits(){var a=$("#app").getBoundingClientRect();return {l:Math.max(0,a.left),r:Math.min(window.innerWidth,a.right)}}
 function closeFdd(){[].forEach.call(document.querySelectorAll(".fdd.open"),function(d){d.classList.remove("open");var w=d.querySelector(".fddw"),b=d.querySelector(".fddb"),c=d.querySelector(".fcard");if(w)w.hidden=true;if(b)b.setAttribute("aria-expanded","false");if(c)c.hidden=true})}
 function wireFollowing(){[].forEach.call(document.querySelectorAll(".fdd"),wireDd)}
@@ -1232,7 +1268,7 @@ three=h+'<rect x="3" y="4" width="5" height="7" rx="1"/><rect x="9.5" y="4" widt
 bs=[[2,"Two reviews",two],[3,"Three reviews",three]];
 return '<div class="seg'+(S.cols===3?' s3':'')+'" role="group" aria-label="Reviews per row">'+bs.map(function(b){var t=b[1]+' per row';return '<button type="button" data-cols="'+b[0]+'" aria-pressed="'+(S.cols===b[0])+'" aria-label="'+t+'" title="'+t+'">'+b[2]+'</button>'}).join("")+'</div>'}
 function appView(){
-var a=me(),nm=esc(S.user||""),prof=S.tab==="profile",mcur=prof||S.tab==="likes"||S.tab==="account"||S.tab==="later";
+var a=me(),nm=esc(S.user||""),prof=S.tab==="profile",mcur=prof||S.tab==="likes"||S.tab==="account"||S.tab==="later"||S.tab==="editp";
 var cnt=S.reviews.filter(function(r){return r.user===S.user}).length;
 var notes=(a&&a.notes)||[],unread=notes.filter(function(n){return !n.read}).length;
 var msgs=(a&&a.msgs)||[],munread=msgs.filter(function(n){return !n.read}).length;
@@ -1246,20 +1282,21 @@ var chat=ic+'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2
 var body;
 if(S.tab==="review"){body='<section class="page"><h2>Write a review</h2><div class="card" id="rvhost"></div></section>'}
 else if(S.tab==="user"&&acct(S.view)){var vu=S.view,va=acct(vu),vc=S.reviews.filter(function(r){return r.user===vu}).length;
-body='<button type="button" class="linkbtn" data-tab="feed" style="margin-bottom:8px">Back to Recommended</button><section class="prof ig">'+pavHTML(va,va.plats||[])+'<div class="igm"><div class="igt"><h2>'+esc(vu)+'</h2></div>'+igStats(vc,(va.following||[]).filter(acct).length,(va.following||[]).filter(acct),nFollowers(vu),followersOf(vu),vu!==S.user?plusBtn(vu):'')+est(va)+'</div>'+mosaicHTML(vu,false)+'</section><div class="list cols'+S.cols+'" id="list">'+listHTML()+'</div>'}
+body='<button type="button" class="linkbtn" data-tab="feed" style="margin-bottom:8px">Back to Recommended</button><section class="prof ig"><div class="pmain"><h2 class="pnm">'+esc(vu)+'</h2>'+pavHTML(va,va.plats||[])+'<div class="igm">'+igStats(vu,va,vu!==S.user?plusBtn(vu):'')+est(va)+'</div></div>'+mosaicHTML(vu,false)+'</section><div class="list cols'+S.cols+'" id="list">'+listHTML()+'</div>'}
 else if(S.tab==="search"){var stabs=[["songs","Songs"],["albums","Albums"],["profiles","Profiles"],["artists","Artists"]].map(function(t){return '<button type="button" class="stab" role="tab" data-st="'+t[0]+'" aria-selected="'+((S.stab||"songs")===t[0])+'">'+t[1]+'</button>'}).join("");
 body='<section class="page"><h2>Results for “'+esc(S.sq||"")+'”</h2><div class="stabs" role="tablist">'+stabs+'</div><div class="list" id="sres">'+resultsHTML()+'</div></section>'}
 else if(S.tab==="song"&&S.song){body=songView()}
 else if(S.tab==="later"&&S.laterOK){body=laterView()}
 else if(S.tab==="likes"){body='<section class="page"><h2>My likes and comments</h2><div class="empty">Reviews you like or comment on will show up here.</div></section>'}
+else if(S.tab==="editp"&&S.user){body=editHTML()}
 else if(S.tab==="account"){body='<section class="page"><h2>Privacy and account</h2><dl><dt>Username</dt><dd>'+nm+'</dd><dt>Email</dt><dd>'+esc(a&&a.email||"")+'</dd>'+(since(a)?'<dt>Account established</dt><dd>'+since(a)+'</dd>':'')+'<dt>Your data</dt><dd>'+(REMOTE?'Your profile and reviews are saved to your Mosaic account.':'Accounts and reviews are saved in this browser only.')+'</dd></dl></section>'}
-else{body=(prof?'<section class="prof ig">'+pavHTML(a,S.platOK?S.plats:[])+'<div class="igm"><div class="igt"><h2>'+nm+'</h2></div>'+igStats(cnt,(a&&a.following||[]).filter(acct).length,(a&&a.following||[]).filter(acct),nFollowers(S.user),followersOf(S.user),"")+est(a)+platRow()+'<div class="row2" style="margin-top:10px"><button class="btn ghost sm" id="chg">Change picture</button>'+(a&&a.pic?'<button class="btn ghost sm" id="rmp">Remove picture</button>':'')+'</div><input id="pic" type="file" accept="image/*" hidden></div>'+mosaicHTML(S.user,true)+'</section>':'')+
+else{body=(prof?'<section class="prof ig"><div class="pmain"><h2 class="pnm">'+nm+'</h2>'+pavHTML(a,S.platOK?S.plats:[],1)+'<div class="igm">'+igStats(S.user,a,"")+est(a)+'</div></div>'+mosaicHTML(S.user,true)+'</section>':'')+
 (S.tab==="feed"&&S.q?'<div class="chips"><span class="meta">Showing reviews for</span><button type="button" class="chip" id="clq">'+esc(S.q)+' ×</button></div>':'')+'<div class="tools"><div class="tl"><button class="btn" id="add">Add review</button>'+(S.tab==="feed"?'<select id="sc" aria-label="Show"><option value="all">Everyone</option><option value="fol">People I follow</option></select>':'')+'<select id="t" aria-label="Type"><option>All</option><option>Album</option><option>Song</option></select><select id="s" aria-label="Sort"><option value="new">Newest</option><option value="top">Highest rated</option></select></div>'+layoutSwitch()+'</div>'+
 '<div class="list cols'+S.cols+'" id="list">'+listHTML()+'</div>'}
 $("#app").innerHTML='<div class="wrap"><header class="top"><h2><button type="button" class="wm" data-tab="feed" aria-label="Mosaic home">Mosaic</button></h2><nav><button data-tab="feed" aria-current="'+(S.tab==="feed")+'">Recommended</button><button data-tab="review" aria-current="'+(S.tab==="review")+'">Post</button></nav>'+
 '<div class="sw'+(S.sv?" open":"")+'"><button class="ib" id="sb" aria-label="Search" type="button">'+mag+'</button><input id="q" type="search" placeholder="Search songs to review" aria-label="Search songs" autocomplete="off" readonly value="'+esc(S.sv||"")+'"><div class="sug" id="sug" hidden></div></div>'+
 '<div class="right"><div class="mew"><button class="me" aria-haspopup="menu" aria-current="'+mcur+'" aria-label="Your account menu">'+avatar(a)+'<span class="nm">'+nm+'</span></button>'+
-'<div class="menu"><div class="box" role="menu"><button role="menuitem" data-tab="profile">My Mosaic</button>'+(S.laterOK?'<button role="menuitem" data-tab="later">Listen later'+(S.later.length?' <span class="meta">'+S.later.length+'</span>':'')+'</button>':'')+'<button role="menuitem" data-tab="likes">My likes and comments</button><button role="menuitem" data-tab="account">Privacy and account</button><hr><button role="menuitem" id="so">Sign out</button></div></div></div>'+
+'<div class="menu"><div class="box" role="menu"><button role="menuitem" data-tab="profile">My Mosaic</button><button role="menuitem" data-tab="editp">Edit profile</button>'+(S.laterOK?'<button role="menuitem" data-tab="later">Listen later'+(S.later.length?' <span class="meta">'+S.later.length+'</span>':'')+'</button>':'')+'<button role="menuitem" data-tab="likes">My likes and comments</button><button role="menuitem" data-tab="account">Privacy and account</button><hr><button role="menuitem" id="so">Sign out</button></div></div></div>'+
 '<div class="ibw"><button class="ib" id="nb" aria-label="Notifications" aria-expanded="false">'+bell+(unread?'<i class="dot"></i>':'')+'</button><div class="pop" id="np" hidden><h3>Notifications</h3>'+notesHTML+'</div></div>'+
 '<div class="ibw"><button class="ib" id="mb" aria-label="Messages" aria-expanded="false">'+chat+(munread?'<i class="dot"></i>':'')+'</button><div class="pop" id="mp" hidden><h3>Messages</h3>'+msgsHTML+'</div></div></div></header>'+body+'</div>';
 var mew=$(".mew");if(S.shut){mew.classList.add("shut");S.shut=false}
@@ -1313,6 +1350,7 @@ document.querySelectorAll("[data-cols]").forEach(function(b){b.onclick=function(
 document.querySelectorAll("[data-cols]").forEach(function(x){x.setAttribute("aria-pressed",String(x.dataset.cols===String(n)))});var sg=b.parentNode;if(sg&&sg.classList)sg.classList.toggle("s3",n===3)}});
 bind()}
 if(S.tab==="review"){var pre=S.pre;S.pre=null;openForm(null,$("#rvhost"),pre)}
+if(S.tab==="editp")wireEdit();
 var chg=$("#chg");if(chg){chg.onclick=function(){$("#pic").click()};
 $("#pic").onchange=function(e){var f=e.target.files[0];if(!f)return;var rd=new FileReader();rd.onload=function(){var im=new Image();im.onload=function(){var c=document.createElement("canvas");c.width=c.height=160;var x=c.getContext("2d"),m=Math.min(im.width,im.height);x.drawImage(im,(im.width-m)/2,(im.height-m)/2,m,m,0,0,160,160);api.setPic(c.toDataURL("image/jpeg",0.85)).then(function(){appView()})};im.src=rd.result};rd.readAsDataURL(f)}}
 var rm=$("#rmp");if(rm)rm.onclick=function(){api.setPic(null).then(function(){appView()})};
@@ -1322,6 +1360,7 @@ bind()}
 function bind(){
 document.querySelectorAll("[data-setplat]").forEach(function(b){b.onclick=openPlatDlg});
 var edp=$("#edpl");if(edp)edp.onclick=openPlatDlg;
+var epr=$("#edprof");if(epr)epr.onclick=function(){S.tab="editp";S.stack=[];S.shut=keepShut();appView();try{window.scrollTo(0,0)}catch(e){}};
 document.querySelectorAll("[data-del]").forEach(function(b){b.onclick=function(){
 if(!confirm("Delete this review?"))return;api.delReview(b.dataset.del).then(function(){appView()})}});
 document.querySelectorAll("[data-edit]").forEach(function(b){b.onclick=function(){
@@ -1480,6 +1519,7 @@ async signOut(){S.user=null;S.later=[];S.plats=[];store.set("ln_user",null)},
 async saveReview(o,r){if(r){Object.assign(r,o)}else{S.reviews.push(Object.assign({id:Date.now(),user:S.user,date:new Date().toISOString().slice(0,10)},o))}save();return {}},
 async delReview(id){S.reviews=S.reviews.filter(function(r){return r.id!=id});save()},
 async setPic(url){var ac=me();if(ac){if(url)ac.pic=url;else delete ac.pic;store.set("ln_accounts",accts)}},
+async setName(n){return {error:"Changing your username isn't available in this preview."}},
 async setPlats(list){var v=validPlats(list),ac=me();if(ac){ac.plats=v;store.set("ln_accounts",accts)}S.plats=v;return {}},
 async toggleFol(n){toggleFol(n)},
 async setTile(pos,it){var k="u:"+S.user,t=S.mos[k]=Array.isArray(S.mos[k])?S.mos[k]:[];if(t[pos])return {error:"That tile's already filled. Pick another one."};if(mosHas(it))return {error:"That's already in your mosaic."};t[pos]=it;saveMos();return {}},
@@ -1542,6 +1582,10 @@ if(res.error)return {error:res.error.code==="23505"||/already reviewed/i.test(re
 if(whole)toast("Saved as "+whole+"/5. The database only accepts whole ratings until its update is run.");return {}},
 async delReview(id){await sb.from("reviews").delete().eq("id",id);await loadRemote()},
 async setPic(url){await sb.from("profiles").update({pic:url||null}).eq("id",S.uid);await loadRemote()},
+async setName(n){if(!S.uid)return {error:"x"};var old=S.user,r=await sb.from("profiles").update({username:n}).eq("id",S.uid);
+if(r.error)return {error:r.error.code==="23505"?"That username is taken. Try another.":"Couldn't save: "+r.error.message};
+["ln_recent","ln_mrecent"].forEach(function(k){var o=store.get(k,{});if(o&&o["u:"+old]){o["u:"+n]=o["u:"+old];delete o["u:"+old];store.set(k,o)}});
+await loadRemote();return {}},
 async setPlats(list){if(!S.uid)return {error:"x"};var v=validPlats(list),r=await sb.from("profiles").update({platforms:v}).eq("id",S.uid);if(r.error)return {error:r.error.message};S.plats=v;return {}},
 async setTile(pos,it){if(!S.uid)return {error:"x"};var r=await sb.from("mosaic_tiles").insert({pos:pos,title:it.title,artist:it.artist,type:it.type,art:it.art||null,tid:it.tid});
 if(r.error){S.mosOK=await loadMosaic();return {error:r.error.code==="23505"?(/one_each/.test(r.error.message||"")?"That's already in your mosaic.":"That tile's already filled. Pick another one."):"Couldn't save: "+r.error.message}}
