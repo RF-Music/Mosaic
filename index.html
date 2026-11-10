@@ -465,14 +465,19 @@ html.mdragging,html.mdragging *{cursor:grabbing!important}
 .seg{display:none}
 }
 /* rating row under the artwork: picture | stars | number, picture and number the same width so the middle star sits on the artwork's centre line */
-.rrate.wav{--rs:26px;justify-content:space-between;gap:8px}
+.rrate.wav{--rs:26px;container-type:inline-size;justify-content:space-between;gap:8px}
 .rrate.wav .stars{max-width:150px}
-.rrate.wav .rv{width:var(--rs);text-align:center;font-size:14px}
+.rrate.wav .rv{width:var(--rs);text-align:right;font-size:15px}
 .cols3 .rrate.wav{--rs:30px}
-.cols3 .rrate.wav .rv{font-size:16px}
-.cols2 .rrate.wav .rv{font-size:14px}
-.rav{flex:none;display:block;width:var(--rs);height:var(--rs);padding:0;border:0;background:none;border-radius:50%;line-height:0;cursor:pointer}
-.rav .av{width:var(--rs);height:var(--rs)}
+.cols3 .rrate.wav .rv{font-size:18px}
+.cols2 .rrate.wav .rv{font-size:15px}
+/* the picture is as tall as the stars, so picture, stars and number sit in one even bar */
+.rav{position:relative;flex:none;display:flex;align-items:center;width:var(--rs);padding:0;border:0;background:none;line-height:0;cursor:pointer}
+.rav .av{--d:max(14px,calc(min(150px, 100cqw - 2 * var(--rs) - 16px) * .14));width:var(--d);height:var(--d)}
+@media (max-width:520px){.cols2 .rrate.wav,.cols3 .rrate.wav{--rs:22px}.cols2 .rrate.wav .rv,.cols3 .rrate.wav .rv{font-size:13px}}
+/* reviewer's name appears under their picture on hover */
+.avbtn{position:relative}
+.rav[data-name]:hover::after,.rav[data-name]:focus-visible::after,.avbtn[data-name]:hover::after,.avbtn[data-name]:focus-visible::after{content:attr(data-name);position:absolute;left:0;top:calc(100% + 5px);z-index:20;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:3px 8px;border-radius:6px;background:var(--ink);color:var(--surface);font:500 12px/1.3 "Montserrat",sans-serif;letter-spacing:0;pointer-events:none;box-shadow:0 4px 12px rgba(0,0,0,.25)}
 .rbx{display:none}
 .plv{display:none}
 /* two per row (wide screens): artwork half the card, platforms hanging down the top-right, the review in focus, actions in the bottom-right */
@@ -486,9 +491,7 @@ html.mdragging,html.mdragging *{cursor:grabbing!important}
 .cols2 .rev:not(.nocv) .plv{display:flex;flex-direction:column;align-items:center;gap:2px;position:absolute;top:-5px;right:-5px;margin:0;z-index:3}
 .cols2 .rev:not(.nocv) .rc>.via,.cols2 .rev:not(.nocv) .rc>h3,.cols2 .rev:not(.nocv) .rc>.rar,.cols2 .rev:not(.nocv) .rc>.rbx{padding-right:30px}
 .cols2 .rev:not(.nocv) .rc>h3{font-size:16px;line-height:1.25}
-.cols2 .rev:not(.nocv) .rc>p{margin:auto 0;padding:12px 30px 12px 0;font-size:18px;font-weight:500;line-height:1.3;letter-spacing:-.01em;color:var(--ink);overflow-wrap:anywhere}
-.cols2 .rev:not(.nocv) .rc>p::before{content:"“"}
-.cols2 .rev:not(.nocv) .rc>p::after{content:"”"}
+.cols2 .rev:not(.nocv) .rc>p{margin:auto 0;padding:14px 30px 14px 0;overflow-wrap:anywhere}
 .cols2 .rev:not(.nocv) .rc>.acts{margin:auto -5px 0 0;padding-top:6px;justify-content:flex-end;gap:1px}
 .cols2 .rev:not(.nocv) .rc>p~.acts{margin-top:0}
 .cols2 .rev:not(.nocv) .act{padding:5px}
@@ -1063,10 +1066,10 @@ if(S.q&&S.tab==="feed"){var q=S.q.toLowerCase();l=l.filter(function(r){return (r
 l.sort(function(a,b){return S.sort==="top"?b.rating-a.rating||b.id-a.id:b.id-a.id});
 return l}
 
-function rateBox(r,av){var v=rnum(r.rating);return '<div class="rrate'+(av?' wav':'')+'">'+(av?'<button type="button" class="rav" data-u="'+esc(r.user)+'" aria-label="'+esc(r.user)+'\'s profile" title="'+esc(r.user)+'">'+avatar(acct(r.user))+'</button>':'')+'<span class="stars" style="--p:'+starPct(v)+'%" role="img" aria-label="'+v.toFixed(1)+' out of 5"></span><b class="rv">'+v.toFixed(1)+'</b></div>'}
+function rateBox(r,av){var v=rnum(r.rating);return '<div class="rrate'+(av?' wav':'')+'">'+(av?'<button type="button" class="rav" data-u="'+esc(r.user)+'" aria-label="'+esc(r.user)+'\'s profile" data-name="'+esc(r.user)+'">'+avatar(acct(r.user))+'</button>':'')+'<span class="stars" style="--p:'+starPct(v)+'%" role="img" aria-label="'+v.toFixed(1)+' out of 5"></span><b class="rv">'+v.toFixed(1)+'</b></div>'}
 function glowHTML(r){var h=hue(r.title+r.artist),bg=' style="background:linear-gradient(135deg,hsl('+h+',70%,48%),hsl('+((h+60)%360)+',75%,36%))"',im=r.art&&okArt(r.art)?'<img src="'+esc(r.art)+'" alt="">':'';return '<span class="glow" aria-hidden="true"><i class="gw"'+bg+'>'+im+'</i><i class="gh"'+bg+'>'+im+'</i></span>'}
-function byLine(r,k,na){var u=na?'':'<button type="button" class="avbtn" data-u="'+esc(r.user)+'" aria-label="'+esc(r.user)+'\'s profile">'+avatar(acct(r.user),"xs")+'</button>',n='<span class="rbn">'+uname(r.user)+'</span>';
-return k==="l"?'<div class="meta rby rbl'+(na?' na':'')+'">'+u+n+'<span class="rbd">'+r.date+'</span></div>':'<div class="meta rby rbf">'+u+n+'<span class="rbc">, </span><span class="rbd">'+r.date+'</span></div>'}
+function byLine(r,k,na){var u=na?'':'<button type="button" class="avbtn" data-u="'+esc(r.user)+'" aria-label="'+esc(r.user)+'\'s profile" data-name="'+esc(r.user)+'">'+avatar(acct(r.user),"xs")+'</button>';
+return k==="l"?'<div class="meta rby rbl'+(na?' na':'')+'">'+u+'<span class="rbd">'+esc(r.date)+'</span></div>':'<div class="meta rby rbf">'+u+'<span class="rbd">'+esc(r.date)+'</span></div>'}
 function plgHTML(r,n,cls){n=n||2;if(!(S.platOK&&S.plats.length))return "";var ids=S.plats,h='<span class="plg'+(cls?' '+cls:'')+'">'+plLinks(r,19,"act",n);
 if(ids.length>n){var q=encodeURIComponent((String(r.title)+" "+String(r.artist)).slice(0,160)),k=ids.length-n;
 h+='<span class="plm"><button type="button" class="plmb" aria-haspopup="true" aria-expanded="false" aria-label="Show '+k+' more listening app'+(k===1?"":"s")+'" title="More apps">'+CAR+'</button><span class="plpop" role="menu" hidden>'+ids.slice(n).map(function(id){var p=PLATIDX[id];return '<a class="plr'+(p.k?" "+p.k:"")+'" style="--pc:'+p.c+'" role="menuitem" href="'+esc(p.u(q))+'" target="_blank" rel="noopener noreferrer" aria-label="Listen on '+p.n+' (opens in a new tab)">'+plLogo(id,18)+'<span>'+p.n+'</span></a>'}).join("")+'</span></span>'}
@@ -1080,7 +1083,7 @@ var l=filtered();
 if(!l.length)return '<div class="empty">'+(S.tab==="profile"?"You haven't reviewed anything yet. Add your first album or song.":(S.tab==="user"?"No reviews from this person yet.":(S.q?"No reviews match that search.":(S.scope==="fol"?"Reviews from people you follow will show up here.":"No reviews yet. Add the first one."))))+'</div>';
 var nc=S.tab==="song";
 return l.map(function(r){var rb=rateBox(r,!nc);return '<article class="rev'+(nc?' nocv':'')+'" style="--h:'+hue(r.title+r.artist)+'">'+glowHTML(r)+(nc?'':'<div class="rl">'+covBtn(r)+rb+byLine(r,"l",1)+'</div>')+'<div class="rc">'+(nc?'':plgHTML(r,4,"plv"))+(r.via?'<div class="meta via">↻ '+esc(r.via)+' reposted</div>':'')+
-(nc?rb:'<h3>'+esc(r.title)+'</h3><div class="meta rar">'+esc(r.artist)+'<span class="tag '+(r.type==="Album"?"alb":"sng")+'">'+esc(r.type)+'</span>'+(r.type==="Album"&&r.tracks&&r.tracks.length?tddHTML(r):'')+'</div><div class="meta rbx">'+uname(r.user)+' · '+esc(r.date)+'</div>')+
+(nc?rb:'<h3>'+esc(r.title)+'</h3><div class="meta rar">'+esc(r.artist)+''+(r.type==="Album"?'<span class="tag alb">Album</span>':'')+(r.type==="Album"&&r.tracks&&r.tracks.length?tddHTML(r):'')+'</div><div class="meta rbx">'+esc(r.date)+'</div>')+
 (r.text?'<p>'+esc(r.text)+'</p>':'')+
 (r.user===S.user&&!r.via?'<div class="row"><button class="btn ghost sm" data-edit="'+r.id+'">Edit</button><button class="btn ghost sm" data-del="'+r.id+'">Delete</button></div>':'')+actsHTML(r)+footHTML(r,!nc)+'</div></article>'}).join("")}
 
