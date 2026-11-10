@@ -528,6 +528,37 @@ html.mdragging,html.mdragging *{cursor:grabbing!important}
 /* sign in / sign out: plain tiles flip away in a wave and the next screen shows through */
 #wave{position:fixed;inset:0;z-index:300;display:grid;pointer-events:none;overflow:hidden;contain:strict}
 #wave i{display:block;background:var(--surface);box-shadow:inset 0 0 0 .5px var(--line);animation:wv .3s ease-in var(--d,0ms) both}
+/* the M transition: every tile turns at once, each its own way; the tiles forming a big M wait a second, darkened and lifted */
+#mflip{position:fixed;left:0;top:0;z-index:301;pointer-events:none;contain:strict}
+#mflip .mf{position:absolute;transform-style:preserve-3d;animation-duration:.7s;animation-timing-function:cubic-bezier(.5,0,.3,1);animation-delay:var(--t,0ms);animation-fill-mode:both}
+#mflip .mf.l{animation-name:mfl}
+#mflip .mf.r{animation-name:mfr}
+#mflip .mf.u{animation-name:mfu}
+#mflip .mf.d{animation-name:mfd}
+#mflip b{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background-repeat:no-repeat;background-size:var(--bw) var(--bh);background-position:var(--x) var(--y)}
+#mflip .f{background-image:var(--o)}
+#mflip .k{background-image:var(--n)}
+#mflip .h .k{transform:rotateY(180deg)}
+#mflip .v .k{transform:rotateX(180deg)}
+#mflip .m{z-index:2}
+#mflip .m .f{animation:mfs .35s ease .08s both}
+#mflip .m .f::after{content:"";position:absolute;inset:0;background:#000;opacity:0;animation:mft .35s ease .08s both}
+@keyframes mfs{from{box-shadow:0 0 0 rgba(0,0,0,0)}to{box-shadow:0 10px 24px rgba(0,0,0,.38)}}
+@keyframes mft{to{opacity:.2}}
+@keyframes mfl{from{transform:perspective(700px) rotateY(0)}to{transform:perspective(700px) rotateY(-180deg)}}
+@keyframes mfr{from{transform:perspective(700px) rotateY(0)}to{transform:perspective(700px) rotateY(180deg)}}
+@keyframes mfu{from{transform:perspective(700px) rotateX(0)}to{transform:perspective(700px) rotateX(180deg)}}
+@keyframes mfd{from{transform:perspective(700px) rotateX(0)}to{transform:perspective(700px) rotateX(-180deg)}}
+#wave.mw i{animation-duration:.5s;animation-timing-function:ease-in;animation-delay:var(--d,0ms);animation-fill-mode:both}
+#wave.mw i.wl{animation-name:wl}
+#wave.mw i.wr{animation-name:wr}
+#wave.mw i.wu{animation-name:wu}
+#wave.mw i.wd{animation-name:wd}
+#wave.mw i.wm{position:relative;z-index:1;box-shadow:inset 0 0 0 .5px var(--line),0 8px 20px rgba(0,0,0,.3)}
+@keyframes wl{0%{transform:perspective(500px) rotateY(0);visibility:visible}99%{visibility:visible}100%{transform:perspective(500px) rotateY(-90deg);visibility:hidden}}
+@keyframes wr{0%{transform:perspective(500px) rotateY(0);visibility:visible}99%{visibility:visible}100%{transform:perspective(500px) rotateY(90deg);visibility:hidden}}
+@keyframes wu{0%{transform:perspective(500px) rotateX(0);visibility:visible}99%{visibility:visible}100%{transform:perspective(500px) rotateX(90deg);visibility:hidden}}
+@keyframes wd{0%{transform:perspective(500px) rotateX(0);visibility:visible}99%{visibility:visible}100%{transform:perspective(500px) rotateX(-90deg);visibility:hidden}}
 @keyframes wv{0%{transform:perspective(500px) rotateX(0);visibility:visible}99%{visibility:visible}100%{transform:perspective(500px) rotateX(90deg);visibility:hidden}}
 @media (prefers-reduced-motion:reduce){#wave{display:none}}
 #tflip{position:fixed;left:0;top:0;z-index:300;display:block;touch-action:none}
@@ -924,11 +955,11 @@ async function run(pre,dir,swap){
 var old=null,e=null;
 try{if(pre&&pre.p)old=await Promise.race([pre.p,wait(800,null)])}catch(x){old=null}
 try{e=env()}catch(x){e=null}
-if(!old||!e||!can()||old.width!==Math.round(e.IW*e.s)||old.height!==Math.round(e.H*e.s)){swap();flipWave(dir);return}
+if(!old||!e||!can()||old.width!==Math.round(e.IW*e.s)||old.height!==Math.round(e.H*e.s)){swap();flipM();return}
 if(cur)cur.kill();
-var cv=document.createElement("canvas"),g=cv.getContext("2d"),dead=false,raf=0,safe=0,fade=0,nu=null,bh=null,w0=innerWidth,h0=innerHeight,job={kill:kill};
+var cv=document.createElement("canvas"),g=cv.getContext("2d"),dead=false,raf=0,safe=0,fade=0,nu=null,bh=null,ovl=null,w0=innerWidth,h0=innerHeight,job={kill:kill};
 cv.id="tflip";cv.width=old.width;cv.height=old.height;cv.setAttribute("aria-hidden","true");cv.style.width=e.IW+"px";cv.style.height=e.H+"px";
-function kill(){if(dead)return;dead=true;cancelAnimationFrame(raf);clearTimeout(safe);clearTimeout(fade);
+function kill(){if(dead)return;dead=true;if(ovl){ovl.k();ovl=null}cancelAnimationFrame(raf);clearTimeout(safe);clearTimeout(fade);
 window.removeEventListener("resize",onrz);document.removeEventListener("visibilitychange",onvis);
 if(cv.parentNode)cv.parentNode.removeChild(cv);cv.width=cv.height=1;old.width=old.height=1;if(nu)nu.width=nu.height=1;if(bh)bh.width=bh.height=1;if(cur===job)cur=null}
 function onrz(){if(Math.abs(innerWidth-w0)>2||Math.abs(innerHeight-h0)>120)kill()}
@@ -944,6 +975,8 @@ if(dead)return;
 nu=R[0];bh=R[1];
 if(nu&&(nu.width!==cv.width||nu.height!==cv.height))nu=null;
 if(bh&&(bh.width!==cv.width||bh.height!==cv.height))bh=null;
+if(nu){var mo=await mflip(old,nu,e).catch(nul);if(dead){if(mo)mo.k();return}
+if(mo){ovl=mo;cv.style.visibility="hidden";clearTimeout(safe);safe=setTimeout(kill,mo.ms);return}}
 var Wd=cv.width,Hd=cv.height,cols=Math.max(8,Math.min(40,Math.round(Math.sqrt(N*Wd/Hd)))),rows=Math.max(8,Math.round(N/cols)),T=[],mx=0,bg=env().bg,ln=(getComputedStyle(document.documentElement).getPropertyValue("--line")||"").trim()||"rgba(128,128,128,.4)",c,r;
 for(r=0;r<rows;r++)for(c=0;c<cols;c++){
 var x0=Math.round(c*Wd/cols),x1=Math.round((c+1)*Wd/cols),y0=Math.round(r*Hd/rows),y1=Math.round((r+1)*Hd/rows),
@@ -968,8 +1001,43 @@ if(nu){cv.style.pointerEvents="none";cv.style.transition="opacity "+FADE+"ms eas
 raf=requestAnimationFrame(tick)
 }catch(x){kill()}}
 }
+/* the M transition: the old and new pages as two pictures, one on each face of every tile */
+function blobOf(c){return new Promise(function(ok,no){try{c.toBlob(function(b){if(b)ok(b);else no(new Error("blob"))},"image/jpeg",.92)}catch(x){no(x)}})}
+function mflip(old,nu,e){
+return Promise.all([blobOf(old),blobOf(nu)]).then(function(B){var urls=B.map(function(b){return URL.createObjectURL(b)});
+function drop(){urls.forEach(function(u){try{URL.revokeObjectURL(u)}catch(x){}})}
+return Promise.all(urls.map(function(u){var im=new Image();im.src=u;return im.decode?im.decode():new Promise(function(ok,no){im.onload=ok;im.onerror=no})})).then(function(){
+var W=e.IW,H=e.H,G=mGrid(W,H),h="";
+G.t.forEach(function(q){h+='<i class="mf '+q.a+(q.m?' m':'')+'" style="left:'+q.x+'px;top:'+q.y+'px;width:'+q.w+'px;height:'+q.h+'px;--x:'+(-q.x)+'px;--y:'+(-q.y)+'px;--t:'+(q.m?MHOLD:0)+'ms"><b class="f"></b><b class="k"></b></i>'});
+var el=document.createElement("div");el.id="mflip";el.setAttribute("aria-hidden","true");
+el.style.cssText="width:"+W+"px;height:"+H+"px;--bw:"+W+"px;--bh:"+H+"px;--o:url("+urls[0]+");--n:url("+urls[1]+")";
+el.innerHTML=h;document.body.appendChild(el);
+return {ms:MHOLD+MFL+80,k:function(){if(el.parentNode)el.parentNode.removeChild(el);drop()}}
+},function(x){drop();throw x})})}
 setTimeout(warm,1200);
 return {begin:begin,run:run,warm:warm}})();
+var MHOLD=1000,MFL=700;
+/* the tile grid for the M transition, and which tiles make up the M (it fills most of the screen) */
+function mGrid(W,H){var tsz=Math.max(36,Math.min(W,H)/12),cols=Math.max(6,Math.round(W/tsz)),rows=Math.max(6,Math.round(H/tsz)),
+mh=H*.76,mw=Math.min(W*.86,mh*1.8);mh=Math.min(mh,mw/.62);var mx=(W-mw)/2,my=(H-mh)/2,
+P=[[0,0],[.21,0],[.5,.5],[.79,0],[1,0],[1,1],[.79,1],[.79,.36],[.5,.86],[.21,.36],[.21,1],[0,1]],D=["l","r","u","d"],T=[];
+function inM(x,y){var u=(x-mx)/mw,v=(y-my)/mh,c=false;if(u<0||u>1||v<0||v>1)return false;
+for(var i=0,j=P.length-1;i<P.length;j=i++){var a=P[i],b=P[j];if((a[1]>v)!==(b[1]>v)&&u<(b[0]-a[0])*(v-a[1])/(b[1]-a[1])+a[0])c=!c}return c}
+for(var r=0;r<rows;r++)for(var c=0;c<cols;c++){var x0=Math.round(c*W/cols),x1=Math.round((c+1)*W/cols),y0=Math.round(r*H/rows),y1=Math.round((r+1)*H/rows),d=D[Math.floor(Math.random()*4)];
+T.push({x:x0,y:y0,w:x1-x0,h:y1-y0,d:d,a:(d==="l"||d==="r"?"h ":"v ")+d,m:inM((x0+x1)/2,(y0+y1)/2)})}
+return {cols:cols,rows:rows,t:T}}
+/* the same transition with plain tiles, for browsers that can't take page pictures */
+function flipM(){
+try{
+if(!window.matchMedia||window.matchMedia("(prefers-reduced-motion: reduce)").matches)return;
+var old=document.getElementById("wave");if(old&&old.parentNode)old.parentNode.removeChild(old);
+var W=window.innerWidth||document.documentElement.clientWidth||900,H=window.innerHeight||document.documentElement.clientHeight||700,G=mGrid(W,H),h="";
+G.t.forEach(function(q){h+='<i class="w'+q.d+(q.m?' wm':'')+'" style="--d:'+(q.m?MHOLD:0)+'ms"></i>'});
+var w=document.createElement("div");w.id="wave";w.className="mw";w.setAttribute("aria-hidden","true");
+w.style.gridTemplateColumns="repeat("+G.cols+",1fr)";w.style.gridTemplateRows="repeat("+G.rows+",1fr)";w.innerHTML=h;
+setTimeout(function(){if(w.parentNode)w.parentNode.removeChild(w)},MHOLD+MFL+200);
+document.body.appendChild(w)
+}catch(e){}}
 function flipWave(dir){
 try{
 if(!window.matchMedia||window.matchMedia("(prefers-reduced-motion: reduce)").matches)return;
