@@ -117,7 +117,7 @@ nav button[aria-current="true"]{color:var(--ink);border-color:var(--pop)}
 .list{display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
 .rev{display:grid;grid-template-columns:72px 1fr;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px;box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 3px 10px rgba(0,0,0,.1)}
 .cover{width:72px;aspect-ratio:1;border-radius:6px;display:grid;place-items:end start;padding:6px;color:#fff;font:600 11px/1.1 "Montserrat",sans-serif;overflow:hidden;text-shadow:0 1px 4px rgba(0,0,0,.4);box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 2px 4px rgba(0,0,0,.25)}
-.rev h3{font-size:17px;font-weight:600}
+.rev h3{font-size:17px;font-weight:600;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;overflow:hidden;overflow-wrap:anywhere}
 .meta{color:var(--mute);font-size:13px}
 .stars{color:var(--star);letter-spacing:1px;font-size:15px}
 .rev p{margin:6px 0 0}
@@ -413,13 +413,13 @@ html.mdragging,html.mdragging *{cursor:grabbing!important}
 .rl .covbtn{display:block;width:100%;border-radius:6px}
 .rl .cover{width:100%;font-size:13px}
 /* the artwork's colours bleed out of the cover and into the tile: a tight halo hugging the cover, and a wider, fainter spill behind it */
-.glow{--cs:120px;--k:2.5;--oh:.7;--ow:.26;position:absolute;inset:0;border-radius:9px;overflow:hidden;pointer-events:none;container-type:inline-size}
+.glow{--cs:120px;--k:2.5;--gk:1.3;--oh:.7;--ow:.42;position:absolute;inset:0;border-radius:9px;overflow:hidden;pointer-events:none;container-type:inline-size}
 .glow i{position:absolute;display:block;aspect-ratio:1}
 .glow img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
-.glow .gh{left:0;top:0;width:calc(var(--cs) + 20px);filter:blur(14px) saturate(1.6);opacity:var(--oh)}
-.glow .gw{left:calc(var(--cs) * (1 - var(--k)) / 2);top:calc(var(--cs) * (1 - var(--k)) / 2);width:calc(var(--cs) * var(--k) + 20px);filter:blur(30px) saturate(1.4);opacity:var(--ow)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .glow{--oh:.6;--ow:.22}}
-:root[data-theme="dark"] .glow{--oh:.6;--ow:.22}
+.glow .gh{display:none}
+.glow .gw{left:calc(var(--cs) * (1 - var(--gk)) / 2);top:calc(var(--cs) * (1 - var(--gk)) / 2);width:calc(var(--cs) * var(--gk) + 20px);filter:blur(26px) saturate(2.1) brightness(1.1);opacity:var(--ow)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .glow{--oh:.6;--ow:.55}}
+:root[data-theme="dark"] .glow{--oh:.6;--ow:.55}
 .rev.nocv .glow{--cs:120px;--k:2.5}
 .rev.nocv .glow .gh{display:none}
 /* the rating: five small, sharp stars as wide as the artwork (white, or dark ink in light mode), the number beside them */
@@ -437,6 +437,13 @@ html.mdragging,html.mdragging *{cursor:grabbing!important}
 .rar{margin-top:1px}
 .rar .tag{margin-left:7px;white-space:nowrap}
 .rc>.acts{margin:auto 0 0 -6px;padding-top:8px}
+.rev:not(.nocv) .rc{display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:1fr auto 1fr}
+.rev:not(.nocv) .rch{grid-row:1;align-self:start;min-width:0}
+.rev:not(.nocv) .rc>p{grid-row:2;align-self:center;margin:0;padding:10px 0;overflow-wrap:anywhere}
+.rev:not(.nocv) .rcf{grid-row:3;align-self:end;min-width:0}
+.rcf>.acts{margin:0 0 0 -6px;padding-top:8px}
+/* three per row: the review is the centrepiece */
+.cols3 .rev:not(.nocv) .rc>p{padding:12px 4px;text-align:center;font-size:17px;font-weight:500;line-height:1.3;letter-spacing:-.01em;color:var(--ink)}
 /* who and when: under the stars (two per row), or in the foot beside the listening apps (three per row) */
 .rby{display:flex;align-items:center;gap:6px;font-size:12px;min-width:0}
 .rby .rbn{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -518,11 +525,10 @@ html.mdragging,html.mdragging *{cursor:grabbing!important}
 .cols2 .rev:not(.nocv) .rf{display:none}
 .cols2 .rev:not(.nocv) .rbx{display:block;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .cols2 .rev:not(.nocv) .plv{display:flex;flex-direction:column;align-items:center;gap:2px;position:absolute;top:-5px;right:-5px;margin:0;z-index:3}
-.cols2 .rev:not(.nocv) .rc>.via,.cols2 .rev:not(.nocv) .rc>h3,.cols2 .rev:not(.nocv) .rc>.rar,.cols2 .rev:not(.nocv) .rc>.rbx{padding-right:30px}
-.cols2 .rev:not(.nocv) .rc>h3{font-size:16px;line-height:1.25}
-.cols2 .rev:not(.nocv) .rc>p{margin:auto 0;padding:14px 30px 14px 0;overflow-wrap:anywhere}
-.cols2 .rev:not(.nocv) .rc>.acts{margin:auto -5px 0 0;padding-top:6px;justify-content:flex-end;gap:1px}
-.cols2 .rev:not(.nocv) .rc>p~.acts{margin-top:0}
+.cols2 .rev:not(.nocv) .rch{padding-right:30px}
+.cols2 .rev:not(.nocv) .rch>h3{font-size:16px;line-height:1.25}
+.cols2 .rev:not(.nocv) .rc>p{padding:12px 30px 12px 0}
+.cols2 .rev:not(.nocv) .rcf>.acts{margin:0 -5px 0 0;padding-top:6px;justify-content:flex-end;gap:1px}
 .cols2 .rev:not(.nocv) .act{padding:5px}
 .cols2 .rev:not(.nocv) .act.later{margin-left:0}
 }
@@ -1209,10 +1215,11 @@ function listHTML(){
 var l=filtered();
 if(!l.length)return '<div class="empty">'+(S.tab==="profile"?"You haven't reviewed anything yet. Add your first album or song.":(S.tab==="user"?"No reviews from this person yet.":(S.q?"No reviews match that search.":(S.scope==="fol"?"Reviews from people you follow will show up here.":"No reviews yet. Add the first one."))))+'</div>';
 var nc=S.tab==="song";
-return l.map(function(r){var rb=rateBox(r,!nc);return '<article class="rev'+(nc?' nocv':'')+'" style="--h:'+hue(r.title+r.artist)+'">'+glowHTML(r)+(nc?'':'<div class="rl">'+covBtn(r)+rb+byLine(r,"l",1)+'</div>')+'<div class="rc">'+(nc?'':plgHTML(r,4,"plv"))+(r.via?'<div class="meta via">↻ '+esc(r.via)+' reposted</div>':'')+
-(nc?rb:'<h3>'+esc(r.title)+'</h3><div class="meta rar">'+esc(r.artist)+''+(r.type==="Album"?'<span class="tag alb">Album</span>':'')+(r.type==="Album"&&r.tracks&&r.tracks.length?tddHTML(r):'')+'</div><div class="meta rbx">'+esc(r.date)+'</div>')+
-(r.text?'<p>'+esc(r.text)+'</p>':'')+
-(r.user===S.user&&!r.via?'<div class="row"><button class="btn ghost sm" data-edit="'+r.id+'">Edit</button><button class="btn ghost sm" data-del="'+r.id+'">Delete</button></div>':'')+actsHTML(r)+footHTML(r,!nc)+'</div></article>'}).join("")}
+return l.map(function(r){var rb=rateBox(r,!nc),
+hd=(r.via?'<div class="meta via">↻ '+esc(r.via)+' reposted</div>':'')+(nc?rb:'<h3>'+esc(r.title)+'</h3><div class="meta rar">'+esc(r.artist)+(r.type==="Album"?'<span class="tag alb">Album</span>':'')+(r.type==="Album"&&r.tracks&&r.tracks.length?tddHTML(r):'')+'</div><div class="meta rbx">'+esc(r.date)+'</div>'),
+tx=r.text?'<p>'+esc(r.text)+'</p>':'',
+ft=(r.user===S.user&&!r.via?'<div class="row"><button class="btn ghost sm" data-edit="'+r.id+'">Edit</button><button class="btn ghost sm" data-del="'+r.id+'">Delete</button></div>':'')+actsHTML(r)+footHTML(r,!nc);
+return '<article class="rev'+(nc?' nocv':'')+'" style="--h:'+hue(r.title+r.artist)+'">'+glowHTML(r)+(nc?'':'<div class="rl">'+covBtn(r)+rb+byLine(r,"l",1)+'</div>')+'<div class="rc">'+(nc?hd+tx+ft:plgHTML(r,4,"plv")+'<div class="rch">'+hd+'</div>'+tx+'<div class="rcf">'+ft+'</div>')+'</div></article>'}).join("")}
 
 var IC={link:'<path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/>',like:'<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/>',
 cmt:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
