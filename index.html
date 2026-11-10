@@ -206,6 +206,23 @@ header.top h2{margin-right:10px}
 .pickbig .btn{margin-top:8px}
 .rvgrid.split textarea{min-height:84px}
 .wc{margin:4px 0 0;font-size:12px;text-align:right}.wc.over{color:var(--bad)}
+.trk{grid-column:1/-1;margin-top:20px;padding-top:16px;border-top:1px solid var(--line)}
+.trk .thd{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.trk h3{margin:0;font-size:16px;font-weight:600}
+.trk .tnote{margin:4px 0 12px;font-size:13px}
+.tracks.trate li{grid-template-columns:30px minmax(0,1fr) auto;align-items:center;padding:6px 0}
+.trate .tt{overflow-wrap:anywhere}
+.rate.tctl{gap:0}
+.tst{display:flex;gap:1px}
+.rate .tst button{font-size:19px;line-height:1;padding:0 1px;background:linear-gradient(90deg,var(--star) var(--p,0%),color-mix(in srgb,var(--mute) 35%,transparent) var(--p,0%));-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.tmeta{display:inline-flex;align-items:center}
+.trate li:not(.on) .tmeta{visibility:hidden}
+.tval{font-size:14px;font-weight:600;min-width:2.4ch;font-variant-numeric:tabular-nums}
+.rate .tclr{display:grid;place-items:center;width:24px;height:24px;margin-left:4px;font-size:17px;line-height:1;color:var(--mute);border-radius:4px}
+.rate .tclr:hover{color:var(--pop);background:color-mix(in srgb,var(--pop) 12%,transparent)}
+.trk .err{text-align:right}
+.tfoot{display:flex;justify-content:flex-end;margin-top:4px}
+@media (max-width:440px){.tracks.trate li{grid-template-columns:30px minmax(0,1fr)}.trate .tctl{grid-column:2}}
 .page>.card,#rvhost{max-width:900px}
 @media (max-width:600px){.rvgrid.split{display:block}.pickbig{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:6px}.pickbig .cover{width:96px}.pickbig b{margin-top:0}}
 
@@ -286,7 +303,10 @@ header.top h2{margin-right:10px}
 .song .sby .ulink{text-decoration-color:color-mix(in srgb,var(--mute) 45%,transparent)}
 .srate{display:flex;align-items:baseline;gap:14px;margin-top:28px}
 .snum{font-size:48px;font-weight:300;letter-spacing:-.03em;line-height:1}
-.srate .stars{font-size:22px}
+.sbar{display:inline-block;position:relative;width:132px;aspect-ratio:100/15.56;--sf:var(--star);--se:color-mix(in srgb,var(--mute) 35%,transparent)}
+.sbar::before,.sbar::after{content:"";position:absolute;inset:0}
+.sbar::before{background:linear-gradient(90deg,var(--sf) var(--p,0%),var(--se) var(--p,0%));-webkit-mask:var(--sm) center/100% 100% no-repeat;mask:var(--sm) center/100% 100% no-repeat}
+.sbar::after{background:var(--so) center/100% 100% no-repeat}
 .noyet{font-size:24px;font-weight:300;letter-spacing:-.01em;color:var(--mute);line-height:1.2}
 .scount{margin:8px 0 0}
 .facts{margin:26px 0 22px;border-top:1px solid var(--line)}
@@ -296,9 +316,11 @@ header.top h2{margin-right:10px}
 .facts dd.na{color:var(--mute)}
 .sinfo h2{font-size:15px;font-weight:500;margin:34px 0 6px}
 .tracks{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
-.tracks li{display:grid;grid-template-columns:30px 1fr auto;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
+.tracks li{display:grid;grid-template-columns:30px minmax(0,1fr) auto auto;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-variant-numeric:tabular-nums}
 .tracks .tn,.tracks .td{color:var(--mute)}
 .tracks .disc{display:block;color:var(--mute);font-size:12px;padding:12px 0 6px}
+.tracks .ta{display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:500}
+.tracks .ta i{font-style:normal;color:var(--star)}
 .src{margin:18px 0 0;font-size:12px}
 .srevs{margin-top:48px}
 .srevs h2{font-size:18px;font-weight:500;margin:0 0 14px}
@@ -320,8 +342,9 @@ header.top h2{margin-right:10px}
 :root[data-theme="dark"] .glow{--oh:.6;--ow:.22}
 .rev.nocv .glow{--cs:120px;--k:2.5}
 .rev.nocv .glow .gh{display:none}
-/* the rating: five small, sharp, black-outlined white stars as wide as the artwork, the number beside them */
-.rrate{--sm:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 15.56'%3E%3Cpath d='M10.00 1.68L11.70 6.23L16.56 6.45L12.76 9.47L14.06 14.16L10.00 11.48L5.94 14.16L7.24 9.47L3.44 6.45L8.30 6.23ZM30.00 1.68L31.70 6.23L36.56 6.45L32.76 9.47L34.06 14.16L30.00 11.48L25.94 14.16L27.24 9.47L23.44 6.45L28.30 6.23ZM50.00 1.68L51.70 6.23L56.56 6.45L52.76 9.47L54.06 14.16L50.00 11.48L45.94 14.16L47.24 9.47L43.44 6.45L48.30 6.23ZM70.00 1.68L71.70 6.23L76.56 6.45L72.76 9.47L74.06 14.16L70.00 11.48L65.94 14.16L67.24 9.47L63.44 6.45L68.30 6.23ZM90.00 1.68L91.70 6.23L96.56 6.45L92.76 9.47L94.06 14.16L90.00 11.48L85.94 14.16L87.24 9.47L83.44 6.45L88.30 6.23Z' fill='%23000'/%3E%3C/svg%3E");--so:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 15.56'%3E%3Cpath d='M10.00 1.68L11.70 6.23L16.56 6.45L12.76 9.47L14.06 14.16L10.00 11.48L5.94 14.16L7.24 9.47L3.44 6.45L8.30 6.23ZM30.00 1.68L31.70 6.23L36.56 6.45L32.76 9.47L34.06 14.16L30.00 11.48L25.94 14.16L27.24 9.47L23.44 6.45L28.30 6.23ZM50.00 1.68L51.70 6.23L56.56 6.45L52.76 9.47L54.06 14.16L50.00 11.48L45.94 14.16L47.24 9.47L43.44 6.45L48.30 6.23ZM70.00 1.68L71.70 6.23L76.56 6.45L72.76 9.47L74.06 14.16L70.00 11.48L65.94 14.16L67.24 9.47L63.44 6.45L68.30 6.23ZM90.00 1.68L91.70 6.23L96.56 6.45L92.76 9.47L94.06 14.16L90.00 11.48L85.94 14.16L87.24 9.47L83.44 6.45L88.30 6.23Z' fill='none' stroke='%23000' stroke-width='.5' vector-effect='non-scaling-stroke' stroke-linejoin='miter' stroke-miterlimit='10'/%3E%3C/svg%3E");--sf:#fff;--se:rgba(0,0,0,.26);display:flex;align-items:center;justify-content:center;gap:7px;color:var(--ink);line-height:1;white-space:nowrap}
+/* the rating: five small, sharp, black-outlined orange stars as wide as the artwork, the number beside them */
+:root{--sm:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 15.56'%3E%3Cpath d='M10.00 1.68L11.70 6.23L16.56 6.45L12.76 9.47L14.06 14.16L10.00 11.48L5.94 14.16L7.24 9.47L3.44 6.45L8.30 6.23ZM30.00 1.68L31.70 6.23L36.56 6.45L32.76 9.47L34.06 14.16L30.00 11.48L25.94 14.16L27.24 9.47L23.44 6.45L28.30 6.23ZM50.00 1.68L51.70 6.23L56.56 6.45L52.76 9.47L54.06 14.16L50.00 11.48L45.94 14.16L47.24 9.47L43.44 6.45L48.30 6.23ZM70.00 1.68L71.70 6.23L76.56 6.45L72.76 9.47L74.06 14.16L70.00 11.48L65.94 14.16L67.24 9.47L63.44 6.45L68.30 6.23ZM90.00 1.68L91.70 6.23L96.56 6.45L92.76 9.47L94.06 14.16L90.00 11.48L85.94 14.16L87.24 9.47L83.44 6.45L88.30 6.23Z' fill='%23000'/%3E%3C/svg%3E");--so:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 15.56'%3E%3Cpath d='M10.00 1.68L11.70 6.23L16.56 6.45L12.76 9.47L14.06 14.16L10.00 11.48L5.94 14.16L7.24 9.47L3.44 6.45L8.30 6.23ZM30.00 1.68L31.70 6.23L36.56 6.45L32.76 9.47L34.06 14.16L30.00 11.48L25.94 14.16L27.24 9.47L23.44 6.45L28.30 6.23ZM50.00 1.68L51.70 6.23L56.56 6.45L52.76 9.47L54.06 14.16L50.00 11.48L45.94 14.16L47.24 9.47L43.44 6.45L48.30 6.23ZM70.00 1.68L71.70 6.23L76.56 6.45L72.76 9.47L74.06 14.16L70.00 11.48L65.94 14.16L67.24 9.47L63.44 6.45L68.30 6.23ZM90.00 1.68L91.70 6.23L96.56 6.45L92.76 9.47L94.06 14.16L90.00 11.48L85.94 14.16L87.24 9.47L83.44 6.45L88.30 6.23Z' fill='none' stroke='%23000' stroke-width='.5' vector-effect='non-scaling-stroke' stroke-linejoin='miter' stroke-miterlimit='10'/%3E%3C/svg%3E")}
+.rrate{--sf:var(--star);--se:rgba(0,0,0,.26);display:flex;align-items:center;justify-content:center;gap:7px;color:var(--ink);line-height:1;white-space:nowrap}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .rrate{color:#fff;--se:rgba(255,255,255,.2)}}
 :root[data-theme="dark"] .rrate{color:#fff;--se:rgba(255,255,255,.2)}
 .rrate .stars{display:block;position:relative;flex:1 1 0;min-width:0;max-width:132px;aspect-ratio:100/15.56;font-size:0;letter-spacing:0;background:none;color:transparent;-webkit-text-fill-color:transparent}
@@ -572,6 +595,10 @@ function clipWords(t,n){var re=/\S+/g,k,i=0;while((k=re.exec(t))){if(++i>n)retur
 function hue(s){var h=0;for(var i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))%360;return h}
 function cover(r){var h=hue(r.title+r.artist);return '<div class="cover" style="background:linear-gradient(135deg,hsl('+h+',70%,48%),hsl('+((h+60)%360)+',75%,36%))">'+esc(r.title.slice(0,22))+(r.art&&okArt(r.art)?'<img src="'+esc(r.art)+'" alt="">':'')+'</div>'}
 function rnum(v){v=Number(v);return isFinite(v)?Math.min(5,Math.max(0,Math.round(v*10)/10)):0}
+/* where the fill ends for each tenth of a star, so every 0.1 adds an equal share of the star's area */
+var SW=[0,.257,.325,.393,.451,.5,.549,.607,.675,.743];
+function starPct(v){v=rnum(v);var k=Math.floor(v+1e-6),f=Math.round((v-k)*10);return k>=5?100:f?Math.round((20*k+3.44+13.12*SW[f])*100)/100:20*k}
+function cleanTracks(a){if(!Array.isArray(a))return null;var o=a.slice(0,300).filter(function(x){return x&&typeof x.t==="string"&&x.t}).map(function(x){return {d:Math.max(1,Math.round(+x.d)||1),n:Math.max(0,Math.round(+x.n)||0),t:x.t.slice(0,200),r:rnum(x.r)}}).filter(function(x){return x.r>0});return o.length?o:null}
 
 var accts=REMOTE?[]:store.get("ln_accounts",[]);
 async function hash(pw,salt){var b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(salt+pw));return Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,"0")}).join("")}
@@ -866,6 +893,7 @@ searchItunes(q).then(function(r){if(S.tk!==tk||S.tab!=="search")return;S.demo=fa
 
 function since(a){if(!a||!a.created)return "";var d=new Date(a.created);if(isNaN(d))return "";return d.toLocaleDateString("en-GB",{month:"long",year:"numeric"})}
 function est(a){var t=since(a);return t?'<p class="meta" style="margin:4px 0 0">Account established in '+t+'</p>':''}
+function dupSong(it,skip){if(!it||(it.type||"Song")!=="Song"||!S.user)return null;var t=String(it.title).toLowerCase(),a=String(it.artist).toLowerCase();return S.reviews.filter(function(r){return r.user===S.user&&r.type==="Song"&&String(r.id)!==String(skip)&&r.title.toLowerCase()===t&&r.artist.toLowerCase()===a})[0]||null}
 function songReviews(s){var t=s.title.toLowerCase(),a=s.artist.toLowerCase();return S.reviews.filter(function(r){return r.type===s.type&&r.title.toLowerCase()===t&&r.artist.toLowerCase()===a})}
 function filtered(){
 if(S.tab==="song"&&S.song)return songReviews(S.song).sort(function(a,b){return b.id-a.id});
@@ -877,7 +905,7 @@ if(S.q&&S.tab==="feed"){var q=S.q.toLowerCase();l=l.filter(function(r){return (r
 l.sort(function(a,b){return S.sort==="top"?b.rating-a.rating||b.id-a.id:b.id-a.id});
 return l}
 
-function rateBox(r){var v=rnum(r.rating);return '<div class="rrate"><span class="stars" style="--p:'+(v*20)+'%" role="img" aria-label="'+v.toFixed(1)+' out of 5"></span><b class="rv">'+v.toFixed(1)+'</b></div>'}
+function rateBox(r){var v=rnum(r.rating);return '<div class="rrate"><span class="stars" style="--p:'+starPct(v)+'%" role="img" aria-label="'+v.toFixed(1)+' out of 5"></span><b class="rv">'+v.toFixed(1)+'</b></div>'}
 function glowHTML(r){var h=hue(r.title+r.artist),bg=' style="background:linear-gradient(135deg,hsl('+h+',70%,48%),hsl('+((h+60)%360)+',75%,36%))"',im=r.art&&okArt(r.art)?'<img src="'+esc(r.art)+'" alt="">':'';return '<span class="glow" aria-hidden="true"><i class="gw"'+bg+'>'+im+'</i><i class="gh"'+bg+'>'+im+'</i></span>'}
 function byLine(r,k){var u='<button type="button" class="avbtn" data-u="'+esc(r.user)+'" aria-label="'+esc(r.user)+'\'s profile">'+avatar(acct(r.user),"xs")+'</button>',n='<span class="rbn">'+uname(r.user)+'</span>';
 return k==="l"?'<div class="meta rby rbl">'+u+n+'<span class="rbd">'+r.date+'</span></div>':'<div class="meta rby rbf">'+u+n+'<span class="rbc">, </span><span class="rbd">'+r.date+'</span></div>'}
@@ -955,11 +983,12 @@ var t0=rows.filter(function(r){return r.wrapperType==="track"})[0];if(!t0)return
 return {year:okYear(t0.releaseDate),genre:String(t0.primaryGenreName||""),album:String(t0.collectionName||""),albumId:okId(t0.collectionId),albumArtist:String(t0.collectionArtistName||t0.artistName||""),ms:okMs(t0.trackTimeMillis)}}
 function demoInfo(s){var t=s.title.toLowerCase(),a=s.artist.toLowerCase(),alb=s.type==="Album";
 var x=DEMO.filter(function(r){return (alb?r[2]:r[0]).toLowerCase()===t&&r[1].toLowerCase()===a})[0];if(!x)return null;
-return alb?{year:String(x[3]),album:x[2],demo:true}:{year:String(x[3]),album:x[2],ms:(x[4]||0)*1000,bpm:x[5]||null,demo:true}}
+return alb?{year:String(x[3]),album:x[2],tracks:DEMO.filter(function(r){return r[2]===x[2]&&r[1]===x[1]}).map(function(r,i){return {n:i+1,d:1,title:r[0],ms:(r[4]||0)*1000}}),demo:true}:{year:String(x[3]),album:x[2],ms:(x[4]||0)*1000,bpm:x[5]||null,demo:true}}
 async function fetchBpm(s,ms){if(!REMOTE||!sb.functions)return null;
 var r=await sb.functions.invoke("track-info",{body:{title:s.title,artist:s.artist,ms:ms||0}});
 if(r.error||!r.data)return null;var b=Math.round(Number(r.data.bpm));return b>=40&&b<=260?b:null}
 function ensureInfo(s){var k=infoKey(s),o=S.info[k];if(o&&!o.failed)return null;return S.info[k]={busy:true,bpmBusy:false}}
+function albumInfo(s){var o=S.info[infoKey(s)];if(o&&!o.failed)return o.busy&&o.p?o.p.then(function(){return o}):Promise.resolve(o);o=ensureInfo(s);o.p=loadInfo(s,o);return o.p.then(function(){return o})}
 async function loadInfo(s,o){var k=infoKey(s);
 try{Object.assign(o,await itunesInfo(s))}catch(e){var dd=REMOTE?null:demoInfo(s);if(dd)Object.assign(o,dd);else o.failed=true}
 o.busy=false;var want=s.type==="Song"&&REMOTE&&!o.failed;o.bpmBusy=want;paintInfo(k);
@@ -973,9 +1002,11 @@ function row(k,v,w,raw){return '<div><dt>'+k+'</dt><dd'+(v?'':' class="na"')+'>'
 if(alb)return row("Released",year,wait)+row("Tracks",o.count?String(o.count):"",wait)+row("Length",fmtTotal(o.ms),wait)+(o.genre?row("Genre",o.genre):"");
 var al=o.album||s.album||"";
 return row("Album",al,wait,o.albumId&&al?'<button type="button" class="ulink" data-alb="1">'+esc(al)+'</button>':"")+row("Released",year,wait)+row("Length",fmtLen(o.ms),wait)+row("BPM",o.bpm?String(o.bpm):"",wait||o.bpmBusy)}
+function trackAvgs(s){var m={};songReviews(s).forEach(function(r){(r.tracks||[]).forEach(function(x){var k=x.t.toLowerCase();(m[k]=m[k]||[]).push(x.r)})});return m}
 function tracksHTML(){var s=S.song,o=S.info[infoKey(s)]||{},t=o.tracks;if(s.type!=="Album"||!t||!t.length)return "";
-var multi=t.some(function(x){return x.d>1}),disc=0,h='<h2>Tracks</h2><ol class="tracks">';
-t.forEach(function(x){if(multi&&x.d!==disc){disc=x.d;h+='<li class="disc">Disc '+x.d+'</li>'}h+='<li><span class="tn">'+(x.n||"")+'</span><span class="tt">'+esc(x.title)+'</span><span class="td">'+esc(fmtLen(x.ms))+'</span></li>'});
+var av=trackAvgs(s),multi=t.some(function(x){return x.d>1}),disc=0,h='<h2>Tracks</h2><ol class="tracks">';
+t.forEach(function(x){if(multi&&x.d!==disc){disc=x.d;h+='<li class="disc">Disc '+x.d+'</li>'}var a=av[x.title.toLowerCase()],m=a?a.reduce(function(p,q){return p+q},0)/a.length:0;
+h+='<li><span class="tn">'+(x.n||"")+'</span><span class="tt">'+esc(x.title)+'</span><span class="ta"'+(a?' title="Average of '+pl(a.length,"rating")+' on Mosaic"><i aria-hidden="true">★</i>'+m.toFixed(1):'>')+'</span><span class="td">'+esc(fmtLen(x.ms))+'</span></li>'});
 return h+'</ol>'}
 function noteHTML(){var s=S.song,o=S.info[infoKey(s)]||{};
 if(o.demo)return "Demo data. Live details aren't available in this preview.";
@@ -988,24 +1019,24 @@ if(f.tab==="later")return "Back to Listen later";
 if(f.tab==="profile")return "Back to My Mosaic";
 if(f.tab==="user"&&f.view)return "Back to "+f.view+"’s profile";
 return "Back to Recommended"}
-function songView(){var s=S.song,alb=s.type==="Album",what=alb?"album":"song",rs=songReviews(s),n=rs.length,avg=n?rs.reduce(function(a,r){return a+rnum(r.rating)},0)/n:0;
-var rate=n?'<div class="srate"><span class="snum">'+avg.toFixed(1)+'</span><span class="stars" style="--p:'+(Math.round(avg*200)/10)+'%" role="img" aria-label="Average '+avg.toFixed(1)+' out of 5">★★★★★</span></div><p class="meta scount">Average of '+pl(n,"review")+' on Mosaic</p>'
+function songView(){var s=S.song,alb=s.type==="Album",what=alb?"album":"song",rs=songReviews(s),n=rs.length,avg=n?rs.reduce(function(a,r){return a+rnum(r.rating)},0)/n:0,mine=dupSong(s);
+var rate=n?'<div class="srate"><span class="snum">'+avg.toFixed(1)+'</span><span class="sbar" style="--p:'+starPct(avg)+'%" role="img" aria-label="Average '+avg.toFixed(1)+' out of 5"></span></div><p class="meta scount">Average of '+pl(n,"review")+' on Mosaic</p>'
 :'<div class="srate none"><span class="noyet">No ratings yet</span></div><p class="meta scount">Be the first to review this '+what+'.</p>';
 return '<button type="button" class="linkbtn" data-back="1" style="margin-bottom:14px">← '+esc(backLabel())+'</button>'+
 '<section class="song"><div class="sleeve">'+heroCover(s)+'</div><div class="sinfo"><h1>'+esc(s.title)+'</h1><p class="sby"><button type="button" class="ulink" data-seeq="'+esc(s.artist)+'" title="See Mosaic reviews by this artist">'+esc(s.artist)+'</button></p>'+rate+
-'<dl class="facts" id="sfacts">'+factsHTML()+'</dl><div class="sbtns"><button type="button" class="btn ink" id="srev">Review this '+what+'</button>'+(S.laterOK?laterBtn(s):'')+'</div>'+listenRow(s)+'<div id="stracks">'+tracksHTML()+'</div><p class="meta src" id="snote">'+noteHTML()+'</p></div></section>'+
+'<dl class="facts" id="sfacts">'+factsHTML()+'</dl><div class="sbtns">'+(mine?'<button type="button" class="btn ink" data-edit="'+esc(mine.id)+'">Edit your review</button>':'<button type="button" class="btn ink" id="srev">Review this '+what+'</button>')+''+(S.laterOK?laterBtn(s):'')+'</div>'+listenRow(s)+'<div id="stracks">'+tracksHTML()+'</div><p class="meta src" id="snote">'+noteHTML()+'</p></div></section>'+
 '<section class="srevs"><h2>Reviews'+(n?' <span class="meta">'+n+'</span>':'')+'</h2>'+(n?'<div class="list cols'+S.cols+'" id="list">'+listHTML()+'</div>':'<div class="empty">Nobody has reviewed this '+what+' yet.</div>')+'</section>'}
 function openSong(s){if(!s)return;
 S.stack.push({tab:S.tab,view:S.view,stab:S.stab,q:S.q,y:window.scrollY||0,song:S.tab==="song"?S.song:null});if(S.stack.length>25)S.stack.shift();
 S.song=s;S.tab="song";S.shut=keepShut();var o=ensureInfo(s);
 appView();try{window.scrollTo(0,0)}catch(e){}
-if(o)loadInfo(s,o)}
+if(o)o.p=loadInfo(s,o)}
 function goBack(){var f=S.stack.pop();
 if(!f){S.tab="feed";S.q="";S.shut=keepShut();appView();return}
 S.tab=f.tab;S.view=f.view;S.stab=f.stab;S.q=f.q||"";S.shut=keepShut();
 var o=null;if(f.song){S.song=f.song;o=ensureInfo(f.song)}
 appView();try{window.scrollTo(0,f.y||0)}catch(e){}
-if(o)loadInfo(f.song,o)}
+if(o)o.p=loadInfo(f.song,o)}
 
 function colsOK(v){return v===3?3:2}
 function layoutSwitch(){var h='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true">',
@@ -1135,16 +1166,55 @@ function okArt(u){return typeof u==="string"&&/^https:\/\/[\w.-]+\.mzstatic\.com
 document.addEventListener("error",function(e){var t=e.target;if(t&&t.tagName==="IMG"&&t.closest&&t.closest(".cover,.res,.pickbig"))t.remove()},true);
 
 function openForm(r,host,pre){
-var d=host||$("#dlg"),rating=r?rnum(r.rating):0,results=[],tm=null,ac=null;
+var d=host||$("#dlg"),rating=r?rnum(r.rating):0,results=[],tm=null,ac=null,dupOn=false;
 var chosen=r&&r.art&&okArt(r.art)?{title:r.title,artist:r.artist,art:r.art,tid:r.tid,type:r.type}:null;
 if(!chosen&&!r&&pre&&(okArt(pre.art)||pre.demo))chosen={title:pre.title,artist:pre.artist,art:pre.art,tid:pre.tid,type:pre.type};
 var byHand=!chosen&&!r&&!!pre&&!!pre.title;
 var manual=(!!r&&!chosen)||byHand,mv={title:r?r.title:(byHand?pre.title:""),artist:r?r.artist:(byHand?pre.artist:""),type:r?r.type:(byHand&&pre.type)||"Song"};
+var saved=r&&r.type==="Album"&&r.tracks?r.tracks:[],tk={list:null,rt:[],ready:false,tok:0,src:null};
+var UPI='<svg width="10" height="7" viewBox="0 0 10 7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 5.5 5 1.5l4 4"/></svg>',DNI='<svg width="10" height="7" viewBox="0 0 10 7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 1.5 5 5.5l4-4"/></svg>';
+if(!host)d.className="";
 d.innerHTML='<form id="rf" method="dialog" class="rvgrid">'+(host?'':'<h2 class="rvh" style="font-size:20px">'+(r?"Edit review":"Add a review")+'</h2>')+'<div id="sel" class="rvl"></div><div class="rvr">'+
 '<label id="rl">Rating</label><div class="rate" role="group" aria-labelledby="rl"></div>'+
 '<label for="tx">Your thoughts</label><textarea id="tx" rows="2" maxlength="120" placeholder="Five words or fewer" aria-describedby="wc">'+(r?esc(r.text):"")+'</textarea><p class="meta wc" id="wc" aria-live="polite"></p>'+
-'<p class="err" id="re" role="alert"></p><div style="display:flex;gap:10px;justify-content:flex-end;margin-top:8px"><button type="button" class="btn ghost" id="cx">Cancel</button><button class="btn" id="sv" value="x">Save review</button></div></div></form>';
-function err(t){$("#re",d).textContent=t}
+'<p class="err" id="re" role="alert"></p><div style="display:flex;gap:10px;justify-content:flex-end;margin-top:8px"><button type="button" class="btn ghost" id="cx">Cancel</button><button class="btn" id="sv" value="x">Save review</button></div></div><div class="trk" id="trk" hidden></div></form>';
+function err(t){$("#re",d).textContent=t;var e2=$("#re2",d);if(e2)e2.textContent=t}
+function dupNote(x){[$("#re",d),$("#re2",d)].forEach(function(e){if(!e)return;e.innerHTML='You’ve already reviewed this song. <button type="button" class="linkbtn" data-dupe="1">Edit that review</button>';
+e.querySelector("[data-dupe]").onclick=function(){if(host){S.tab="profile";S.stack=[];appView()}else if(d.open)d.close();openForm(x)}})}
+function toTop(on){var t=on&&$(".rvr",d);if(t&&t.scrollIntoView)t.scrollIntoView({block:"center",behavior:"smooth"})}
+function trkCount(){return tk.rt.filter(function(v){return v>0}).length+" of "+tk.list.length+" rated"}
+function trkHead(){return '<div class="thd"><h3>Rate the tracks</h3>'+(tk.ready?'<span class="meta" id="tcnt">'+trkCount()+'</span>':'')+'</div><p class="meta tnote">Optional. Rate as many songs as you like, in any order. Your rating above is for the album as a whole.</p>'}
+function rowIn(i){var x=tk.list[i],v=tk.rt[i]||0,lb=esc(x.title),h='<span class="tn">'+(x.n||"")+'</span><span class="tt">'+lb+'</span><span class="rate tctl"><span class="tst" role="group" aria-label="Rate '+lb+'">';
+for(var k=1;k<=5;k++){var f=Math.max(0,Math.min(1,v-(k-1)));h+='<button type="button" data-ts="'+k+'" style="--p:'+Math.round(f*100)+'%" aria-label="'+k+' star'+(k>1?"s":"")+'">★</button>'}
+return h+'</span><span class="tmeta"><span class="step"><button type="button" data-tu="1" aria-label="Raise rating for '+lb+' by 0.1">'+UPI+'</button><button type="button" data-tdn="1" aria-label="Lower rating for '+lb+' by 0.1">'+DNI+'</button></span><b class="tval">'+(v>0?v.toFixed(1):"")+'</b><button type="button" class="tclr" data-tc="1" aria-label="Clear rating for '+lb+'" title="Clear">×</button></span></span>'}
+function setList(tr){var used={};tk.list=[];tk.rt=[];
+(tr||[]).forEach(function(x){if(!x||!x.title)return;var lt=String(x.title).toLowerCase(),j=-1;
+saved.forEach(function(s,q){if(j<0&&!used[q]&&s.t.toLowerCase()===lt&&(s.d||1)===(x.d||1))j=q});
+if(j<0)saved.forEach(function(s,q){if(j<0&&!used[q]&&s.t.toLowerCase()===lt)j=q});
+if(j>-1)used[j]=1;tk.list.push({d:x.d||1,n:x.n||0,title:String(x.title)});tk.rt.push(j>-1?saved[j].r:0)});
+saved.forEach(function(s,q){if(!used[q]){tk.list.push({d:s.d||1,n:s.n||0,title:s.t});tk.rt.push(s.r)}});
+tk.ready=tk.list.length>0}
+function drawTrk(){var el=$("#trk",d);if(!el)return;
+if(!tk.ready){el.innerHTML=trkHead()+'<p class="meta" style="margin:0">Couldn’t load the tracklist right now, so songs can’t be rated one by one.</p>';return}
+var multi=tk.list.some(function(x){return x.d>1}),disc=0,h='<ol class="tracks trate">';
+tk.list.forEach(function(x,i){if(multi&&x.d!==disc){disc=x.d;h+='<li class="disc">Disc '+x.d+'</li>'}h+='<li data-ti="'+i+'"'+(tk.rt[i]>0?' class="on"':'')+'>'+rowIn(i)+'</li>'});
+el.innerHTML=trkHead()+h+'</ol><p class="err" id="re2" role="alert"></p><div class="tfoot"><button type="button" class="btn" id="sv2">Save review</button></div>';
+$("#sv2",d).onclick=doSave;el.querySelector(".trate").onclick=onTrk}
+function trkSync(){var el=$("#trk",d),alb=!!chosen&&chosen.type==="Album",rl=$("#rl",d);if(rl)rl.textContent=alb?"Album rating":"Rating";if(!el)return;
+if(!alb){tk.tok++;tk.src=null;tk.list=null;tk.rt=[];tk.ready=false;el.hidden=true;el.innerHTML="";return}
+el.hidden=false;if(tk.src===chosen)return;
+tk.src=chosen;tk.list=null;tk.rt=[];tk.ready=false;var my=++tk.tok;
+el.innerHTML=trkHead()+'<p class="meta" style="margin:0">Loading the tracklist…</p>';
+albumInfo(chosen).then(function(o){if(my===tk.tok){setList(o&&o.tracks);drawTrk()}},function(){if(my===tk.tok){setList([]);drawTrk()}})}
+function onTrk(e){var b=e.target.closest&&e.target.closest("button"),li=b&&b.closest("li[data-ti]");if(!li)return;
+var i=+li.dataset.ti,v=tk.rt[i]||0,f;
+if(b.dataset.ts){var k=+b.dataset.ts,bx=b.getBoundingClientRect();v=(e.detail>0&&bx.width&&e.clientX-bx.left<bx.width/2)?k-0.5:k;f='[data-ts="'+k+'"]'}
+else if(b.dataset.tu){v=rnum(v+0.1);f="[data-tu]"}
+else if(b.dataset.tdn){v=rnum(v-0.1);f=v>0?"[data-tdn]":'[data-ts="1"]'}
+else if(b.dataset.tc){v=0;f='[data-ts="1"]'}
+else return;
+tk.rt[i]=v;li.className=v>0?"on":"";li.innerHTML=rowIn(i);var c=$("#tcnt",d);if(c)c.textContent=trkCount();var g=li.querySelector(f);if(g)g.focus()}
+function trkOut(){if(!tk.ready)return saved.length?saved:null;var o=[];tk.list.forEach(function(x,i){var v=rnum(tk.rt[i]);if(v>0)o.push({d:x.d||1,n:x.n||0,t:String(x.title).slice(0,200),r:v})});return o.length?o:null}
 function setS(t){var e=$("#ss",d);if(e)e.textContent=t}
 function drawRes(){var el=$("#sr",d);if(!el)return;
 el.innerHTML=results.map(function(t,i){return '<button type="button" class="res" role="option" data-i="'+i+'">'+rimg(t)+'<span><b>'+esc(t.title)+'</b><span class="meta">'+esc(t.artist)+'</span></span></button>'}).join("");
@@ -1156,7 +1226,8 @@ fetch("https://itunes.apple.com/search?media=music&entity=song&limit=8&term="+en
 drawRes();setS(results.length?"":"No songs found. Try a different spelling.")})
 .catch(function(e){if(e&&e.name==="AbortError")return;if(!REMOTE){results=demoSongs(q);drawRes();setS(results.length?"Demo results. Live song search isn't available in this preview.":"No demo songs match. Try Bowie, Radiohead or Queen.");return}results=[];drawRes();setS("Song search isn't available right now. You can enter the song yourself.")})}
 function renderSel(){var el=$("#sel",d);
-$("#rf",d).classList.toggle("split",!!chosen);
+$("#rf",d).classList.toggle("split",!!chosen);trkSync();
+var dx=chosen?dupSong(chosen,r&&r.id):null;if(dx){dupNote(dx);dupOn=true}else if(dupOn){err("");dupOn=false}
 if(chosen){el.innerHTML='<div class="pickbig">'+cover(chosen)+'<b>'+esc(chosen.title)+'</b><div class="meta">'+esc(chosen.artist)+'</div><button type="button" class="btn ghost sm" id="chs">Change</button></div>';
 $("#chs",d).onclick=function(){chosen=null;manual=false;results=[];renderSel();$("#sq",d).focus()};return}
 if(manual){el.innerHTML='<div class="two"><div><label for="ti">Title</label><input id="ti" maxlength="80" value="'+esc(mv.title)+'"></div><div><label for="ar">Artist</label><input id="ar" maxlength="80" value="'+esc(mv.artist)+'"></div></div><label for="ty">Type</label><select id="ty"><option>Song</option><option>Album</option></select><button type="button" class="linkbtn" id="bk">Search for a song instead</button>';
@@ -1180,14 +1251,17 @@ var txa=$("#tx",d),wcn=$("#wc",d);
 function wcount(){var n=wordsOf(txa.value);wcn.textContent=n+" / 5 words";wcn.classList.toggle("over",n>5)}
 txa.oninput=function(){var v=txa.value,c=clipWords(v,5);if(c!==v){var p=Math.min(txa.selectionStart,c.length);txa.value=c;try{txa.setSelectionRange(p,p)}catch(e){}}wcount()};
 wcount();
-$("#sv",d).onclick=function(ev){ev.preventDefault();var o;
+function doSave(ev){if(ev)ev.preventDefault();var o,fromEnd=!!(ev&&ev.currentTarget&&ev.currentTarget.id==="sv2");
 if(chosen){o={title:chosen.title,artist:chosen.artist,type:chosen.type||"Song",art:chosen.art,tid:chosen.tid}}
 else if(manual){var t=$("#ti",d).value.trim(),a=$("#ar",d).value.trim();if(!t||!a){err("Add a title and an artist.");return}o={title:t,artist:a,type:$("#ty",d).value,art:"",tid:null}}
 else{err("Search for a song and choose it, or enter it yourself.");return}
-if(!(rating>0)){err("Choose a star rating.");return}
-o.rating=rating;o.text=$("#tx",d).value.trim();if(wordsOf(o.text)>5){err("Reviews are limited to 5 words. Shorten it to save.");return}
-var svb=$("#sv",d);svb.disabled=true;
-api.saveReview(o,r).then(function(res){if(res&&res.error){svb.disabled=false;err(res.error);return}if(host){S.tab="profile";appView()}else{d.close();appView()}}).catch(function(){svb.disabled=false;err("Couldn't save. Check your connection and try again.")})};
+var dx=dupSong(o,r&&r.id);if(dx){dupNote(dx);dupOn=true;toTop(fromEnd);return}
+if(!(rating>0)){err(o.type==="Album"?"Choose a star rating for the whole album.":"Choose a star rating.");toTop(fromEnd);return}
+o.rating=rating;o.text=$("#tx",d).value.trim();if(wordsOf(o.text)>5){err("Reviews are limited to 5 words. Shorten it to save.");toTop(fromEnd);return}
+o.tracks=o.type==="Album"&&chosen?trkOut():null;
+var bs=[$("#sv",d),$("#sv2",d)].filter(Boolean);bs.forEach(function(x){x.disabled=true});
+api.saveReview(o,r).then(function(res){if(res&&res.error){bs.forEach(function(x){x.disabled=false});err(res.error);return}if(host){S.tab="profile";appView()}else{d.close();appView()}}).catch(function(){bs.forEach(function(x){x.disabled=false});err("Couldn't save. Check your connection and try again.")})}
+$("#sv",d).onclick=doSave;
 if(!host)d.showModal()}
 
 var localApi={
@@ -1222,7 +1296,7 @@ for(var i=0;i<rs.length;i++)if(rs[i].error)throw rs[i].error;
 var by={};
 accts=(rs[0].data||[]).map(function(x){var o={id:x.id,name:x.username,created:x.created_at,following:[]};if(okPic(x.pic))o.pic=x.pic;by[x.id]=o;return o});
 (rs[2].data||[]).forEach(function(f){if(by[f.follower]&&by[f.following])by[f.follower].following.push(by[f.following].name)});
-S.reviews=(rs[1].data||[]).map(function(x){return {id:x.id,title:x.title,artist:x.artist,type:x.type,art:x.art||"",tid:x.tid,rating:rnum(x.rating),text:x.body||"",user:by[x.user_id]?by[x.user_id].name:"Unknown",date:String(x.created_at).slice(0,10)}});
+S.reviews=(rs[1].data||[]).map(function(x){return {id:x.id,title:x.title,artist:x.artist,type:x.type,art:x.art||"",tid:x.tid,rating:rnum(x.rating),text:x.body||"",tracks:cleanTracks(x.tracks),user:by[x.user_id]?by[x.user_id].name:"Unknown",date:String(x.created_at).slice(0,10)}});
 var m=by[S.uid];S.user=m?m.name:null;
 if(m){m.email=S.email;m.notes=(rs[3].data||[]).map(function(n){return {id:n.id,by:by[n.actor_id]?by[n.actor_id].name:"Someone",date:String(n.created_at).slice(0,10),read:n.read}})}
 S.msgOK=false;
@@ -1255,11 +1329,11 @@ var r=await sb.auth.signInWithPassword({email:email,password:pw});
 if(r.error){return {error:/not confirmed/i.test(r.error.message||"")?"Confirm your email first, then sign in.":"Username, email or password is incorrect."}}
 S.uid=r.data.user.id;S.email=r.data.user.email;await loadRemote();return S.user?{}:{error:"Couldn't load your account. Refresh the page."}},
 async signOut(){await sb.auth.signOut();S.user=null;S.uid=null;accts=[];S.reviews=[];S.later=[];S.plats=[];S.platOK=false},
-async saveReview(o,r){var row={title:o.title,artist:o.artist,type:o.type,art:o.art||null,tid:o.tid||null,rating:o.rating,body:o.text};
+async saveReview(o,r){var row={title:o.title,artist:o.artist,type:o.type,art:o.art||null,tid:o.tid||null,rating:o.rating,body:o.text,tracks:o.type==="Album"&&o.tracks?o.tracks:null};
 var save=function(rw){return r?sb.from("reviews").update(rw).eq("id",r.id):sb.from("reviews").insert(rw)};
 var res=await save(row),whole=0;
 if(res.error&&/integer/i.test(res.error.message||"")){whole=Math.max(1,Math.round(o.rating));res=await save(Object.assign({},row,{rating:whole}))}
-if(res.error)return {error:"Couldn't save: "+res.error.message};await loadRemote();
+if(res.error)return {error:res.error.code==="23505"||/already reviewed/i.test(res.error.message||"")?"You've already reviewed this song. Edit your existing review instead.":"Couldn't save: "+res.error.message};await loadRemote();
 if(whole)toast("Saved as "+whole+"/5. The database only accepts whole ratings until its update is run.");return {}},
 async delReview(id){await sb.from("reviews").delete().eq("id",id);await loadRemote()},
 async setPic(url){await sb.from("profiles").update({pic:url||null}).eq("id",S.uid);await loadRemote()},
