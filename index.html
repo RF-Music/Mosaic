@@ -69,7 +69,7 @@ nav button[aria-current="true"]{color:var(--ink);border-color:var(--pop)}
 .sg b{display:block;font-weight:500;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .sg .meta{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .sg.all{justify-content:center;color:var(--mute);font-size:13px}
-.sug .rh{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:4px 6px;font-size:12px;color:var(--mute)}
+.sug .rh,.mrec .rh{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:4px 6px;font-size:12px;color:var(--mute)}
 .rclr{background:none;border:0;padding:0;font:inherit;color:var(--mute);text-decoration:underline;text-underline-offset:2px;cursor:pointer}
 .rclr:hover{color:var(--ink)}
 .sg.rq{padding:7px 6px;font-size:14px;color:var(--ink)}
@@ -465,16 +465,14 @@ html.mdragging,html.mdragging *{cursor:grabbing!important}
 .seg{display:none}
 }
 /* rating row under the artwork: picture | stars | number, picture and number the same width so the middle star sits on the artwork's centre line */
-.rrate.wav{--rs:26px;container-type:inline-size;justify-content:space-between;gap:8px}
+.rrate.wav{--rs:26px;justify-content:space-between;gap:8px}
 .rrate.wav .stars{max-width:150px}
-.rrate.wav .rv{width:var(--rs);text-align:right;font-size:15px}
+.rrate.wav .rv{width:var(--rs);text-align:center;font-size:14px}
 .cols3 .rrate.wav{--rs:30px}
-.cols3 .rrate.wav .rv{font-size:18px}
-.cols2 .rrate.wav .rv{font-size:15px}
-/* the picture is as tall as the stars, so picture, stars and number sit in one even bar */
-.rav{position:relative;flex:none;display:flex;align-items:center;width:var(--rs);padding:0;border:0;background:none;line-height:0;cursor:pointer}
-.rav .av{--d:max(14px,calc(min(150px, 100cqw - 2 * var(--rs) - 16px) * .14));width:var(--d);height:var(--d)}
-@media (max-width:520px){.cols2 .rrate.wav,.cols3 .rrate.wav{--rs:22px}.cols2 .rrate.wav .rv,.cols3 .rrate.wav .rv{font-size:13px}}
+.cols3 .rrate.wav .rv{font-size:16px}
+.cols2 .rrate.wav .rv{font-size:14px}
+.rav{position:relative;flex:none;display:block;width:var(--rs);height:var(--rs);padding:0;border:0;background:none;border-radius:50%;line-height:0;cursor:pointer}
+.rav .av{width:var(--rs);height:var(--rs)}
 /* reviewer's name appears under their picture on hover */
 .avbtn{position:relative}
 .rav[data-name]:hover::after,.rav[data-name]:focus-visible::after,.avbtn[data-name]:hover::after,.avbtn[data-name]:focus-visible::after{content:attr(data-name);position:absolute;left:0;top:calc(100% + 5px);z-index:20;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:3px 8px;border-radius:6px;background:var(--ink);color:var(--surface);font:500 12px/1.3 "Montserrat",sans-serif;letter-spacing:0;pointer-events:none;box-shadow:0 4px 12px rgba(0,0,0,.25)}
@@ -649,25 +647,31 @@ if(it){var hu=hue(it.title+it.artist);h+='<div class="mt on" data-mi="'+i+'"><bu
 else if(own)h+='<button type="button" class="mt" data-mi="'+i+'" data-mp="'+i+'" aria-label="Add a favourite song or album to tile '+(i+1)+'"><span class="ml" aria-hidden="true">'+(MOSL[i]||"")+'</span><span class="mpl" aria-hidden="true">'+plus+'</span></button>';
 else h+='<div class="mt"></div>'}
 return h+'</div>'}
-function openMosPick(pos){var d=$("#dlg"),tm=null,tk=0,res=null;d.className="mosd";
+function openMosPick(pos){var d=$("#dlg"),tm=null,tk=0,res=null,more=false,MK="ln_mrecent";d.className="mosd";
 d.innerHTML='<form method="dialog" id="mf"><h2 style="font-size:20px">Add to your mosaic</h2><p class="meta" style="margin:2px 0 12px">Search for a favourite song or album. It goes in the tile you picked.</p><input id="mq" type="search" placeholder="Search songs and albums" autocomplete="off" aria-label="Search songs and albums"><div class="results mres" id="mr"></div><p class="meta" id="ms" style="margin:6px 0 0"></p><p class="err" id="mer" role="alert"></p><div style="display:flex;justify-content:flex-end;margin-top:6px"><button type="button" class="btn ghost" id="mcx">Cancel</button></div></form>';
 var qi=$("#mq",d),out=$("#mr",d),st=$("#ms",d),er=$("#mer",d);
 function row(it,key){var dup=mosHas(it);return '<button type="button" class="res" data-mk="'+key+'"'+(dup?' disabled':'')+'>'+rimg(it)+'<span><b>'+esc(it.title)+'</b><span class="meta">'+esc(it.artist)+(dup?' · Already in your mosaic':'')+'</span></span><span class="tag '+(it.type==="Album"?"alb":"sng")+'">'+it.type+'</span></button>'}
-function draw(){if(!res){out.innerHTML="";return}var h="";
+function drawRecent(){var rl=recents(MK);if(!rl.length){out.innerHTML="";return}
+var CLK='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
+out.innerHTML='<div class="mrec"><div class="rh"><span>Recent searches</span><button type="button" class="rclr" data-rclr="1">Clear</button></div>'+rl.slice(0,more?10:2).map(function(t,i){return '<button type="button" class="sg rq" data-rq="'+i+'">'+CLK+'<span>'+esc(t)+'</span></button>'}).join("")+(rl.length>2?'<button type="button" class="sg more'+(more?' open':'')+'" data-rmore="1" aria-expanded="'+more+'">'+(more?'Show fewer':'Show '+(rl.length-2)+' more')+CAR+'</button>':'')+'</div>';
+out.querySelectorAll("[data-rq]").forEach(function(b){b.onclick=function(){var t=rl[+b.dataset.rq];qi.value=t;clearTimeout(tm);run(t);qi.focus()}});
+out.querySelector("[data-rclr]").onclick=function(){clearRecents(MK);more=false;drawRecent();qi.focus()};
+var mo=out.querySelector("[data-rmore]");if(mo)mo.onclick=function(){more=!more;drawRecent()}}
+function draw(){if(!res){drawRecent();return}var h="";
 if(res.songs.length)h+='<h3>Songs</h3>'+res.songs.map(function(it,i){return row(it,"songs:"+i)}).join("");
 if(res.albums.length)h+='<h3>Albums</h3>'+res.albums.map(function(it,i){return row(it,"albums:"+i)}).join("");
 out.innerHTML=h;st.textContent=h?"":"Nothing found. Try a different spelling.";
 out.querySelectorAll("[data-mk]").forEach(function(b){b.onclick=function(){var x=b.dataset.mk.split(":"),it=res[x[0]]&&res[x[0]][+x[1]];if(it&&!mosHas(it))pick(it)}})}
-function pick(it){er.textContent="";out.querySelectorAll("button").forEach(function(b){b.disabled=true});
+function pick(it){er.textContent="";addRecent(qi.value,MK);out.querySelectorAll("button").forEach(function(b){b.disabled=true});
 api.setTile(pos,mosItem(it)).then(function(r){if(r&&r.error){er.textContent=r.error;draw();return}d.close();appView()}).catch(function(){er.textContent="Couldn't save. Check your connection and try again.";draw()})}
 function run(q){var my=++tk,u="https://itunes.apple.com/search?media=music&limit=6&term="+encodeURIComponent(q);st.textContent="Searching…";
 Promise.all(["song","album"].map(function(en){return fetch(u+"&entity="+en).then(function(x){if(!x.ok)throw 0;return x.json()}).then(function(j){return j.results||[]}).catch(function(){return null})})).then(function(r){if(my!==tk)return;
 if(r[0]===null&&r[1]===null){if(!REMOTE){var dm=demoNorm(q);res={songs:dm.songs.slice(0,6),albums:dm.albums.slice(0,6)};draw();if(!st.textContent)st.textContent="Demo results. Live search isn't available in this preview.";return}res=null;draw();st.textContent="Search isn't available right now. Try again in a moment.";return}
 var n=normRes([r[0],r[1],null]);res={songs:(n.songs||[]).slice(0,6),albums:(n.albums||[]).slice(0,6)};draw()})}
 qi.oninput=function(){var q=qi.value.trim();clearTimeout(tm);tk++;if(q.length<2){res=null;draw();st.textContent="";return}tm=setTimeout(function(){run(q)},300)};
-qi.onkeydown=function(e){if(e.key==="Enter")e.preventDefault()};
+qi.onkeydown=function(e){if(e.key!=="Enter")return;e.preventDefault();var q=qi.value.trim();if(q.length<2)return;clearTimeout(tm);tk++;addRecent(q,MK);run(q)};
 $("#mcx",d).onclick=function(){d.close()};
-d.showModal();qi.focus()}
+drawRecent();d.showModal();qi.focus()}
 function refreshMos(){var g=document.querySelector(".mos.own");if(!g){appView();return}var w=document.createElement("div");w.innerHTML=mosaicHTML(S.user,true);if(w.firstChild)g.replaceWith(w.firstChild);else g.remove();bindMos()}
 function moveTileUI(a,b){var t=mosOf(S.user).slice(),x=t[a];if(!x||a===b)return;t[a]=t[b]||null;t[b]=x;S.mos["u:"+S.user]=t;refreshMos();
 api.moveTile(a,b).then(function(r){if(r&&r.error)toast(r.error);refreshMos()}).catch(function(){toast("Couldn't move it. Try again.")})}
@@ -688,10 +692,10 @@ if(!gh)return;gh.remove();src.classList.remove("msrc");g.classList.remove("dragg
 if(ev.type==="pointerup"&&over)moveTileUI(from,+over.dataset.mi)}
 document.addEventListener("pointermove",move,{passive:false});document.addEventListener("pointerup",end);document.addEventListener("pointercancel",end)}}
 /* recent searches, per user, newest first */
-function recentStore(){var o=store.get("ln_recent",{});return o&&typeof o==="object"&&!Array.isArray(o)?o:{}}
-function recents(){var l=recentStore()["u:"+S.user];return Array.isArray(l)?l.filter(function(x){return typeof x==="string"&&x}).slice(0,10):[]}
-function addRecent(q){q=String(q||"").trim().slice(0,100);if(q.length<2||!S.user)return;var o=recentStore(),l=recents().filter(function(x){return x.toLowerCase()!==q.toLowerCase()});l.unshift(q);o["u:"+S.user]=l.slice(0,10);store.set("ln_recent",o)}
-function clearRecents(){var o=recentStore();delete o["u:"+S.user];store.set("ln_recent",o)}
+function recentStore(k){var o=store.get(k||"ln_recent",{});return o&&typeof o==="object"&&!Array.isArray(o)?o:{}}
+function recents(k){var l=recentStore(k)["u:"+S.user];return Array.isArray(l)?l.filter(function(x){return typeof x==="string"&&x}).slice(0,10):[]}
+function addRecent(q,k){k=k||"ln_recent";q=String(q||"").trim().slice(0,100);if(q.length<2||!S.user)return;var o=recentStore(k),l=recents(k).filter(function(x){return x.toLowerCase()!==q.toLowerCase()});l.unshift(q);o["u:"+S.user]=l.slice(0,10);store.set(k,o)}
+function clearRecents(k){k=k||"ln_recent";var o=recentStore(k);delete o["u:"+S.user];store.set(k,o)}
 function saveSoc(){store.set("ln_social",{likes:S.likes,reposts:S.reposts,comments:S.comments})}
 /* streaming apps: the ten biggest by listeners, biggest first. Logos are each service's own mark (Simple Icons, CC0). */
 var PLAT=[
