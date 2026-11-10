@@ -6,6 +6,7 @@
 <title>Mosaic – a diary for the music you play</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@800&text=CREATYOUMSI&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#f5f3f0;--surface:#fffefc;--ink:#2b2930;--mute:#6e6a72;--line:#e3dfda;--accent:#34323a;--accent-ink:#fff;--pop:#ff4f9f;--pop-ink:#2a0a1c;--star:#f08a1d;--bad:#c9524d;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
@@ -296,25 +297,25 @@ header.top h2{margin-right:10px}
 .igs span{color:var(--mute);font-size:14px}.igs b{color:var(--ink);font-weight:600;font-size:16px;margin-right:2px}
 @media (max-width:520px){.prof.ig{gap:14px;padding:16px}.prof.ig .av.big{width:64px;height:64px}.igs{gap:16px}.igt .btn{width:100%}}
 /* favourites mosaic: 6 x 5 tiles beside the profile details, dull grey until filled */
-.mos{--mg:#bdbdbd;--ml:#8a8a8a;--mh:#d2d2d2;--mp:#2b2930;flex:none;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px;width:220px;margin-left:auto}
+.mos{--mg:#bdbdbd;--ml:#8a8a8a;--mh:#d2d2d2;--mp:#2b2930;flex:none;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:2px;width:220px;margin-left:auto}
 :root[data-theme="dark"] .mos{--mg:#4e4e53;--ml:#88888e;--mh:#66666b;--mp:#fff}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .mos{--mg:#4e4e53;--ml:#88888e;--mh:#66666b;--mp:#fff}}
-.mt{position:relative;min-width:0;aspect-ratio:1/1;border:0;border-radius:3px;padding:0;background:var(--mg);display:grid;place-items:center}
+.mt{position:relative;min-width:0;aspect-ratio:1/1;border:0;border-radius:0;padding:0;background:var(--mg);display:grid;place-items:center}
 button.mt{cursor:pointer;transition:background .12s}
-.mt .ml{font-size:15px;font-weight:700;line-height:1;color:var(--ml)}
+.mt .ml{font-family:"Syne","Montserrat",sans-serif;font-size:17px;font-weight:800;line-height:1;color:var(--ml)}
 .mt .mpl{display:none;color:var(--mp)}
 button.mt:hover,button.mt:focus-visible{background:var(--mh)}
 button.mt:hover .ml,button.mt:focus-visible .ml{display:none}
 button.mt:hover .mpl,button.mt:focus-visible .mpl{display:grid}
 .mt.on{background:none}
 .mt.on:hover,.mt.on:focus-within{z-index:2}
-.mto{display:block;width:100%;height:100%;padding:0;border:0;border-radius:3px;overflow:hidden;cursor:pointer;transition:transform .12s,box-shadow .12s}
+.mto{display:block;width:100%;height:100%;padding:0;border:0;border-radius:0;overflow:hidden;cursor:pointer;transition:transform .12s,box-shadow .12s}
 .mto img{display:block;width:100%;height:100%;object-fit:cover}
 .mto .mi{display:grid;place-items:center;width:100%;height:100%;color:#fff;font-weight:600;font-size:14px}
 .mt.on:hover .mto{transform:scale(1.08);box-shadow:0 4px 12px rgba(0,0,0,.35)}
 .mtx{position:absolute;top:-6px;right:-6px;width:18px;height:18px;border-radius:50%;border:0;padding:0;background:var(--ink);color:var(--surface);font-size:13px;line-height:1;display:none;place-items:center;cursor:pointer;z-index:3}
 .mt.on:hover .mtx,.mt.on:focus-within .mtx{display:grid}
-@media (max-width:760px){.mos{flex:0 0 100%;width:auto;grid-template-columns:repeat(6,minmax(0,52px));justify-content:center;margin:6px 0 0}.mt .ml{font-size:19px}}
+@media (max-width:760px){.mos{flex:0 0 100%;width:auto;grid-template-columns:repeat(6,minmax(0,52px));justify-content:center;margin:6px 0 0}.mt .ml{font-size:21px}}
 #dlg.mosd{width:min(520px,94vw)}
 .mosd .mres{max-height:min(52vh,420px)}
 .mosd .mres h3{font-size:12px;font-weight:600;color:var(--mute);text-transform:uppercase;letter-spacing:.06em;margin:8px 6px 4px}
