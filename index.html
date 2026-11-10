@@ -283,7 +283,16 @@ header.top h2{margin-right:10px}
 .avbtn{background:none;border:0;padding:0;cursor:pointer;display:inline-grid;border-radius:50%}
 .av.xs{width:22px;height:22px}
 /* profile header */
-.prof.ig{gap:24px;padding:22px 26px}
+.prof.ig{gap:18px;padding:22px 26px}
+/* listening apps orbit the right side of the profile picture, centred however many there are */
+.pav{--avs:88px;--is:26px;position:relative;flex:none;width:var(--avs);height:var(--avs)}
+.pav.has{margin-right:calc(var(--is) + 5px)}
+.prof.ig .pav .av.big{width:100%;height:100%}
+.orbit{position:absolute;inset:0;pointer-events:none}
+.orb{--R:calc(var(--avs) / 2 + 5px + var(--is) / 2);position:absolute;left:calc(50% + var(--R) * var(--x) - var(--is) / 2);top:calc(50% + var(--R) * var(--y) - var(--is) / 2);width:var(--is);height:var(--is);display:grid;place-items:center;border-radius:50%;background:var(--surface);border:1px solid var(--line);box-shadow:0 2px 6px rgba(0,0,0,.18);pointer-events:auto}
+.orb svg{display:block;fill:var(--pc)}
+.orb.dk svg{fill:var(--ink)}
+@media (max-width:520px){.pav{--avs:64px;--is:22px}.orb svg{width:13px;height:13px}}
 .prof.ig .av.big{width:88px;height:88px}
 .igm{flex:1;min-width:0}
 .igt{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:12px}
@@ -296,12 +305,12 @@ header.top h2{margin-right:10px}
 .igs span{color:var(--mute);font-size:14px}.igs b{color:var(--ink);font-weight:600;font-size:16px;margin-right:2px}
 @media (max-width:520px){.prof.ig{gap:14px;padding:16px}.prof.ig .av.big{width:64px;height:64px}.igs{gap:16px}.igt .btn{width:100%}}
 /* favourites mosaic: 6 x 5 tiles beside the profile details, dull grey until filled */
-.mos{--mg:#bdbdbd;--ml:#8a8a8a;--mh:#d2d2d2;--mp:#2b2930;flex:none;display:grid;grid-template-columns:repeat(6,36px);grid-auto-rows:36px;width:max-content;margin-left:auto}
+.mos{--mg:#bdbdbd;--ml:#8a8a8a;--mh:#d2d2d2;--mp:#2b2930;flex:none;display:grid;grid-template-columns:repeat(6,44px);grid-auto-rows:44px;width:max-content;margin-left:auto}
 :root[data-theme="dark"] .mos{--mg:#4e4e53;--ml:#88888e;--mh:#66666b;--mp:#fff}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .mos{--mg:#4e4e53;--ml:#88888e;--mh:#66666b;--mp:#fff}}
 .mt{position:relative;min-width:0;aspect-ratio:1/1;border:1px solid transparent;border-radius:4px;padding:0;background:var(--mg);background-clip:padding-box;display:grid;place-items:center}
 button.mt{cursor:pointer;transition:background .12s}
-.mt .ml{font-size:15px;font-weight:700;line-height:1;color:var(--ml)}
+.mt .ml{font-size:18px;font-weight:700;line-height:1;color:var(--ml)}
 .mt .mpl{display:none;color:var(--mp)}
 button.mt:hover,button.mt:focus-visible{background:var(--mh)}
 button.mt:hover .ml,button.mt:focus-visible .ml{display:none}
@@ -314,7 +323,7 @@ button.mt:hover .mpl,button.mt:focus-visible .mpl{display:grid}
 .mt.on:hover .mto{transform:scale(1.08);box-shadow:0 4px 12px rgba(0,0,0,.35)}
 .mtx{position:absolute;top:-6px;right:-6px;width:18px;height:18px;border-radius:50%;border:0;padding:0;background:var(--ink);color:var(--surface);font-size:13px;line-height:1;display:none;place-items:center;cursor:pointer;z-index:3}
 .mt.on:hover .mtx,.mt.on:focus-within .mtx{display:grid}
-@media (max-width:760px){.mos{flex:0 0 100%;width:auto;grid-template-columns:repeat(6,minmax(0,48px));grid-auto-rows:auto;justify-content:center;margin:6px 0 0}.mt .ml{font-size:19px}}
+@media (max-width:840px){.mos{flex:0 0 100%;width:auto;grid-template-columns:repeat(6,minmax(0,52px));grid-auto-rows:auto;justify-content:center;margin:6px 0 0}.mt .ml{font-size:19px}}
 /* dragging a tile to another spot */
 .mos.own .mt.on{touch-action:none;user-select:none;-webkit-user-select:none}
 .mos.own .mto{cursor:grab}
@@ -477,7 +486,7 @@ html.mdragging,html.mdragging *{cursor:grabbing!important}
 .avbtn{position:relative}
 .rav[data-name]:hover::after,.rav[data-name]:focus-visible::after,.avbtn[data-name]:hover::after,.avbtn[data-name]:focus-visible::after{content:attr(data-name);position:absolute;left:0;top:calc(100% + 5px);z-index:20;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:3px 8px;border-radius:6px;background:var(--ink);color:var(--surface);font:500 12px/1.3 "Montserrat",sans-serif;letter-spacing:0;pointer-events:none;box-shadow:0 4px 12px rgba(0,0,0,.25)}
 .rbx{display:none}
-.plv{display:none}
+.plg.plv{display:none}
 /* two per row (wide screens): artwork half the card, platforms hanging down the top-right, the review in focus, actions in the bottom-right */
 @media (min-width:701px){
 .cols2 .rev:not(.nocv){grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;padding:12px}
@@ -597,6 +606,8 @@ a.pl.act{padding:5px}
 .prow .linkbtn{padding:2px 0}
 .plp{margin:16px 0 4px}
 .plh{display:block;font-weight:400;font-size:13px}
+.plp .meta.warn{color:var(--bad)}
+.pt.lim{opacity:.45}
 .plp .meta{margin:2px 0 9px;font-size:12px}
 .pgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
 .pt{position:relative;display:flex;align-items:center;gap:10px;min-width:0;padding:8px 26px 8px 10px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:9px;text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:border-color .12s,background .12s,transform .08s}
@@ -711,7 +722,7 @@ var PLAT=[
 {id:"bandcamp",n:"Bandcamp",c:"#408294",u:function(q){return "https://bandcamp.com/search?q="+q},d:"M0 18.75l7.437-13.5H24l-7.438 13.5H0z"}];
 var PLATIDX={};PLAT.forEach(function(p){PLATIDX[p.id]=p});
 function appleStore(){var m=/[-_]([A-Za-z]{2})$/.exec(navigator.language||"");return m?m[1].toLowerCase():"us"}
-function validPlats(a){var o=[];(Array.isArray(a)?a:[]).forEach(function(x){if(typeof x==="string"&&Object.prototype.hasOwnProperty.call(PLATIDX,x)&&o.indexOf(x)<0)o.push(x)});return o}
+function validPlats(a){var o=[];(Array.isArray(a)?a:[]).forEach(function(x){if(typeof x==="string"&&Object.prototype.hasOwnProperty.call(PLATIDX,x)&&o.indexOf(x)<0)o.push(x)});return o.slice(0,4)}
 function syncPlats(){if(REMOTE)return;var a=me();S.plats=a?validPlats(a.plats):[]}
 async function loadPlats(){try{var r=await sb.from("profiles").select("platforms").eq("id",S.uid).maybeSingle();if(r.error)return false;S.plats=validPlats(r.data&&r.data.platforms);return true}catch(e){return false}}
 function plLogo(id,px){return '<svg width="'+px+'" height="'+px+'" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="'+PLATIDX[id].d+'"/></svg>'}
@@ -719,9 +730,17 @@ function plCls(p,x){return "pl"+(p.k?" "+p.k:"")+(x?" "+x:"")}
 function plLinks(t,px,x,n){var q=encodeURIComponent((String(t.title)+" "+String(t.artist)).slice(0,160));
 return S.plats.slice(0,n||S.plats.length).map(function(id){var p=PLATIDX[id];return '<a class="'+plCls(p,x)+'" style="--pc:'+p.c+'" href="'+esc(p.u(q))+'" target="_blank" rel="noopener noreferrer" title="Listen on '+p.n+'" aria-label="Listen on '+p.n+' (opens in a new tab)">'+plLogo(id,px)+'</a>'}).join("")}
 function listenRow(t){if(!S.platOK)return "";return '<div class="listen">'+(S.plats.length?'<span class="meta">Listen on</span>'+plLinks(t,24,"lg"):'<button type="button" class="linkbtn" data-setplat="1">Choose where you listen</button>')+'</div>'}
-function platPicker(sel){return '<div class="plp" role="group" aria-labelledby="plh"><span class="plh" id="plh">Where do you listen?</span><p class="meta">Pick your main app first. You can choose more than one, and change it any time.</p><div class="pgrid">'+PLAT.map(function(p){return '<button type="button" class="'+("pt"+(p.k?" "+p.k:""))+'" style="--pc:'+p.c+'" data-p="'+p.id+'" aria-pressed="'+(sel.indexOf(p.id)>-1)+'"><span class="ptl">'+plLogo(p.id,24)+'</span><span class="ptn">'+p.n+'</span></button>'}).join("")+'</div></div>'}
-function wirePlatPicker(root,sel){[].forEach.call(root.querySelectorAll(".pt"),function(b){b.onclick=function(){var id=b.dataset.p,i=sel.indexOf(id);if(i>-1)sel.splice(i,1);else sel.push(id);b.setAttribute("aria-pressed",String(i<0))}})}
-function platRow(){if(!S.platOK)return "";return '<div class="prow"><span class="meta">Listens on</span>'+(S.plats.length?'<span class="plset">'+S.plats.map(function(id){var p=PLATIDX[id];return '<span class="'+plCls(p)+'" style="--pc:'+p.c+'" title="'+p.n+'">'+plLogo(id,19)+'</span>'}).join("")+'</span>':'<span class="meta">not set</span>')+'<button type="button" class="linkbtn" id="edpl">'+(S.plats.length?"Edit":"Choose")+'</button></div>'}
+function platPicker(sel){return '<div class="plp" role="group" aria-labelledby="plh"><span class="plh" id="plh">Where do you listen?</span><p class="meta">Pick your main app first. You can choose up to four, and change them any time.</p><div class="pgrid">'+PLAT.map(function(p){return '<button type="button" class="'+("pt"+(p.k?" "+p.k:""))+'" style="--pc:'+p.c+'" data-p="'+p.id+'" aria-pressed="'+(sel.indexOf(p.id)>-1)+'"><span class="ptl">'+plLogo(p.id,24)+'</span><span class="ptn">'+p.n+'</span></button>'}).join("")+'</div></div>'}
+function wirePlatPicker(root,sel){var bs=root.querySelectorAll(".pt"),hint=root.querySelector(".plp .meta");
+function sync(){var full=sel.length>=4;[].forEach.call(bs,function(x){x.classList.toggle("lim",full&&sel.indexOf(x.dataset.p)<0)})}
+[].forEach.call(bs,function(b){b.onclick=function(){var id=b.dataset.p,i=sel.indexOf(id);
+if(i<0&&sel.length>=4){if(hint){hint.textContent="You can pick up to four. Tap one you've picked to swap it out.";hint.classList.add("warn")}return}
+if(i>-1)sel.splice(i,1);else sel.push(id);b.setAttribute("aria-pressed",String(i<0));sync()}});sync()}
+function orbitHTML(ids){ids=validPlats(ids);var n=ids.length;if(!n)return "";
+return '<span class="orbit" role="group" aria-label="Listens on">'+ids.map(function(id,i){var p=PLATIDX[id],a=(i-(n-1)/2)*30*Math.PI/180;
+return '<span class="orb'+(p.k?" "+p.k:"")+'" style="--pc:'+p.c+';--x:'+Math.cos(a).toFixed(4)+';--y:'+Math.sin(a).toFixed(4)+'" role="img" aria-label="'+p.n+'" title="'+p.n+'">'+plLogo(id,15)+'</span>'}).join("")+'</span>'}
+function pavHTML(a,ids){var o=orbitHTML(ids);return '<div class="pav'+(o?' has':'')+'">'+avatar(a,"big")+o+'</div>'}
+function platRow(){if(!S.platOK)return "";return '<div class="prow"><button type="button" class="linkbtn" id="edpl">'+(S.plats.length?"Edit listening apps":"Choose where you listen")+'</button></div>'}
 function openPlatDlg(){var d=$("#dlg"),sel=S.plats.slice();d.className="plpd";
 d.innerHTML='<form method="dialog" id="pdf">'+platPicker(sel)+'<p class="err" id="pe" role="alert"></p><div style="display:flex;gap:10px;justify-content:flex-end;margin-top:12px"><button type="button" class="btn ghost" id="pcx">Cancel</button><button class="btn" id="psv" value="x">Save</button></div></form>';
 wirePlatPicker(d,sel);
@@ -1227,14 +1246,14 @@ var chat=ic+'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2
 var body;
 if(S.tab==="review"){body='<section class="page"><h2>Write a review</h2><div class="card" id="rvhost"></div></section>'}
 else if(S.tab==="user"&&acct(S.view)){var vu=S.view,va=acct(vu),vc=S.reviews.filter(function(r){return r.user===vu}).length;
-body='<button type="button" class="linkbtn" data-tab="feed" style="margin-bottom:8px">Back to Recommended</button><section class="prof ig">'+avatar(va,"big")+'<div class="igm"><div class="igt"><h2>'+esc(vu)+'</h2></div>'+igStats(vc,(va.following||[]).filter(acct).length,(va.following||[]).filter(acct),nFollowers(vu),followersOf(vu),vu!==S.user?plusBtn(vu):'')+est(va)+'</div>'+mosaicHTML(vu,false)+'</section><div class="list cols'+S.cols+'" id="list">'+listHTML()+'</div>'}
+body='<button type="button" class="linkbtn" data-tab="feed" style="margin-bottom:8px">Back to Recommended</button><section class="prof ig">'+pavHTML(va,va.plats||[])+'<div class="igm"><div class="igt"><h2>'+esc(vu)+'</h2></div>'+igStats(vc,(va.following||[]).filter(acct).length,(va.following||[]).filter(acct),nFollowers(vu),followersOf(vu),vu!==S.user?plusBtn(vu):'')+est(va)+'</div>'+mosaicHTML(vu,false)+'</section><div class="list cols'+S.cols+'" id="list">'+listHTML()+'</div>'}
 else if(S.tab==="search"){var stabs=[["songs","Songs"],["albums","Albums"],["profiles","Profiles"],["artists","Artists"]].map(function(t){return '<button type="button" class="stab" role="tab" data-st="'+t[0]+'" aria-selected="'+((S.stab||"songs")===t[0])+'">'+t[1]+'</button>'}).join("");
 body='<section class="page"><h2>Results for “'+esc(S.sq||"")+'”</h2><div class="stabs" role="tablist">'+stabs+'</div><div class="list" id="sres">'+resultsHTML()+'</div></section>'}
 else if(S.tab==="song"&&S.song){body=songView()}
 else if(S.tab==="later"&&S.laterOK){body=laterView()}
 else if(S.tab==="likes"){body='<section class="page"><h2>My likes and comments</h2><div class="empty">Reviews you like or comment on will show up here.</div></section>'}
 else if(S.tab==="account"){body='<section class="page"><h2>Privacy and account</h2><dl><dt>Username</dt><dd>'+nm+'</dd><dt>Email</dt><dd>'+esc(a&&a.email||"")+'</dd>'+(since(a)?'<dt>Account established</dt><dd>'+since(a)+'</dd>':'')+'<dt>Your data</dt><dd>'+(REMOTE?'Your profile and reviews are saved to your Mosaic account.':'Accounts and reviews are saved in this browser only.')+'</dd></dl></section>'}
-else{body=(prof?'<section class="prof ig">'+avatar(a,"big")+'<div class="igm"><div class="igt"><h2>'+nm+'</h2></div>'+igStats(cnt,(a&&a.following||[]).filter(acct).length,(a&&a.following||[]).filter(acct),nFollowers(S.user),followersOf(S.user),"")+est(a)+platRow()+'<div class="row2" style="margin-top:10px"><button class="btn ghost sm" id="chg">Change picture</button>'+(a&&a.pic?'<button class="btn ghost sm" id="rmp">Remove picture</button>':'')+'</div><input id="pic" type="file" accept="image/*" hidden></div>'+mosaicHTML(S.user,true)+'</section>':'')+
+else{body=(prof?'<section class="prof ig">'+pavHTML(a,S.platOK?S.plats:[])+'<div class="igm"><div class="igt"><h2>'+nm+'</h2></div>'+igStats(cnt,(a&&a.following||[]).filter(acct).length,(a&&a.following||[]).filter(acct),nFollowers(S.user),followersOf(S.user),"")+est(a)+platRow()+'<div class="row2" style="margin-top:10px"><button class="btn ghost sm" id="chg">Change picture</button>'+(a&&a.pic?'<button class="btn ghost sm" id="rmp">Remove picture</button>':'')+'</div><input id="pic" type="file" accept="image/*" hidden></div>'+mosaicHTML(S.user,true)+'</section>':'')+
 (S.tab==="feed"&&S.q?'<div class="chips"><span class="meta">Showing reviews for</span><button type="button" class="chip" id="clq">'+esc(S.q)+' ×</button></div>':'')+'<div class="tools"><div class="tl"><button class="btn" id="add">Add review</button>'+(S.tab==="feed"?'<select id="sc" aria-label="Show"><option value="all">Everyone</option><option value="fol">People I follow</option></select>':'')+'<select id="t" aria-label="Type"><option>All</option><option>Album</option><option>Song</option></select><select id="s" aria-label="Sort"><option value="new">Newest</option><option value="top">Highest rated</option></select></div>'+layoutSwitch()+'</div>'+
 '<div class="list cols'+S.cols+'" id="list">'+listHTML()+'</div>'}
 $("#app").innerHTML='<div class="wrap"><header class="top"><h2><button type="button" class="wm" data-tab="feed" aria-label="Mosaic home">Mosaic</button></h2><nav><button data-tab="feed" aria-current="'+(S.tab==="feed")+'">Recommended</button><button data-tab="review" aria-current="'+(S.tab==="review")+'">Post</button></nav>'+
@@ -1476,10 +1495,10 @@ async delComment(cid,rid){S.comments[rid]=(S.comments[rid]||[]).filter(function(
 };
 function notifyLocal(kind,rid){var r=S.reviews.filter(function(x){return String(x.id)===String(rid)})[0];if(!r||r.user===S.user)return;var o=acct(r.user);if(!o)return;o.notes=(o.notes||[]).filter(function(n){return kind==="comment"||!(n.by===S.user&&n.kind===kind&&String(n.rid)===String(rid))});o.notes.unshift({by:S.user,date:new Date().toISOString().slice(0,10),read:false,kind:kind,rid:rid});o.notes=o.notes.slice(0,30);store.set("ln_accounts",accts)}
 async function loadRemote(){
-var rs=await Promise.all([sb.from("profiles").select("id,username,pic,created_at"),sb.from("reviews").select("*").order("created_at",{ascending:false}),sb.from("follows").select("follower,following"),sb.from("notifications").select("id,actor_id,read,created_at").order("created_at",{ascending:false}).limit(30)]);
+var rs=await Promise.all([sb.from("profiles").select("id,username,pic,created_at,platforms"),sb.from("reviews").select("*").order("created_at",{ascending:false}),sb.from("follows").select("follower,following"),sb.from("notifications").select("id,actor_id,read,created_at").order("created_at",{ascending:false}).limit(30)]);
 for(var i=0;i<rs.length;i++)if(rs[i].error)throw rs[i].error;
 var by={};
-accts=(rs[0].data||[]).map(function(x){var o={id:x.id,name:x.username,created:x.created_at,following:[]};if(okPic(x.pic))o.pic=x.pic;by[x.id]=o;return o});
+accts=(rs[0].data||[]).map(function(x){var o={id:x.id,name:x.username,created:x.created_at,following:[],plats:validPlats(x.platforms)};if(okPic(x.pic))o.pic=x.pic;by[x.id]=o;return o});
 (rs[2].data||[]).forEach(function(f){if(by[f.follower]&&by[f.following])by[f.follower].following.push(by[f.following].name)});
 S.reviews=(rs[1].data||[]).map(function(x){return {id:x.id,title:x.title,artist:x.artist,type:x.type,art:x.art||"",tid:x.tid,rating:rnum(x.rating),text:x.body||"",tracks:cleanTracks(x.tracks),user:by[x.user_id]?by[x.user_id].name:"Unknown",date:String(x.created_at).slice(0,10)}});
 var m=by[S.uid];S.user=m?m.name:null;
