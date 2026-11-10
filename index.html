@@ -296,12 +296,15 @@ header.top h2{margin-right:10px}
 button.orb{padding:0;font:inherit;color:var(--ink);cursor:pointer;transition:border-color .12s,color .12s}
 button.orb:hover,button.orb:focus-visible{border-color:var(--pop);color:var(--pop)}
 /* name over the picture; stats to its right; the mosaic stays on the far right */
-.pmain{flex:1;min-width:0;display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-areas:"nm nm" "pv st";column-gap:18px;row-gap:12px;align-items:center}
-.pmain .pnm{grid-area:nm;margin:0 0 8px;font-size:22px;font-weight:600;letter-spacing:-.01em;overflow-wrap:anywhere}
+.pmain{flex:1;min-width:0;display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-areas:"nm st" "pv st";column-gap:18px;row-gap:10px;align-items:center}
+.pmain:has(.pav.has){column-gap:49px}
+.pmain .pav.has{margin-right:0}
+.pmain .pnm{grid-area:nm;justify-self:center;width:0;display:flex;justify-content:center;margin:0 0 6px;font-size:22px;font-weight:600;letter-spacing:-.01em}
+.pmain .pnm span{flex:none;width:max-content;max-width:140px;text-align:center;overflow-wrap:anywhere}
 .pmain .pav{grid-area:pv}
-.pmain .igm{grid-area:st}
+.pmain .igm{grid-area:st;align-self:center}
 .pmain .igs{margin-bottom:6px}
-@media (max-width:520px){.pmain{column-gap:12px}}
+@media (max-width:520px){.pmain{column-gap:12px}.pmain:has(.pav.has){column-gap:39px}.pmain .pnm span{max-width:96px}}
 /* edit profile page */
 .dash .dsec{margin-bottom:12px}
 .dash .dsec h3{margin:0 0 10px;font-size:16px;font-weight:600}
@@ -326,9 +329,7 @@ button.orb:hover,button.orb:focus-visible{border-color:var(--pop);color:var(--po
 .igs span{color:var(--mute);font-size:14px}.igs b{color:var(--ink);font-weight:600;font-size:16px;margin-right:2px}
 @media (max-width:520px){.prof.ig{gap:14px;padding:16px}.prof.ig .av.big{width:64px;height:64px}.igs{gap:16px}.igt .btn{width:100%}}
 /* favourites mosaic: 6 x 5 tiles beside the profile details, dull grey until filled */
-.mos{--mg:#bdbdbd;--ml:#8a8a8a;--mh:#d2d2d2;--mp:#2b2930;flex:none;display:grid;grid-template-columns:repeat(6,44px);grid-auto-rows:44px;width:max-content;margin-left:auto}
-:root[data-theme="dark"] .mos{--mg:#4e4e53;--ml:#88888e;--mh:#66666b;--mp:#fff}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .mos{--mg:#4e4e53;--ml:#88888e;--mh:#66666b;--mp:#fff}}
+.mos{--mg:color-mix(in srgb,var(--ink) 8%,var(--surface));--ml:color-mix(in srgb,var(--ink) 30%,var(--surface));--mh:color-mix(in srgb,var(--ink) 15%,var(--surface));--mp:var(--ink);flex:none;display:grid;grid-template-columns:repeat(6,44px);grid-auto-rows:44px;width:max-content;margin-left:auto}
 .mt{position:relative;min-width:0;aspect-ratio:1/1;border:1px solid transparent;border-radius:4px;padding:0;background:var(--mg);background-clip:padding-box;display:grid;place-items:center}
 button.mt{cursor:pointer;transition:background .12s}
 .mt .ml{font-size:18px;font-weight:700;line-height:1;color:var(--ml)}
@@ -1116,9 +1117,9 @@ function ddRows(list){return list.map(function(n){return '<button type="button" 
 function ddHTML(k,n,list,cf){var w=k==="fg"?"following":(n===1?"follower":"followers"),t='<b>'+n+'</b> '+w;
 if(!list||!list.length)return t;
 return '<span class="fdd '+k+'" data-k="'+k+'"><button type="button" class="fddb" aria-haspopup="true" aria-expanded="false">'+(cf?CAR+'<span>'+t+'</span>':'<span>'+t+'</span>'+CAR)+'</button><span class="fddw" hidden><span class="fddm" role="menu">'+ddRows(list)+'</span><span class="fcard" hidden></span></span></span>'}
-function igStats(n,a,plus){var rs=S.reviews.filter(function(r){return r.user===n}),rv=rs.length,avg=rv?rs.reduce(function(x,r){return x+rnum(r.rating)},0)/rv:0,lk=rs.reduce(function(x,r){return x+(S.likes[r.id]||[]).length},0),fgl=((a&&a.following)||[]).filter(acct),fll=followersOf(n);
-return '<div class="igs"><span><b>'+rv+'</b> '+(rv===1?"review":"reviews")+'</span><span><b>'+(rv?avg.toFixed(1):"–")+'</b> avg rating</span></div>'+
-'<div class="igs"><span><b>'+lk+'</b> '+(lk===1?"like":"likes")+'</span><span class="ff'+(fgl.length&&fll.length?' pair':'')+'"><span class="fls">'+ddHTML("fl",fll.length,fll)+'</span><span class="fgs">'+ddHTML("fg",fgl.length,fgl,1)+'</span></span>'+(plus||"")+'</div>'}
+function igStats(n,a,plus){var rs=S.reviews.filter(function(r){return r.user===n}),rv=rs.length,lk=rs.reduce(function(x,r){return x+(S.likes[r.id]||[]).length},0),fgl=((a&&a.following)||[]).filter(acct),fll=followersOf(n);
+return '<div class="igs"><span><b>'+rv+'</b> '+(rv===1?"review":"reviews")+'</span><span><b>'+lk+'</b> '+(lk===1?"like":"likes")+'</span></div>'+
+'<div class="igs"><span class="ff'+(fgl.length&&fll.length?' pair':'')+'"><span class="fls">'+ddHTML("fl",fll.length,fll)+'</span><span class="fgs">'+ddHTML("fg",fgl.length,fgl,1)+'</span></span>'+(plus||"")+'</div>'}
 function limits(){var a=$("#app").getBoundingClientRect();return {l:Math.max(0,a.left),r:Math.min(window.innerWidth,a.right)}}
 function closeFdd(){[].forEach.call(document.querySelectorAll(".fdd.open"),function(d){d.classList.remove("open");var w=d.querySelector(".fddw"),b=d.querySelector(".fddb"),c=d.querySelector(".fcard");if(w)w.hidden=true;if(b)b.setAttribute("aria-expanded","false");if(c)c.hidden=true})}
 function wireFollowing(){[].forEach.call(document.querySelectorAll(".fdd"),wireDd)}
@@ -1180,7 +1181,7 @@ function doSearch(q){if(q.length<2)return;addRecent(q);S.sq=q;S.q="";S.sopen=tru
 searchItunes(q).then(function(r){if(S.tk!==tk||S.tab!=="search")return;S.demo=false;if(!REMOTE&&r.every(function(x){return x===null})){S.res=demoNorm(q);S.demo=true}else S.res=normRes(r);var el=$("#sres");if(el){el.innerHTML=resultsHTML();bind()}})}
 
 function since(a){if(!a||!a.created)return "";var d=new Date(a.created);if(isNaN(d))return "";return d.toLocaleDateString("en-GB",{month:"long",year:"numeric"})}
-function est(a){var t=since(a);return t?'<p class="meta" style="margin:4px 0 0">Account established in '+t+'</p>':''}
+function est(a){var t=since(a);return t?'<p class="meta" style="margin:4px 0 0">Est. '+t+'</p>':''}
 function dupSong(it,skip){if(!it||(it.type||"Song")!=="Song"||!S.user)return null;var t=String(it.title).toLowerCase(),a=String(it.artist).toLowerCase();return S.reviews.filter(function(r){return r.user===S.user&&r.type==="Song"&&String(r.id)!==String(skip)&&r.title.toLowerCase()===t&&r.artist.toLowerCase()===a})[0]||null}
 function songReviews(s){var t=s.title.toLowerCase(),a=s.artist.toLowerCase();return S.reviews.filter(function(r){return r.type===s.type&&r.title.toLowerCase()===t&&r.artist.toLowerCase()===a})}
 function filtered(){
@@ -1350,7 +1351,7 @@ var chat=ic+'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2
 var body;
 if(S.tab==="review"){body='<section class="page"><h2>Write a review</h2><div class="card" id="rvhost"></div></section>'}
 else if(S.tab==="user"&&acct(S.view)){var vu=S.view,va=acct(vu),vc=S.reviews.filter(function(r){return r.user===vu}).length;
-body='<button type="button" class="linkbtn" data-tab="feed" style="margin-bottom:8px">Back to Recommended</button><section class="prof ig"><div class="pmain"><h2 class="pnm">'+esc(vu)+'</h2>'+pavHTML(va,va.plats||[])+'<div class="igm">'+igStats(vu,va,vu!==S.user?plusBtn(vu):'')+est(va)+'</div></div>'+mosaicHTML(vu,false)+'</section><div class="list cols'+S.cols+'" id="list">'+listHTML()+'</div>'}
+body='<button type="button" class="linkbtn" data-tab="feed" style="margin-bottom:8px">Back to Recommended</button><section class="prof ig"><div class="pmain"><h2 class="pnm"><span>'+esc(vu)+'</span></h2>'+pavHTML(va,va.plats||[])+'<div class="igm">'+igStats(vu,va,vu!==S.user?plusBtn(vu):'')+est(va)+'</div></div>'+mosaicHTML(vu,false)+'</section><div class="list cols'+S.cols+'" id="list">'+listHTML()+'</div>'}
 else if(S.tab==="search"){var stabs=[["songs","Songs"],["albums","Albums"],["profiles","Profiles"],["artists","Artists"]].map(function(t){return '<button type="button" class="stab" role="tab" data-st="'+t[0]+'" aria-selected="'+((S.stab||"songs")===t[0])+'">'+t[1]+'</button>'}).join("");
 body='<section class="page"><h2>Results for “'+esc(S.sq||"")+'”</h2><div class="stabs" role="tablist">'+stabs+'</div><div class="list" id="sres">'+resultsHTML()+'</div></section>'}
 else if(S.tab==="song"&&S.song){body=songView()}
@@ -1358,7 +1359,7 @@ else if(S.tab==="later"&&S.laterOK){body=laterView()}
 else if(S.tab==="likes"){body='<section class="page"><h2>My likes and comments</h2><div class="empty">Reviews you like or comment on will show up here.</div></section>'}
 else if(S.tab==="editp"&&S.user){body=editHTML()}
 else if(S.tab==="account"){body='<section class="page"><h2>Privacy and account</h2><dl><dt>Username</dt><dd>'+nm+'</dd><dt>Email</dt><dd>'+esc(a&&a.email||"")+'</dd>'+(since(a)?'<dt>Account established</dt><dd>'+since(a)+'</dd>':'')+'<dt>Your data</dt><dd>'+(REMOTE?'Your profile and reviews are saved to your Mosaic account.':'Accounts and reviews are saved in this browser only.')+'</dd></dl></section>'}
-else{body=(prof?'<section class="prof ig"><div class="pmain"><h2 class="pnm">'+nm+'</h2>'+pavHTML(a,S.platOK?S.plats:[],1)+'<div class="igm">'+igStats(S.user,a,"")+est(a)+'</div></div>'+mosaicHTML(S.user,true)+'</section>':'')+
+else{body=(prof?'<section class="prof ig"><div class="pmain"><h2 class="pnm"><span>'+nm+'</span></h2>'+pavHTML(a,S.platOK?S.plats:[],1)+'<div class="igm">'+igStats(S.user,a,"")+est(a)+'</div></div>'+mosaicHTML(S.user,true)+'</section>':'')+
 (S.tab==="feed"&&S.q?'<div class="chips"><span class="meta">Showing reviews for</span><button type="button" class="chip" id="clq">'+esc(S.q)+' ×</button></div>':'')+'<div class="tools"><div class="tl"><button class="btn" id="add">Add review</button>'+(S.tab==="feed"?'<select id="sc" aria-label="Show"><option value="all">Everyone</option><option value="fol">People I follow</option></select>':'')+'<select id="t" aria-label="Type"><option>All</option><option>Album</option><option>Song</option></select><select id="s" aria-label="Sort"><option value="new">Newest</option><option value="top">Highest rated</option></select></div>'+layoutSwitch()+'</div>'+
 '<div class="list cols'+S.cols+'" id="list">'+listHTML()+'</div>'}
 $("#app").innerHTML='<div class="wrap"><header class="top"><h2><button type="button" class="wm" data-tab="feed" aria-label="Mosaic home">Mosaic</button></h2><nav><button data-tab="feed" aria-current="'+(S.tab==="feed")+'">Recommended</button><button data-tab="review" aria-current="'+(S.tab==="review")+'">Post</button></nav>'+
