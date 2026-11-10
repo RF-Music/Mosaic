@@ -974,10 +974,10 @@ function begin(menu){
 if(!can())return null;
 try{if(menu&&window.scrollY>0)window.scrollTo(0,0);var o={p:shoot(menu).catch(nul)};o.b=shootBg().catch(nul);return o}catch(x){return null}}
 async function run(pre,dir,swap){
-var old=null,e=null;
+var old=null,e=null,fx=nextFx(),useM=fx%2===1,mdir=MDIR[Math.floor(fx/2)%4];
 try{if(pre&&pre.p)old=await Promise.race([pre.p,wait(800,null)])}catch(x){old=null}
 try{e=env()}catch(x){e=null}
-if(!old||!e||!can()||old.width!==Math.round(e.IW*e.s)||old.height!==Math.round(e.H*e.s)){swap();flipM();return}
+if(!old||!e||!can()||old.width!==Math.round(e.IW*e.s)||old.height!==Math.round(e.H*e.s)){swap();if(useM)flipM(mdir);else flipWave(dir);return}
 if(cur)cur.kill();
 var cv=document.createElement("canvas"),g=cv.getContext("2d"),dead=false,raf=0,safe=0,fade=0,nu=null,bh=null,ovl=null,w0=innerWidth,h0=innerHeight,job={kill:kill};
 cv.id="tflip";cv.width=old.width;cv.height=old.height;cv.setAttribute("aria-hidden","true");cv.style.width=e.IW+"px";cv.style.height=e.H+"px";
@@ -997,7 +997,7 @@ if(dead)return;
 nu=R[0];bh=R[1];
 if(nu&&(nu.width!==cv.width||nu.height!==cv.height))nu=null;
 if(bh&&(bh.width!==cv.width||bh.height!==cv.height))bh=null;
-if(nu){var mo=null;try{mo=mflip(old,nu,e)}catch(x){mo=null}
+if(nu&&useM){var mo=null;try{mo=mflip(old,nu,e,mdir)}catch(x){mo=null}
 if(mo){ovl=mo;requestAnimationFrame(function(){requestAnimationFrame(function(){if(dead)return;mo.go();cv.style.visibility="hidden";clearTimeout(safe);safe=setTimeout(kill,mo.ms)})});return}}
 var Wd=cv.width,Hd=cv.height,cols=Math.max(8,Math.min(40,Math.round(Math.sqrt(N*Wd/Hd)))),rows=Math.max(8,Math.round(N/cols)),T=[],mx=0,bg=env().bg,ln=(getComputedStyle(document.documentElement).getPropertyValue("--line")||"").trim()||"rgba(128,128,128,.4)",c,r;
 for(r=0;r<rows;r++)for(c=0;c<cols;c++){
@@ -1024,8 +1024,8 @@ raf=requestAnimationFrame(tick)
 }catch(x){kill()}}
 }
 /* the M transition: every tile gets two small canvases, cut from the old and new page pictures (no reading pictures back, so it works on every page) */
-function mflip(old,nu,e){
-var W=e.IW,H=e.H,sc=old.width/W,G=mGrid(W,H),dir=MDIR[Math.floor(Math.random()*4)],el=document.createElement("div"),cs=[];
+function mflip(old,nu,e,dir){
+var W=e.IW,H=e.H,sc=old.width/W,G=mGrid(W,H),el=document.createElement("div"),cs=[];
 el.id="mflip";el.className=dir+(dir==="l"||dir==="r"?" h":" v");el.setAttribute("aria-hidden","true");el.style.width=W+"px";el.style.height=H+"px";
 function face(src,q,cls){var c=document.createElement("canvas"),sx=Math.round(q.x*sc),sy=Math.round(q.y*sc),sw=Math.max(1,Math.round((q.x+q.w)*sc)-sx),sh=Math.max(1,Math.round((q.y+q.h)*sc)-sy);
 c.className=cls;c.width=sw;c.height=sh;c.getContext("2d").drawImage(src,sx,sy,sw,sh,0,0,sw,sh);cs.push(c);return c}
@@ -1034,7 +1034,9 @@ document.body.appendChild(el);
 return {ms:MHOLD+MFL+80,go:function(){el.classList.add("go")},k:function(){if(el.parentNode)el.parentNode.removeChild(el);cs.forEach(function(c){c.width=c.height=1})}}}
 setTimeout(warm,1200);
 return {begin:begin,run:run,warm:warm}})();
-var MHOLD=1000,MFL=700,MDIR=["l","r","u","d"];
+var MHOLD=1000,MFL=700,MDIR=["l","u","r","d"];
+/* which sign in/out animation plays next: even turns the left-to-right wave, odd turns the M (its direction moves on each time) */
+function nextFx(){var n=Math.max(0,Math.floor(+store.get("ln_tfx",0)||0));store.set("ln_tfx",(n+1)%1000);return n}
 /* the tile grid for the M transition, and which tiles make up the M (it fills most of the screen) */
 function mGrid(W,H){var tsz=Math.max(34,Math.min(W,H)/14),cols=Math.max(6,Math.round(W/tsz)),rows=Math.max(6,Math.round(H/tsz)),
 mh=H*.76,mw=Math.min(W*.86,mh*1.8);mh=Math.min(mh,mw/.62);var mx=(W-mw)/2,my=(H-mh)/2,sw=mw<mh?.21:.17,iv=.31+(sw-.17)*1.6,ov=mw<mh?.5:.54,
@@ -1045,12 +1047,12 @@ for(var r=0;r<rows;r++)for(var c=0;c<cols;c++){var x0=Math.round(c*W/cols),x1=Ma
 T.push({x:x0,y:y0,w:x1-x0,h:y1-y0,m:inM((x0+x1)/2,(y0+y1)/2)})}
 return {cols:cols,rows:rows,t:T}}
 /* the same transition with plain tiles, for browsers that can't take page pictures */
-function flipM(){
+function flipM(dr){
 try{
 if(!window.matchMedia||window.matchMedia("(prefers-reduced-motion: reduce)").matches)return;
 var old=document.getElementById("wave");if(old&&old.parentNode)old.parentNode.removeChild(old);
 var W=window.innerWidth||document.documentElement.clientWidth||900,H=window.innerHeight||document.documentElement.clientHeight||700,G=mGrid(W,H),h="";
-var dr=MDIR[Math.floor(Math.random()*4)];G.t.forEach(function(q){h+='<i class="w'+dr+(q.m?' wm':'')+'" style="--d:'+(q.m?MHOLD:0)+'ms"></i>'});
+dr=dr||MDIR[0];G.t.forEach(function(q){h+='<i class="w'+dr+(q.m?' wm':'')+'" style="--d:'+(q.m?MHOLD:0)+'ms"></i>'});
 var w=document.createElement("div");w.id="wave";w.className="mw";w.setAttribute("aria-hidden","true");
 w.style.gridTemplateColumns="repeat("+G.cols+",1fr)";w.style.gridTemplateRows="repeat("+G.rows+",1fr)";w.innerHTML=h;
 setTimeout(function(){if(w.parentNode)w.parentNode.removeChild(w)},MHOLD+MFL+200);
