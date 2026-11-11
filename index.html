@@ -1127,7 +1127,11 @@ function amzTick(){var T=AMZ.T;if(!AMZ.el||AMZ.busy||document.hidden||!T.length|
 var t=T[Math.floor(Math.random()*T.length)];if(t.fl)return;
 var shown={};T.forEach(function(x){shown[x.art]=1});var c=AMZ.pool.filter(function(u){return !shown[u]});if(!c.length)c=AMZ.pool.filter(function(u){return u!==t.art});if(!c.length)return;
 var u=c[Math.floor(Math.random()*c.length)],im=new Image();t.fl=true;
-im.onload=function(){if(!AMZ.el||AMZ.busy){t.fl=false;return}var face=t.f[1-t.v];face.innerHTML="";im.alt="";im.className="nf";face.appendChild(im);t.rot+=180;t.ai.style.transform="rotateY("+t.rot+"deg)";t.v=1-t.v;t.art=u;setTimeout(function(){t.fl=false},650)};
+im.onload=function(){if(!AMZ.el||AMZ.busy){t.fl=false;return}var A=t.f[0],B=t.f[1];
+/* settle the tile back to rest with the current picture on its front (no visible change), then flip it a random way: left, right, up or down */
+t.ai.style.transition="none";if(t.v===1){A.innerHTML="";while(B.firstChild)A.appendChild(B.firstChild)}t.ai.style.transform="none";t.v=0;
+var ax=Math.random()<.5?"X":"Y",sg=Math.random()<.5?1:-1;B.style.transform="rotate"+ax+"(180deg)";B.innerHTML="";im.alt="";im.className="nf";B.appendChild(im);
+void t.ai.offsetWidth;t.ai.style.transition="";t.ai.style.transform="rotate"+ax+"("+(180*sg)+"deg)";t.v=1;t.art=u;setTimeout(function(){t.fl=false},650)};
 im.onerror=function(){t.fl=false};im.src=amzArt(u)}
 function amzStart(){clearInterval(AMZ.timer);AMZ.timer=0;if(!amzCalm())AMZ.timer=setInterval(amzTick,500)}
 function amzStop(){clearInterval(AMZ.timer);AMZ.timer=0}
