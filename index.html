@@ -535,8 +535,8 @@ html.mdragging,html.mdragging *{cursor:grabbing!important}
 .rdel{margin-right:auto;color:var(--bad)}
 /* two per row (wide screens): artwork half the card, platforms hanging down the top-right, the review in focus, actions in the bottom-right */
 @media (min-width:701px){
-.cols2 .rev:not(.nocv){grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;padding:12px}
-.cols2 .rev:not(.nocv) .glow{--cs:calc((100cqw - 38px) / 2);--k:2.1}
+.cols2 .rev:not(.nocv){grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;padding:12px}
+.cols2 .rev:not(.nocv) .glow{--cs:calc((100cqw - 36px) / 2);--k:2.1}
 .cols2 .rev:not(.nocv) .rl .cover{font-size:14px}
 .cols2 .rev:not(.nocv) .rbl{display:none}
 .cols2 .rev:not(.nocv) .rf{display:none}
@@ -559,7 +559,7 @@ html.mdragging,html.mdragging *{cursor:grabbing!important}
 .cols3 .rev:not(.nocv) .rcf>.cmts{flex-basis:100%}
 .cols2 .rev:not(.nocv) .rch{padding-right:30px}
 .cols2 .rev:not(.nocv) .rch>h3{font-size:16px;line-height:1.25}
-.cols2 .rev:not(.nocv) .rc>p{justify-self:center;max-width:100%;padding:6px 0;text-align:center}
+.cols2 .rev:not(.nocv) .rc>p{justify-self:center;max-width:100%;padding:6px 0;text-align:left}
 .cols2 .rev:not(.nocv) .rcf>.acts{margin:0 -5px 0 0;padding-top:0;justify-content:flex-end;gap:1px}
 .cols2 .rev:not(.nocv) .act{padding:5px}
 .cols2 .rev:not(.nocv) .act.later{margin-left:0}
@@ -1461,7 +1461,7 @@ var sc=$("#sc");if(sc){sc.value=S.scope||"all";sc.onchange=function(e){S.scope=e
 $("#t").onchange=function(e){S.type=e.target.value;$("#list").innerHTML=listHTML();bind()};
 $("#s").onchange=function(e){S.sort=e.target.value;$("#list").innerHTML=listHTML();bind()};
 document.querySelectorAll("[data-cols]").forEach(function(b){b.onclick=function(){var n=colsOK(+b.dataset.cols);S.cols=n;store.set("ln_perrow",n);var l=$("#list");if(l){l.classList.remove("cols1","cols2","cols3");l.classList.add("cols"+n)}
-document.querySelectorAll("[data-cols]").forEach(function(x){x.setAttribute("aria-pressed",String(x.dataset.cols===String(n)))});var sg=b.parentNode;if(sg&&sg.classList)sg.classList.toggle("s3",n===3)}});
+document.querySelectorAll("[data-cols]").forEach(function(x){x.setAttribute("aria-pressed",String(x.dataset.cols===String(n)))});var sg=b.parentNode;if(sg&&sg.classList)sg.classList.toggle("s3",n===3);fitReviews()}});
 bind()}
 if(S.tab==="review"){var pre=S.pre;S.pre=null;openForm(null,$("#rvhost"),pre)}
 if(S.tab==="editp")wireEdit();
@@ -1471,7 +1471,18 @@ var rm=$("#rmp");if(rm)rm.onclick=function(){api.setPic(null).then(function(){ap
 wireFollowing();
 bind()}
 
-function bind(){
+/* two per row: shrink each review to its longest line so the text block sits exactly midway between artwork and tile edge */
+var fitT=0;
+function fitReviews(){var all=document.querySelectorAll(".rev .rc>p");if(!all.length)return;
+[].forEach.call(all,function(p){if(p.style.width)p.style.width=""});
+if(!(window.matchMedia&&matchMedia("(min-width:701px)").matches))return;
+var ps=[].slice.call(document.querySelectorAll(".cols2 .rev:not(.nocv) .rc>p"));
+var ws=ps.map(function(p){try{var rg=document.createRange();rg.selectNodeContents(p);var rs=rg.getClientRects(),l=Infinity,r=-Infinity;
+for(var i=0;i<rs.length;i++){if(rs[i].width<1)continue;if(rs[i].left<l)l=rs[i].left;if(rs[i].right>r)r=rs[i].right}return r>l?Math.ceil(r-l)+1:0}catch(e){return 0}});
+ps.forEach(function(p,i){if(ws[i])p.style.width=ws[i]+"px"})}
+window.addEventListener("resize",function(){clearTimeout(fitT);fitT=setTimeout(fitReviews,120)});
+try{if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitReviews)}catch(e){}
+function bind(){fitReviews();
 document.querySelectorAll("[data-setplat]").forEach(function(b){b.onclick=openPlatDlg});
 var edp=$("#edpl");if(edp)edp.onclick=openPlatDlg;
 var epr=$("#edprof");if(epr)epr.onclick=function(){S.tab="editp";S.stack=[];S.shut=keepShut();appView();try{window.scrollTo(0,0)}catch(e){}};
