@@ -548,6 +548,13 @@ html.mdragging,html.mdragging *{cursor:grabbing!important}
 /* stars and action buttons share the card's bottom line */
 .cols2 .rev:not(.nocv) .rl{align-self:stretch}
 .cols2 .rev:not(.nocv) .rl>.rrate{margin-top:auto}
+/* two per row: artwork, stars and the tile's bottom edge are evenly spaced (the same 12px as the tile's padding) */
+.cols2 .rev:not(.nocv) .rl{gap:12px}
+/* and on the right: the same space between the date, the review and the buttons */
+.cols2 .rev:not(.nocv) .rc{display:flex;flex-direction:column}
+.cols2 .rev:not(.nocv) .rc>p{margin:auto 0;align-self:center}
+.cols2 .rev:not(.nocv) .rcf{margin-top:auto}
+.cols2 .rev:not(.nocv) .rc>p~.rcf{margin-top:0}
 /* three per row: date (and your pen) under the artist; actions and apps share one line */
 .cols3 .rev:not(.nocv) .rbx{display:block;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .cols3 .rev:not(.nocv) .rcf>.row{display:none}
