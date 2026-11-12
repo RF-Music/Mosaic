@@ -381,6 +381,7 @@ html.mdragging,html.mdragging *{cursor:grabbing!important}
 .cvf.on .cvi{transform:rotateY(180deg)}
 .cvi>.covbtn,.cvbk{-webkit-backface-visibility:hidden;backface-visibility:hidden}
 .cvi>.covbtn{transform:rotateY(0deg)}
+.cvf[data-ax="X"] .cvbk{transform:rotateX(180deg)}
 .cvf.on .cvi>.covbtn,.cvf:not(.on) .cvbk{pointer-events:none}
 .cvbk{position:absolute;inset:0;display:block;width:100%;height:100%;margin:0;padding:0;border:0;border-radius:6px;overflow:hidden;transform:rotateY(180deg);cursor:pointer;container-type:size;font:inherit;line-height:1.15;text-align:left;color:#fff;background:linear-gradient(135deg,hsl(var(--h,220) 55% 34%),hsl(calc(var(--h,220) + 60) 60% 22%));box-shadow:inset 0 1px 0 rgba(255,255,255,.22),0 2px 4px rgba(0,0,0,.25)}
 .cvbk .cbg{position:absolute;left:-10%;top:-10%;width:120%;height:120%;max-width:none;object-fit:cover;filter:blur(9px) saturate(1.5);filter:blur(4cqw) saturate(1.5)}
@@ -594,7 +595,7 @@ html.mdragging,html.mdragging *{cursor:grabbing!important}
 .cols3 .rev:not(.nocv) .rcf>.cmts{flex-basis:100%}
 .cols2 .rev:not(.nocv) .rch{padding-right:30px}
 .cols2 .rev:not(.nocv) .rch>h3{font-size:16px;line-height:1.25}
-.cols2 .rev:not(.nocv) .rc>p{justify-self:center;max-width:100%;padding:6px 0;text-align:left}
+.cols2 .rev:not(.nocv) .rc>p{justify-self:center;max-width:100%;padding:6px 0;text-align:left;text-wrap:balance}
 .cols2 .rev:not(.nocv) .rcf>.acts{margin:0 -5px 0 0;padding-top:0;justify-content:flex-end;gap:1px}
 .cols2 .rev:not(.nocv) .act{padding:5px}
 .cols2 .rev:not(.nocv) .act.later{margin-left:0}
@@ -1429,17 +1430,22 @@ function okDate(d){var m=/^(\d{4})-(\d{2})-(\d{2})/.exec(String(d||""));return m
 function fmtRel(o){var m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(o.rel||"");return m?(+m[3])+" "+MON[+m[2]-1]+" "+m[1]:(o.year||"")}
 function backRows(r){var s=revSong(r),o=S.info[infoKey(s)]||{},w=!!o.busy,rs=songReviews(s),n=rs.length,av=n?(rs.reduce(function(a,x){return a+rnum(x.rating)},0)/n).toFixed(1):"",ct=n?'<span class="cnt">('+n+')</span>':"";
 function row(ic,k,v,wait,extra){return '<span class="cvr"><span class="cvl"><svg viewBox="0 0 24 24" aria-hidden="true">'+CVI[ic]+'</svg><span class="cvt">'+k+'</span></span><span class="cvv'+(v?'':' na')+'"'+(v&&ic==="alb"?' title="'+esc(v)+'"':'')+'>'+(v?esc(v)+(extra||''):(wait?'…':'—'))+'</span></span>'}
-if(r.type==="Album")return row("rel","Released",fmtRel(o),w)+row("avg","Avg rating",av,false,ct)+row("len","Length",fmtTotal(o.ms),w)+row("trk","Tracks",o.count?String(o.count):"",w);
-return row("alb","Album",o.album||"",w)+row("rel","Released",fmtRel(o),w)+row("avg","Avg rating",av,false,ct)+row("len","Length",fmtLen(o.ms),w)+row("bpm","BPM",o.bpm?String(o.bpm):"",w||o.bpmBusy)}
+if(r.type==="Album")return row("avg","Avg rating",av,false,ct)+row("rel","Released",fmtRel(o),w)+row("len","Length",fmtTotal(o.ms),w)+row("trk","Tracks",o.count?String(o.count):"",w);
+return row("avg","Avg rating",av,false,ct)+row("alb","Album",o.album||"",w)+row("rel","Released",fmtRel(o),w)+row("len","Length",fmtLen(o.ms),w)+row("bpm","BPM",o.bpm?String(o.bpm):"",w||o.bpmBusy)}
 function backInner(r){return (r.art&&okArt(r.art)?'<img class="cbg" src="'+esc(r.art)+'" alt="">':'')+'<span class="vh">Hide details. </span><span class="cvd">'+backRows(r)+'</span>'}
 function covBtn(r){var at=S.tab+"|"+(S.view||"");if(at!==FLIPAT){FLIP={};FLIPAT=at}
 var id=String(r.id),on=!!FLIP[id];
 return '<div class="cvf'+(on?' on':'')+'" data-rid="'+esc(id)+'" data-k="'+esc(infoKey(revSong(r)))+'"><div class="cvi">'+
 '<button type="button" class="covbtn" data-flip="1" aria-expanded="'+on+'" aria-label="Show details for “'+esc(r.title)+'”" title="'+(r.type==="Album"?"Album":"Song")+' details"'+(on?' tabindex="-1" aria-hidden="true"':'')+'>'+cover(r)+'</button>'+
 '<button type="button" class="cvbk" data-unflip="1"'+(on?'':' tabindex="-1" aria-hidden="true"')+'>'+(on?backInner(r):'')+'</button></div></div>'}
-function flipCover(f,on){if(!f)return;var id=f.dataset.rid,r=revOf(id),fr=f.querySelector(".covbtn"),bk=f.querySelector(".cvbk");if(!r||!fr||!bk)return;
+var FDIR=[["Y",1],["Y",-1],["X",1],["X",-1]];
+function flipCover(f,on){if(!f||(f._ft&&Date.now()-f._ft<560))return;var id=f.dataset.rid,r=revOf(id),fr=f.querySelector(".covbtn"),bk=f.querySelector(".cvbk"),cv=f.querySelector(".cvi");if(!r||!fr||!bk||!cv)return;
 if(on){var s=revSong(r),o=ensureInfo(s);bk.innerHTML=backInner(r);FLIP[id]=1;if(o)o.p=loadInfo(s,o)}else delete FLIP[id];
-f.classList.toggle("on",on);fr.setAttribute("aria-expanded",String(on));
+/* pick a way to turn, line the tile up on that axis (nothing visibly changes), then turn it half a circle */
+var d=FDIR[Math.floor(Math.random()*FDIR.length)],ax=d[0],sg=d[1];
+cv.style.transition="none";f.dataset.ax=ax;cv.style.transform="rotate"+ax+"("+(on?0:-sg*180)+"deg)";void cv.offsetWidth;cv.style.transition="";
+f.classList.toggle("on",on);cv.style.transform="rotate"+ax+"("+(on?sg*180:0)+"deg)";f._ft=Date.now();
+fr.setAttribute("aria-expanded",String(on));
 [[fr,!on],[bk,on]].forEach(function(x){if(x[1]){x[0].removeAttribute("tabindex");x[0].removeAttribute("aria-hidden")}else{x[0].setAttribute("tabindex","-1");x[0].setAttribute("aria-hidden","true")}});
 try{(on?bk:fr).focus({preventScroll:true})}catch(e){}}
 function paintBacks(k){[].forEach.call(document.querySelectorAll(".cvf.on"),function(f){if(f.dataset.k!==k)return;var r=revOf(f.dataset.rid),d=f.querySelector(".cvd");if(r&&d)d.innerHTML=backRows(r)})}
@@ -1625,8 +1631,9 @@ function fitReviews(){var all=document.querySelectorAll(".rev .rc>p");if(!all.le
 [].forEach.call(all,function(p){if(p.style.width)p.style.width=""});
 if(!(window.matchMedia&&matchMedia("(min-width:701px)").matches))return;
 var ps=[].slice.call(document.querySelectorAll(".cols2 .rev:not(.nocv) .rc>p"));
-var ws=ps.map(function(p){try{var rg=document.createRange();rg.selectNodeContents(p);var rs=rg.getClientRects(),l=Infinity,r=-Infinity;
-for(var i=0;i<rs.length;i++){if(rs[i].width<1)continue;if(rs[i].left<l)l=rs[i].left;if(rs[i].right>r)r=rs[i].right}return r>l?Math.ceil(r-l)+1:0}catch(e){return 0}});
+var ws=ps.map(function(p){try{var l=Infinity,r=-Infinity,tw=document.createTreeWalker(p,4),n,m,re,rg,rs,i;
+while((n=tw.nextNode())){re=/\S+/g;while((m=re.exec(n.data))){rg=document.createRange();rg.setStart(n,m.index);rg.setEnd(n,m.index+m[0].length);rs=rg.getClientRects();
+for(i=0;i<rs.length;i++){if(rs[i].width<1)continue;if(rs[i].left<l)l=rs[i].left;if(rs[i].right>r)r=rs[i].right}}}return r>l?Math.ceil(r-l)+1:0}catch(e){return 0}});
 ps.forEach(function(p,i){if(ws[i])p.style.width=ws[i]+"px"})}
 window.addEventListener("resize",function(){clearTimeout(fitT);fitT=setTimeout(fitReviews,120)});
 try{if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitReviews)}catch(e){}
