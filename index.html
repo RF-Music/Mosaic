@@ -260,6 +260,10 @@ header.top h2{margin-right:10px}
 .tray{position:absolute;left:100%;top:50%;margin-left:6px;transform:translate(-6px,-50%);display:flex;gap:6px;align-items:center;padding:4px 8px;background:var(--surface);border:1px solid var(--line);border-radius:999px;box-shadow:0 6px 18px rgba(0,0,0,.25);opacity:0;visibility:hidden;max-width:640px;transition:opacity .18s,transform .18s,visibility 0s .18s,max-width 0s .18s;z-index:6;white-space:nowrap}
 .sendw:not(.open) .tray{max-width:0;overflow:hidden;padding-left:0;padding-right:0;border-width:0}
 .tray::before{content:"";position:absolute;left:-10px;top:0;bottom:0;width:10px}
+.tray{flex-direction:column;align-items:flex-end;border-radius:18px;padding:6px 8px}
+.trw{display:flex;gap:6px;align-items:center}
+.shx{flex:none;height:30px;padding:0 11px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink);font:600 12px/1 "Montserrat",sans-serif;cursor:pointer;white-space:nowrap;transition:transform .1s,color .12s,border-color .12s}
+.shx:hover,.shx:focus-visible{transform:translateY(-2px);color:var(--pop);border-color:var(--pop)}
 .sendw.open .tray{opacity:1;visibility:visible;transform:translate(0,-50%);transition-delay:0s}
 .avs{position:relative;display:grid;place-items:center;width:30px;height:30px;padding:0;border:0;border-radius:50%;background:none;cursor:pointer;color:var(--mute);transition:transform .1s}
 .avs:hover,.avs:focus-visible{transform:translateY(-2px)}
@@ -271,7 +275,17 @@ header.top h2{margin-right:10px}
 .avs .ok{display:none;position:absolute;inset:0;border-radius:50%;background:color-mix(in srgb,var(--teal) 88%,transparent);color:#fff;font-style:normal;font-size:14px;place-items:center}
 .avs.sent .ok{display:grid}
 .tnone{font-size:12px;padding:0 4px}
-@media (max-width:520px){.tray .avs:nth-child(n+7){display:none}}
+#dlg.stdlg{width:min(400px,94vw)}
+.stw{display:flex;flex-direction:column;align-items:center;gap:12px}
+.stw h2{margin:0;align-self:stretch;font-size:17px;font-weight:600}
+.stw [hidden]{display:none!important}
+.stp{height:min(54vh,460px);aspect-ratio:9/16;border-radius:14px;overflow:hidden;display:grid;place-items:center;background:color-mix(in srgb,var(--line) 70%,transparent);box-shadow:0 10px 28px rgba(0,0,0,.3)}
+.stp img{display:block;width:100%;height:100%;object-fit:cover}
+.stl{padding:12px;font-size:13px;color:var(--mute);text-align:center}
+.sthint{margin:0;max-width:340px;text-align:center}
+.sthint .linkbtn{padding:0;font-size:inherit}
+.stb{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+@media (max-width:520px){.trf .avs:nth-child(n+6){display:none}}
 
 .fol-on{min-width:96px}.fol-on .fb{display:none}
 .fol-on:hover .fa,.fol-on:focus-visible .fa{display:none}.fol-on:hover .fb,.fol-on:focus-visible .fb{display:inline}
@@ -513,6 +527,7 @@ html.mdragging,html.mdragging *{cursor:grabbing!important}
 .cols2 .sendw,.cols3 .sendw{position:static}
 .cols2 .tray,.cols3 .tray{left:auto;right:0;top:auto;bottom:100%;margin:0 0 6px;transform:translate(0,6px)}
 .cols2 .sendw.open .tray,.cols3 .sendw.open .tray{transform:none}
+@media (max-width:700px){.list>.rev:nth-child(odd) .tray{left:0;right:auto}}
 .cols2 .tray::before,.cols3 .tray::before{left:0;right:0;top:100%;bottom:auto;width:auto;height:10px}
 .cols3 .rev{grid-template-columns:minmax(0,1fr);grid-template-rows:auto 1fr;gap:8px}
 .cols2 .rev.nocv,.cols3 .rev.nocv{grid-template-columns:minmax(0,1fr);grid-template-rows:1fr;gap:0}
@@ -520,7 +535,7 @@ html.mdragging,html.mdragging *{cursor:grabbing!important}
 .cols3 .rrate{gap:8px}
 .cols3 .rrate .rv{font-size:15px}
 .cols3 .glow{--cs:calc(100cqw - 20px);--k:1.7}
-.cols3 .tray .avs:nth-child(n+5){display:none}
+.cols3 .trf .avs:nth-child(n+7){display:none}
 /* three per row: the byline drops to the foot, level with the listening apps */
 .cols3 .rbl{display:none}
 .cols3 .rbf{display:flex}
@@ -532,7 +547,7 @@ html.mdragging,html.mdragging *{cursor:grabbing!important}
 .cols2 .rrate .rv,.cols3 .rrate .rv{font-size:14px}
 .cols3 .rrate{gap:6px}
 .cols2 .glow{--cs:calc(100cqw - 20px);--k:1.7}
-.cols2 .tray .avs:nth-child(n+5){display:none}
+.cols2 .trf .avs:nth-child(n+6){display:none}
 .cols3 .rl .cover{font-size:12px}
 .cols3 .rbl{display:grid}
 .cols3 .rbf{display:none}
@@ -948,8 +963,23 @@ return h+'<div class="list lt">'+l.map(function(t,i){
 return '<div class="ri"><button type="button" class="artbtn" data-info="lt:'+i+'" aria-label="About “'+esc(t.title)+'”">'+rimg({title:t.title,artist:t.artist,thumb:okArt(t.art)?t.art:""})+'</button><div class="rt"><b>'+esc(t.title)+'</b><span class="meta">'+esc(t.artist)+' · '+t.type+'</span></div>'+(S.plats.length?'<span class="lis2">'+plLinks(t,22,"lg")+'</span>':'')+'<button type="button" class="btn ghost sm" data-lrm="'+i+'" aria-label="Remove “'+esc(t.title)+'” from listen later">Remove</button></div>'}).join("")+'</div></section>'}
 function save(){store.set("ln_reviews",S.reviews)}
 function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
-function wordsOf(t){var k=String(t).match(/\S+/g);return k?k.length:0}
-function clipWords(t,n){var re=/\S+/g,k,i=0;while((k=re.exec(t))){if(++i>n)return t.slice(0,k.index).replace(/\s+$/,"")}return t}
+/* five words. Words joined into a chain (best-album-of-the-decade, best_album_ever, best.album.ever, BestAlbumEver) count one by one.
+   A simple pair like double-edged, lo-fi or AC/DC is still one word, and so are set phrases like once-in-a-lifetime.
+   Every space-separated chunk counts at least once, so this never allows more than the database's own space-based check. */
+var CMPD=" once-in-a-lifetime once-in-a-generation state-of-the-art larger-than-life out-of-this-world over-the-top run-of-the-mill one-of-a-kind edge-of-your-seat edge-of-the-seat middle-of-the-road tongue-in-cheek down-to-earth happy-go-lucky up-to-date behind-the-scenes head-over-heels hit-or-miss make-or-break by-the-numbers paint-by-numbers coming-of-age end-of-the-world end-of-an-era stream-of-consciousness out-of-the-box top-of-the-line matter-of-fact on-the-nose rough-around-the-edges rock-and-roll rock-n-roll rock-'n'-roll drum-and-bass drum-n-bass rhythm-and-blues call-and-response in-your-face spur-of-the-moment up-and-coming all-or-nothing love-it-or-hate-it next-to-nothing heart-on-sleeve heart-on-your-sleeve word-for-word day-to-day face-to-face back-to-back side-by-side step-by-step one-on-one off-the-wall off-the-charts over-the-moon under-the-radar take-it-or-leave-it out-of-body out-of-control out-of-tune out-of-place middle-of-the-night not-so-subtle ride-or-die all-time-great all-killer-no-filler good-for-nothing jack-of-all-trades ";
+var WEDGE=/^["'“”‘’«»()\[\]{}<>.,;:!?¡¿…*~#^|\\\/&+=\-‐‑‒−]+|["'“”‘’«»()\[\]{}<>.,;:!?¡¿…*~#^|\\\/&+=\-‐‑‒−]+$/g;
+function chainWords(t){t=String(t).replace(/[’‘]/g,"'").replace(WEDGE,"");if(!t)return 0;var ps=[];
+t.split(/[-‐‑‒−\/]+/).forEach(function(x){if(!x)return;var d=x.split(".").filter(Boolean),cur=d[0]||"";
+for(var i=1;i<d.length;i++){if(d[i-1].length>1&&d[i].length>1&&!(/^\d+$/.test(d[i-1])&&/^\d+$/.test(d[i]))){if(cur)ps.push(cur);cur=d[i]}else cur+="."+d[i]}
+if(cur)ps.push(cur)});
+var n=0;ps.forEach(function(x){var k=(x.match(/[a-z][A-Z]/g)||[]).length+1;n+=k>2?k:1});
+if(ps.length===2&&n===2)return 1;
+if(ps.length>2&&CMPD.indexOf(" "+t.toLowerCase().replace(/[‐‑‒−]/g,"-")+" ")>-1)return 1;
+return n}
+function tokWords(k){var n=0;String(k).split(/[–—―_]+/).forEach(function(t){n+=chainWords(t)});return Math.max(1,n)}
+function wordsOf(t){var n=0;(String(t).match(/\S+/g)||[]).forEach(function(x){n+=tokWords(x)});return n}
+function chained(t){return (String(t).match(/\S+/g)||[]).some(function(x){return tokWords(x)>1})}
+function clipWords(t,n){var re=/\S+/g,k,c=0;while((k=re.exec(t))){if(c>=n)return t.slice(0,k.index).replace(/\s+$/,"");c+=tokWords(k[0])}return t}
 function hue(s){var h=0;for(var i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))%360;return h}
 function cover(r){var h=hue(r.title+r.artist);return '<div class="cover" style="background:linear-gradient(135deg,hsl('+h+',70%,48%),hsl('+((h+60)%360)+',75%,36%))">'+esc(r.title.slice(0,22))+(r.art&&okArt(r.art)?'<img src="'+esc(r.art)+'" alt="">':'')+'</div>'}
 function rnum(v){v=Number(v);return isFinite(v)?Math.min(5,Math.max(0,Math.round(v*10)/10)):0}
@@ -1394,7 +1424,7 @@ if(S.social){
 h+='<button type="button" class="act'+(liked?' on':'')+'" data-like="'+id+'" aria-pressed="'+liked+'" aria-label="Like">'+ico("like")+(lk.length?'<span>'+lk.length+'</span>':'')+'</button>';
 h+='<button type="button" class="act'+(S.cm[id]?' on':'')+'" data-cmt="'+id+'" aria-expanded="'+!!S.cm[id]+'" aria-label="Comments">'+ico("cmt")+(cm.length?'<span>'+cm.length+'</span>':'')+'</button>';
 h+='<button type="button" class="act'+(reposted?' on':'')+'" data-rp="'+id+'" aria-pressed="'+reposted+'" aria-label="Repost"'+(own?' disabled title="You can\'t repost your own review"':'')+'>'+ico("rp")+(rp.length?'<span>'+rp.length+'</span>':'')+'</button>'}
-h+='<span class="sendw" data-sw="'+id+'"><button type="button" class="act" data-send="'+id+'" aria-label="Send" aria-haspopup="true">'+ico("send")+'</button><span class="tray" role="group" aria-label="Send to">'+trayHTML(id)+'</span></span>';
+h+='<span class="sendw" data-sw="'+id+'"><button type="button" class="act" data-send="'+id+'" aria-label="Share" aria-haspopup="true">'+ico("send")+'</button><span class="tray" role="group" aria-label="Share">'+trayHTML(id)+'</span></span>';
 if(S.laterOK){var lt=inLater(r);h+='<button type="button" class="act later'+(lt?' on':'')+'" data-later="'+id+'" aria-pressed="'+lt+'" aria-label="'+(lt?'Remove from listen later':'Listen later')+'" title="'+(lt?'On your listen later list':'Listen later')+'">'+ico("bm")+'</button>'}
 h+='</div>';
 if(S.social&&S.cm[id]){h+='<div class="cmts">'+cm.map(function(c){return '<div class="cm"><span><b>'+uname(c.user)+'</b> '+esc(c.text)+' <span class="meta">'+esc(c.date)+'</span></span>'+(c.user===S.user?'<button type="button" class="cx" data-dcm="'+c.id+'" data-rid="'+id+'" aria-label="Delete comment">×</button>':'')+'</div>'}).join("")+
@@ -1403,16 +1433,122 @@ return h}
 function friends(){var a=me();if(!a)return [];var fol=(a.following||[]).filter(acct),fb=accts.filter(function(x){return x.name!==S.user&&(x.following||[]).indexOf(S.user)>-1}).map(function(x){return x.name}),all=[];
 fol.concat(fb).forEach(function(n){if(n!==S.user&&all.indexOf(n)<0)all.push(n)});
 all.sort(function(x,y){return (fol.indexOf(y)>-1&&fb.indexOf(y)>-1)-(fol.indexOf(x)>-1&&fb.indexOf(x)>-1)});return all}
-function trayHTML(id){var h='<button type="button" class="avs lnk" data-name="Copy link" data-copy="'+id+'" aria-label="Copy link">'+ico("link")+'</button>';
-if(S.msgOK){var fr=friends();if(!fr.length)h+='<span class="meta tnone">Follow people to send them reviews</span>';
-fr.slice(0,8).forEach(function(n){h+='<button type="button" class="avs'+(S.sent[id+":"+n]?" sent":"")+'" data-name="'+esc(n)+'" data-to="'+esc(n)+'" data-rid="'+id+'" aria-label="Send to '+esc(n)+'">'+avatar(acct(n))+'<i class="ok">✓</i></button>'})}
+function trayHTML(id){var h='<span class="trw"><button type="button" class="avs lnk" data-name="Copy link" data-copy="'+id+'" aria-label="Copy link">'+ico("link")+'</button>'+
+'<button type="button" class="shx" data-story="ig" data-rid="'+id+'" aria-label="Share to your Instagram story">Instagram</button>'+
+'<button type="button" class="shx" data-story="tt" data-rid="'+id+'" aria-label="Share to TikTok">TikTok</button></span>';
+if(S.msgOK){var fr=friends();h+='<span class="trw trf">';if(!fr.length)h+='<span class="meta tnone">Follow people to send them reviews</span>';
+fr.slice(0,8).forEach(function(n){h+='<button type="button" class="avs'+(S.sent[id+":"+n]?" sent":"")+'" data-name="'+esc(n)+'" data-to="'+esc(n)+'" data-rid="'+id+'" aria-label="Send to '+esc(n)+'">'+avatar(acct(n))+'<i class="ok">✓</i></button>'});h+='</span>'}
 return h}
 function refreshList(fid){var el=$("#list");if(!el)return;el.innerHTML=listHTML();bind();syncSongLater();if(fid){var f=document.getElementById(fid);if(f)f.focus()}}
-function sendText(r){return '“'+r.title+'” by '+r.artist+', rated '+rnum(r.rating).toFixed(1)+'/5 on Mosaic'}
+function sendText(r){var t=String(r.text||"").trim();return (t?'“'+t+'” — '+r.title:'“'+r.title+'”')+' by '+r.artist+', rated '+rnum(r.rating).toFixed(1)+'/5 on Mosaic'}
 async function copyReview(r,btn){var text=sendText(r),url=location.href.split("#")[0],msg="Copied";
 try{if(navigator.share){await navigator.share({title:"Mosaic",text:text,url:url});return}}catch(e){if(e&&e.name==="AbortError")return}
 try{await navigator.clipboard.writeText(text+" "+url)}catch(e){msg="Couldn't copy"}
 btn.dataset.name=msg;btn.classList.add("flash");setTimeout(function(){btn.dataset.name="Copy link";btn.classList.remove("flash")},1600)}
+/* ---------- story pictures: a 1080×1920 image of a review (artwork, stars, the words, who wrote it, the link) for Instagram stories and TikTok ---------- */
+var STARPT=[[10,1.68],[11.7,6.23],[16.56,6.45],[12.76,9.47],[14.06,14.16],[10,11.48],[5.94,14.16],[7.24,9.47],[3.44,6.45],[8.3,6.23]];
+function siteLink(){return location.origin+location.pathname.replace(/index\.html$/,"")}
+function siteHost(){return (location.host+location.pathname.replace(/index\.html$/,"")).replace(/\/$/,"")}
+function loadPic(src,cors){return new Promise(function(ok,no){var im=new Image();if(cors)im.crossOrigin="anonymous";im.onload=function(){ok(im)};im.onerror=function(){no(new Error("img"))};im.src=src})}
+/* the artwork at full size, readable by the canvas: straight from Apple if it allows it, otherwise through our own small artwork function */
+async function storyArt(u){if(!u||!okArt(u))return null;var big=u.replace(/\/\d+x\d+bb\./,"/1000x1000bb.");
+try{return await loadPic(big,true)}catch(e){}
+if(!REMOTE||!sb)return null;
+try{var se=await sb.auth.getSession(),tk=se&&se.data&&se.data.session&&se.data.session.access_token;if(!tk)return null;
+var res=await fetch(SUPABASE_URL+"/functions/v1/art?u="+encodeURIComponent(big),{headers:{Authorization:"Bearer "+tk,apikey:SUPABASE_KEY}});if(!res.ok)return null;
+var ou=URL.createObjectURL(await res.blob());try{return await loadPic(ou,false)}finally{setTimeout(function(){URL.revokeObjectURL(ou)},5000)}}catch(e){return null}}
+function rrect(g,x,y,w,h,r){g.beginPath();g.moveTo(x+r,y);g.arcTo(x+w,y,x+w,y+h,r);g.arcTo(x+w,y+h,x,y+h,r);g.arcTo(x,y+h,x,y,r);g.arcTo(x,y,x+w,y,r);g.closePath()}
+function fitText(g,t,w){t=String(t);if(g.measureText(t).width<=w)return t;while(t.length>1&&g.measureText(t+"…").width>w)t=t.slice(0,-1);return t.replace(/\s+$/,"")+"…"}
+/* the fewest lines that fit, then the most even ones */
+function splitLines(g,ws,maxW,maxL){var best=null;
+(function go(i,ls){if(i===ws.length){var w=0;ls.forEach(function(l){w=Math.max(w,g.measureText(l).width)});if(w<=maxW&&(!best||ls.length<best.n||(ls.length===best.n&&w<best.w)))best={n:ls.length,w:w,lines:ls.slice()};return}
+if(ls.length>=maxL)return;for(var j=i+1;j<=ws.length;j++){ls.push(ws.slice(i,j).join(" "));go(j,ls);ls.pop()}})(0,[]);
+return best&&best.lines}
+function strHash(t){var h=2166136261;t=String(t);for(var i=0;i<t.length;i++){h^=t.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
+function seeded(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+function canBlur(){try{var t=document.createElement("canvas");t.width=t.height=9;var x=t.getContext("2d");if(!("filter" in x))return false;x.filter="blur(2px)";x.fillStyle="#fff";x.fillRect(4,4,1,1);return x.getImageData(1,4,1,1).data[3]>0}catch(e){return false}}
+function quoteLine(g,l,cx,by){var a=l.charAt(0)==="“",z=l.length>1&&l.slice(-1)==="”",mid=l.slice(a?1:0,z?l.length-1:l.length),wa=a?g.measureText("“").width:0,wm=g.measureText(mid).width,wz=z?g.measureText("”").width:0,x=cx-(wa+wm+wz)/2;
+g.textAlign="left";if(a){g.fillStyle="#ff63ad";g.fillText("“",x,by)}g.fillStyle="#fff";g.fillText(mid,x+wa,by);if(z){g.fillStyle="#ff63ad";g.fillText("”",x+wa+wm,by)}g.textAlign="center"}
+async function storyBlob(r){
+var W=1080,H=1920,c=document.createElement("canvas");c.width=W;c.height=H;var g=c.getContext("2d"),F=' "Montserrat",system-ui,sans-serif';
+function font(w,z){g.font=w+" "+z+"px"+F}
+try{if(document.fonts&&document.fonts.load)await Promise.all(["700 80px","600 44px","500 36px"].map(function(f){return document.fonts.load(f+F)}))}catch(e){}
+var art=await storyArt(r.art),who=acct(r.user),pic=null,hh=hue(r.title+r.artist);
+if(who&&okPic(who.pic)){try{pic=await loadPic(who.pic,false)}catch(e){}}
+/* background: the artwork blurred right out (or the cover colours), a dark wash, then a faint mosaic of tiles */
+if(art){var iw=art.naturalWidth||art.width,ih=art.naturalHeight||art.height;
+if(canBlur()){g.save();g.filter="blur(80px) saturate(1.35)";var s0=Math.max(W/iw,H/ih)*1.25;g.drawImage(art,(W-iw*s0)/2,(H-ih*s0)/2,iw*s0,ih*s0);g.restore()}
+else{var sm=document.createElement("canvas");sm.width=18;sm.height=32;var sg=sm.getContext("2d"),s1=Math.max(18/iw,32/ih);sg.drawImage(art,(18-iw*s1)/2,(32-ih*s1)/2,iw*s1,ih*s1);g.imageSmoothingEnabled=true;g.drawImage(sm,0,0,W,H)}}
+else{var bg=g.createLinearGradient(0,0,W,H);bg.addColorStop(0,"hsl("+hh+",70%,48%)");bg.addColorStop(1,"hsl("+((hh+60)%360)+",75%,36%)");g.fillStyle=bg;g.fillRect(0,0,W,H)}
+var wa=g.createLinearGradient(0,0,0,H);wa.addColorStop(0,"rgba(12,10,16,.5)");wa.addColorStop(.5,"rgba(12,10,16,.4)");wa.addColorStop(1,"rgba(12,10,16,.78)");g.fillStyle=wa;g.fillRect(0,0,W,H);
+var rnd=seeded(strHash(r.id+"|"+r.title)),T=90,cols=W/T,rows=Math.ceil(H/T),tx,ty;
+for(ty=0;ty<rows;ty++)for(tx=0;tx<cols;tx++){var v=rnd();g.fillStyle=v<.5?"rgba(255,255,255,"+(v*.08).toFixed(3)+")":"rgba(0,0,0,"+((v-.5)*.16).toFixed(3)+")";g.fillRect(tx*T,ty*T,T,T)}
+g.fillStyle="rgba(0,0,0,.2)";for(tx=1;tx<cols;tx++)g.fillRect(tx*T-1.5,0,3,H);for(ty=1;ty<rows;ty++)g.fillRect(0,ty*T-1.5,W,3);
+/* measure first, so everything sits inside the part of the screen Instagram and TikTok leave clear */
+var text=String(r.text||"").trim(),rv=null,ws,z;
+if(text){ws=text.split(/\s+/);ws[0]="“"+ws[0];ws[ws.length-1]+="”";
+for(z=84;z>=36;z-=4){font("700",z);var ls=splitLines(g,ws,860,3);if(ls){rv={s:z,lines:ls};break}}
+if(!rv){font("700",36);rv={s:36,lines:[fitText(g,ws.join(" "),860)]}}}
+var ts=60;font("700",ts);while(ts>40&&g.measureText(r.title).width>920){ts-=2;font("700",ts)}
+var RH=rv?Math.round(rv.lines.length*rv.s*1.16):0,
+fixed=54+44+60+Math.round(ts*1.2)+8+46+40+56+(rv?52+RH:0)+56+64+14+36,
+A=Math.round(Math.max(460,Math.min(700,1450-fixed))),y=240+Math.max(0,(1450-fixed-A)/2);
+g.textAlign="center";g.textBaseline="alphabetic";
+/* the wordmark */
+font("600",50);var wmw=g.measureText("Mosaic").width,wg=g.createLinearGradient(W/2-wmw/2,0,W/2+wmw/2,0);wg.addColorStop(0,"#ff63ad");wg.addColorStop(1,"#8b6cff");g.fillStyle=wg;g.fillText("Mosaic",W/2,y+40);y+=54+44;
+/* the artwork, lifted off the page */
+var ax=(W-A)/2,ay=y,gl=g.createRadialGradient(W/2,ay+A/2,A*.3,W/2,ay+A/2,A*.9);gl.addColorStop(0,"rgba(255,255,255,.12)");gl.addColorStop(1,"rgba(255,255,255,0)");g.fillStyle=gl;g.fillRect(0,ay-A*.4,W,A*1.8);
+g.save();g.shadowColor="rgba(0,0,0,.55)";g.shadowBlur=80;g.shadowOffsetY=30;rrect(g,ax,ay,A,A,28);g.fillStyle="#141218";g.fill();g.restore();
+g.save();rrect(g,ax,ay,A,A,28);g.clip();
+if(art){var iw2=art.naturalWidth||art.width,ih2=art.naturalHeight||art.height,s2=Math.max(A/iw2,A/ih2);g.drawImage(art,ax+(A-iw2*s2)/2,ay+(A-ih2*s2)/2,iw2*s2,ih2*s2)}
+else{var cg=g.createLinearGradient(ax,ay,ax+A,ay+A);cg.addColorStop(0,"hsl("+hh+",70%,48%)");cg.addColorStop(1,"hsl("+((hh+60)%360)+",75%,36%)");g.fillStyle=cg;g.fillRect(ax,ay,A,A);
+font("600",54);g.textAlign="left";g.fillStyle="#fff";var tl=splitLines(g,String(r.title).split(/\s+/),A-80,3)||[fitText(g,r.title,A-80)];tl.forEach(function(l,i){g.fillText(l,ax+40,ay+A-44-(tl.length-1-i)*62)});g.textAlign="center"}
+g.restore();
+g.save();rrect(g,ax+1,ay+1,A-2,A-2,27);g.strokeStyle="rgba(255,255,255,.16)";g.lineWidth=2;g.stroke();g.restore();
+y+=A+60;
+/* title and artist */
+font("700",ts);g.fillStyle="#fff";g.fillText(fitText(g,r.title,920),W/2,y+Math.round(ts*.95));y+=Math.round(ts*1.2)+8;
+font("500",38);g.fillStyle="rgba(255,255,255,.72)";g.fillText(fitText(g,r.artist+(r.type==="Album"?" · Album":""),920),W/2,y+36);y+=46+40;
+/* the stars, filled to the tenth, and the number */
+var k=3.6,SBW=100*k,SBH=15.56*k,num=rnum(r.rating).toFixed(1);font("700",52);var nw=g.measureText(num).width,sx=(W-(93.12*k+26+nw))/2-3.44*k;
+g.save();g.beginPath();for(var si=0;si<5;si++){STARPT.forEach(function(q,j){var px=sx+(q[0]+20*si)*k,py=y+q[1]*k;if(j)g.lineTo(px,py);else g.moveTo(px,py)});g.closePath()}g.clip();
+g.fillStyle="rgba(255,255,255,.26)";g.fillRect(sx,y,SBW,SBH);g.fillStyle="#fff";g.fillRect(sx,y,SBW*starPct(r.rating)/100,SBH);g.restore();
+g.textAlign="left";g.fillStyle="#fff";g.fillText(num,sx+96.56*k+26,y+SBH/2+18);g.textAlign="center";y+=56;
+/* the five words, the star of the show */
+if(rv){y+=52;font("700",rv.s);var lh=rv.s*1.16;rv.lines.forEach(function(l,i){quoteLine(g,l,W/2,Math.round(y+i*lh+rv.s*.92))});y+=RH}
+/* who wrote it, and where to find it */
+y+=56;var AV=64,nm="@"+r.user;font("600",38);nm=fitText(g,nm,760);var nmw=g.measureText(nm).width,fx=(W-(AV+18+nmw))/2;
+g.save();g.beginPath();g.arc(fx+AV/2,y+AV/2,AV/2,0,Math.PI*2);g.closePath();g.clip();
+if(pic){var pw=pic.naturalWidth||pic.width,ph=pic.naturalHeight||pic.height,ps=Math.max(AV/pw,AV/ph);g.drawImage(pic,fx+(AV-pw*ps)/2,y+(AV-ph*ps)/2,pw*ps,ph*ps)}
+else{var ag=g.createLinearGradient(fx,y,fx+AV,y+AV);ag.addColorStop(0,"#ff63ad");ag.addColorStop(1,"#8b6cff");g.fillStyle=ag;g.fillRect(fx,y,AV,AV);font("700",30);g.fillStyle="#fff";g.fillText(String(r.user||"?").charAt(0).toUpperCase(),fx+AV/2,y+AV/2+11)}
+g.restore();
+g.save();g.beginPath();g.arc(fx+AV/2,y+AV/2,AV/2-1,0,Math.PI*2);g.strokeStyle="rgba(255,255,255,.35)";g.lineWidth=2;g.stroke();g.restore();
+font("600",38);g.textAlign="left";g.fillStyle="#fff";g.fillText(nm,fx+AV+18,y+AV/2+13);g.textAlign="center";y+=AV+14;
+font("500",30);g.fillStyle="rgba(255,255,255,.62)";g.fillText(fitText(g,siteHost(),960),W/2,y+28);
+return await new Promise(function(ok,no){c.toBlob(function(b){if(b)ok(b);else no(new Error("blob"))},"image/png")})}
+function copyText(t){try{return navigator.clipboard.writeText(t).then(function(){return true},function(){return false})}catch(e){return Promise.resolve(false)}}
+/* the share window: a preview of the picture, then the phone's share sheet (pick Instagram → Stories, or TikTok); on a computer, save it */
+function openStory(r,to){var d=$("#dlg"),ig=to!=="tt",app=ig?"Instagram":"TikTok",url="",file=null,live=true;d.className="stdlg";
+d.innerHTML='<div class="stw"><h2>'+(ig?"Share to your Instagram story":"Share to TikTok")+'</h2>'+
+'<div class="stp" id="stp" aria-busy="true"><span class="stl">Making your picture…</span></div>'+
+'<p class="meta sthint" id="sth" aria-live="polite"></p>'+
+'<div class="stb"><button type="button" class="btn ghost" id="stx">Close</button><a class="btn ghost" id="stv" hidden>Save image</a><button type="button" class="btn ink" id="stg" hidden>Share to '+app+'</button></div></div>';
+d.addEventListener("close",function(){live=false;d.className="";if(url){var u=url;setTimeout(function(){URL.revokeObjectURL(u)},1500)}},{once:true});
+$("#stx",d).onclick=function(){d.close()};
+d.showModal();
+storyBlob(r).then(function(b){if(!live)return;url=URL.createObjectURL(b);
+var fn="mosaic-"+(String(r.title).toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"")||"review")+".png";
+try{file=new File([b],fn,{type:"image/png"})}catch(e){file=null}
+var p=$("#stp",d);p.removeAttribute("aria-busy");p.innerHTML='<img src="'+url+'" alt="Story picture of '+esc(r.user)+'’s review of “'+esc(r.title)+'”">';
+var sv=$("#stv",d);sv.href=url;sv.download=fn;sv.hidden=false;
+var phone=false,can=false;try{phone=matchMedia("(pointer:coarse)").matches}catch(e){}
+try{can=!!(phone&&file&&navigator.canShare&&navigator.canShare({files:[file]}))}catch(e){}
+var go=$("#stg",d),hint=$("#sth",d);
+if(can){go.hidden=false;hint.innerHTML=ig?'Pick Instagram, then Stories. To link back to Mosaic, <button type="button" class="linkbtn" id="stc">copy the link</button> and paste it into a Link sticker.':"Pick TikTok, then post it as a photo."}
+else hint.textContent=phone?"Press and hold the picture to save it, then post it from "+app+".":(ig?"Save it, then add it to your story from Instagram on your phone.":"Save it, then post it as a photo from TikTok on your phone.");
+var cl=$("#stc",d);if(cl)cl.onclick=function(){copyText(siteLink()).then(function(ok){cl.textContent=ok?"link copied":"copy the link (couldn't copy, try again)"})};
+go.onclick=function(){navigator.share({files:[file]}).then(function(){d.close()},function(e){if(!e||e.name!=="AbortError")hint.textContent="Sharing didn't open here. Save the image instead."})};
+}).catch(function(){if(!live)return;var p=$("#stp",d);p.removeAttribute("aria-busy");p.innerHTML='<span class="stl">Couldn\'t make the picture. Try again in a moment.</span>'})}
 function mutSoc(kind,rid){var a=S[kind][rid]=S[kind][rid]||[],i=a.indexOf(S.user);if(i>-1){a.splice(i,1);return false}a.push(S.user);return true}
 
 /* song and album pages */
@@ -1681,6 +1817,7 @@ btn.onpointerdown=function(e){touch=e.pointerType==="touch"};
 btn.onclick=function(){if(touch&&w.classList.contains("open"))close();else open()};
 w.onkeydown=function(e){if(e.key==="Escape"){close();btn.focus()}}});
 document.querySelectorAll("[data-copy]").forEach(function(b){b.onclick=function(){var r=rv(b.dataset.copy);if(r)copyReview(r,b)}});
+document.querySelectorAll("[data-story]").forEach(function(b){b.onclick=function(){var r=rv(b.dataset.rid);if(r)openStory(r,b.dataset.story)}});
 document.querySelectorAll("[data-to]").forEach(function(b){b.onclick=function(){var id=b.dataset.rid,to=b.dataset.to;if(S.sent[id+":"+to])return;S.sent[id+":"+to]=true;b.classList.add("sent");api.sendReview(id,to).then(function(res){if(res&&res.error){S.sent[id+":"+to]=false;b.classList.remove("sent");b.dataset.name="Couldn't send";setTimeout(function(){b.dataset.name=to},1600)}})}});
 document.querySelectorAll(".cmf").forEach(function(f){var id=f.dataset.cf,i=f.querySelector("input");i.oninput=function(){S.draft[id]=i.value};
 f.onsubmit=function(e){e.preventDefault();var t=i.value.trim();if(!t)return;i.disabled=true;api.addComment(id,t).then(function(res){S.draft[id]="";refreshList("cmi"+id)}).catch(function(){i.disabled=false})}});
@@ -1773,7 +1910,7 @@ paint();
 $("#cx",d).onclick=function(){if(host){S.tab="feed";appView()}else d.close()};
 var rdl=$("#rdl",d);if(rdl)rdl.onclick=function(){if(!confirm("Delete this review?"))return;rdl.disabled=true;api.delReview(r.id).then(function(){d.close();appView()}).catch(function(){rdl.disabled=false;err("Couldn't delete it. Check your connection and try again.")})};
 var txa=$("#tx",d),wcn=$("#wc",d);
-function wcount(){var n=wordsOf(txa.value);wcn.textContent=n+" / 5 words";wcn.classList.toggle("over",n>5)}
+function wcount(){var v=txa.value,n=wordsOf(v);wcn.textContent=n+" / 5 words"+(n>5&&chained(v)?" · joined-up words count separately":"");wcn.classList.toggle("over",n>5)}
 txa.oninput=function(){var v=txa.value,c=clipWords(v,5);if(c!==v){var p=Math.min(txa.selectionStart,c.length);txa.value=c;try{txa.setSelectionRange(p,p)}catch(e){}}wcount()};
 wcount();
 function doSave(ev){if(ev)ev.preventDefault();var o,fromEnd=!!(ev&&ev.currentTarget&&ev.currentTarget.id==="sv2");
@@ -1782,7 +1919,7 @@ else if(manual){var t=$("#ti",d).value.trim(),a=$("#ar",d).value.trim();if(!t||!
 else{err("Search for a song and choose it, or enter it yourself.");return}
 var dx=dupSong(o,r&&r.id);if(dx){dupNote(dx);dupOn=true;toTop(fromEnd);return}
 if(!(rating>0)){err(o.type==="Album"?"Choose a star rating for the whole album.":"Choose a star rating.");toTop(fromEnd);return}
-o.rating=rating;o.text=$("#tx",d).value.trim();if(wordsOf(o.text)>5){err("Reviews are limited to 5 words. Shorten it to save.");toTop(fromEnd);return}
+o.rating=rating;o.text=$("#tx",d).value.trim();if(wordsOf(o.text)>5){err(chained(o.text)?"Reviews are limited to 5 words, and joined-up words like best-album-ever count separately. Shorten it to save.":"Reviews are limited to 5 words. Shorten it to save.");toTop(fromEnd);return}
 o.tracks=o.type==="Album"&&chosen?trkOut():null;
 var bs=[$("#sv",d),$("#sv2",d)].filter(Boolean);bs.forEach(function(x){x.disabled=true});
 api.saveReview(o,r).then(function(res){if(res&&res.error){bs.forEach(function(x){x.disabled=false});err(res.error);return}if(host){S.tab="profile";appView()}else{d.close();appView()}}).catch(function(){bs.forEach(function(x){x.disabled=false});err("Couldn't save. Check your connection and try again.")})}
