@@ -1628,17 +1628,21 @@ function rateBox(r,av){var v=rnum(r.rating);return '<div class="rrate'+(av?' wav
 /* the glow behind a review: the cover itself, enlarged to fill the tile (kept square, so some of it is cropped) and softly blurred.
    The blur is done once, on a tiny canvas the browser then just scales up, so there's nothing heavy to redraw while scrolling.
    Covers without artwork use their own two-colour gradient. */
-function glowHTML(r){var h=hue(r.title+r.artist),u=r.art&&okArt(r.art)?r.art:"",bg=' style="background:linear-gradient(160deg,hsl('+h+',74%,52%),hsl('+((h+60)%360)+',78%,40%))"';
+function glowHTML(r){var h=hue(r.title+r.artist),u=r.art&&okArt(r.art)?r.art:"",bg=' style="background:linear-gradient(160deg,hsl('+h+',70%,34%),hsl('+((h+60)%360)+',74%,24%))"';
 return '<span class="glow" aria-hidden="true"><i class="gw"'+bg+'>'+(u?'<canvas class="soft" width="48" height="48" data-soft="'+esc(u)+'" data-blur="1.8"></canvas>':'')+'</i></span>'}
 /* soft canvases: each picture is fetched once; ones already here draw straight away (no fade), new ones fade in when they arrive */
-var SOFT={},SOFTN=0;
+var SOFT={},SOFTN=0,GLOW={mul:.55,dim:.28};
 function paintSoft(){[].forEach.call(document.querySelectorAll("canvas[data-soft]"),function(c){var u=c.getAttribute("data-soft"),o=SOFT[u];c.removeAttribute("data-soft");
 if(!o){if(++SOFTN>400){SOFT={};SOFTN=1}o=SOFT[u]={im:new Image(),ok:0,bad:0,q:[]};o.im.decoding="async";
 o.im.onload=function(){o.ok=1;o.q.forEach(function(k){drawSoft(o.im,k,false)});o.q=[]};
 o.im.onerror=function(){o.bad=1;o.q.forEach(function(k){if(k.parentNode)k.parentNode.removeChild(k)});o.q=[]};o.im.src=u}
 if(o.ok)drawSoft(o.im,c,true);else if(o.bad){if(c.parentNode)c.parentNode.removeChild(c)}else o.q.push(c)})}
-function drawSoft(im,c,now){try{var x=c.getContext("2d"),w=c.width,h=c.height,b=+c.getAttribute("data-blur")||0,m=Math.ceil(b*3);
-x.imageSmoothingEnabled=true;x.imageSmoothingQuality="high";if(b&&"filter" in x)x.filter="blur("+b+"px)";x.drawImage(im,-m,-m,w+2*m,h+2*m);
+function drawSoft(im,c,now){try{var x=c.getContext("2d"),w=c.width,h=c.height,b=+c.getAttribute("data-blur")||0,m=Math.ceil(b*3),f="filter" in x;
+x.globalCompositeOperation="source-over";x.globalAlpha=1;x.clearRect(0,0,w,h);
+x.imageSmoothingEnabled=true;x.imageSmoothingQuality="high";if(b&&f)x.filter="blur("+b+"px)";x.drawImage(im,-m,-m,w+2*m,h+2*m);
+/* darker glows: the picture partly multiplied by itself deepens the darks and keeps its colour, then a veil of black takes the glare off the whites */
+x.globalCompositeOperation="multiply";x.globalAlpha=GLOW.mul;x.drawImage(im,-m,-m,w+2*m,h+2*m);
+x.globalCompositeOperation="source-over";x.globalAlpha=1;if(f)x.filter="none";x.fillStyle="rgba(0,0,0,"+GLOW.dim+")";x.fillRect(0,0,w,h);
 if(now)c.classList.add("now");c.classList.add("on")}catch(e){}}
 function byLine(r,k,na){var u=na?'':'<button type="button" class="avbtn" data-u="'+esc(r.user)+'" aria-label="'+esc(r.user)+'\'s profile" data-name="'+esc(r.user)+'">'+avatar(acct(r.user),"xs")+'</button>';
 return k==="l"?'<div class="meta rby rbl'+(na?' na':'')+'">'+u+'<span class="rbd">'+esc(r.date)+'</span></div>':'<div class="meta rby rbf">'+u+'<span class="rbd">'+esc(r.date)+'</span></div>'}
@@ -2243,7 +2247,7 @@ var h='<section class="page sotd">';
 if(!s)h+='<div class="sdhd"><h2>Song of the Day</h2><span class="meta">'+esc(dayLong(today))+'</span></div><div class="empty">'+(S.sotd.admin?"You haven’t picked today’s song yet. Pick one below.":"Today’s song isn’t up yet. Check back soon.")+'</div>';
 else{var hu=hue(s.title+s.artist),cta=ent?'<button type="button" class="btn ink" data-edit="'+esc(ent.r.id)+'">Edit your entry</button>':mine?'<button type="button" class="btn ink" id="sdenter">Enter your review</button><button type="button" class="btn ghost" data-edit="'+esc(mine.id)+'">Edit it first</button>':'<button type="button" class="btn ink" id="sdrev">Review it</button>';
 /* the glow fills the whole screen behind everything (fixed, so scrolling doesn't redraw it) */
-h+='<div class="sdbg" aria-hidden="true"><i style="background:linear-gradient(160deg,hsl('+hu+',74%,52%),hsl('+((hu+60)%360)+',78%,40%))"></i>'+(s.art?'<canvas class="soft" width="96" height="96" data-soft="'+esc(bigArt(s.art))+'" data-blur="3.4"></canvas>':'')+'</div>'+
+h+='<div class="sdbg" aria-hidden="true"><i style="background:linear-gradient(160deg,hsl('+hu+',70%,34%),hsl('+((hu+60)%360)+',74%,24%))"></i>'+(s.art?'<canvas class="soft" width="96" height="96" data-soft="'+esc(bigArt(s.art))+'" data-blur="3.4"></canvas>':'')+'</div>'+
 '<div class="sdhero"><p class="sdk">Song of the Day · '+esc(dayLong(today))+'</p>'+
 '<div class="sdaw'+(S.sdIntroOn?' sdpre':'')+'"><button type="button" class="sdart'+(S.sdIntroOn?' sdhide':'')+'" data-sdsong="1" aria-label="About “'+esc(s.title)+'”">'+heroCover(s)+'</button>'+earHTML(s,sdPlats())+'</div>'+
 '<h2 class="sdt"><a class="tlink" href="#" data-sdsong="1">'+esc(s.title)+'</a></h2><p class="sdby">'+esc(s.artist)+'</p>'+
