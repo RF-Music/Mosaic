@@ -414,6 +414,15 @@ html.mdragging,html.mdragging *{cursor:grabbing!important}
 /* small tiles: icons stand in for the labels */
 @container (max-width:199.9px){.cvt{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}.cvv .cnt{display:none}}
 @media (prefers-reduced-motion:reduce){.cvi{transition:none}}
+/* three per row: the back of the cover in smaller, calmer type, so long album names get two lines instead of being cut short */
+.cols3 .cvd{padding:4.5cqw 6.5cqw}
+.cols3 .cvr{gap:4cqw}
+.cols3 .cvl{gap:2.2cqw;font-size:clamp(7.5px,3.7cqw,9.5px);letter-spacing:.07em;color:rgba(255,255,255,.7)}
+.cols3 .cvl svg{width:clamp(10px,5cqw,12.5px);height:clamp(10px,5cqw,12.5px)}
+.cols3 .cvt{text-box:trim-both cap alphabetic}
+.cols3 .cvv{font-size:clamp(10px,5.3cqw,12.5px)}
+.cols3 .cvv .cnt{font-size:.85em}
+.cols3 .cvv[title]{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;white-space:normal;line-height:1.25;overflow-wrap:anywhere}
 .tlink{color:inherit;text-decoration:none}
 .tlink:hover{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
 .vh{position:absolute;width:1px;height:1px;margin:-1px;padding:0;border:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
