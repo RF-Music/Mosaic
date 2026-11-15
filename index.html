@@ -835,11 +835,9 @@ header.top:has(.sw:focus-within) h2,header.top:has(.sw:hover) h2{display:none}}
 .sdy .rart{width:56px;height:56px}
 .sdy p{margin:4px 0 0}
 .sdw{display:inline-flex;align-items:center;gap:2px;margin-right:4px;font-size:12px;font-weight:600;color:var(--mute);vertical-align:-2px}
-.sdlb,.sdpick{list-style:none;margin:0;padding:0;background:var(--surface);border:1px solid var(--line);border-radius:10px}
-.sdlb li,.sdpick li{display:flex;align-items:center;gap:10px;padding:9px 14px;border-top:1px solid var(--line);min-width:0}
-.sdlb li:first-child,.sdpick li:first-child{border-top:0}
-.sdlb .sdn{width:18px;flex:none;color:var(--mute);font-variant-numeric:tabular-nums}
-.sdlb b{margin-left:auto;font-weight:600;white-space:nowrap}
+.sdpick{list-style:none;margin:0;padding:0;background:var(--surface);border:1px solid var(--line);border-radius:10px}
+.sdpick li{display:flex;align-items:center;gap:10px;padding:9px 14px;border-top:1px solid var(--line);min-width:0}
+.sdpick li:first-child{border-top:0}
 .sdd{width:96px;flex:none;font-weight:500}
 .sds{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
 .sds>span{min-width:0}
@@ -1366,8 +1364,8 @@ function ddRows(list){return list.map(function(n){return '<button type="button" 
 function ddHTML(k,n,list,cf){var w=k==="fg"?"following":(n===1?"follower":"followers"),t='<b>'+n+'</b> '+w;
 if(!list||!list.length)return t;
 return '<span class="fdd '+k+'" data-k="'+k+'"><button type="button" class="fddb" aria-haspopup="true" aria-expanded="false">'+(cf?CAR+'<span>'+t+'</span>':'<span>'+t+'</span>'+CAR)+'</button><span class="fddw" hidden><span class="fddm" role="menu">'+ddRows(list)+'</span><span class="fcard" hidden></span></span></span>'}
-function igStats(n,a,plus){var rs=S.reviews.filter(function(r){return r.user===n}),rv=rs.length,lk=rs.reduce(function(x,r){return x+(S.likes[r.id]||[]).length},0),fgl=((a&&a.following)||[]).filter(acct),fll=followersOf(n),cr=credOf(n);
-return '<div class="igs"><span><b>'+rv+'</b> '+(rv===1?"review":"reviews")+'</span><span><b>'+lk+'</b> '+(lk===1?"like":"likes")+'</span>'+(cr?'<span title="Won on Song of the Day"><b>'+cr+'</b> cred</span>':'')+'</div>'+
+function igStats(n,a,plus){var rs=S.reviews.filter(function(r){return r.user===n}),rv=rs.length,lk=rs.reduce(function(x,r){return x+(S.likes[r.id]||[]).length},0),fgl=((a&&a.following)||[]).filter(acct),fll=followersOf(n);
+return '<div class="igs"><span><b>'+rv+'</b> '+(rv===1?"review":"reviews")+'</span><span><b>'+lk+'</b> '+(lk===1?"like":"likes")+'</span>'+'</div>'+
 '<div class="igs"><span class="ff'+(fgl.length&&fll.length?' pair':'')+'"><span class="fls">'+ddHTML("fl",fll.length,fll)+'</span><span class="fgs">'+ddHTML("fg",fgl.length,fgl,1)+'</span></span>'+(plus||"")+'</div>'}
 function limits(){var a=$("#app").getBoundingClientRect();return {l:Math.max(0,a.left),r:Math.min(window.innerWidth,a.right)}}
 function closeFdd(){[].forEach.call(document.querySelectorAll(".fdd.open"),function(d){d.classList.remove("open");var w=d.querySelector(".fddw"),b=d.querySelector(".fddb"),c=d.querySelector(".fcard");if(w)w.hidden=true;if(b)b.setAttribute("aria-expanded","false");if(c)c.hidden=true})}
@@ -1990,9 +1988,9 @@ if(!host)d.showModal()}
 
 /* ---------- Song of the Day ----------
    One song a day, picked by an admin. Everyone can review it (five words or fewer); saving a review of the day's song enters it.
-   The entries with the most likes by midnight UK time win cred: 3 for first, 2 for second, 1 for third.
+   The entry with the most likes by midnight UK time wins the day.
    Only likes given on the day count, and not your own. Ties go to whoever entered first. */
-var CRED=[3,2,1],SDT=0,SDDAY="";
+var SDT=0,SDDAY="";
 var CROWN='<svg class="crown" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 7.5l4.6 3.9L12 4.5l4.4 6.9L21 7.5 19.2 19H4.8z"/></svg>';
 var UKF={};
 function ukDate(t){return t?new Date(typeof t==="string"?t.replace(/(\.\d{3})\d+/,"$1"):t):new Date()}
@@ -2013,9 +2011,6 @@ function dayLikes(r,day){var at=S.likeAt[r.id]||{};return (S.likes[r.id]||[]).fi
 function standings(day){var s=S.sotd.days[day],out=[];if(!s)return out;
 (S.sotd.entries[day]||[]).forEach(function(e){var r=revOf(e.rid);if(r&&r.user===e.user&&sdSame(r,s))out.push({r:r,user:e.user,at:String(e.at||""),likes:dayLikes(r,day)})});
 return out.sort(function(a,b){return b.likes-a.likes||(a.at<b.at?-1:a.at>b.at?1:0)})}
-/* cred from every finished day: 3, 2, 1 for the top three entries that got at least one like */
-function credTable(){var today=ukDay(),t={};Object.keys(S.sotd.entries).forEach(function(day){if(!(day<today))return;standings(day).slice(0,3).forEach(function(x,i){if(!x.likes)return;var o=t[x.user]=t[x.user]||{cred:0,wins:0};o.cred+=CRED[i];if(!i)o.wins++})});return t}
-function credOf(n){var o=S.sotdOK&&credTable()[n];return o?o.cred:0}
 function syncSotd(){var o=store.get("ln_sotd",null)||{};S.sotd={days:o.days&&typeof o.days==="object"?o.days:{},entries:o.entries&&typeof o.entries==="object"?o.entries:{},admin:true};S.sotdOK=true}
 function saveSotd(){store.set("ln_sotd",{days:S.sotd.days,entries:S.sotd.entries})}
 function localEnter(r){var d=ukDay(),s=S.sotd.days[d];if(!r||!sdSame(r,s))return false;var l=S.sotd.entries[d]=S.sotd.entries[d]||[],e=l.filter(function(x){return x.user===r.user})[0];if(e)e.rid=r.id;else l.push({user:r.user,rid:r.id,at:new Date().toISOString()});saveSotd();return true}
@@ -2034,14 +2029,12 @@ var h='<section class="page sotd"><div class="sdhd"><h2>Song of the Day</h2><spa
 if(!s)h+='<div class="empty">'+(S.sotd.admin?"You haven’t picked today’s song yet. Pick one below.":"Today’s song isn’t up yet. Check back soon.")+'</div>';
 else{var cta=ent?'<button type="button" class="btn ink" data-edit="'+esc(ent.r.id)+'">Edit your entry</button>':mine?'<button type="button" class="btn ink" id="sdenter">Enter your review</button><button type="button" class="btn ghost" data-edit="'+esc(mine.id)+'">Edit it first</button>':'<button type="button" class="btn ink" id="sdrev">Review it</button>';
 h+='<div class="sdcard"><button type="button" class="sdart" data-sdsong="1" aria-label="About “'+esc(s.title)+'”">'+heroCover(s)+'</button><div class="sdinfo"><p class="sdk">Today’s song</p><h3><a class="tlink" href="#" data-sdsong="1">'+esc(s.title)+'</a></h3><p class="sdby">'+esc(s.artist)+'</p>'+
-'<p class="sdrule">Review it in five words or fewer. The reviews with the most likes by midnight win cred: <b>3</b> for first, <b>2</b> for second and <b>1</b> for third.</p>'+
+'<p class="sdrule">Review it in five words or fewer. The review with the most likes by midnight wins.</p>'+
 '<div class="sbtns">'+cta+'</div><p class="meta sdst"><span id="sdstat">'+esc(sdStat(today,s,st))+'</span> Closes in <span id="sdleft">'+leftText()+'</span>.</p></div></div>'+
 '<h3 class="sdh">Today’s entries'+(st.length?' <span class="meta">'+st.length+'</span>':'')+'</h3><div class="list cols'+S.cols+'" id="list">'+listHTML()+'</div>'}
 var yd=dayAdd(today,-1),ys=S.sotd.days[yd];
 if(ys){var yst=standings(yd),w=yst[0]&&yst[0].likes?yst[0]:null;
 h+='<h3 class="sdh">Yesterday</h3><div class="sdy">'+rimg({title:ys.title,artist:ys.artist,thumb:ys.art})+'<div><b>'+esc(ys.title)+'</b> <span class="meta">'+esc(ys.artist)+'</span><p>'+(w?'<span class="sdw">'+CROWN+'</span>'+uname(w.user)+' won'+(w.r.text?' with “'+esc(w.r.text)+'”':'')+' <span class="meta">'+pl(w.likes,"like")+'</span>':yst.length?'Nobody got a like, so nobody won.':'Nobody entered.')+'</p></div></div>'}
-var ct=credTable(),lb=Object.keys(ct).filter(acct).map(function(n){return {n:n,c:ct[n].cred,w:ct[n].wins}}).sort(function(a,b){return b.c-a.c||b.w-a.w||(a.n<b.n?-1:1)}).slice(0,10);
-h+='<h3 class="sdh">Most cred</h3>'+(lb.length?'<ol class="sdlb">'+lb.map(function(x,i){return '<li><span class="sdn">'+(i+1)+'</span>'+avatar(acct(x.n),"xs")+'<button type="button" class="ulink" data-u="'+esc(x.n)+'">'+esc(x.n)+'</button>'+(x.w?'<span class="sdw" title="'+pl(x.w,"win")+'">'+CROWN+(x.w>1?x.w:'')+'</span>':'')+'<b>'+x.c+' cred</b></li>'}).join("")+'</ol>':'<div class="empty">No cred yet. The first results land at midnight.</div>');
 if(S.sotd.admin)h+=sdAdminHTML(today);
 return h+'</section>'}
 function sdAdminHTML(today){var h='<h3 class="sdh">Pick the songs <span class="meta">Only you can see this</span></h3><ol class="sdpick">';
