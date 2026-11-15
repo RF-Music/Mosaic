@@ -460,11 +460,11 @@ html.mdragging,html.mdragging *{cursor:grabbing!important}
 .rl .cover{width:100%;font-size:13px}
 /* the artwork's colours bleed out of the cover and into the tile: a tight halo hugging the cover, and a wider, fainter spill behind it */
 /* the glow: a soft wash of the artwork's colours across the whole tile */
-.glow{--ow:.3;position:absolute;inset:0;border-radius:9px;overflow:hidden;pointer-events:none}
+.glow{--ow:.42;position:absolute;inset:0;border-radius:9px;overflow:hidden;pointer-events:none}
 .glow .gw{position:absolute;inset:0;display:block;opacity:var(--ow)}
 .glow img{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;display:block}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .glow{--ow:.4}}
-:root[data-theme="dark"] .glow{--ow:.4}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .glow{--ow:.52}}
+:root[data-theme="dark"] .glow{--ow:.52}
 /* the rating: five small, sharp stars as wide as the artwork (white, or dark ink in light mode), the number beside them */
 :root{--sm:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 15.56'%3E%3Cpath d='M10.00 1.68L11.70 6.23L16.56 6.45L12.76 9.47L14.06 14.16L10.00 11.48L5.94 14.16L7.24 9.47L3.44 6.45L8.30 6.23ZM30.00 1.68L31.70 6.23L36.56 6.45L32.76 9.47L34.06 14.16L30.00 11.48L25.94 14.16L27.24 9.47L23.44 6.45L28.30 6.23ZM50.00 1.68L51.70 6.23L56.56 6.45L52.76 9.47L54.06 14.16L50.00 11.48L45.94 14.16L47.24 9.47L43.44 6.45L48.30 6.23ZM70.00 1.68L71.70 6.23L76.56 6.45L72.76 9.47L74.06 14.16L70.00 11.48L65.94 14.16L67.24 9.47L63.44 6.45L68.30 6.23ZM90.00 1.68L91.70 6.23L96.56 6.45L92.76 9.47L94.06 14.16L90.00 11.48L85.94 14.16L87.24 9.47L83.44 6.45L88.30 6.23Z' fill='%23000'/%3E%3C/svg%3E")}
 .rrate{--sf:var(--ink);--se:rgba(0,0,0,.26);display:flex;align-items:center;justify-content:center;gap:7px;color:var(--ink);line-height:1;white-space:nowrap}
@@ -1453,7 +1453,7 @@ function rateBox(r,av){var v=rnum(r.rating);return '<div class="rrate'+(av?' wav
 /* the glow behind a review: the artwork shrunk to 4×4 pixels and stretched over the whole tile, so the browser blends its colours
    into a soft gradient for free (no blur to redraw while scrolling). Covers without artwork use their own two-colour gradient. */
 function glowArt(u){return u&&okArt(u)&&/\/\d+x\d+bb\.[a-z]+$/i.test(u)?u.replace(/\/\d+x\d+bb\.[a-z]+$/i,"/4x4bb.jpg"):""}
-function glowHTML(r){var h=hue(r.title+r.artist),g=glowArt(r.art),bg=' style="background:linear-gradient(160deg,hsl('+h+',62%,50%),hsl('+((h+60)%360)+',66%,38%))"';
+function glowHTML(r){var h=hue(r.title+r.artist),g=glowArt(r.art),bg=' style="background:linear-gradient(160deg,hsl('+h+',74%,52%),hsl('+((h+60)%360)+',78%,40%))"';
 return '<span class="glow" aria-hidden="true"><i class="gw"'+bg+'>'+(g?'<img src="'+esc(g)+'" alt="" decoding="async" loading="lazy">':'')+'</i></span>'}
 function byLine(r,k,na){var u=na?'':'<button type="button" class="avbtn" data-u="'+esc(r.user)+'" aria-label="'+esc(r.user)+'\'s profile" data-name="'+esc(r.user)+'">'+avatar(acct(r.user),"xs")+'</button>';
 return k==="l"?'<div class="meta rby rbl'+(na?' na':'')+'">'+u+'<span class="rbd">'+esc(r.date)+'</span></div>':'<div class="meta rby rbf">'+u+'<span class="rbd">'+esc(r.date)+'</span></div>'}
