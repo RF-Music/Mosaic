@@ -1303,26 +1303,6 @@ function armSv(){clearTimeout(svT);svDue=false;svT=S.sv?setTimeout(function(){sv
 function clearSv(){svDue=false;clearTimeout(svT);svT=null;if(svClear&&document.getElementById("q"))svClear();else S.sv=""}
 document.addEventListener("keydown",function(e){if(e.key==="Escape")closePops();
 if(searchHover&&e.key&&e.key.length===1&&!e.ctrlKey&&!e.metaKey&&!e.altKey){var q=document.getElementById("q");if(q&&document.activeElement!==q)q.focus()}});
-/* artwork tilt: while the page scrolls, review artwork (and a song's big artwork) leans back a little when scrolling down and forward a little when scrolling up, by how fast the page is moving, then eases flat again.
-   Only artwork on screen is touched, the flip-to-details card is tilted as a whole (so flips aren't affected), and nothing stays transformed once it settles. Off when the device asks for reduced motion. */
-(function(){
-var MAX=6,GAIN=4,raf=0,t0=0,ly=window.scrollY||0,tilt=0,vel=0,moved=0,live=[],
-rm=window.matchMedia?window.matchMedia("(prefers-reduced-motion: reduce)"):null;
-function paint(a){var H=window.innerHeight,els=a?document.querySelectorAll(".cvf,.cover.hero"):[],keep=[],i;
-for(i=0;i<els.length;i++){var r=els[i].getBoundingClientRect();if(r.bottom>-40&&r.top<H+40)keep.push(els[i])}
-var q=Math.round(a*10)/10,tf=q?"perspective(400px) rotateX("+q+"deg)":"";
-for(i=0;i<keep.length;i++)if(keep[i].style.transform!==tf)keep[i].style.transform=tf;
-for(i=0;i<live.length;i++)if(keep.indexOf(live[i])<0)live[i].style.transform="";
-live=keep}
-function step(t){var y=window.scrollY||0,dt=Math.min(50,Math.max(4,t-t0)),d=y-ly;t0=t;ly=y;
-if(Math.abs(d)>12*dt)d=0;/* a jump (another page, back to the top), not a scroll */
-if(d)moved=t;
-vel+=(d/dt-vel)*(1-Math.exp(-dt/50));
-tilt+=(Math.max(-MAX,Math.min(MAX,vel*GAIN))-tilt)*(1-Math.exp(-dt/90));
-if(t-moved>120&&Math.abs(tilt)<.05){tilt=vel=0;paint(0);raf=0;return}
-paint(tilt);raf=requestAnimationFrame(step)}
-window.addEventListener("scroll",function(){if(raf)return;if(rm&&rm.matches){ly=window.scrollY||0;return}t0=performance.now()-16;moved=t0;raf=requestAnimationFrame(step)},{passive:true})
-})();
 /* the path the click took (kept even when the clicked button was redrawn during the click, so it's no longer in the page) */
 function clickIn(e,sel){var p=e.composedPath?e.composedPath():[];for(var i=0;i<p.length;i++)if(p[i].matches&&p[i].matches(sel))return true;return !!(e.target.closest&&e.target.closest(sel))}
 document.addEventListener("click",function(e){if(clickIn(e,".sw"))return;var w=document.querySelector(".sw"),u=document.getElementById("sug"),qq=document.getElementById("q");if(w&&!(qq&&qq.value))w.classList.remove("open");if(u)u.hidden=true});
