@@ -88,7 +88,7 @@ nav button[aria-current="true"]{color:var(--ink);border-color:var(--pop)}
 .me,.ib{background:var(--surface);border:1px solid var(--line);border-radius:7px;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 2px 0 var(--line);transition:transform .08s,box-shadow .08s}
 .me:active,.ib:active{transform:translateY(2px);box-shadow:inset 0 1px 2px rgba(0,0,0,.2),0 0 0 transparent}
 .me{display:flex;align-items:center;gap:7px;padding:3px 10px 3px 3px;font-size:14px;font-weight:500}
-.me[aria-current="true"],.ib[aria-expanded="true"]{border-color:var(--pop)}
+.me[aria-current="true"],.ib[aria-expanded="true"],.ib[aria-current="true"]{border-color:var(--pop)}
 .me .nm{max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ib{width:36px;height:36px;display:grid;place-items:center}
 .ibw{position:relative}
@@ -476,6 +476,13 @@ canvas.soft.now{transition:none}
 .rrate .stars{display:block;position:relative;flex:1 1 0;min-width:0;max-width:132px;aspect-ratio:100/15.56;font-size:0;letter-spacing:0;background:none;color:transparent;-webkit-text-fill-color:transparent}
 .rrate .stars::before{content:"";position:absolute;inset:0}
 .rrate .stars::before{background:linear-gradient(90deg,var(--sf) var(--p,0%),var(--se) var(--p,0%));-webkit-mask:var(--sm) center/100% 100% no-repeat;mask:var(--sm) center/100% 100% no-repeat}
+/* a hairline black outline round every star (over the fill, so full and empty stars read the same) */
+:root{--so:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 15.56'%3E%3Cpath d='M10.00 1.68L11.70 6.23L16.56 6.45L12.76 9.47L14.06 14.16L10.00 11.48L5.94 14.16L7.24 9.47L3.44 6.45L8.30 6.23ZM30.00 1.68L31.70 6.23L36.56 6.45L32.76 9.47L34.06 14.16L30.00 11.48L25.94 14.16L27.24 9.47L23.44 6.45L28.30 6.23ZM50.00 1.68L51.70 6.23L56.56 6.45L52.76 9.47L54.06 14.16L50.00 11.48L45.94 14.16L47.24 9.47L43.44 6.45L48.30 6.23ZM70.00 1.68L71.70 6.23L76.56 6.45L72.76 9.47L74.06 14.16L70.00 11.48L65.94 14.16L67.24 9.47L63.44 6.45L68.30 6.23ZM90.00 1.68L91.70 6.23L96.56 6.45L92.76 9.47L94.06 14.16L90.00 11.48L85.94 14.16L87.24 9.47L83.44 6.45L88.30 6.23Z' fill='none' stroke='%23000' stroke-width='.5' stroke-linejoin='round'/%3E%3C/svg%3E")}
+.rrate .stars::after,.sbar::after{content:"";position:absolute;inset:0;background:var(--so) center/100% 100% no-repeat;pointer-events:none}
+.tracks .ta i,.tdr .tv i{-webkit-text-stroke:.5px #000;paint-order:stroke fill}
+.rate>button[data-r],.rate .tst button{-webkit-text-stroke:.6px #000}
+/* written reviews get the same hairline outline as the rating number */
+.rev .rc>p,.sdrt,.sdwq,.dmrvt{-webkit-text-stroke:.5px #000;paint-order:stroke fill}
 .rrate .rv{flex:none;font-size:13px;-webkit-text-stroke:.5px #000;paint-order:stroke fill}
 .rc{display:flex;flex-direction:column;min-width:0}
 .rc>.rrate{justify-content:flex-start;align-self:flex-start;margin-bottom:8px}
@@ -895,6 +902,113 @@ a.pl.act{padding:5px}
 .sdx:hover{color:var(--bad)}
 .sdmore{margin-top:6px;border-radius:10px}
 @media (max-width:520px){.sdd{width:72px}.sdpick li{gap:8px;padding:8px 10px}}
+/* ---------- Song of the Day: the ear just off the cover's top-right corner; your apps drop down beside the artwork ---------- */
+.sdaw{position:relative}
+.sdaw>.ear{display:flex;flex-direction:column;align-items:center;position:absolute;left:calc(100% + 8px);top:0;z-index:4;transition:opacity .45s ease .12s,transform .5s cubic-bezier(.2,.8,.3,1) .12s}
+.sdaw.sdpre>.ear{opacity:0;visibility:hidden;transform:translateX(-10px);transition:none}
+.sdaw .earb{color:var(--ink);padding:6px 5px 2px;border-radius:10px}
+.sdaw .earb>svg:first-child{width:22px;height:22px}
+.sdaw .earb:hover,.sdaw .ear.open .earb{background:color-mix(in srgb,var(--ink) 13%,transparent)}
+.sdaw .beads{padding-top:9px;gap:9px}
+.sdaw .bead{width:32px;height:32px}
+/* ---------- Messages ---------- */
+.mbn{position:absolute;top:-7px;right:-7px;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--pop);color:#fff;font:700 10.5px/18px "Montserrat",sans-serif;font-style:normal;text-align:center;box-shadow:0 0 0 2px var(--bg);pointer-events:none}
+.pbt{display:inline-flex;align-items:center;gap:6px}
+.dmto1{display:inline-grid;place-items:center;width:34px;height:22px;padding:0;background:none;color:var(--ink);border:1px solid var(--line);border-radius:999px;cursor:pointer;transition:border-color .12s,color .12s,transform .08s}
+.dmto1:hover{border-color:var(--violet);color:var(--violet)}
+.dmto1:active{transform:scale(.94)}
+.wrap.dmw{padding-bottom:12px}
+.dmp{display:grid;grid-template-columns:minmax(230px,290px) minmax(0,1fr);height:calc(100svh - 112px);min-height:360px;background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 18px 44px -30px rgba(0,0,0,.5)}
+.dml{display:flex;flex-direction:column;min-width:0;min-height:0;border-right:1px solid var(--line)}
+.dmlh{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 12px 8px 16px;flex:none}
+.dmlh h2{margin:0;font-size:18px;font-weight:600;letter-spacing:-.01em}
+.dmlh .ib{width:34px;height:34px}
+.dmto{display:flex;align-items:center;gap:10px;margin:2px 12px 8px;padding:0 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);flex:none}
+.dmto label{font-size:13px;font-weight:500;color:var(--mute)}
+.dmto input{flex:1;min-width:0;border:0;background:none;padding:9px 0;color:var(--ink);font:400 14px "Montserrat",sans-serif;outline:none}
+.dmto:focus-within{border-color:color-mix(in srgb,var(--violet) 70%,var(--line))}
+.dmlist{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:2px 6px 10px}
+.dmnone{margin:0;padding:14px 10px}
+.dmi{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:11px;width:100%;padding:8px 10px;border:0;border-radius:10px;background:none;color:var(--ink);font:inherit;text-align:left;cursor:pointer}
+.dmi:hover,.dmi:focus-visible{background:color-mix(in srgb,var(--ink) 6%,transparent)}
+.dmi.on{background:color-mix(in srgb,var(--violet) 17%,transparent)}
+.dmi .av{width:42px;height:42px}
+.dmin{display:flex;flex-direction:column;min-width:0;line-height:1.3}
+.dmin b{font-weight:500;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dmpv{font-size:12.5px;color:var(--mute);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dmpv:empty{display:none}
+.dmi.un .dmin b{font-weight:700}
+.dmi.un .dmpv{color:var(--ink);font-weight:500}
+.dmr{display:flex;flex-direction:column;align-items:flex-end;gap:5px;font-size:11.5px;color:var(--mute);white-space:nowrap}
+.dmn{min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--pop);color:#fff;font:700 10.5px/18px "Montserrat",sans-serif;font-style:normal;text-align:center}
+.dmt{display:flex;flex-direction:column;min-width:0;min-height:0}
+.dmth{display:flex;align-items:center;gap:8px;padding:9px 14px;border-bottom:1px solid var(--line);flex:none}
+.dmth .dmback{display:none;width:34px;height:34px}
+.dmwho{display:flex;align-items:center;gap:10px;min-width:0;background:none;border:0;padding:3px 10px 3px 3px;border-radius:999px;color:var(--ink);font:inherit;cursor:pointer}
+.dmwho:hover{background:color-mix(in srgb,var(--ink) 6%,transparent)}
+.dmwho .av{width:34px;height:34px}
+.dmwho b{font-weight:600;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dmmsgs{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:10px 14px 8px;display:flex;flex-direction:column}
+.dmmsgs>:first-child{margin-top:auto}
+.dmday{align-self:center;margin:14px 0 2px;font-size:11.5px;font-weight:600;letter-spacing:.02em;color:var(--mute)}
+.dmg{display:flex;align-items:flex-end;gap:8px;margin-top:8px}
+.dmg.mine{justify-content:flex-end}
+.dmav{flex:none;display:flex;margin-bottom:1px}
+.dmav .av{width:26px;height:26px}
+.dmgs{display:flex;flex-direction:column;gap:3px;min-width:0;max-width:min(76%,480px)}
+.dmg.mine .dmgs,.dmg.mine .dmm{align-items:flex-end}
+.dmg.their .dmgs,.dmg.their .dmm{align-items:flex-start}
+.dmm{display:flex;flex-direction:column;max-width:100%;min-width:0}
+.dmb{max-width:100%;padding:8px 13px;border-radius:19px;font-size:14px;font-weight:400;line-height:1.42;overflow-wrap:anywhere;cursor:pointer}
+.dmg.mine .dmb{background:linear-gradient(135deg,#7a5cf5,#c04fd8);color:#fff}
+.dmg.their .dmb{background:color-mix(in srgb,var(--ink) 9%,var(--surface));color:var(--ink)}
+.dmg.mine .dmm:not(:last-child) .dmb{border-bottom-right-radius:6px}
+.dmg.mine .dmm:not(:first-child) .dmb{border-top-right-radius:6px}
+.dmg.their .dmm:not(:last-child) .dmb{border-bottom-left-radius:6px}
+.dmg.their .dmm:not(:first-child) .dmb{border-top-left-radius:6px}
+.dmb a{color:inherit;text-decoration:underline;text-underline-offset:2px}
+.dmg .dmb.dmgone{background:none;border:1px dashed var(--line);color:var(--mute);font-style:italic;cursor:default}
+.dmm.pend .dmb,.dmm.pend .dmrv{opacity:.55}
+.dmg.mine .dmm.fail .dmb{background:color-mix(in srgb,var(--bad) 26%,var(--surface));color:var(--ink)}
+.dmtm{display:none;margin:3px 6px 1px;font-size:11px;color:var(--mute);white-space:nowrap}
+.dmm.sel .dmtm{display:block}
+.dmun{background:none;border:0;padding:0;font:inherit;color:var(--bad);text-decoration:underline;text-underline-offset:2px;cursor:pointer}
+.dmre{background:none;border:0;padding:3px 6px 0;font:500 11.5px "Montserrat",sans-serif;color:var(--bad);cursor:pointer}
+.dmst{align-self:flex-end;margin:4px 4px 0;font-size:11.5px;color:var(--mute)}
+.dmhi{margin:auto;display:flex;flex-direction:column;align-items:center;gap:8px;max-width:34ch;padding:24px 12px;text-align:center}
+.dmhi b{font-size:16px;font-weight:600}
+.dmf{display:flex;align-items:flex-end;gap:8px;padding:10px 12px 12px;border-top:1px solid var(--line);flex:none}
+.dmf textarea{flex:1;min-width:0;height:42px;max-height:132px;resize:none;overflow-y:auto;padding:10px 16px;border:1px solid var(--line);border-radius:21px;background:var(--bg);color:var(--ink);font:400 14px/1.45 "Montserrat",sans-serif;outline:none}
+.dmf textarea:focus{border-color:color-mix(in srgb,var(--violet) 70%,var(--line))}
+.dmsend{flex:none;display:grid;place-items:center;width:42px;height:42px;border:0;border-radius:50%;background:linear-gradient(135deg,#7a5cf5,#c04fd8);color:#fff;cursor:pointer;transition:opacity .15s,transform .08s}
+.dmsend:active{transform:scale(.93)}
+.dmsend:disabled{opacity:.35;cursor:default;transform:none}
+.dmempty{flex:1;display:grid;place-items:center;padding:24px;text-align:center}
+.dmempty>div{display:flex;flex-direction:column;align-items:center;gap:4px;max-width:34ch}
+.dmempty svg{color:var(--mute);margin-bottom:6px}
+.dmempty p{margin:0}
+.dmempty .btn{margin-top:12px}
+/* a review shared into a chat */
+.dmrv{display:grid;grid-template-columns:56px minmax(0,1fr);gap:11px;align-items:center;width:min(310px,100%);padding:9px;border:1px solid var(--line);border-radius:16px;background:var(--surface);color:var(--ink);font:inherit;text-align:left;cursor:pointer;box-shadow:0 8px 18px -12px rgba(0,0,0,.4);transition:border-color .12s}
+.dmrv:hover{border-color:color-mix(in srgb,var(--violet) 55%,var(--line))}
+.dmrv .rart{width:56px;height:56px;border-radius:7px}
+.dmrvb{display:flex;flex-direction:column;gap:2px;min-width:0;line-height:1.3}
+.dmrvb>b{font-size:13.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dmrva{font-size:12px;color:var(--mute);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dmrvr{display:flex;align-items:center;gap:3px;min-width:0;font-size:12px;font-weight:600;font-variant-numeric:tabular-nums}
+.dmrvr svg{flex:none;color:#e0a526}
+.dmrvr .meta{font-size:12px;font-weight:400;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dmrvt{font-size:12.5px;font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media (max-width:700px){
+.dmp{grid-template-columns:minmax(0,1fr);border-radius:12px}
+.dmp.dmo .dml,.dmp:not(.dmo) .dmt{display:none}
+.dml{border-right:0}
+.dmth{padding:8px 10px}
+.dmth .dmback{display:grid}
+.dmmsgs{padding:8px 10px 6px}
+.dmgs{max-width:82%}
+.dmf{padding:8px 10px 10px}
+}
 </style>
 </head>
 <body>
@@ -1482,10 +1596,21 @@ var l=S.reviews.slice();
 if(S.tab==="profile"||S.tab==="user"){var pn=S.tab==="profile"?S.user:S.view;l=l.filter(function(r){return r.user===pn}).concat(S.reviews.filter(function(r){return r.user!==pn&&(S.reposts[r.id]||[]).indexOf(pn)>-1}).map(function(r){return Object.assign({},r,{via:pn})}))}
 if(S.tab==="feed"&&S.scope==="fol"){var fl=(me()&&me().following)||[];l=l.filter(function(r){return fl.indexOf(r.user)>-1})}
 if(S.type!=="All")l=l.filter(function(r){return r.type===S.type});
+if(S.tab==="feed"&&!S.q)l=sdThin(l);
 if(S.q&&S.tab==="feed"){var q=S.q.toLowerCase();l=l.filter(function(r){return (r.title+" "+r.artist+" "+r.text+" "+r.user).toLowerCase().indexOf(q)>-1})}
 l.sort(function(a,b){return S.sort==="top"?b.rating-a.rating||b.id-a.id:b.id-a.id});
 return l}
 
+/* Song of the Day reviews are all of the same song on the same day, so they'd crowd the feed. Each day only the two doing best
+   (most liked that day, earliest first on a tie) and your own stay in the feed; the rest live on the Song of the Day page.
+   Searching still finds every one of them. */
+function sdThin(l){var E=S.sotdOK&&S.sotd.entries,D=S.sotd.days;if(!E)return l;var on={},cut={},any=0;
+l.forEach(function(r){on[r.id]=r});
+Object.keys(E).forEach(function(d){var s=D[d];if(!s)return;var c=[];
+(E[d]||[]).forEach(function(e){var r=on[e.rid];if(r&&r.user===e.user&&sdSame(r,s))c.push({r:r,at:String(e.at||""),k:dayLikes(r,d)})});
+if(c.length<3)return;c.sort(function(a,b){return b.k-a.k||(a.at<b.at?-1:a.at>b.at?1:0)});
+var n=0;c.forEach(function(x){if(x.r.user===S.user)return;if(n<2)n++;else{cut[x.r.id]=1;any=1}})});
+return any?l.filter(function(r){return !cut[r.id]}):l}
 function rateBox(r,av){var v=rnum(r.rating);return '<div class="rrate'+(av?' wav':'')+'">'+(av?'<button type="button" class="rav" data-u="'+esc(r.user)+'" aria-label="'+esc(r.user)+'\'s profile" data-name="'+esc(r.user)+'">'+avatar(acct(r.user))+'</button>':'')+'<span class="stars" style="--p:'+starPct(v)+'%" role="img" aria-label="'+v.toFixed(1)+' out of 5"></span><b class="rv">'+v.toFixed(1)+'</b></div>'}
 /* the glow behind a review: the artwork shrunk to 4×4 pixels and stretched over the whole tile, so the browser blends its colours
    into a soft gradient for free (no blur to redraw while scrolling). Covers without artwork use their own two-colour gradient. */
@@ -1507,9 +1632,9 @@ if(now)c.classList.add("now");c.classList.add("on")}catch(e){}}
 function byLine(r,k,na){var u=na?'':'<button type="button" class="avbtn" data-u="'+esc(r.user)+'" aria-label="'+esc(r.user)+'\'s profile" data-name="'+esc(r.user)+'">'+avatar(acct(r.user),"xs")+'</button>';
 return k==="l"?'<div class="meta rby rbl'+(na?' na':'')+'">'+u+'<span class="rbd">'+esc(r.date)+'</span></div>':'<div class="meta rby rbf">'+u+'<span class="rbd">'+esc(r.date)+'</span></div>'}
 function penBtn(r){return r.user===S.user&&!r.via?'<button type="button" class="ob" data-edit="'+r.id+'" aria-label="Edit your review" title="Edit review"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>':''}
-function earHTML(r){if(!(S.platOK&&S.plats.length))return "";var q=encodeURIComponent((String(r.title)+" "+String(r.artist)).slice(0,160));
+function earHTML(r,ids){ids=ids||(S.platOK&&S.plats.length?S.plats:null);if(!ids||!ids.length)return "";var q=encodeURIComponent((String(r.title)+" "+String(r.artist)).slice(0,160));
 return '<span class="ear"><button type="button" class="earb" aria-expanded="false" aria-label="Listen on your apps" title="Listen on…"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8.5a6.5 6.5 0 1 1 13 0c0 6-6 6-6 10a3.5 3.5 0 1 1-7 0"/><path d="M15 8.5a2.5 2.5 0 0 0-5 0v1a2 2 0 1 1 0 4"/></svg><svg class="earc" width="9" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m1 1 4 4 4-4"/></svg></button><span class="beads" hidden>'+
-S.plats.map(function(id,i){var p=PLATIDX[id];return '<a class="bead'+(p.k?" "+p.k:"")+'" style="--pc:'+p.c+';--i:'+i+'" href="'+esc(p.u(q))+'" target="_blank" rel="noopener noreferrer" title="Listen on '+p.n+'" aria-label="Listen on '+p.n+' (opens in a new tab)">'+plLogo(id,15)+'</a>'}).join("")+'</span></span>'}
+ids.map(function(id,i){var p=PLATIDX[id];return '<a class="bead'+(p.k?" "+p.k:"")+'" style="--pc:'+p.c+';--i:'+i+'" href="'+esc(p.u(q))+'" target="_blank" rel="noopener noreferrer" title="Listen on '+p.n+'" aria-label="Listen on '+p.n+' (opens in a new tab)">'+plLogo(id,15)+'</a>'}).join("")+'</span></span>'}
 function plgHTML(r,n,cls){n=n||2;if(!(S.platOK&&S.plats.length))return "";var ids=S.plats,h='<span class="plg'+(cls?' '+cls:'')+'">'+plLinks(r,19,"act",n);
 if(ids.length>n){var q=encodeURIComponent((String(r.title)+" "+String(r.artist)).slice(0,160)),k=ids.length-n;
 h+='<span class="plm"><button type="button" class="plmb" aria-haspopup="true" aria-expanded="false" aria-label="Show '+k+' more listening app'+(k===1?"":"s")+'" title="More apps">'+CAR+'</button><span class="plpop" role="menu" hidden>'+ids.slice(n).map(function(id){var p=PLATIDX[id];return '<a class="plr'+(p.k?" "+p.k:"")+'" style="--pc:'+p.c+'" role="menuitem" href="'+esc(p.u(q))+'" target="_blank" rel="noopener noreferrer" aria-label="Listen on '+p.n+' (opens in a new tab)">'+plLogo(id,18)+'<span>'+p.n+'</span></a>'}).join("")+'</span></span>'}
@@ -1632,6 +1757,7 @@ font("500",38);g.fillStyle="rgba(255,255,255,.72)";g.fillText(fitText(g,r.artist
 var k=3.6,SBW=100*k,SBH=15.56*k,num=rnum(r.rating).toFixed(1);font("700",52);var nw=g.measureText(num).width,sx=(W-(93.12*k+26+nw))/2-3.44*k;
 g.save();g.beginPath();for(var si=0;si<5;si++){STARPT.forEach(function(q,j){var px=sx+(q[0]+20*si)*k,py=y+q[1]*k;if(j)g.lineTo(px,py);else g.moveTo(px,py)});g.closePath()}g.clip();
 g.fillStyle="rgba(255,255,255,.26)";g.fillRect(sx,y,SBW,SBH);g.fillStyle="#fff";g.fillRect(sx,y,SBW*starPct(r.rating)/100,SBH);g.restore();
+g.beginPath();for(var sj=0;sj<5;sj++){STARPT.forEach(function(q,j){var px=sx+(q[0]+20*sj)*k,py=y+q[1]*k;if(j)g.lineTo(px,py);else g.moveTo(px,py)});g.closePath()}g.lineWidth=2;g.lineJoin="round";g.strokeStyle="#000";g.stroke();
 g.textAlign="left";g.fillStyle="#fff";g.fillText(num,sx+96.56*k+26,y+SBH/2+18);g.textAlign="center";y+=56;
 /* the five words, the star of the show */
 if(rv){y+=52;font("700",rv.s);var lh=rv.s*1.16;rv.lines.forEach(function(l,i){quoteLine(g,l,W/2,Math.round(y+i*lh+rv.s*.92))});y+=RH}
@@ -1683,7 +1809,7 @@ function revSong(r){return {title:r.title,artist:r.artist,type:r.type,art:r.art|
 function revOf(id){return S.reviews.filter(function(v){return String(v.id)===String(id)})[0]}
 function okDate(d){var m=/^(\d{4})-(\d{2})-(\d{2})/.exec(String(d||""));return m&&+m[2]>=1&&+m[2]<=12&&+m[3]>=1&&+m[3]<=31?m[1]+"-"+m[2]+"-"+m[3]:""}
 function fmtRel(o){var m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(o.rel||"");return m?(+m[3])+" "+MON[+m[2]-1]+" "+m[1]:(o.year||"")}
-function backRows(r){var s=revSong(r),o=S.info[infoKey(s)]||{},w=!!o.busy,rs=songReviews(s),n=rs.length,av=n?(rs.reduce(function(a,x){return a+rnum(x.rating)},0)/n).toFixed(1):"",ct=n?'<span class="cnt">('+n+')</span>':"";
+function backRows(r){var s=revSong(r),o=S.info[infoKey(s)]||{},w=!!o.busy,rs=songReviews(s),n=rs.length,av=n?(rs.reduce(function(a,x){return a+rnum(x.rating)},0)/n).toFixed(2):"",ct=n?'<span class="cnt">('+n+')</span>':"";
 function row(ic,k,v,wait,extra){return '<span class="cvr"><span class="cvl"><svg viewBox="0 0 24 24" aria-hidden="true">'+CVI[ic]+'</svg><span class="cvt">'+k+'</span></span><span class="cvv'+(v?'':' na')+'"'+(v&&ic==="alb"?' title="'+esc(v)+'"':'')+'>'+(v?esc(v)+(extra||''):(wait?'…':'—'))+'</span></span>'}
 if(r.type==="Album")return row("avg","Avg rating",av,false,ct)+row("rel","Released",fmtRel(o),w)+row("len","Length",fmtTotal(o.ms),w)+row("trk","Tracks",o.count?String(o.count):"",w);
 return row("avg","Avg rating",av,false,ct)+row("alb","Album",o.album||"",w)+row("rel","Released",fmtRel(o),w)+row("len","Length",fmtLen(o.ms),w)+row("bpm","BPM",o.bpm?String(o.bpm):"",w||o.bpmBusy)}
@@ -1752,7 +1878,7 @@ function trackAvgs(s){var m={};songReviews(s).forEach(function(r){(r.tracks||[])
 function tracksHTML(){var s=S.song,o=S.info[infoKey(s)]||{},t=o.tracks;if(s.type!=="Album"||!t||!t.length)return "";
 var av=trackAvgs(s),multi=t.some(function(x){return x.d>1}),disc=0,h='<h2>Tracks</h2><ol class="tracks">';
 t.forEach(function(x){if(multi&&x.d!==disc){disc=x.d;h+='<li class="disc">Disc '+x.d+'</li>'}var a=av[x.title.toLowerCase()],m=a?a.reduce(function(p,q){return p+q},0)/a.length:0;
-h+='<li><span class="tn">'+(x.n||"")+'</span><span class="tt">'+esc(x.title)+'</span><span class="ta"'+(a?' title="Average of '+pl(a.length,"rating")+' on Mosaic"><i aria-hidden="true">★</i>'+m.toFixed(1):'>')+'</span><span class="td">'+esc(fmtLen(x.ms))+'</span></li>'});
+h+='<li><span class="tn">'+(x.n||"")+'</span><span class="tt">'+esc(x.title)+'</span><span class="ta"'+(a?' title="Average of '+pl(a.length,"rating")+' on Mosaic"><i aria-hidden="true">★</i>'+m.toFixed(2):'>')+'</span><span class="td">'+esc(fmtLen(x.ms))+'</span></li>'});
 return h+'</ol>'}
 function noteHTML(){var s=S.song,o=S.info[infoKey(s)]||{};
 if(o.demo)return "Demo data. Live details aren't available in this preview.";
@@ -1763,24 +1889,25 @@ if(f.tab==="song"&&f.song)return "Back to “"+f.song.title+"”";
 if(f.tab==="search")return "Back to results";
 if(f.tab==="later")return "Back to Listen later";
 if(f.tab==="sotd")return "Back to Song of the Day";
+if(f.tab==="msgs")return f.dmw?"Back to your chat with "+f.dmw:"Back to Messages";
 if(f.tab==="profile")return "Back to My Mosaic";
 if(f.tab==="user"&&f.view)return "Back to "+f.view+"’s profile";
 return "Back to Recommended"}
 function songView(){var s=S.song,alb=s.type==="Album",what=alb?"album":"song",rs=songReviews(s),n=rs.length,avg=n?rs.reduce(function(a,r){return a+rnum(r.rating)},0)/n:0,mine=dupSong(s);
-var rate=n?'<div class="srate"><span class="snum">'+avg.toFixed(1)+'</span><span class="sbar" style="--p:'+starPct(avg)+'%" role="img" aria-label="Average '+avg.toFixed(1)+' out of 5"></span></div><p class="meta scount">Average of '+pl(n,"review")+' on Mosaic</p>'
+var rate=n?'<div class="srate"><span class="snum">'+avg.toFixed(2)+'</span><span class="sbar" style="--p:'+starPct(avg)+'%" role="img" aria-label="Average '+avg.toFixed(2)+' out of 5"></span></div><p class="meta scount">Average of '+pl(n,"review")+' on Mosaic</p>'
 :'<div class="srate none"><span class="noyet">No ratings yet</span></div><p class="meta scount">Be the first to review this '+what+'.</p>';
 return '<button type="button" class="linkbtn" data-back="1" style="margin-bottom:14px">← '+esc(backLabel())+'</button>'+
 '<section class="song"><div class="sleeve">'+heroCover(s)+'</div><div class="sinfo"><h1>'+esc(s.title)+'</h1><p class="sby"><button type="button" class="ulink" data-seeq="'+esc(s.artist)+'" title="See Mosaic reviews by this artist">'+esc(s.artist)+'</button></p>'+rate+
 '<dl class="facts" id="sfacts">'+factsHTML()+'</dl><div class="sbtns">'+(mine?'<button type="button" class="btn ink" data-edit="'+esc(mine.id)+'">Edit your review</button>':'<button type="button" class="btn ink" id="srev">Review this '+what+'</button>')+''+(S.laterOK?laterBtn(s):'')+'</div>'+listenRow(s)+'<div id="stracks">'+tracksHTML()+'</div><p class="meta src" id="snote">'+noteHTML()+'</p></div></section>'+
 '<section class="srevs"><h2>Reviews'+(n?' <span class="meta">'+n+'</span>':'')+'</h2>'+(n?'<div class="list cols'+S.cols+'" id="list">'+listHTML()+'</div>':'<div class="empty">Nobody has reviewed this '+what+' yet.</div>')+'</section>'}
 function openSong(s){if(!s)return;
-S.stack.push({tab:S.tab,view:S.view,stab:S.stab,q:S.q,y:window.scrollY||0,song:S.tab==="song"?S.song:null});if(S.stack.length>25)S.stack.shift();
+S.stack.push({tab:S.tab,view:S.view,stab:S.stab,q:S.q,y:window.scrollY||0,song:S.tab==="song"?S.song:null,dmw:S.tab==="msgs"?S.dmWith:null});if(S.stack.length>25)S.stack.shift();
 S.song=s;S.tab="song";S.shut=keepShut();var o=ensureInfo(s);
 appView();try{window.scrollTo(0,0)}catch(e){}
 if(o)o.p=loadInfo(s,o)}
 function goBack(){var f=S.stack.pop();
 if(!f){S.tab="feed";S.q="";S.shut=keepShut();appView();return}
-S.tab=f.tab;S.view=f.view;S.stab=f.stab;S.q=f.q||"";S.shut=keepShut();
+S.tab=f.tab;S.view=f.view;S.stab=f.stab;S.q=f.q||"";if(f.tab==="msgs"){S.dmWith=f.dmw||null;S.dmNew=false}S.shut=keepShut();
 var o=null;if(f.song){S.song=f.song;o=ensureInfo(f.song)}
 appView();try{window.scrollTo(0,f.y||0)}catch(e){}
 if(o)o.p=loadInfo(f.song,o)}
@@ -1793,11 +1920,11 @@ bs=[[2,"Two reviews",two],[3,"Three reviews",three]];
 return '<div class="seg'+(S.cols===3?' s3':'')+'" role="group" aria-label="Reviews per row">'+bs.map(function(b){var t=b[1]+' per row';return '<button type="button" data-cols="'+b[0]+'" aria-pressed="'+(S.cols===b[0])+'" aria-label="'+t+'" title="'+t+'">'+b[2]+'</button>'}).join("")+'</div>'}
 function appView(){
 if(S.tab==="sotd"&&!S.sotdOK)S.tab="feed";
+if(S.tab==="msgs"&&!(S.user&&S.msgOK))S.tab="feed";
 var a=me(),nm=esc(S.user||""),prof=S.tab==="profile",mcur=prof||S.tab==="likes"||S.tab==="account"||S.tab==="later"||S.tab==="editp";
 var cnt=S.reviews.filter(function(r){return r.user===S.user}).length;
 var notes=(a&&a.notes)||[],unread=notes.filter(function(n){return !n.read}).length;
-var msgs=(a&&a.msgs)||[],munread=msgs.filter(function(n){return !n.read}).length;
-var msgsHTML=msgs.length?msgs.slice(0,8).map(function(n){var r=S.reviews.filter(function(x){return String(x.id)===String(n.rid)})[0];return '<div class="note"><button type="button" class="ulink" data-u="'+esc(n.by)+'">'+esc(n.by)+'</button> sent you '+(r?'<button type="button" class="ulink" data-gorv="'+esc(r.title)+'">“'+esc(r.title)+'”</button> by '+esc(r.artist):'a review')+' <span class="meta">'+esc(n.date)+'</span></div>'}).join(""):'<p class="meta" style="margin:0">No messages yet.</p>';
+var munread=S.user?dmUnread():0;
 var notesHTML=notes.length?notes.slice(0,8).map(function(n){var rv=n.rid!=null?S.reviews.filter(function(r){return r.id==n.rid})[0]:null,what=n.kind==="like"?"liked":n.kind==="comment"?"commented on":n.kind==="repost"?"reposted":"";
 return '<div class="note"><button type="button" class="ulink" data-u="'+esc(n.by)+'">'+esc(n.by)+'</button> '+(what?what+" your review"+(rv?" of "+esc(rv.title):""):"started following you")+' <span class="meta">'+esc(n.date)+'</span></div>'}).join(""):'<p class="meta" style="margin:0">Nothing new yet.</p>';
 var ic='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">';
@@ -1807,10 +1934,11 @@ var chat=ic+'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2
 var body;
 if(S.tab==="review"){body='<section class="page"><h2>Write a review</h2><div class="card" id="rvhost"></div></section>'}
 else if(S.tab==="user"&&acct(S.view)){var vu=S.view,va=acct(vu),vc=S.reviews.filter(function(r){return r.user===vu}).length;
-body='<button type="button" class="linkbtn" data-tab="feed" style="margin-bottom:8px">Back to Recommended</button><section class="prof ig"><div class="pmain"><h2 class="pnm"><span>'+esc(vu)+'</span></h2>'+pavHTML(va,va.plats||[])+'<div class="igm">'+igStats(vu,va,vu!==S.user?plusBtn(vu):'')+est(va)+'</div></div>'+mosaicHTML(vu,false)+'</section><div class="list cols'+S.cols+'" id="list">'+listHTML()+'</div>'}
+body='<button type="button" class="linkbtn" data-tab="feed" style="margin-bottom:8px">Back to Recommended</button><section class="prof ig"><div class="pmain"><h2 class="pnm"><span>'+esc(vu)+'</span></h2>'+pavHTML(va,va.plats||[])+'<div class="igm">'+igStats(vu,va,vu!==S.user?'<span class="pbt">'+plusBtn(vu)+dmBtn(vu)+'</span>':'')+est(va)+'</div></div>'+mosaicHTML(vu,false)+'</section><div class="list cols'+S.cols+'" id="list">'+listHTML()+'</div>'}
 else if(S.tab==="search"){var stabs=[["songs","Songs"],["albums","Albums"],["profiles","Profiles"],["artists","Artists"]].map(function(t){return '<button type="button" class="stab" role="tab" data-st="'+t[0]+'" aria-selected="'+((S.stab||"songs")===t[0])+'">'+t[1]+'</button>'}).join("");
 body='<section class="page"><h2>Results for “'+esc(S.sq||"")+'”</h2><div class="stabs" role="tablist">'+stabs+'</div><div class="list" id="sres">'+resultsHTML()+'</div></section>'}
 else if(S.tab==="sotd"&&S.sotdOK){body=sotdView()}
+else if(S.tab==="msgs"){body=dmView()}
 else if(S.tab==="song"&&S.song){body=songView()}
 else if(S.tab==="later"&&S.laterOK){body=laterView()}
 else if(S.tab==="likes"){body='<section class="page"><h2>My likes and comments</h2><div class="empty">Reviews you like or comment on will show up here.</div></section>'}
@@ -1819,20 +1947,21 @@ else if(S.tab==="account"){body='<section class="page"><h2>Privacy and account</
 else{body=(prof?'<section class="prof ig"><div class="pmain"><h2 class="pnm"><span>'+nm+'</span></h2>'+pavHTML(a,S.platOK?S.plats:[],1)+'<div class="igm">'+igStats(S.user,a,"")+est(a)+'</div></div>'+mosaicHTML(S.user,true)+'</section>':'')+
 (S.tab==="feed"&&S.q?'<div class="chips"><span class="meta">Showing reviews for</span><button type="button" class="chip" id="clq">'+esc(S.q)+' ×</button></div>':'')+'<div class="tools"><div class="tl"><button class="btn addb" id="add" aria-label="Add review" title="Add review"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>'+(S.tab==="feed"?'<select id="sc" aria-label="Show"><option value="all">Everyone</option><option value="fol">People I follow</option></select>':'')+'<select id="t" aria-label="Type"><option>All</option><option>Album</option><option>Song</option></select><select id="s" aria-label="Sort"><option value="new">Newest</option><option value="top">Highest rated</option></select></div>'+layoutSwitch()+'</div>'+
 '<div class="list cols'+S.cols+'" id="list">'+listHTML()+'</div>'}
-$("#app").innerHTML='<div class="wrap"><header class="top"><h2><button type="button" class="wm" data-tab="feed" aria-label="Mosaic home">Mosaic</button></h2><nav><button data-tab="feed" aria-current="'+(S.tab==="feed")+'">Recommended</button>'+(S.sotdOK?'<button data-tab="sotd" aria-current="'+(S.tab==="sotd")+'">Song of the Day</button>':'')+'</nav>'+
+$("#app").innerHTML='<div class="wrap'+(S.tab==="msgs"?' dmw':'')+'"><header class="top"><h2><button type="button" class="wm" data-tab="feed" aria-label="Mosaic home">Mosaic</button></h2><nav><button data-tab="feed" aria-current="'+(S.tab==="feed")+'">Recommended</button>'+(S.sotdOK?'<button data-tab="sotd" aria-current="'+(S.tab==="sotd")+'">Song of the Day</button>':'')+'</nav>'+
 '<div class="sw'+(S.sv?" open":"")+'"><button class="ib" id="sb" aria-label="Search" type="button">'+mag+'</button><input id="q" type="search" placeholder="Search songs to review" aria-label="Search songs" autocomplete="off" readonly value="'+esc(S.sv||"")+'"><div class="sug" id="sug" hidden></div></div>'+
 '<div class="right"><div class="mew"><button class="me" aria-haspopup="menu" aria-current="'+mcur+'" aria-label="Your account menu">'+avatar(a)+'<span class="nm">'+nm+'</span></button>'+
 '<div class="menu"><div class="box" role="menu"><button role="menuitem" data-tab="profile">My Mosaic</button><button role="menuitem" data-tab="editp">Edit profile</button>'+(S.laterOK?'<button role="menuitem" data-tab="later">Listen later'+(S.later.length?' <span class="meta">'+S.later.length+'</span>':'')+'</button>':'')+'<button role="menuitem" data-tab="likes">My likes and comments</button><button role="menuitem" data-tab="account">Privacy and account</button><hr><button role="menuitem" id="so">Sign out</button></div></div></div>'+
 '<div class="ibw"><button class="ib" id="nb" aria-label="Notifications" aria-expanded="false">'+bell+(unread?'<i class="dot"></i>':'')+'</button><div class="pop" id="np" hidden><h3>Notifications</h3>'+notesHTML+'</div></div>'+
-'<div class="ibw"><button class="ib" id="mb" aria-label="Messages" aria-expanded="false">'+chat+(munread?'<i class="dot"></i>':'')+'</button><div class="pop" id="mp" hidden><h3>Messages</h3>'+msgsHTML+'</div></div></div></header>'+body+'</div>';
+(S.msgOK?'<div class="ibw"><button class="ib" id="mb" type="button" aria-label="Messages'+(munread?', '+munread+' unread':'')+'" aria-current="'+(S.tab==="msgs")+'">'+chat+(munread?'<i class="mbn" aria-hidden="true">'+(munread>9?"9+":munread)+'</i>':'')+'</button></div>':'')+'</div></header>'+body+'</div>';
 var mew=$(".mew");if(S.shut){mew.classList.add("shut");S.shut=false}
 mew.onmouseleave=function(){mew.classList.remove("shut")};
 $(".me").onclick=function(e){e.stopPropagation();if(mew.classList.contains("open")){mew.classList.remove("open");mew.classList.add("shut")}else{mew.classList.remove("shut");mew.classList.add("open")}};
 document.querySelectorAll("[data-tab]").forEach(function(b){b.onclick=function(){S.tab=b.dataset.tab;S.q="";S.stack=[];S.shut=keepShut();appView();if(S.tab==="sotd")maybeSdIntro()}});
 $("#so").onclick=async function(){closePops();var arts=S.reviews.map(function(r){return r.art}),so=api.signOut().catch(function(){});await amzArrive(arts,function(){return so.then(function(){S.tab="feed";S.q="";authView()})})};
 wirePop($("#nb"),$("#np"));
-$("#nb").addEventListener("click",function(){var a2=me();if(a2&&a2.notes&&a2.notes.some(function(n){return !n.read})){a2.notes.forEach(function(n){n.read=true});api.markRead();var dt=this.querySelector(".dot");if(dt)dt.remove()}});wirePop($("#mb"),$("#mp"));
-$("#mb").addEventListener("click",function(){var a3=me();if(a3&&a3.msgs&&a3.msgs.some(function(n){return !n.read})){a3.msgs.forEach(function(n){n.read=true});api.markMsgsRead();var d2=this.querySelector(".dot");if(d2)d2.remove()}});
+$("#nb").addEventListener("click",function(){var a2=me();if(a2&&a2.notes&&a2.notes.some(function(n){return !n.read})){a2.notes.forEach(function(n){n.read=true});api.markRead();var dt=this.querySelector(".dot");if(dt)dt.remove()}});
+var mbb=$("#mb");if(mbb)mbb.onclick=function(){var t=dmThreads().filter(function(x){return x.un})[0];dmOpen(dmWide()?(t?t.u:S.dmWith):null)};
+document.querySelectorAll("[data-dmto]").forEach(function(b){b.onclick=function(){dmOpen(b.dataset.dmto)}});
 document.querySelectorAll("[data-gorv]").forEach(function(b){b.onclick=function(){S.q=b.dataset.gorv;S.tab="feed";S.stack=[];S.shut=keepShut();appView()}});
 var sw=$(".sw"),qi=$("#q"),sug=$("#sug"),sugs=[],sh=-1,stm=null,stk=0;
 searchHover=false;
@@ -1882,7 +2011,7 @@ if(S.tab==="editp")wireEdit();
 var chg=$("#chg");if(chg){chg.onclick=function(){$("#pic").click()};
 $("#pic").onchange=function(e){var f=e.target.files[0];if(!f)return;var rd=new FileReader();rd.onload=function(){var im=new Image();im.onload=function(){var c=document.createElement("canvas");c.width=c.height=160;var x=c.getContext("2d"),m=Math.min(im.width,im.height);x.drawImage(im,(im.width-m)/2,(im.height-m)/2,m,m,0,0,160,160);api.setPic(c.toDataURL("image/jpeg",0.85)).then(function(){appView()})};im.src=rd.result};rd.readAsDataURL(f)}}
 var rm=$("#rmp");if(rm)rm.onclick=function(){api.setPic(null).then(function(){appView()})};
-wireFollowing();wireSotd();
+wireFollowing();wireSotd();dmWire();
 bind()}
 
 /* two per row: shrink each review to its longest line so the text block sits exactly midway between artwork and tile edge */
@@ -1942,7 +2071,7 @@ btn.onclick=function(){if(touch&&w.classList.contains("open"))close();else open(
 w.onkeydown=function(e){if(e.key==="Escape"){close();btn.focus()}}});
 document.querySelectorAll("[data-copy]").forEach(function(b){b.onclick=function(){var r=rv(b.dataset.copy);if(r)copyReview(r,b)}});
 document.querySelectorAll("[data-story]").forEach(function(b){b.onclick=function(){var r=rv(b.dataset.rid);if(r)openStory(r,b.dataset.story)}});
-document.querySelectorAll("[data-to]").forEach(function(b){b.onclick=function(){var id=b.dataset.rid,to=b.dataset.to;if(S.sent[id+":"+to])return;S.sent[id+":"+to]=true;b.classList.add("sent");api.sendReview(id,to).then(function(res){if(res&&res.error){S.sent[id+":"+to]=false;b.classList.remove("sent");b.dataset.name="Couldn't send";setTimeout(function(){b.dataset.name=to},1600)}})}});
+document.querySelectorAll("[data-to]").forEach(function(b){b.onclick=function(){var id=b.dataset.rid,to=b.dataset.to;if(S.sent[id+":"+to])return;S.sent[id+":"+to]=true;b.classList.add("sent");dmSend(to,"",id,true).then(function(ok){if(!ok){S.sent[id+":"+to]=false;b.classList.remove("sent");b.dataset.name="Couldn't send";setTimeout(function(){b.dataset.name=to},1600)}})}});
 document.querySelectorAll(".cmf").forEach(function(f){var id=f.dataset.cf,i=f.querySelector("input");i.oninput=function(){S.draft[id]=i.value};
 f.onsubmit=function(e){e.preventDefault();var t=i.value.trim();if(!t)return;i.disabled=true;api.addComment(id,t).then(function(res){if(res&&res.error){i.disabled=false;toast("Couldn't post your comment. Try again.");return}S.draft[id]="";refreshList("cmi"+id)}).catch(function(){i.disabled=false;toast("Couldn't post your comment. Try again.")})}});
 document.querySelectorAll("[data-dcm]").forEach(function(b){b.onclick=function(){api.delComment(b.dataset.dcm,b.dataset.rid).then(function(){refreshList()})}})}
@@ -2086,7 +2215,7 @@ if(rs[0].error||rs[1].error)return false;var by={},days={},en={};accts.forEach(f
 (rs[1].data||[]).forEach(function(x){if(by[x.user_id])(en[x.day]=en[x.day]||[]).push({user:by[x.user_id],rid:x.review_id,at:x.created_at})});
 S.sotd={days:days,entries:en,admin:!rs[2].error&&rs[2].data===true};return true}catch(e){return false}}
 /* one line per review: who, rating, the review, likes and comments (comments open underneath) */
-var STAR1='<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.7l2.8 6 6.6.8-4.9 4.5 1.3 6.5L12 17.3l-5.8 3.2 1.3-6.5L2.6 9.5l6.6-.8z"/></svg>';
+var STAR1='<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="#000" stroke-width="1.1" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.7l2.8 6 6.6.8-4.9 4.5 1.3 6.5L12 17.3l-5.8 3.2 1.3-6.5L2.6 9.5l6.6-.8z"/></svg>';
 function sdRowHTML(x){var r=x.r,id=r.id,v=rnum(r.rating),lk=S.likes[id]||[],cm=S.comments[id]||[],liked=lk.indexOf(S.user)>-1;
 return '<div class="sdr"><button type="button" class="avbtn sdra" data-u="'+esc(r.user)+'" aria-label="'+esc(r.user)+'\'s profile" data-name="'+esc(r.user)+'">'+avatar(acct(r.user),"xs")+'</button>'+
 '<span class="sdrr" role="img" aria-label="Rated '+v.toFixed(1)+' out of 5">'+STAR1+v.toFixed(1)+'</span><span class="sdrt">'+esc(r.text||"")+'</span>'+
@@ -2096,6 +2225,8 @@ return '<div class="sdr"><button type="button" class="avbtn sdra" data-u="'+esc(
 function sdStat(today,s,st){var m=st.filter(function(x){return x.user===S.user})[0];
 if(m){var i=st.indexOf(m);return m.likes?"You’re "+nth(i+1)+" with "+pl(m.likes,"like")+" today.":"You’re in. Likes from today decide the places."}
 return dupSong(s)?"You reviewed this before it was picked. Enter that review, or edit it first.":""}
+/* the Song of the Day's ear: your apps, or the big three if you haven't picked any */
+function sdPlats(){return S.platOK&&S.plats.length?S.plats:["spotify","applemusic","youtubemusic"]}
 function sotdView(){var today=ukDay(),s=S.sotd.days[today],st=standings(today),mine=s?dupSong(s):null,ent=st.filter(function(x){return x.user===S.user})[0];
 var h='<section class="page sotd">';
 if(!s)h+='<div class="sdhd"><h2>Song of the Day</h2><span class="meta">'+esc(dayLong(today))+'</span></div><div class="empty">'+(S.sotd.admin?"You haven’t picked today’s song yet. Pick one below.":"Today’s song isn’t up yet. Check back soon.")+'</div>';
@@ -2103,7 +2234,7 @@ else{var hu=hue(s.title+s.artist),cta=ent?'<button type="button" class="btn ink"
 /* the glow fills the whole screen behind everything (fixed, so scrolling doesn't redraw it) */
 h+='<div class="sdbg" aria-hidden="true"><i style="background:linear-gradient(160deg,hsl('+hu+',74%,52%),hsl('+((hu+60)%360)+',78%,40%))"></i>'+(s.art?'<canvas class="soft" width="96" height="96" data-soft="'+esc(bigArt(s.art))+'" data-blur="3.4"></canvas>':'')+'</div>'+
 '<div class="sdhero"><p class="sdk">Song of the Day · '+esc(dayLong(today))+'</p>'+
-'<button type="button" class="sdart'+(S.sdIntroOn?' sdhide':'')+'" data-sdsong="1" aria-label="About “'+esc(s.title)+'”">'+heroCover(s)+'</button>'+
+'<div class="sdaw'+(S.sdIntroOn?' sdpre':'')+'"><button type="button" class="sdart'+(S.sdIntroOn?' sdhide':'')+'" data-sdsong="1" aria-label="About “'+esc(s.title)+'”">'+heroCover(s)+'</button>'+earHTML(s,sdPlats())+'</div>'+
 '<h2 class="sdt"><a class="tlink" href="#" data-sdsong="1">'+esc(s.title)+'</a></h2><p class="sdby">'+esc(s.artist)+'</p>'+
 '<div class="sbtns">'+cta+'</div>'+
 '<p class="meta sdst"><span id="sdstat">'+esc(sdStat(today,s,st))+'</span> Review it in five words or fewer; the most-liked review by midnight wins. Closes in <span id="sdleft">'+leftText()+'</span>.</p>'+
@@ -2111,7 +2242,7 @@ h+='<div class="sdbg" aria-hidden="true"><i style="background:linear-gradient(16
 '<h3 class="sdh" id="sdpop">Popular reviews'+(st.length?' <span class="meta">'+st.length+'</span>':'')+'</h3><div class="sdrows" id="list">'+listHTML()+'</div>'}
 var yd=dayAdd(today,-1),ys=S.sotd.days[yd];
 if(ys){var yst=standings(yd),w=yst[0]&&yst[0].likes?yst[0]:null;
-h+='<h3 class="sdh">Yesterday</h3><div class="sdy">'+rimg({title:ys.title,artist:ys.artist,thumb:ys.art})+'<div><b>'+esc(ys.title)+'</b> <span class="meta">'+esc(ys.artist)+'</span><p>'+(w?'<span class="sdw">'+CROWN+'</span>'+uname(w.user)+' won'+(w.r.text?' with “'+esc(w.r.text)+'”':'')+' <span class="meta">'+pl(w.likes,"like")+'</span>':yst.length?'Nobody got a like, so nobody won.':'Nobody entered.')+'</p></div></div>'}
+h+='<h3 class="sdh">Yesterday</h3><div class="sdy">'+rimg({title:ys.title,artist:ys.artist,thumb:ys.art})+'<div><b>'+esc(ys.title)+'</b> <span class="meta">'+esc(ys.artist)+'</span><p>'+(w?'<span class="sdw">'+CROWN+'</span>'+uname(w.user)+' won'+(w.r.text?' with <span class="sdwq">“'+esc(w.r.text)+'”</span>':'')+' <span class="meta">'+pl(w.likes,"like")+'</span>':yst.length?'Nobody got a like, so nobody won.':'Nobody entered.')+'</p></div></div>'}
 if(S.sotd.admin)h+=sdAdminHTML(today);
 return h+'</section>'}
 /* ---------- Song of the Day intro ----------
@@ -2122,7 +2253,7 @@ function sdSeen(){var o=store.get("ln_sdi",null);return !!(o&&o["u:"+S.user])}
 function maybeSdIntro(){var s=S.sotd.days[ukDay()];if(!s||!s.art||!S.user||sdSeen()||amzCalm()||document.getElementById("sdi"))return;
 var o=store.get("ln_sdi",{})||{};o["u:"+S.user]=1;store.set("ln_sdi",o);sdIntro(s)}
 function sdIntro(s){try{window.scrollTo(0,0)}catch(e){}
-S.sdIntroOn=true;var hc=$(".sotd .sdart");if(hc)hc.classList.add("sdhide");
+S.sdIntroOn=true;var hc=$(".sotd .sdart");if(hc)hc.classList.add("sdhide");var hw=$(".sotd .sdaw");if(hw)hw.classList.add("sdpre");
 var W=window.innerWidth,H=window.innerHeight,G=mGrid(W,H),key=amzArt(s.art),
 pool=amzShuffle(amzUniq((AMZ.pool||[]).concat(S.reviews.map(function(r){return r.art}))).filter(function(u){return amzArt(u)!==key})),
 el=document.createElement("div"),h='<div class="sdib"></div>',timers=[],done=false,flipping=true,iv=0,bim=new Image();
@@ -2159,7 +2290,7 @@ el.classList.add("out");t.el.classList.add("big");
 t.el.style.left=r.left+"px";t.el.style.top=r.top+"px";t.el.style.width=r.width+"px";t.el.style.height=r.height+"px";
 later(finish,1200)}
 function finish(){if(done)return;done=true;flipping=false;clearInterval(iv);timers.forEach(clearTimeout);S.sdIntroOn=false;
-var c=$(".sotd .sdart");if(c)c.classList.remove("sdhide");
+var c=$(".sotd .sdart");if(c)c.classList.remove("sdhide");var cw=$(".sotd .sdaw");if(cw)cw.classList.remove("sdpre");
 el.classList.add("gone");setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el)},250);
 document.removeEventListener("keydown",onKey,true)}
 function onKey(e){var k=e.key;if(k==="Escape"||k==="Enter"||k===" "){e.preventDefault();finish()}else if(/^(Arrow|Page|Home|End)/.test(k))e.preventDefault()}
@@ -2207,7 +2338,7 @@ $("#dcx",d).onclick=function(){d.close()};
 d.showModal();qi.focus()}
 
 var localApi={
-async start(){S.user=store.get("ln_user",null);syncLater();syncPlats();syncMos();syncSotd();return !!S.user},
+async start(){S.user=store.get("ln_user",null);syncLater();syncPlats();syncMos();syncSotd();syncDm();return !!S.user},
 async setDaily(day,it){var o=S.sotd.days[day],v=sdItem(it);if(o&&!(o.title.toLowerCase()===v.title.toLowerCase()&&o.artist.toLowerCase()===v.artist.toLowerCase()))delete S.sotd.entries[day];S.sotd.days[day]=v;saveSotd();return {}},
 async clearDaily(day){delete S.sotd.days[day];delete S.sotd.entries[day];saveSotd();return {}},
 async enterDaily(){var s=S.sotd.days[ukDay()],m=s&&dupSong(s);return m&&localEnter(m)?{}:{error:"Couldn't enter your review. Try again."}},
@@ -2217,11 +2348,11 @@ async signUp(dn,em,pw,pl){
 if(accts.some(function(x){return x.email===em}))return {error:"That email already has an account. Sign in instead."};
 if(await localApi.usernameTaken(dn))return {error:"That username is taken. Try another.",field:"dn"};
 var salt=String(Math.random()).slice(2)+Date.now(),h=await hash(pw,salt);
-accts.push({email:em,name:dn,salt:salt,hash:h,created:new Date().toISOString(),plats:validPlats(pl)});store.set("ln_accounts",accts);S.user=dn;store.set("ln_user",dn);syncLater();syncPlats();return {}},
+accts.push({email:em,name:dn,salt:salt,hash:h,created:new Date().toISOString(),plats:validPlats(pl)});store.set("ln_accounts",accts);S.user=dn;store.set("ln_user",dn);syncLater();syncPlats();syncDm();return {}},
 async signIn(idf,pw){var a=accts.filter(function(x){return x.email===idf||x.name.toLowerCase()===idf})[0];
 if(!a||(await hash(pw,a.salt))!==a.hash)return {error:"Username, email or password is incorrect."};
-S.user=a.name;store.set("ln_user",a.name);syncLater();syncPlats();return {}},
-async signOut(){S.user=null;S.later=[];S.plats=[];store.set("ln_user",null)},
+S.user=a.name;store.set("ln_user",a.name);syncLater();syncPlats();syncDm();return {}},
+async signOut(){dmReset();S.user=null;S.later=[];S.plats=[];store.set("ln_user",null)},
 async saveReview(o,r){var x=r;if(r){Object.assign(r,o)}else{x=Object.assign({id:Date.now(),user:S.user,date:new Date().toISOString().slice(0,10)},o);S.reviews.push(x)}save();if(!localEnter(x)&&r)localLeave(r);return {}},
 async delReview(id){S.reviews=S.reviews.filter(function(r){return r.id!=id});save()},
 async setPic(url){var ac=me();if(ac){if(url)ac.pic=url;else delete ac.pic;store.set("ln_accounts",accts)}},
@@ -2232,8 +2363,10 @@ async setTile(pos,it){var k="u:"+S.user,t=S.mos[k]=Array.isArray(S.mos[k])?S.mos
 async clearTile(pos){var t=S.mos["u:"+S.user];if(Array.isArray(t)){t[pos]=null;saveMos()}return {}},
 async moveTile(a,b){saveMos();return {}},
 async markRead(){store.set("ln_accounts",accts)},
-async sendReview(rid,to){var t=acct(to);if(!t)return {error:"x"};t.msgs=(t.msgs||[]).filter(function(m){return !(m.by===S.user&&String(m.rid)===String(rid))});t.msgs.unshift({id:Date.now(),by:S.user,rid:rid,date:new Date().toISOString().slice(0,10),read:false});t.msgs=t.msgs.slice(0,30);store.set("ln_accounts",accts);return {}},
-async markMsgsRead(){store.set("ln_accounts",accts)},
+async dmSend(to,body,rid){if(!S.user||!acct(to)||to===S.user)return {error:"x"};var all=dmStore(),m=dmMk(Date.now()*10+Math.floor(Math.random()*10),S.user,to,body,rid,new Date().toISOString(),false);all.push(m);dmSave(all);return {msg:m}},
+async dmRead(u){var all=dmStore(),ch=0;all.forEach(function(x){if(x.from===u&&x.to===S.user&&!x.read){x.read=true;ch=1}});if(ch)dmSave(all)},
+async dmUnsend(id){dmSave(dmStore().filter(function(x){return String(x.id)!==String(id)}));return {}},
+async dmPoll(){var was={},before=dmSig();S.dm.forEach(function(x){was[x.id]=1});syncDm();S.dm.forEach(function(x){if(!was[x.id]&&x.to===S.user&&!x.read)DMIN=x});return dmSig()!==before},
 async persistToggle(kind,rid,add){saveSoc();if(add)notifyLocal(kind==="likes"?"like":"repost",rid)},
 async setLater(it,add,prev){saveLater();return {}},
 async addComment(rid,text){var a=S.comments[rid]=S.comments[rid]||[];a.push({id:Date.now(),user:S.user,text:text,date:new Date().toISOString().slice(0,10)});saveSoc();notifyLocal("comment",rid)},
@@ -2248,7 +2381,7 @@ async function loadRemote(){
 function safe(q){return Promise.resolve(q).then(null,function(e){return {error:e||{}}})}
 var mosP=safe(sb.from("mosaic_tiles").select("user_id,pos,title,artist,type,art,tid")),sdP=sotdQ();sdP.catch(function(){});
 var rs=await Promise.all([sb.from("profiles").select("id,username,pic,created_at,platforms"),sb.from("reviews").select("*").order("created_at",{ascending:false}),sb.from("follows").select("follower,following"),sb.from("notifications").select("id,actor_id,read,created_at").order("created_at",{ascending:false}).limit(30),
-safe(sb.from("messages").select("id,sender,review_id,read,created_at").eq("recipient",S.uid).order("created_at",{ascending:false}).limit(30)),
+safe(sb.from("messages").select(DMC).or("sender.eq."+S.uid+",recipient.eq."+S.uid).order("created_at",{ascending:false}).limit(500)),
 safe(sb.from("review_likes").select("review_id,user_id,created_at")),safe(sb.from("review_reposts").select("review_id,user_id")),safe(sb.from("review_comments").select("id,review_id,user_id,body,created_at").order("created_at",{ascending:true})),safe(sb.from("notifications").select("id,kind,review_id")),
 loadLater(),loadPlats()]);
 for(var i=0;i<4;i++)if(rs[i].error)throw rs[i].error;
@@ -2258,8 +2391,9 @@ accts=(rs[0].data||[]).map(function(x){var o={id:x.id,name:x.username,created:x.
 S.reviews=(rs[1].data||[]).map(function(x){return revRow(x,by[x.user_id]?by[x.user_id].name:"Unknown")});
 var m=by[S.uid];S.user=m?m.name:null;
 if(m){m.email=S.email;m.notes=(rs[3].data||[]).map(function(n){return {id:n.id,by:by[n.actor_id]?by[n.actor_id].name:"Someone",date:String(n.created_at).slice(0,10),read:n.read}})}
-var mr=rs[4];S.msgOK=!mr.error;
-if(!mr.error&&m)m.msgs=(mr.data||[]).map(function(x){return {id:x.id,by:by[x.sender]?by[x.sender].name:"Someone",rid:x.review_id,date:String(x.created_at).slice(0,10),read:x.read}});
+var mr=rs[4];S.msgOK=!mr.error;var dl=[];
+if(!mr.error&&m)(mr.data||[]).forEach(function(x){var f=by[x.sender],t=by[x.recipient];if(f&&t)dl.push(dmMk(x.id,f.name,t.name,x.body,x.review_id,x.created_at,x.read))});
+S.dm=dl.sort(dmCmp);
 S.social=false;S.likes={};S.likeAt={};S.reposts={};S.comments={};
 try{var sr=[rs[5],rs[6],rs[7],rs[8]];
 if(!sr[0].error&&!sr[1].error&&!sr[2].error){S.social=true;
@@ -2270,7 +2404,7 @@ if(m&&!sr[3].error){var km={};(sr[3].data||[]).forEach(function(x){km[x.id]=x});
 S.laterOK=rs[9];if(!S.laterOK)S.later=[];
 S.platOK=rs[10];if(!S.platOK)S.plats=[];
 var more=await Promise.all([loadMosaic(mosP),loadSotd(sdP)]);
-S.mosOK=more[0];S.sotdOK=more[1];S.loadedAt=Date.now()}
+S.mosOK=more[0];S.sotdOK=more[1];S.loadedAt=Date.now();dmLiveStart()}
 /* S.mut counts your changes (so a refresh that overlaps one can be redone); inOrder() runs saves for the same item one after another */
 S.mut=0;var WQ={};
 function inOrder(k,fn){var q=(WQ[k]||Promise.resolve()).then(fn,fn);WQ[k]=q.then(null,function(){});return q}
@@ -2297,7 +2431,7 @@ if(idf.indexOf("@")<0){var x=await sb.rpc("email_for_username",{u:idf});if(!x.da
 var r=await sb.auth.signInWithPassword({email:email,password:pw});
 if(r.error){return {error:/not confirmed/i.test(r.error.message||"")?"Confirm your email first, then sign in.":"Username, email or password is incorrect."}}
 S.uid=r.data.user.id;S.email=r.data.user.email;await loadRemote();return S.user?{}:{error:"Couldn't load your account. Refresh the page."}},
-async signOut(){await sb.auth.signOut();S.user=null;S.uid=null;accts=[];S.reviews=[];S.later=[];S.plats=[];S.mos={};S.platOK=false;S.sotd={days:{},entries:{},admin:false};S.sotdOK=false},
+async signOut(){await sb.auth.signOut();dmReset();S.user=null;S.uid=null;accts=[];S.reviews=[];S.later=[];S.plats=[];S.mos={};S.platOK=false;S.sotd={days:{},entries:{},admin:false};S.sotdOK=false},
 async saveReview(o,r){var row={title:o.title,artist:o.artist,type:o.type,art:o.art||null,tid:o.tid||null,rating:o.rating,body:o.text,tracks:o.type==="Album"&&o.tracks?o.tracks:null};
 var save=function(rw){return (r?sb.from("reviews").update(rw).eq("id",r.id):sb.from("reviews").insert(rw)).select("*").single()};
 var res=await save(row),whole=0;
@@ -2328,8 +2462,18 @@ inOrder("fol:"+t.id,function(){return was?sb.from("follows").delete().eq("follow
 .then(function(r){if(r&&r.error&&r.error.code!=="23505")throw r.error})
 .catch(function(){var b=me();if(b&&isFol(n)!==was)b.following=was?(b.following||[]).concat([n]):(b.following||[]).filter(function(x){return x!==n});toast("Couldn't update who you follow. Try again.");appView()})},
 async markRead(){await sb.from("notifications").update({read:true}).eq("read",false)},
-async sendReview(rid,to){var t=acct(to);if(!t||!S.uid)return {error:"x"};var r=await sb.from("messages").insert({recipient:t.id,review_id:rid});return r.error?{error:r.error.message}:{}},
-async markMsgsRead(){await sb.from("messages").update({read:true}).eq("read",false)},
+async dmSend(to,body,rid){var t=acct(to);if(!t||!S.uid||t.id===S.uid)return {error:"x"};var row={recipient:t.id};if(body)row.body=body;if(rid!=null)row.review_id=+rid;
+var r=await sb.from("messages").insert(row).select(DMC).single();if(r.error)return {error:r.error.message||"x"};var m=dmRow(r.data);return m?{msg:m}:{error:"x"}},
+async dmRead(u){var t=acct(u);if(!t||!S.uid)return;await sb.from("messages").update({read:true}).eq("sender",t.id).eq("recipient",S.uid).eq("read",false)},
+async dmUnsend(id){var r=await sb.from("messages").delete().eq("id",id).eq("sender",S.uid);return r.error?{error:r.error.message||"x"}:{}},
+/* the backstop for live delivery: anything newer than what's here, and whether the person you're chatting with has seen your messages */
+async dmPoll(){if(!S.uid)return false;var last=0;S.dm.forEach(function(x){if(x.t>last)last=x.t});
+var q=sb.from("messages").select(DMC).or("sender.eq."+S.uid+",recipient.eq."+S.uid).order("created_at",{ascending:true}).limit(200);if(last)q=q.gt("created_at",new Date(last-6e4).toISOString());
+var r=await q;if(r.error)return false;var rows=r.data||[],ms=rows.map(dmRow).filter(Boolean);if(ms.length<rows.length){S.loadedAt=0;setTimeout(bgRefresh,0)}var ch=dmMerge(ms);
+var w=S.dmWith,ids=w?S.dm.filter(function(x){return x.from===S.user&&x.to===w&&!x.read&&typeof x.id==="number"}).slice(-60).map(function(x){return x.id}):[];
+if(ids.length){var r2=await sb.from("messages").select("id,read").in("id",ids);if(!r2.error){var got={};(r2.data||[]).forEach(function(x){got[x.id]=x});
+S.dm=S.dm.filter(function(x){if(ids.indexOf(x.id)<0)return true;var g=got[x.id];if(!g){ch=true;return false}if(g.read&&!x.read){x.read=true;ch=true}return true})}}
+return ch},
 /* likes and reposts are already on screen; this just saves them (in click order). If a save fails it's undone, with a note. */
 async persistToggle(kind,rid,add){if(!S.uid)return true;var tb=kind==="likes"?"review_likes":"review_reposts";
 var r=await inOrder(tb+":"+rid,function(){return add?sb.from(tb).insert({review_id:rid}):sb.from(tb).delete().eq("review_id",rid).eq("user_id",S.uid)}).then(null,function(e){return {error:e||{}}});
@@ -2344,13 +2488,181 @@ if(r.error||!r.data)return {error:(r.error&&r.error.message)||"x"};S.mut++;
 async delComment(cid,rid){var r=await sb.from("review_comments").delete().eq("id",cid);if(r.error){toast("Couldn't delete that comment. Try again.");return}S.mut++;
 var l=S.comments[rid];if(l)S.comments[rid]=l.filter(function(c){return String(c.id)!==String(cid)})}
 };
+/* ---------- Messages ----------
+   Direct messages: text, and reviews shared from a review's share tray (each lands in your chat with that person). New messages
+   arrive live, with a quiet poll as a backstop; opening a chat marks it read and the sender sees "Seen". Only the conversation
+   list and the messages ever redraw while a chat is open, never the box you're typing in. */
+S.dm=[];S.dmPend=[];S.dmWith=null;S.dmNew=false;S.dmDraft={};S.dmLive=false;
+var DMC="id,sender,recipient,review_id,body,read,created_at",DMSEQ=0,DMLAST=0,DMBUSY=0,DMCH=null,DMIN=null,TITLE=document.title;
+var DMI={pen:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>',
+back:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>',
+x:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>',
+send:'<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>',
+chat:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
+big:'<svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 9h8M8 13h5"/></svg>'};
+function dmT(at){var t=Date.parse(String(at||"").replace(/(\.\d{3})\d+/,"$1"));return isNaN(t)?Date.now():t}
+function dmMk(id,from,to,body,rid,at,read){return {id:id,from:from,to:to,body:body==null?"":String(body),rid:rid==null||rid===""?null:rid,at:String(at||""),t:dmT(at),read:!!read}}
+function dmCmp(a,b){return a.t-b.t||(+a.id||0)-(+b.id||0)}
+function dmAll(){return S.dmPend.length?S.dm.concat(S.dmPend).sort(dmCmp):S.dm}
+function dmOther(x){return x.from===S.user?x.to:x.from}
+function dmUnread(){var n=0;S.dm.forEach(function(x){if(x.to===S.user&&x.from!==S.user&&!x.read)n++});return n}
+function dmSig(){return S.dm.map(function(x){return x.id+(x.read?"r":"")}).join()}
+function dmThreads(){var m={},l=[];dmAll().forEach(function(x){var o=dmOther(x);if(!o||o===S.user)return;var t=m[o];if(!t){t=m[o]={u:o,last:x,un:0};l.push(t)}if(dmCmp(x,t.last)>=0)t.last=x;if(x.to===S.user&&!x.read)t.un++});
+return l.sort(function(a,b){return dmCmp(b.last,a.last)})}
+/* a database row as a message (null until both people's accounts are loaded) */
+function dmRow(x){if(!x)return null;var f=null,t=null;accts.forEach(function(a){if(a.id===x.sender)f=a;if(a.id===x.recipient)t=a});return f&&t?dmMk(x.id,f.name,t.name,x.body,x.review_id,x.created_at,x.read):null}
+/* fold messages in: new ones are added (the placeholder of something you just sent gives way to the real thing), read receipts updated */
+function dmMerge(list,own){var ch=false,ix={};S.dm.forEach(function(x,i){ix[x.id]=i});
+(list||[]).forEach(function(x){if(!x||x.id==null)return;var i=ix[x.id];
+if(i==null){S.dm.push(x);ix[x.id]=S.dm.length-1;ch=true;
+if(x.from===S.user){if(!own){var k=-1;S.dmPend.some(function(p,j){if(!p.fail&&p.to===x.to&&p.body===x.body&&String(p.rid)===String(x.rid)){k=j;return true}});if(k>-1)S.dmPend.splice(k,1)}}
+else if(!x.read)DMIN=x}
+else{var o=S.dm[i];if(o.read!==x.read||o.body!==x.body){o.read=x.read;o.body=x.body;ch=true}}});
+if(ch)S.dm.sort(dmCmp);return ch}
+function dmGone(id){var n=S.dm.length;S.dm=S.dm.filter(function(x){return String(x.id)!==String(id)});return S.dm.length!==n}
+/* live delivery: messages to you, plus your own (sent from another device, and when they're read) */
+function dmLiveStart(){if(!REMOTE||!S.uid||!S.msgOK||DMCH||!sb||typeof sb.channel!=="function")return;
+try{DMCH=sb.channel("dm-"+S.uid)
+.on("postgres_changes",{event:"INSERT",schema:"public",table:"messages",filter:"recipient=eq."+S.uid},function(p){dmGot(p&&p.new)})
+.on("postgres_changes",{event:"*",schema:"public",table:"messages",filter:"sender=eq."+S.uid},function(p){if(!p)return;if(p.eventType==="DELETE"){if(p.old&&p.old.id!=null&&dmGone(p.old.id))dmChanged()}else dmGot(p.new)})
+.subscribe(function(st){S.dmLive=st==="SUBSCRIBED"})}catch(e){DMCH=null;S.dmLive=false}}
+function dmLiveStop(){if(DMCH){try{sb.removeChannel(DMCH)}catch(e){}}DMCH=null;S.dmLive=false}
+function dmGot(x){if(!x||!S.user)return;var m=dmRow(x);if(!m){S.loadedAt=0;bgRefresh();return}if(dmMerge([m]))dmChanged()}
+/* something changed: redraw only the messages parts, keep the badge right, and mark an open chat read */
+function dmChanged(){var inc=DMIN;DMIN=null;
+if(S.tab==="msgs"&&$(".dmp")){dmSeen();dmPaint()}
+else if(inc&&document.visibilityState==="visible")toast("New message from "+inc.from);
+dmBadge()}
+function dmSeen(){var w=S.dmWith;if(!w||S.tab!=="msgs"||S.dmNew||document.visibilityState!=="visible")return;var any=false;
+S.dm.forEach(function(x){if(x.from===w&&x.to===S.user&&!x.read){x.read=true;any=true}});
+if(any){Promise.resolve(api.dmRead(w)).catch(function(){});var ls=$("#dmlist");if(ls)ls.innerHTML=dmListHTML();dmBadge()}}
+function dmBadge(){var n=S.user?dmUnread():0,b=$("#mb");
+if(b){var c=b.querySelector(".mbn");if(n){if(!c){c=document.createElement("i");c.className="mbn";c.setAttribute("aria-hidden","true");b.appendChild(c)}c.textContent=n>9?"9+":String(n)}else if(c)c.remove();b.setAttribute("aria-label","Messages"+(n?", "+n+" unread":""))}
+try{document.title=(n?"("+n+") ":"")+TITLE}catch(e){}}
+function dmPaint(bottom){var ls=$("#dmlist");if(ls)ls.innerHTML=dmListHTML();
+var box=$("#dmmsgs");if(box&&S.dmWith){var end=bottom||box.scrollHeight-box.scrollTop-box.clientHeight<90,top=box.scrollTop;box.innerHTML=dmThreadHTML(S.dmWith);box.scrollTop=end?box.scrollHeight:top}
+dmBadge()}
+/* send text, or a review by id: it shows straight away, then is confirmed, or marked "couldn't send" with a retry
+   (quiet: on failure just drop it, for the share tray, which says so itself) */
+function dmSend(to,body,rid,quiet){body=String(body||"").trim().slice(0,1000);if(!S.user||!to||to===S.user||(!body&&rid==null))return Promise.resolve(false);
+var p=dmMk("p"+(++DMSEQ),S.user,to,body,rid,new Date().toISOString(),false);p.pend=true;S.dmPend.push(p);
+if(S.tab==="msgs")dmPaint(true);
+function fail(){if(quiet)S.dmPend=S.dmPend.filter(function(x){return x!==p});else{p.pend=false;p.fail=true}if(S.tab==="msgs")dmPaint();return false}
+return Promise.resolve(api.dmSend(to,body||null,rid)).then(function(res){if(!(res&&res.msg))return fail();
+S.dmPend=S.dmPend.filter(function(x){return x!==p});dmMerge([res.msg],true);if(S.tab==="msgs")dmPaint();else dmBadge();return true},fail)}
+function dmUnsendMsg(id){var m=S.dm.filter(function(x){return String(x.id)===String(id)})[0];if(!m||m.from!==S.user)return;
+if(!confirm("Unsend this message? It’ll disappear for both of you."))return;
+dmGone(m.id);dmPaint();
+function undo(){dmMerge([m],true);dmPaint();toast("Couldn’t unsend it. Try again.")}
+Promise.resolve(api.dmUnsend(m.id)).then(function(r){if(r&&r.error)undo()},undo)}
+/* the backstop poll: quick while you're on Messages, slow elsewhere, slower still when live delivery is working */
+function dmTick(){if(!S.user||!S.msgOK||DMBUSY||document.visibilityState!=="visible")return;
+var on=S.tab==="msgs",gap=on?(S.dmLive?12000:4000):(S.dmLive?120000:40000);if(Date.now()-DMLAST<gap)return;
+DMBUSY=1;DMLAST=Date.now();Promise.resolve(api.dmPoll()).then(function(ch){DMBUSY=0;if(ch)dmChanged()},function(){DMBUSY=0})}
+setInterval(dmTick,2000);
+/* back on the tab: catch up on messages (live delivery can drop while a phone sleeps); after a minute away the full quiet refresh does it */
+document.addEventListener("visibilitychange",function(){if(document.visibilityState!=="visible"||!S.user)return;dmSeen();if(REMOTE&&Date.now()-(S.loadedAt||0)>=60000)return;DMLAST=0;dmTick()});
+window.addEventListener("resize",function(){if(S.tab==="msgs")dmFit()});
+/* this browser's messages, for the preview (no database) */
+function dmStore(){var l=store.get("ln_msgs",null);
+if(!Array.isArray(l)){l=[];accts.forEach(function(a){(a.msgs||[]).forEach(function(m){if(m&&m.by)l.push({id:m.id||Date.now()+l.length,from:m.by,to:a.name,body:"",rid:m.rid,at:(okDate(m.date)||new Date().toISOString().slice(0,10))+"T12:00:00.000Z",read:!!m.read})})});store.set("ln_msgs",l)}
+return l.filter(function(x){return x&&x.from&&x.to}).map(function(x){return dmMk(x.id,x.from,x.to,x.body,x.rid,x.at,x.read)})}
+function dmSave(l){store.set("ln_msgs",l.slice(-2000).map(function(x){return {id:x.id,from:x.from,to:x.to,body:x.body,rid:x.rid,at:x.at,read:x.read}}))}
+function syncDm(){S.dm=S.user?dmStore().filter(function(x){return x.from===S.user||x.to===S.user}).sort(dmCmp):[]}
+function dmReset(){dmLiveStop();S.dm=[];S.dmPend=[];S.dmWith=null;S.dmNew=false;S.dmDraft={};DMLAST=0;DMIN=null;try{document.title=TITLE}catch(e){}}
+/* times: "now", "5m", "3h", "Tue", "12 Nov"; in a chat, day breaks ("Today", "Yesterday", "Tuesday") and 24-hour clock times */
+function dmDay(t){var d=new Date(t);return d.getFullYear()+"-"+d.getMonth()+"-"+d.getDate()}
+function dmClock(t){try{return new Date(t).toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"})}catch(e){return ""}}
+function dmDayLabel(t){var d=new Date(t),n=new Date(),y=new Date(n.getFullYear(),n.getMonth(),n.getDate()-1);
+if(dmDay(t)===dmDay(n.getTime()))return "Today";if(dmDay(t)===dmDay(y.getTime()))return "Yesterday";
+var o=n-d<6*864e5?{weekday:"long"}:d.getFullYear()===n.getFullYear()?{weekday:"short",day:"numeric",month:"short"}:{day:"numeric",month:"short",year:"numeric"};
+try{return d.toLocaleDateString("en-GB",o)}catch(e){return d.toDateString()}}
+function dmAgo(t){var g=Date.now()-t;if(g<6e4)return "now";if(g<36e5)return Math.floor(g/6e4)+"m";if(g<864e5)return Math.floor(g/36e5)+"h";
+var d=new Date(t),n=new Date(),o=g<6*864e5?{weekday:"short"}:d.getFullYear()===n.getFullYear()?{day:"numeric",month:"short"}:{day:"numeric",month:"short",year:"2-digit"};
+try{return d.toLocaleDateString("en-GB",o)}catch(e){return ""}}
+/* message text: escaped, links clickable, line breaks kept */
+function dmText(t){t=String(t||"");var out="",re=/https?:\/\/[^\s<>"']+/g,i=0,m;
+while((m=re.exec(t))){var u=m[0].replace(/[.,:;!?)\]]+$/,"");out+=esc(t.slice(i,m.index))+'<a href="'+esc(u)+'" target="_blank" rel="noopener noreferrer nofollow">'+esc(u)+'</a>';i=m.index+u.length;re.lastIndex=i}
+return (out+esc(t.slice(i))).replace(/\n/g,"<br>")}
+/* a shared review, as a little card (tap it for the song's page) */
+function dmRevHTML(x){var r=revOf(x.rid);if(!r)return '<div class="dmb dmgone">This review was deleted.</div>';
+return '<button type="button" class="dmrv" data-dminfo="rv:'+esc(r.id)+'" aria-label="'+esc(r.user)+'’s review of '+esc(r.title)+' by '+esc(r.artist)+'">'+rimg({title:r.title,artist:r.artist,thumb:r.art})+
+'<span class="dmrvb"><b>'+esc(r.title)+'</b><span class="dmrva">'+esc(r.artist)+'</span><span class="dmrvr">'+STAR1+rnum(r.rating).toFixed(1)+'<span class="meta"> · '+esc(r.user)+'</span></span>'+(r.text?'<span class="dmrvt">“'+esc(r.text)+'”</span>':'')+'</span></button>'}
+function dmListHTML(){var th=dmThreads();if(!th.length)return '<p class="meta dmnone">No conversations yet.</p>';
+return th.map(function(t){var x=t.last,mine=x.from===S.user,r=x.rid!=null?revOf(x.rid):null,
+pv=x.fail?"Couldn’t send":x.pend?"Sending…":x.rid!=null?(mine?"You shared ":"Shared ")+(r?"“"+r.title+"”":"a review"):(mine?"You: ":"")+x.body.replace(/\s+/g," ");
+return '<button type="button" class="dmi'+(t.u===S.dmWith?' on':'')+(t.un?' un':'')+'" data-dmw="'+esc(t.u)+'"'+(t.u===S.dmWith?' aria-current="true"':'')+'>'+avatar(acct(t.u))+
+'<span class="dmin"><b>'+esc(t.u)+'</b><span class="dmpv">'+esc(pv)+'</span></span><span class="dmr"><span>'+esc(dmAgo(x.t))+'</span>'+(t.un?'<i class="dmn" aria-label="'+t.un+' unread">'+(t.un>9?"9+":t.un)+'</i>':'')+'</span></button>'}).join("")}
+/* who you can message: people you follow or who follow you first, then everyone else */
+function dmPeopleHTML(q){q=String(q||"").trim().toLowerCase();var l=friends().slice();
+accts.forEach(function(a){if(a.name!==S.user&&l.indexOf(a.name)<0)l.push(a.name)});
+if(q)l=l.filter(function(n){return n.toLowerCase().indexOf(q)>-1}).sort(function(a,b){return (a.toLowerCase().indexOf(q)?1:0)-(b.toLowerCase().indexOf(q)?1:0)});
+l=l.slice(0,40);if(!l.length)return '<p class="meta dmnone">'+(q?'No one called “'+esc(q)+'”.':'No one to message yet.')+'</p>';
+return l.map(function(n){var a=acct(n),f=isFol(n),b=!!a&&(a.following||[]).indexOf(S.user)>-1;
+return '<button type="button" class="dmi" data-dmw="'+esc(n)+'">'+avatar(a)+'<span class="dmin"><b>'+esc(n)+'</b><span class="dmpv">'+(f&&b?"You follow each other":f?"You follow them":b?"Follows you":"")+'</span></span></button>'}).join("")}
+/* one chat: day breaks, runs of messages grouped (same person, a few minutes apart), their avatar by each run, and "Seen" */
+function dmThreadHTML(u){var ua=acct(u),l=dmAll().filter(function(x){return (x.from===u&&x.to===S.user)||(x.from===S.user&&x.to===u)});
+if(!l.length)return '<div class="dmhi">'+avatar(ua,"big")+'<b>'+esc(u)+'</b><span class="meta">No messages yet. Say hi, or send them a review from its share button.</span></div>';
+var h="",day="",g=null;function shut(){if(g){h+='</div></div>';g=null}}
+l.forEach(function(x){var k=dmDay(x.t),mine=x.from===S.user;
+if(k!==day){shut();h+='<div class="dmday">'+esc(dmDayLabel(x.t))+'</div>';day=k}
+if(!g||g.mine!==mine||x.t-g.t>3e5){shut();g={mine:mine};h+='<div class="dmg '+(mine?'mine':'their')+'">'+(mine?'':'<span class="dmav">'+avatar(ua,"xs")+'</span>')+'<div class="dmgs">'}
+g.t=x.t;
+h+='<div class="dmm'+(x.pend?' pend':'')+(x.fail?' fail':'')+'" data-dmsel="1">'+(x.rid!=null?dmRevHTML(x):'<div class="dmb">'+dmText(x.body)+'</div>')+
+(x.fail?'<button type="button" class="dmre" data-dmre="'+esc(x.id)+'">Couldn’t send. Tap to retry</button>':'<span class="dmtm">'+esc(dmClock(x.t))+(mine&&!x.pend?' · <button type="button" class="dmun" data-dmun="'+esc(x.id)+'">Unsend</button>':'')+'</span>')+'</div>'});
+shut();var z=l[l.length-1];if(z.from===S.user&&!z.fail)h+='<div class="dmst">'+(z.pend?"Sending…":z.read?"Seen":"Sent")+'</div>';
+return h}
+function dmView(){var w=S.dmWith,wa=w&&acct(w);if(w&&!wa)S.dmWith=w=null;
+var h='<section class="dmp'+(w?' dmo':'')+'" aria-label="Messages"><div class="dml">';
+if(S.dmNew)h+='<div class="dmlh"><h2>New message</h2><button type="button" class="ib" data-dmcancel="1" aria-label="Cancel new message" title="Cancel">'+DMI.x+'</button></div>'+
+'<div class="dmto"><label for="dmq">To</label><input id="dmq" type="search" placeholder="Search people" autocomplete="off" spellcheck="false"></div><div class="dmlist" id="dmpl">'+dmPeopleHTML("")+'</div>';
+else h+='<div class="dmlh"><h2>Messages</h2><button type="button" class="ib" data-dmnew="1" aria-label="New message" title="New message">'+DMI.pen+'</button></div><div class="dmlist" id="dmlist">'+dmListHTML()+'</div>';
+h+='</div><div class="dmt">';
+if(wa)h+='<div class="dmth"><button type="button" class="ib dmback" data-dmback="1" aria-label="Back to your messages">'+DMI.back+'</button><button type="button" class="dmwho" data-dmu="'+esc(w)+'" title="'+esc(w)+'’s profile">'+avatar(wa)+'<b>'+esc(w)+'</b></button></div>'+
+'<div class="dmmsgs" id="dmmsgs" role="log" aria-live="polite" aria-label="Chat with '+esc(w)+'">'+dmThreadHTML(w)+'</div>'+
+'<form class="dmf" id="dmf" autocomplete="off"><textarea id="dmx" rows="1" maxlength="1000" placeholder="Message '+esc(w)+'…" aria-label="Message '+esc(w)+'"></textarea><button type="submit" class="dmsend" id="dmsend" aria-label="Send" title="Send" disabled>'+DMI.send+'</button></form>';
+else h+='<div class="dmempty"><div>'+DMI.big+'<p><b>Your messages</b></p><p class="meta">Chat with anyone on Mosaic, and send them reviews from any review’s share button.</p><button type="button" class="btn ink sm" data-dmnew="1">New message</button></div></div>';
+return h+'</div></section>'}
+function dmCoarse(){try{return matchMedia("(pointer:coarse)").matches}catch(e){return false}}
+function dmWide(){try{return matchMedia("(min-width:701px)").matches}catch(e){return true}}
+/* the chat fills the screen below the header, so the messages scroll inside it and the box stays at the bottom */
+function dmFit(){var p=$(".dmp");if(!p)return;var top=p.getBoundingClientRect().top+(window.scrollY||0);p.style.height=Math.max(360,Math.round(window.innerHeight-top-14))+"px"}
+function dmOpen(u){S.tab="msgs";S.q="";S.stack=[];S.dmNew=false;if(u!==undefined)S.dmWith=u;S.shut=keepShut();appView();try{window.scrollTo(0,0)}catch(e){}}
+function dmBtn(n){return S.user&&S.msgOK&&n!==S.user?'<button type="button" class="dmto1" data-dmto="'+esc(n)+'" aria-label="Message '+esc(n)+'" title="Message '+esc(n)+'">'+DMI.chat+'</button>':''}
+function dmClick(e){var t=e.target,b;if(!t||!t.closest)return;
+if((b=t.closest("[data-dminfo]"))){openSong(songOf(b.dataset.dminfo));return}
+if((b=t.closest("[data-dmun]"))){dmUnsendMsg(b.dataset.dmun);return}
+if((b=t.closest("[data-dmre]"))){var p=S.dmPend.filter(function(x){return String(x.id)===b.dataset.dmre})[0];if(p){S.dmPend=S.dmPend.filter(function(x){return x!==p});dmSend(p.to,p.body,p.rid)}return}
+if((b=t.closest("[data-dmw]"))){S.dmWith=b.dataset.dmw;S.dmNew=false;appView();return}
+if((b=t.closest("[data-dmnew]"))){S.dmNew=true;appView();return}
+if((b=t.closest("[data-dmcancel]"))){S.dmNew=false;appView();return}
+if((b=t.closest("[data-dmback]"))){S.dmWith=null;appView();return}
+if((b=t.closest("[data-dmu]"))){var u=b.dataset.dmu;S.view=u;S.tab=u===S.user?"profile":"user";S.stack=[];S.shut=keepShut();appView();try{window.scrollTo(0,0)}catch(er){}return}
+if(t.closest("a,button,textarea,input"))return;
+if((b=t.closest("[data-dmsel]"))){var was=b.classList.contains("sel");[].forEach.call(document.querySelectorAll(".dmm.sel"),function(x){x.classList.remove("sel")});if(!was)b.classList.add("sel")}}
+function dmWire(){dmBadge();var p=$(".dmp");if(!p)return;dmFit();p.onclick=dmClick;
+var box=$("#dmmsgs");if(box)box.scrollTop=box.scrollHeight;
+var f=$("#dmf"),x=$("#dmx"),sd=$("#dmsend"),w=S.dmWith;
+if(f&&x&&sd){var grow=function(){x.style.height="";x.style.height=Math.min(Math.max(x.scrollHeight+2,42),132)+"px";sd.disabled=!x.value.trim()},
+go=function(){var v=x.value.trim();if(!v)return;S.dmDraft[w]="";x.value="";grow();dmSend(w,v,null)};
+x.value=S.dmDraft[w]||"";grow();
+x.oninput=function(){S.dmDraft[w]=x.value;grow()};
+x.onkeydown=function(e){if(e.key==="Enter"&&!e.shiftKey&&!e.isComposing&&e.keyCode!==229&&!dmCoarse()){e.preventDefault();go()}};
+sd.onpointerdown=function(e){e.preventDefault()};
+f.onsubmit=function(e){e.preventDefault();go()};
+if(!dmCoarse())try{x.focus({preventScroll:true})}catch(e){}}
+var q=$("#dmq"),pl=$("#dmpl");if(q&&pl){q.oninput=function(){pl.innerHTML=dmPeopleHTML(q.value)};
+q.onkeydown=function(e){if(e.key==="Escape"){S.dmNew=false;appView()}else if(e.key==="Enter"){e.preventDefault();var o=pl.querySelector("[data-dmw]");if(o)o.click()}};
+if(!dmCoarse())try{q.focus({preventScroll:true})}catch(e){}}
+dmSeen();dmBadge()}
+
 var api=REMOTE?remoteApi:localApi;
 /* nothing refetches while you're using the site; when you come back to the tab after a minute or more, everything refreshes
    quietly in the background, and the page only redraws if something changed (and you're not mid-way through typing) */
 var BGR=0;
 function dataSig(){var a=me();return JSON.stringify([S.reviews.map(function(r){return [r.id,r.rating,r.text]}),accts.map(function(x){return [x.name,x.pic?x.pic.length:0,(x.following||[]).length]}),
 [S.likes,S.reposts,S.comments].map(function(o){return Object.keys(o).map(function(k){return k+":"+o[k].length}).join()}),
-a&&a.notes?a.notes.filter(function(n){return !n.read}).length:0,a&&a.msgs?a.msgs.filter(function(n){return !n.read}).length:0,S.sotdOK?sdSig():""])}
+a&&a.notes?a.notes.filter(function(n){return !n.read}).length:0,dmSig(),S.sotdOK?sdSig():""])}
 function bgRefresh(){if(!REMOTE||!S.user||BGR||Date.now()-(S.loadedAt||0)<60000)return;BGR=1;var before=dataSig();
 api.refresh().then(function(){BGR=0;if(!S.user||dataSig()===before)return;var ae=document.activeElement,dl=$("#dlg");
 if((dl&&dl.open)||(ae&&/^(INPUT|TEXTAREA|SELECT)$/.test(ae.tagName)))return;var y=window.scrollY;appView();try{window.scrollTo(0,y)}catch(e){}}).catch(function(){BGR=0})}
