@@ -82,7 +82,7 @@ nav button[aria-current="true"]{color:var(--ink);border-color:var(--pop)}
 .sg.more{justify-content:center;color:var(--mute);padding:3px 6px}
 .sg.more .car{width:18px;height:18px}
 .sg.more:hover{color:var(--ink)}
-.sw input{width:0;padding:7px 0;border:0;box-shadow:none;opacity:0;transition:width .15s,opacity .15s}
+.sw input{width:0;height:36px;min-width:0;padding:7px 0;border:0;box-shadow:none;opacity:0;transition:width .15s,opacity .15s}
 .sw:hover input,.sw:focus-within input{width:min(200px,38vw);padding:7px 10px;border:1px solid var(--line);box-shadow:inset 0 1px 2px rgba(0,0,0,.14);opacity:1;visibility:visible}
 .top .right{display:flex;align-items:center;gap:6px;margin-left:auto}
 .me,.ib{background:var(--surface);border:1px solid var(--line);border-radius:7px;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 2px 0 var(--line);transition:transform .08s,box-shadow .08s}
@@ -500,6 +500,8 @@ html.mdragging,html.mdragging *{cursor:grabbing!important}
 .bead svg{display:block;fill:var(--pc)}
 .bead.dk svg{fill:var(--ink)}
 @keyframes bead{from{opacity:0;transform:translateY(-8px) scale(.6)}to{opacity:1;transform:none}}
+@keyframes beadx{from{opacity:0;transform:translateX(-8px) scale(.6)}to{opacity:1;transform:none}}
+.rbt{display:none}
 /* three per row: the review is the centrepiece */
 .cols3 .rev:not(.nocv) .rc>p{justify-self:center;max-width:88%;padding:4px 0;text-align:center}
 /* who and when: under the stars (two per row), or in the foot beside the listening apps (three per row) */
@@ -603,14 +605,25 @@ html.mdragging,html.mdragging *{cursor:grabbing!important}
 .cols2 .rev:not(.nocv) .rcf{margin-top:auto}
 .cols2 .rev:not(.nocv) .rc>p~.rcf{margin-top:0}
 /* three per row: date (and your pen) under the artist; actions and apps share one line */
-.cols3 .rev:not(.nocv) .rbx{display:block;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cols3 .rev:not(.nocv) .rbx{display:none}
 .cols3 .rev:not(.nocv) .rcf>.row{display:none}
 .cols3 .rev:not(.nocv) .rbf{display:none}
 .cols3 .rev:not(.nocv) .rcf{display:flex;flex-wrap:wrap;align-items:center}
 .cols3 .rev:not(.nocv) .rcf>.acts{flex:1 1 auto}
-.cols3 .rev:not(.nocv) .rcf>.rf{flex:none;padding-top:8px}
-.cols3 .rev:not(.nocv) .rcf>.rf.np{display:none}
+.cols3 .rev:not(.nocv) .rcf>.rf{display:none}
 .cols3 .rev:not(.nocv) .rcf>.cmts{flex-basis:100%}
+/* three per row: title and artist centred like the review; the date sits in the bottom row, with the listen-on ear and your pen on the left (the ear's apps open out to the right, and the date steps aside while they're open) */
+.cols3 .rev:not(.nocv) .rch{text-align:center}
+.cols3 .rev:not(.nocv) .rbt{display:flex;align-items:center;gap:2px;flex-basis:100%;min-width:0;min-height:30px;padding-top:4px;margin-left:-4px}
+.cols3 .rev:not(.nocv) .rbt .ear{display:flex;flex-direction:row;align-items:center}
+.cols3 .rev:not(.nocv) .rbt .earb{flex-direction:row;align-items:center;gap:1px;padding:3px 3px 3px 4px}
+.cols3 .rev:not(.nocv) .rbt .earc{margin:0;transform:rotate(-90deg)}
+.cols3 .rev:not(.nocv) .rbt .ear.open .earc{transform:rotate(90deg)}
+.cols3 .rev:not(.nocv) .rbt .beads{flex-direction:row;padding:0 0 0 7px}
+.cols3 .rev:not(.nocv) .rbt .beads::before{left:0;right:14px;top:50%;bottom:auto;width:auto;height:1px;transform:translateY(-50%)}
+.cols3 .rev:not(.nocv) .rbt .bead{animation-name:beadx}
+.cols3 .rev:not(.nocv) .rbt .rbtd{margin-left:auto;font-size:12px;color:var(--mute);white-space:nowrap}
+.cols3 .rev:not(.nocv) .rbt:has(.ear.open) .rbtd{display:none}
 .cols2 .rev:not(.nocv) .rch{padding-right:30px}
 .cols2 .rev:not(.nocv) .rch>h3{font-size:16px;line-height:1.25}
 .cols2 .rev:not(.nocv) .rc>p{justify-self:center;max-width:100%;padding:6px 0;text-align:left;text-wrap:balance}
@@ -805,9 +818,11 @@ a.pl.act{padding:5px}
 .plpd .plp{margin-top:0}
 .plpd .plh{font-size:20px;font-weight:600;margin-bottom:2px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
-/* phones: logo, search and your icons on top, the tabs on their own row underneath (search takes the logo's place while it's open) */
-@media (max-width:600px){header.top{column-gap:8px}header.top h2{margin-right:0}header.top nav{order:3;flex:1 1 100%;margin:0 -6px}header.top .sw{order:1;margin-left:auto}header.top .right{order:2;margin-left:0}
-header.top:has(.sw:focus-within) h2,header.top:has(.sw:hover) h2{display:none}}
+/* phones and narrow windows: logo, search and your icons on top, the tabs on their own row underneath (on phones, search takes the logo's place while it's open) */
+@media (max-width:720px){header.top{column-gap:8px}header.top h2{margin-right:0}header.top nav{order:3;flex:1 1 100%;margin:0 -6px}header.top .sw{order:1;margin-left:auto}header.top .right{order:2;margin-left:0}}
+@media (max-width:600px){header.top:has(.sw:focus-within) h2,header.top:has(.sw:hover) h2{display:none}}
+/* wider screens: one line that never wraps; if room is short, the search box takes what's left instead of pushing your icons down */
+@media (min-width:721px){header.top{flex-wrap:nowrap}header.top>h2,header.top nav,header.top .right{flex:none}header.top .sw{flex:0 1 auto;min-width:36px}}
 /* the + that adds a review */
 .btn.addb{width:38px;height:38px;padding:0;display:inline-grid;place-items:center;flex:none}
 /* Song of the Day */
@@ -1465,7 +1480,7 @@ return l.map(function(r,i){var rb=rateBox(r,!nc),
 hd=(r.via?'<div class="meta via">↻ '+esc(r.via)+' reposted</div>':'')+(nc?rb:'<h3><a class="tlink" href="#" data-info="rv:'+esc(r.id)+'">'+esc(r.title)+'</a></h3><div class="meta rar">'+esc(r.artist)+(r.type==="Album"?'<span class="tag alb">Album</span>':'')+(r.type==="Album"&&r.tracks&&r.tracks.length?tddHTML(r):'')+'</div><div class="meta rbx">'+esc(r.date)+(r.user===S.user&&!r.via?'<span class="ownb">'+penBtn(r)+'</span>':'')+'</div>'),
 tx=r.text?'<p>'+esc(r.text)+'</p>':'',
 ft=(r.user===S.user&&!r.via?'<div class="row"><button class="btn ghost sm" data-edit="'+r.id+'">Edit</button><button class="btn ghost sm" data-del="'+r.id+'">Delete</button></div>':'')+actsHTML(r)+footHTML(r,!nc);
-return '<article class="rev'+(nc?' nocv':'')+'" style="--h:'+hue(r.title+r.artist)+'">'+glowHTML(r)+(nc?'':'<div class="rl">'+covBtn(r)+rb+byLine(r,"l",1)+'</div>')+'<div class="rc">'+(nc?(sd?rankHTML(sd[i],i):'')+hd+tx+ft:'<span class="tr">'+earHTML(r)+penBtn(r)+'</span><div class="rch">'+hd+'</div>'+tx+'<div class="rcf">'+ft+'</div>')+'</div></article>'}).join("")}
+return '<article class="rev'+(nc?' nocv':'')+'" style="--h:'+hue(r.title+r.artist)+'">'+glowHTML(r)+(nc?'':'<div class="rl">'+covBtn(r)+rb+byLine(r,"l",1)+'</div>')+'<div class="rc">'+(nc?(sd?rankHTML(sd[i],i):'')+hd+tx+ft:'<span class="tr">'+earHTML(r)+penBtn(r)+'</span><div class="rch">'+hd+'</div>'+tx+'<div class="rcf">'+ft+'<div class="rbt">'+earHTML(r)+penBtn(r)+'<span class="rbtd">'+esc(r.date)+'</span></div></div>')+'</div></article>'}).join("")}
 
 var IC={link:'<path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/>',like:'<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/>',
 cmt:'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
