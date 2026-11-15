@@ -430,7 +430,7 @@ html.mdragging,html.mdragging *{cursor:grabbing!important}
 .song .sby .ulink{text-decoration-color:color-mix(in srgb,var(--mute) 45%,transparent)}
 .srate{display:flex;align-items:baseline;gap:14px;margin-top:28px}
 .snum{font-size:48px;font-weight:300;letter-spacing:-.03em;line-height:1}
-.sbar{display:inline-block;position:relative;width:132px;aspect-ratio:100/15.56;--sf:var(--star);--se:color-mix(in srgb,var(--mute) 35%,transparent)}
+.sbar{display:inline-block;position:relative;width:132px;aspect-ratio:100/15.56;--sf:var(--star);--se:transparent}
 .sbar::before{content:"";position:absolute;inset:0}
 .sbar::before{background:linear-gradient(90deg,var(--sf) var(--p,0%),var(--se) var(--p,0%));-webkit-mask:var(--sm) center/100% 100% no-repeat;mask:var(--sm) center/100% 100% no-repeat}
 .noyet{font-size:24px;font-weight:300;letter-spacing:-.01em;color:var(--mute);line-height:1.2}
@@ -470,17 +470,17 @@ canvas.soft.now{transition:none}
 :root[data-theme="dark"] .glow{--ow:.52}
 /* the rating: five small, sharp stars as wide as the artwork (white, or dark ink in light mode), the number beside them */
 :root{--sm:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 15.56'%3E%3Cpath d='M10.00 1.68L11.70 6.23L16.56 6.45L12.76 9.47L14.06 14.16L10.00 11.48L5.94 14.16L7.24 9.47L3.44 6.45L8.30 6.23ZM30.00 1.68L31.70 6.23L36.56 6.45L32.76 9.47L34.06 14.16L30.00 11.48L25.94 14.16L27.24 9.47L23.44 6.45L28.30 6.23ZM50.00 1.68L51.70 6.23L56.56 6.45L52.76 9.47L54.06 14.16L50.00 11.48L45.94 14.16L47.24 9.47L43.44 6.45L48.30 6.23ZM70.00 1.68L71.70 6.23L76.56 6.45L72.76 9.47L74.06 14.16L70.00 11.48L65.94 14.16L67.24 9.47L63.44 6.45L68.30 6.23ZM90.00 1.68L91.70 6.23L96.56 6.45L92.76 9.47L94.06 14.16L90.00 11.48L85.94 14.16L87.24 9.47L83.44 6.45L88.30 6.23Z' fill='%23000'/%3E%3C/svg%3E")}
-.rrate{--sf:var(--ink);--se:rgba(0,0,0,.26);display:flex;align-items:center;justify-content:center;gap:7px;color:var(--ink);line-height:1;white-space:nowrap}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .rrate{color:#fff;--sf:#fff;--se:rgba(255,255,255,.2)}}
-:root[data-theme="dark"] .rrate{color:#fff;--sf:#fff;--se:rgba(255,255,255,.2)}
+.rrate{--sf:var(--ink);--se:transparent;display:flex;align-items:center;justify-content:center;gap:7px;color:var(--ink);line-height:1;white-space:nowrap}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .rrate{color:#fff;--sf:#fff;--se:transparent}}
+:root[data-theme="dark"] .rrate{color:#fff;--sf:#fff;--se:transparent}
 .rrate .stars{display:block;position:relative;flex:1 1 0;min-width:0;max-width:132px;aspect-ratio:100/15.56;font-size:0;letter-spacing:0;background:none;color:transparent;-webkit-text-fill-color:transparent}
 .rrate .stars::before{content:"";position:absolute;inset:0}
 .rrate .stars::before{background:linear-gradient(90deg,var(--sf) var(--p,0%),var(--se) var(--p,0%));-webkit-mask:var(--sm) center/100% 100% no-repeat;mask:var(--sm) center/100% 100% no-repeat}
-/* a hairline black outline round every star (over the fill, so full and empty stars read the same) */
-:root{--so:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 15.56'%3E%3Cpath d='M10.00 1.68L11.70 6.23L16.56 6.45L12.76 9.47L14.06 14.16L10.00 11.48L5.94 14.16L7.24 9.47L3.44 6.45L8.30 6.23ZM30.00 1.68L31.70 6.23L36.56 6.45L32.76 9.47L34.06 14.16L30.00 11.48L25.94 14.16L27.24 9.47L23.44 6.45L28.30 6.23ZM50.00 1.68L51.70 6.23L56.56 6.45L52.76 9.47L54.06 14.16L50.00 11.48L45.94 14.16L47.24 9.47L43.44 6.45L48.30 6.23ZM70.00 1.68L71.70 6.23L76.56 6.45L72.76 9.47L74.06 14.16L70.00 11.48L65.94 14.16L67.24 9.47L63.44 6.45L68.30 6.23ZM90.00 1.68L91.70 6.23L96.56 6.45L92.76 9.47L94.06 14.16L90.00 11.48L85.94 14.16L87.24 9.47L83.44 6.45L88.30 6.23Z' fill='none' stroke='%23000' stroke-width='.5' stroke-linejoin='round'/%3E%3C/svg%3E")}
-.rrate .stars::after,.sbar::after{content:"";position:absolute;inset:0;background:var(--so) center/100% 100% no-repeat;pointer-events:none}
-.tracks .ta i,.tdr .tv i{-webkit-text-stroke:.5px #000;paint-order:stroke fill}
-.rate>button[data-r],.rate .tst button{-webkit-text-stroke:.6px #000}
+/* two per row: each star a little bigger and closer to the next, so the row is no longer than before */
+:root{--sm2:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 15.56'%3E%3Cpath d='M11.18 0.56L13.19 5.93L18.92 6.19L14.44 9.75L15.97 15.28L11.18 12.12L6.39 15.28L7.92 9.75L3.44 6.19L9.17 5.93ZM30.59 0.56L32.60 5.93L38.33 6.19L33.85 9.75L35.38 15.28L30.59 12.12L25.80 15.28L27.33 9.75L22.85 6.19L28.58 5.93ZM50.00 0.56L52.01 5.93L57.74 6.19L53.26 9.75L54.79 15.28L50.00 12.12L45.21 15.28L46.74 9.75L42.26 6.19L47.99 5.93ZM69.41 0.56L71.42 5.93L77.15 6.19L72.67 9.75L74.20 15.28L69.41 12.12L64.62 15.28L66.15 9.75L61.67 6.19L67.40 5.93ZM88.82 0.56L90.83 5.93L96.56 6.19L92.08 9.75L93.61 15.28L88.82 12.12L84.03 15.28L85.56 9.75L81.08 6.19L86.81 5.93Z' fill='%23000'/%3E%3C/svg%3E")}
+.cols2 .rrate .stars::before{background:linear-gradient(90deg,var(--sf) var(--p2,var(--p,0%)),var(--se) var(--p2,var(--p,0%)));-webkit-mask-image:var(--sm2);mask-image:var(--sm2)}
+/* three per row: the written review sits a little higher (up to 10px, never crowding the title; set in fitReviews) */
+.cols3 .rev:not(.nocv) .rc>p{transform:translateY(calc(-1 * var(--lift,0px)))}
 /* written reviews get the same hairline outline as the rating number */
 .rev .rc>p,.sdrt,.sdwq,.dmrvt{-webkit-text-stroke:.5px #000;paint-order:stroke fill}
 .rrate .rv{flex:none;font-size:13px;-webkit-text-stroke:.5px #000;paint-order:stroke fill}
@@ -1192,6 +1192,8 @@ function cover(r){var h=hue(r.title+r.artist);return '<div class="cover" style="
 function rnum(v){v=Number(v);return isFinite(v)?Math.min(5,Math.max(0,Math.round(v*10)/10)):0}
 /* where the fill ends for each tenth of a star, so every 0.1 adds an equal share of the star's area */
 var SW=[0,.257,.325,.393,.451,.5,.549,.607,.675,.743];
+/* the bigger, closer stars of two per row: same tenths-by-area, star k centred at 11.1808 + 19.4096*k, half-width 7.7408 */
+function starPct2(v){v=rnum(v);var k=Math.floor(v+1e-6),f=Math.round((v-k)*10),c=11.1808,d=19.4096,h=7.7408;if(k>=5)return 100;return Math.round((f?c+d*k-h+2*h*SW[f]:k?c+d*(k-.5):0)*100)/100}
 function starPct(v){v=rnum(v);var k=Math.floor(v+1e-6),f=Math.round((v-k)*10);return k>=5?100:f?Math.round((20*k+3.44+13.12*SW[f])*100)/100:20*k}
 function cleanTracks(a){if(!Array.isArray(a))return null;var o=a.slice(0,300).filter(function(x){return x&&typeof x.t==="string"&&x.t}).map(function(x){return {d:Math.max(1,Math.round(+x.d)||1),n:Math.max(0,Math.round(+x.n)||0),t:x.t.slice(0,200),r:rnum(x.r)}}).filter(function(x){return x.r>0});return o.length?o:null}
 
@@ -1611,7 +1613,7 @@ Object.keys(E).forEach(function(d){var s=D[d];if(!s)return;var c=[];
 if(c.length<3)return;c.sort(function(a,b){return b.k-a.k||(a.at<b.at?-1:a.at>b.at?1:0)});
 var n=0;c.forEach(function(x){if(x.r.user===S.user)return;if(n<2)n++;else{cut[x.r.id]=1;any=1}})});
 return any?l.filter(function(r){return !cut[r.id]}):l}
-function rateBox(r,av){var v=rnum(r.rating);return '<div class="rrate'+(av?' wav':'')+'">'+(av?'<button type="button" class="rav" data-u="'+esc(r.user)+'" aria-label="'+esc(r.user)+'\'s profile" data-name="'+esc(r.user)+'">'+avatar(acct(r.user))+'</button>':'')+'<span class="stars" style="--p:'+starPct(v)+'%" role="img" aria-label="'+v.toFixed(1)+' out of 5"></span><b class="rv">'+v.toFixed(1)+'</b></div>'}
+function rateBox(r,av){var v=rnum(r.rating);return '<div class="rrate'+(av?' wav':'')+'">'+(av?'<button type="button" class="rav" data-u="'+esc(r.user)+'" aria-label="'+esc(r.user)+'\'s profile" data-name="'+esc(r.user)+'">'+avatar(acct(r.user))+'</button>':'')+'<span class="stars" style="--p:'+starPct(v)+'%;--p2:'+starPct2(v)+'%" role="img" aria-label="'+v.toFixed(1)+' out of 5"></span><b class="rv">'+v.toFixed(1)+'</b></div>'}
 /* the glow behind a review: the artwork shrunk to 4×4 pixels and stretched over the whole tile, so the browser blends its colours
    into a soft gradient for free (no blur to redraw while scrolling). Covers without artwork use their own two-colour gradient. */
 /* the glow behind a review: the cover itself, enlarged to fill the tile (kept square, so some of it is cropped) and softly blurred.
@@ -1756,8 +1758,7 @@ font("500",38);g.fillStyle="rgba(255,255,255,.72)";g.fillText(fitText(g,r.artist
 /* the stars, filled to the tenth, and the number */
 var k=3.6,SBW=100*k,SBH=15.56*k,num=rnum(r.rating).toFixed(1);font("700",52);var nw=g.measureText(num).width,sx=(W-(93.12*k+26+nw))/2-3.44*k;
 g.save();g.beginPath();for(var si=0;si<5;si++){STARPT.forEach(function(q,j){var px=sx+(q[0]+20*si)*k,py=y+q[1]*k;if(j)g.lineTo(px,py);else g.moveTo(px,py)});g.closePath()}g.clip();
-g.fillStyle="rgba(255,255,255,.26)";g.fillRect(sx,y,SBW,SBH);g.fillStyle="#fff";g.fillRect(sx,y,SBW*starPct(r.rating)/100,SBH);g.restore();
-g.beginPath();for(var sj=0;sj<5;sj++){STARPT.forEach(function(q,j){var px=sx+(q[0]+20*sj)*k,py=y+q[1]*k;if(j)g.lineTo(px,py);else g.moveTo(px,py)});g.closePath()}g.lineWidth=2;g.lineJoin="round";g.strokeStyle="#000";g.stroke();
+g.fillStyle="#fff";g.fillRect(sx,y,SBW*starPct(r.rating)/100,SBH);g.restore();
 g.textAlign="left";g.fillStyle="#fff";g.fillText(num,sx+96.56*k+26,y+SBH/2+18);g.textAlign="center";y+=56;
 /* the five words, the star of the show */
 if(rv){y+=52;font("700",rv.s);var lh=rv.s*1.16;rv.lines.forEach(function(l,i){quoteLine(g,l,W/2,Math.round(y+i*lh+rv.s*.92))});y+=RH}
@@ -2017,6 +2018,7 @@ bind()}
 /* two per row: shrink each review to its longest line so the text block sits exactly midway between artwork and tile edge */
 var fitT=0;
 function fitReviews(){var all=document.querySelectorAll(".rev .rc>p");if(!all.length)return;
+[].forEach.call(document.querySelectorAll(".cols3 .rev:not(.nocv) .rc>p"),function(p){var h=p.parentNode.querySelector(".rch");if(h)p.style.setProperty("--lift",Math.max(0,Math.min(10,p.offsetTop-(h.offsetTop+h.offsetHeight)-6))+"px")});
 [].forEach.call(all,function(p){if(p.style.width)p.style.width=""});
 if(!(window.matchMedia&&matchMedia("(min-width:701px)").matches))return;
 var ps=[].slice.call(document.querySelectorAll(".cols2 .rev:not(.nocv) .rc>p"));
@@ -2215,7 +2217,7 @@ if(rs[0].error||rs[1].error)return false;var by={},days={},en={};accts.forEach(f
 (rs[1].data||[]).forEach(function(x){if(by[x.user_id])(en[x.day]=en[x.day]||[]).push({user:by[x.user_id],rid:x.review_id,at:x.created_at})});
 S.sotd={days:days,entries:en,admin:!rs[2].error&&rs[2].data===true};return true}catch(e){return false}}
 /* one line per review: who, rating, the review, likes and comments (comments open underneath) */
-var STAR1='<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="#000" stroke-width="1.1" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.7l2.8 6 6.6.8-4.9 4.5 1.3 6.5L12 17.3l-5.8 3.2 1.3-6.5L2.6 9.5l6.6-.8z"/></svg>';
+var STAR1='<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.7l2.8 6 6.6.8-4.9 4.5 1.3 6.5L12 17.3l-5.8 3.2 1.3-6.5L2.6 9.5l6.6-.8z"/></svg>';
 function sdRowHTML(x){var r=x.r,id=r.id,v=rnum(r.rating),lk=S.likes[id]||[],cm=S.comments[id]||[],liked=lk.indexOf(S.user)>-1;
 return '<div class="sdr"><button type="button" class="avbtn sdra" data-u="'+esc(r.user)+'" aria-label="'+esc(r.user)+'\'s profile" data-name="'+esc(r.user)+'">'+avatar(acct(r.user),"xs")+'</button>'+
 '<span class="sdrr" role="img" aria-label="Rated '+v.toFixed(1)+' out of 5">'+STAR1+v.toFixed(1)+'</span><span class="sdrt">'+esc(r.text||"")+'</span>'+
