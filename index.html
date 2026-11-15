@@ -459,15 +459,12 @@ html.mdragging,html.mdragging *{cursor:grabbing!important}
 .rl .covbtn{display:block;width:100%;border-radius:6px}
 .rl .cover{width:100%;font-size:13px}
 /* the artwork's colours bleed out of the cover and into the tile: a tight halo hugging the cover, and a wider, fainter spill behind it */
-.glow{--cs:120px;--k:2.5;--gk:1.3;--oh:.7;--ow:.42;position:absolute;inset:0;border-radius:9px;overflow:hidden;pointer-events:none;container-type:inline-size}
-.glow i{position:absolute;display:block;aspect-ratio:1}
-.glow img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
-.glow .gh{display:none}
-.glow .gw{left:calc(var(--cs) * (1 - var(--gk)) / 2);top:calc(var(--cs) * (1 - var(--gk)) / 2);width:calc(var(--cs) * var(--gk) + 20px);filter:blur(26px) saturate(2.1) brightness(1.1);opacity:var(--ow)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .glow{--oh:.6;--ow:.55}}
-:root[data-theme="dark"] .glow{--oh:.6;--ow:.55}
-.rev.nocv .glow{--cs:120px;--k:2.5}
-.rev.nocv .glow .gh{display:none}
+/* the glow: a soft wash of the artwork's colours across the whole tile */
+.glow{--ow:.3;position:absolute;inset:0;border-radius:9px;overflow:hidden;pointer-events:none}
+.glow .gw{position:absolute;inset:0;display:block;opacity:var(--ow)}
+.glow img{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;display:block}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .glow{--ow:.4}}
+:root[data-theme="dark"] .glow{--ow:.4}
 /* the rating: five small, sharp stars as wide as the artwork (white, or dark ink in light mode), the number beside them */
 :root{--sm:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 15.56'%3E%3Cpath d='M10.00 1.68L11.70 6.23L16.56 6.45L12.76 9.47L14.06 14.16L10.00 11.48L5.94 14.16L7.24 9.47L3.44 6.45L8.30 6.23ZM30.00 1.68L31.70 6.23L36.56 6.45L32.76 9.47L34.06 14.16L30.00 11.48L25.94 14.16L27.24 9.47L23.44 6.45L28.30 6.23ZM50.00 1.68L51.70 6.23L56.56 6.45L52.76 9.47L54.06 14.16L50.00 11.48L45.94 14.16L47.24 9.47L43.44 6.45L48.30 6.23ZM70.00 1.68L71.70 6.23L76.56 6.45L72.76 9.47L74.06 14.16L70.00 11.48L65.94 14.16L67.24 9.47L63.44 6.45L68.30 6.23ZM90.00 1.68L91.70 6.23L96.56 6.45L92.76 9.47L94.06 14.16L90.00 11.48L85.94 14.16L87.24 9.47L83.44 6.45L88.30 6.23Z' fill='%23000'/%3E%3C/svg%3E")}
 .rrate{--sf:var(--ink);--se:rgba(0,0,0,.26);display:flex;align-items:center;justify-content:center;gap:7px;color:var(--ink);line-height:1;white-space:nowrap}
@@ -518,7 +515,7 @@ html.mdragging,html.mdragging *{cursor:grabbing!important}
 .rf.np{display:none}
 .rev.nocv .rbf{display:flex}
 .rev.nocv .rf.np{display:flex}
-@media (max-width:520px){.rev{grid-template-columns:96px minmax(0,1fr)}.rl .cover{font-size:11px}.rrate .rv{font-size:12px}.glow{--cs:96px;--k:2.6}}
+@media (max-width:520px){.rev{grid-template-columns:96px minmax(0,1fr)}.rl .cover{font-size:11px}.rrate .rv{font-size:12px}}
 /* two or three reviews per row, wherever reviews are listed */
 .list.cols2{grid-template-columns:repeat(2,minmax(0,1fr))}
 .list.cols3{grid-template-columns:repeat(3,minmax(0,1fr))}
@@ -526,7 +523,6 @@ html.mdragging,html.mdragging *{cursor:grabbing!important}
 .cols2 .rev{grid-template-columns:96px minmax(0,1fr);gap:10px}
 .cols2 .rl .cover{font-size:11px}
 .cols2 .rrate .rv{font-size:12px}
-.cols2 .glow{--cs:96px;--k:2.6}
 .cols2 .rev h3,.cols3 .rev h3{font-size:15px}
 .cols2 .acts,.cols3 .acts{position:relative}
 .cols2 .sendw,.cols3 .sendw{position:static}
@@ -539,7 +535,6 @@ html.mdragging,html.mdragging *{cursor:grabbing!important}
 .cols3 .rl .cover{font-size:14px}
 .cols3 .rrate{gap:8px}
 .cols3 .rrate .rv{font-size:15px}
-.cols3 .glow{--cs:calc(100cqw - 20px);--k:1.7}
 .cols3 .trf .avs:nth-child(n+7){display:none}
 /* three per row: the byline drops to the foot, level with the listening apps */
 .cols3 .rbl{display:none}
@@ -551,7 +546,6 @@ html.mdragging,html.mdragging *{cursor:grabbing!important}
 .cols2 .rl .cover{font-size:12px}
 .cols2 .rrate .rv,.cols3 .rrate .rv{font-size:14px}
 .cols3 .rrate{gap:6px}
-.cols2 .glow{--cs:calc(100cqw - 20px);--k:1.7}
 .cols2 .trf .avs:nth-child(n+6){display:none}
 .cols3 .rl .cover{font-size:12px}
 .cols3 .rbl{display:grid}
@@ -585,7 +579,6 @@ html.mdragging,html.mdragging *{cursor:grabbing!important}
 /* two per row (wide screens): artwork half the card, platforms hanging down the top-right, the review in focus, actions in the bottom-right */
 @media (min-width:701px){
 .cols2 .rev:not(.nocv){grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;padding:12px}
-.cols2 .rev:not(.nocv) .glow{--cs:calc((100cqw - 36px) / 2);--k:2.1}
 .cols2 .rev:not(.nocv) .rl .cover{font-size:14px}
 .cols2 .rev:not(.nocv) .rbl{display:none}
 .cols2 .rev:not(.nocv) .rf{display:none}
@@ -889,7 +882,7 @@ function mosHas(t){var k=mosKey(t);return mosOf(S.user).some(function(x){return 
 function mosItem(t){return {title:String(t.title||"").slice(0,200),artist:String(t.artist||"").slice(0,200),type:t.type==="Album"?"Album":"Song",art:okArt(t.art)?upArt(t.art):"",tid:okId(t.tid)?Number(t.tid):null}}
 function syncMos(){var o=store.get("ln_mosaic",{});S.mos={};if(o&&typeof o==="object")Object.keys(o).forEach(function(k){if(k.indexOf("u:")===0&&Array.isArray(o[k]))S.mos[k]=o[k].slice(0,30)});S.mosOK=true}
 function saveMos(){store.set("ln_mosaic",S.mos)}
-async function loadMosaic(){try{var r=await sb.from("mosaic_tiles").select("user_id,pos,title,artist,type,art,tid");if(r.error)return false;var by={},m={};accts.forEach(function(a){by[a.id]=a.name});
+async function loadMosaic(pre){try{var r=await (pre||sb.from("mosaic_tiles").select("user_id,pos,title,artist,type,art,tid"));if(r.error)return false;var by={},m={};accts.forEach(function(a){by[a.id]=a.name});
 (r.data||[]).forEach(function(x){var n=by[x.user_id];if(!n||!(x.pos>=0&&x.pos<30))return;var k="u:"+n;(m[k]=m[k]||[])[x.pos]={title:x.title,artist:x.artist,type:x.type==="Album"?"Album":"Song",art:okArt(x.art)?x.art:"",tid:x.tid}});S.mos=m;return true}catch(e){return false}}
 function mimg(t){return t.art&&okArt(t.art)?'<img src="'+esc(t.art.replace(/\/\d+x\d+bb\./,"/100x100bb."))+'" alt="" loading="lazy" draggable="false">':'<span class="mi">'+esc(String(t.title).charAt(0).toUpperCase())+'</span>'}
 function mosaicHTML(n,own){if(!S.mosOK)return "";var t=mosOf(n);
@@ -1457,7 +1450,11 @@ l.sort(function(a,b){return S.sort==="top"?b.rating-a.rating||b.id-a.id:b.id-a.i
 return l}
 
 function rateBox(r,av){var v=rnum(r.rating);return '<div class="rrate'+(av?' wav':'')+'">'+(av?'<button type="button" class="rav" data-u="'+esc(r.user)+'" aria-label="'+esc(r.user)+'\'s profile" data-name="'+esc(r.user)+'">'+avatar(acct(r.user))+'</button>':'')+'<span class="stars" style="--p:'+starPct(v)+'%" role="img" aria-label="'+v.toFixed(1)+' out of 5"></span><b class="rv">'+v.toFixed(1)+'</b></div>'}
-function glowHTML(r){var h=hue(r.title+r.artist),bg=' style="background:linear-gradient(135deg,hsl('+h+',70%,48%),hsl('+((h+60)%360)+',75%,36%))"',im=r.art&&okArt(r.art)?'<img src="'+esc(r.art)+'" alt="">':'';return '<span class="glow" aria-hidden="true"><i class="gw"'+bg+'>'+im+'</i><i class="gh"'+bg+'>'+im+'</i></span>'}
+/* the glow behind a review: the artwork shrunk to 4×4 pixels and stretched over the whole tile, so the browser blends its colours
+   into a soft gradient for free (no blur to redraw while scrolling). Covers without artwork use their own two-colour gradient. */
+function glowArt(u){return u&&okArt(u)&&/\/\d+x\d+bb\.[a-z]+$/i.test(u)?u.replace(/\/\d+x\d+bb\.[a-z]+$/i,"/4x4bb.jpg"):""}
+function glowHTML(r){var h=hue(r.title+r.artist),g=glowArt(r.art),bg=' style="background:linear-gradient(160deg,hsl('+h+',62%,50%),hsl('+((h+60)%360)+',66%,38%))"';
+return '<span class="glow" aria-hidden="true"><i class="gw"'+bg+'>'+(g?'<img src="'+esc(g)+'" alt="" decoding="async" loading="lazy">':'')+'</i></span>'}
 function byLine(r,k,na){var u=na?'':'<button type="button" class="avbtn" data-u="'+esc(r.user)+'" aria-label="'+esc(r.user)+'\'s profile" data-name="'+esc(r.user)+'">'+avatar(acct(r.user),"xs")+'</button>';
 return k==="l"?'<div class="meta rby rbl'+(na?' na':'')+'">'+u+'<span class="rbd">'+esc(r.date)+'</span></div>':'<div class="meta rby rbf">'+u+'<span class="rbd">'+esc(r.date)+'</span></div>'}
 function penBtn(r){return r.user===S.user&&!r.via?'<button type="button" class="ob" data-edit="'+r.id+'" aria-label="Edit your review" title="Edit review"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>':''}
@@ -1619,7 +1616,7 @@ else hint.textContent=phone?"Press and hold the picture to save it, then post it
 var cl=$("#stc",d);if(cl)cl.onclick=function(){copyText(siteLink()).then(function(ok){cl.textContent=ok?"link copied":"copy the link (couldn't copy, try again)"})};
 go.onclick=function(){navigator.share({files:[file]}).then(function(){d.close()},function(e){if(!e||e.name!=="AbortError")hint.textContent="Sharing didn't open here. Save the image instead."})};
 }).catch(function(){if(!live)return;var p=$("#stp",d);p.removeAttribute("aria-busy");p.innerHTML='<span class="stl">Couldn\'t make the picture. Try again in a moment.</span>'})}
-function mutSoc(kind,rid){var a=S[kind][rid]=S[kind][rid]||[],i=a.indexOf(S.user),at=kind==="likes"?(S.likeAt[rid]=S.likeAt[rid]||{}):null;if(i>-1){a.splice(i,1);if(at)delete at[S.user];return false}a.push(S.user);if(at)at[S.user]=ukDay();return true}
+function mutSoc(kind,rid){S.mut=(S.mut||0)+1;var a=S[kind][rid]=S[kind][rid]||[],i=a.indexOf(S.user),at=kind==="likes"?(S.likeAt[rid]=S.likeAt[rid]||{}):null;if(i>-1){a.splice(i,1);if(at)delete at[S.user];return false}a.push(S.user);if(at)at[S.user]=ukDay();return true}
 
 /* song and album pages */
 /* clicking a card's artwork turns the tile over: the song's details are on the back */
@@ -1853,7 +1850,7 @@ document.querySelectorAll("[data-setplat]").forEach(function(b){b.onclick=openPl
 var edp=$("#edpl");if(edp)edp.onclick=openPlatDlg;
 var epr=$("#edprof");if(epr)epr.onclick=function(){S.tab="editp";S.stack=[];S.shut=keepShut();appView();try{window.scrollTo(0,0)}catch(e){}};
 document.querySelectorAll("[data-del]").forEach(function(b){b.onclick=function(){
-if(!confirm("Delete this review?"))return;api.delReview(b.dataset.del).then(function(){appView()})}});
+if(!confirm("Delete this review?"))return;api.delReview(b.dataset.del).then(function(){appView()}).catch(function(){toast("Couldn't delete it. Try again.")})}});
 document.querySelectorAll("[data-edit]").forEach(function(b){b.onclick=function(){
 openForm(S.reviews.filter(function(r){return r.id==b.dataset.edit})[0])}});
 document.querySelectorAll("[data-u]").forEach(function(b){b.onclick=function(){var u=b.dataset.u;S.view=u;S.tab=u===S.user?"profile":"user";S.stack=[];S.shut=keepShut();appView()}});
@@ -1878,10 +1875,10 @@ var p=w.querySelector(".tddp");w.classList.add("open");b.setAttribute("aria-expa
 document.querySelectorAll(".tddp").forEach(function(p){p.onclick=function(e){e.stopPropagation()}});
 document.querySelectorAll(".plmb").forEach(function(b){b.onclick=function(e){e.stopPropagation();var w=b.parentNode,was=w.classList.contains("open");closePops();if(!was){w.classList.add("open");b.setAttribute("aria-expanded","true");w.querySelector(".plpop").hidden=false}}});
 function rv(id){return S.reviews.filter(function(r){return String(r.id)===String(id)})[0]}
-document.querySelectorAll("[data-like]").forEach(function(b){b.onclick=function(){var id=b.dataset.like,add=mutSoc("likes",id);refreshList();api.persistToggle("likes",id,add).then(function(){refreshList()})}});
+document.querySelectorAll("[data-like]").forEach(function(b){b.onclick=function(){var id=b.dataset.like,add=mutSoc("likes",id);refreshList();api.persistToggle("likes",id,add).then(function(ok){if(ok===false)refreshList()})}});
 document.querySelectorAll("[data-later]").forEach(function(b){b.onclick=function(){var r=rv(b.dataset.later);if(r)toggleLater(r,refreshList)}});
 document.querySelectorAll("[data-lrm]").forEach(function(b){b.onclick=function(){var t=S.later[+b.dataset.lrm];if(t)toggleLater(t,appView)}});
-document.querySelectorAll("[data-rp]").forEach(function(b){b.onclick=function(){var id=b.dataset.rp,r=rv(id);if(!r||r.user===S.user)return;var add=mutSoc("reposts",id);refreshList();api.persistToggle("reposts",id,add).then(function(){refreshList()})}});
+document.querySelectorAll("[data-rp]").forEach(function(b){b.onclick=function(){var id=b.dataset.rp,r=rv(id);if(!r||r.user===S.user)return;var add=mutSoc("reposts",id);refreshList();api.persistToggle("reposts",id,add).then(function(ok){if(ok===false)refreshList()})}});
 document.querySelectorAll("[data-cmt]").forEach(function(b){b.onclick=function(){var id=b.dataset.cmt;S.cm[id]=!S.cm[id];refreshList(S.cm[id]?"cmi"+id:null)}});
 document.querySelectorAll(".sendw").forEach(function(w){var ot=null,ct=null,touch=false,btn=w.querySelector("[data-send]");
 function open(){clearTimeout(ct);w.classList.add("open")}function close(){clearTimeout(ot);w.classList.remove("open")}
@@ -1895,11 +1892,11 @@ document.querySelectorAll("[data-copy]").forEach(function(b){b.onclick=function(
 document.querySelectorAll("[data-story]").forEach(function(b){b.onclick=function(){var r=rv(b.dataset.rid);if(r)openStory(r,b.dataset.story)}});
 document.querySelectorAll("[data-to]").forEach(function(b){b.onclick=function(){var id=b.dataset.rid,to=b.dataset.to;if(S.sent[id+":"+to])return;S.sent[id+":"+to]=true;b.classList.add("sent");api.sendReview(id,to).then(function(res){if(res&&res.error){S.sent[id+":"+to]=false;b.classList.remove("sent");b.dataset.name="Couldn't send";setTimeout(function(){b.dataset.name=to},1600)}})}});
 document.querySelectorAll(".cmf").forEach(function(f){var id=f.dataset.cf,i=f.querySelector("input");i.oninput=function(){S.draft[id]=i.value};
-f.onsubmit=function(e){e.preventDefault();var t=i.value.trim();if(!t)return;i.disabled=true;api.addComment(id,t).then(function(res){S.draft[id]="";refreshList("cmi"+id)}).catch(function(){i.disabled=false})}});
+f.onsubmit=function(e){e.preventDefault();var t=i.value.trim();if(!t)return;i.disabled=true;api.addComment(id,t).then(function(res){if(res&&res.error){i.disabled=false;toast("Couldn't post your comment. Try again.");return}S.draft[id]="";refreshList("cmi"+id)}).catch(function(){i.disabled=false;toast("Couldn't post your comment. Try again.")})}});
 document.querySelectorAll("[data-dcm]").forEach(function(b){b.onclick=function(){api.delComment(b.dataset.dcm,b.dataset.rid).then(function(){refreshList()})}})}
 
 function okArt(u){return typeof u==="string"&&/^https:\/\/[\w.-]+\.mzstatic\.com\//.test(u)}
-document.addEventListener("error",function(e){var t=e.target;if(t&&t.tagName==="IMG"&&t.closest&&t.closest(".cover,.res,.pickbig,.mto,.cvbk"))t.remove()},true);
+document.addEventListener("error",function(e){var t=e.target;if(t&&t.tagName==="IMG"&&t.closest&&t.closest(".cover,.res,.pickbig,.mto,.cvbk,.glow"))t.remove()},true);
 
 function openForm(r,host,pre){
 var d=host||$("#dlg"),rating=r?rnum(r.rating):0,results=[],tm=null,ac=null,dupOn=false;
@@ -2030,7 +2027,8 @@ function syncSotd(){var o=store.get("ln_sotd",null)||{};S.sotd={days:o.days&&typ
 function saveSotd(){store.set("ln_sotd",{days:S.sotd.days,entries:S.sotd.entries})}
 function localEnter(r){var d=ukDay(),s=S.sotd.days[d];if(!r||!sdSame(r,s))return false;var l=S.sotd.entries[d]=S.sotd.entries[d]||[],e=l.filter(function(x){return x.user===r.user})[0];if(e)e.rid=r.id;else l.push({user:r.user,rid:r.id,at:new Date().toISOString()});saveSotd();return true}
 function localLeave(r){var d=ukDay(),l=S.sotd.entries[d];if(!l)return;S.sotd.entries[d]=l.filter(function(e){return String(e.rid)!==String(r.id)});saveSotd()}
-async function loadSotd(){try{var rs=await Promise.all([sb.from("daily_songs").select("day,title,artist,album,art,tid"),sb.from("daily_entries").select("day,user_id,review_id,created_at"),S.uid?sb.rpc("is_admin"):Promise.resolve({data:false})]);
+function sotdQ(){return Promise.all([sb.from("daily_songs").select("day,title,artist,album,art,tid"),sb.from("daily_entries").select("day,user_id,review_id,created_at"),S.uid?sb.rpc("is_admin"):Promise.resolve({data:false})])}
+async function loadSotd(pre){try{var rs=await (pre||sotdQ());
 if(rs[0].error||rs[1].error)return false;var by={},days={},en={};accts.forEach(function(a){by[a.id]=a.name});
 (rs[0].data||[]).forEach(function(x){days[x.day]=sdItem(x)});
 (rs[1].data||[]).forEach(function(x){if(by[x.user_id])(en[x.day]=en[x.day]||[]).push({user:by[x.user_id],rid:x.review_id,at:x.created_at})});
@@ -2124,34 +2122,47 @@ async addComment(rid,text){var a=S.comments[rid]=S.comments[rid]||[];a.push({id:
 async delComment(cid,rid){S.comments[rid]=(S.comments[rid]||[]).filter(function(c){return String(c.id)!==String(cid)||c.user!==S.user});saveSoc()}
 };
 function notifyLocal(kind,rid){var r=S.reviews.filter(function(x){return String(x.id)===String(rid)})[0];if(!r||r.user===S.user)return;var o=acct(r.user);if(!o)return;o.notes=(o.notes||[]).filter(function(n){return kind==="comment"||!(n.by===S.user&&n.kind===kind&&String(n.rid)===String(rid))});o.notes.unshift({by:S.user,date:new Date().toISOString().slice(0,10),read:false,kind:kind,rid:rid});o.notes=o.notes.slice(0,30);store.set("ln_accounts",accts)}
+/* one review row from the database, as the page uses it */
+function revRow(x,name){return {id:x.id,title:x.title,artist:x.artist,type:x.type,art:x.art||"",tid:x.tid,rating:rnum(x.rating),text:x.body||"",tracks:cleanTracks(x.tracks),user:name,date:String(x.created_at).slice(0,10)}}
+/* the full load: every request goes out at once (one round trip instead of seven).
+   It runs when you sign in, when the page opens, and quietly when you come back to the tab; actions don't trigger it. */
 async function loadRemote(){
-var rs=await Promise.all([sb.from("profiles").select("id,username,pic,created_at,platforms"),sb.from("reviews").select("*").order("created_at",{ascending:false}),sb.from("follows").select("follower,following"),sb.from("notifications").select("id,actor_id,read,created_at").order("created_at",{ascending:false}).limit(30)]);
-for(var i=0;i<rs.length;i++)if(rs[i].error)throw rs[i].error;
+function safe(q){return Promise.resolve(q).then(null,function(e){return {error:e||{}}})}
+var mosP=safe(sb.from("mosaic_tiles").select("user_id,pos,title,artist,type,art,tid")),sdP=sotdQ();sdP.catch(function(){});
+var rs=await Promise.all([sb.from("profiles").select("id,username,pic,created_at,platforms"),sb.from("reviews").select("*").order("created_at",{ascending:false}),sb.from("follows").select("follower,following"),sb.from("notifications").select("id,actor_id,read,created_at").order("created_at",{ascending:false}).limit(30),
+safe(sb.from("messages").select("id,sender,review_id,read,created_at").eq("recipient",S.uid).order("created_at",{ascending:false}).limit(30)),
+safe(sb.from("review_likes").select("review_id,user_id,created_at")),safe(sb.from("review_reposts").select("review_id,user_id")),safe(sb.from("review_comments").select("id,review_id,user_id,body,created_at").order("created_at",{ascending:true})),safe(sb.from("notifications").select("id,kind,review_id")),
+loadLater(),loadPlats()]);
+for(var i=0;i<4;i++)if(rs[i].error)throw rs[i].error;
 var by={};
 accts=(rs[0].data||[]).map(function(x){var o={id:x.id,name:x.username,created:x.created_at,following:[],plats:validPlats(x.platforms)};if(okPic(x.pic))o.pic=x.pic;by[x.id]=o;return o});
 (rs[2].data||[]).forEach(function(f){if(by[f.follower]&&by[f.following])by[f.follower].following.push(by[f.following].name)});
-S.reviews=(rs[1].data||[]).map(function(x){return {id:x.id,title:x.title,artist:x.artist,type:x.type,art:x.art||"",tid:x.tid,rating:rnum(x.rating),text:x.body||"",tracks:cleanTracks(x.tracks),user:by[x.user_id]?by[x.user_id].name:"Unknown",date:String(x.created_at).slice(0,10)}});
+S.reviews=(rs[1].data||[]).map(function(x){return revRow(x,by[x.user_id]?by[x.user_id].name:"Unknown")});
 var m=by[S.uid];S.user=m?m.name:null;
 if(m){m.email=S.email;m.notes=(rs[3].data||[]).map(function(n){return {id:n.id,by:by[n.actor_id]?by[n.actor_id].name:"Someone",date:String(n.created_at).slice(0,10),read:n.read}})}
-S.msgOK=false;
-try{var mr=await sb.from("messages").select("id,sender,review_id,read,created_at").eq("recipient",S.uid).order("created_at",{ascending:false}).limit(30);
-if(!mr.error){S.msgOK=true;if(m)m.msgs=(mr.data||[]).map(function(x){return {id:x.id,by:by[x.sender]?by[x.sender].name:"Someone",rid:x.review_id,date:String(x.created_at).slice(0,10),read:x.read}})}}catch(e){S.msgOK=false}
+var mr=rs[4];S.msgOK=!mr.error;
+if(!mr.error&&m)m.msgs=(mr.data||[]).map(function(x){return {id:x.id,by:by[x.sender]?by[x.sender].name:"Someone",rid:x.review_id,date:String(x.created_at).slice(0,10),read:x.read}});
 S.social=false;S.likes={};S.likeAt={};S.reposts={};S.comments={};
-try{var sr=await Promise.all([sb.from("review_likes").select("review_id,user_id,created_at"),sb.from("review_reposts").select("review_id,user_id"),sb.from("review_comments").select("id,review_id,user_id,body,created_at").order("created_at",{ascending:true}),sb.from("notifications").select("id,kind,review_id")]);
+try{var sr=[rs[5],rs[6],rs[7],rs[8]];
 if(!sr[0].error&&!sr[1].error&&!sr[2].error){S.social=true;
 (sr[0].data||[]).forEach(function(x){if(by[x.user_id]){var nm=by[x.user_id].name;(S.likes[x.review_id]=S.likes[x.review_id]||[]).push(nm);(S.likeAt[x.review_id]=S.likeAt[x.review_id]||{})[nm]=ukDay(x.created_at)}});
 (sr[1].data||[]).forEach(function(x){if(by[x.user_id])(S.reposts[x.review_id]=S.reposts[x.review_id]||[]).push(by[x.user_id].name)});
 (sr[2].data||[]).forEach(function(x){if(by[x.user_id])(S.comments[x.review_id]=S.comments[x.review_id]||[]).push({id:x.id,user:by[x.user_id].name,text:x.body,date:String(x.created_at).slice(0,10)})});
 if(m&&!sr[3].error){var km={};(sr[3].data||[]).forEach(function(x){km[x.id]=x});m.notes.forEach(function(n){var x=km[n.id];if(x&&x.kind&&x.kind!=="follow"){n.kind=x.kind;n.rid=x.review_id}})}}}catch(e){S.social=false}
-S.laterOK=await loadLater();if(!S.laterOK)S.later=[];
-S.platOK=await loadPlats();if(!S.platOK)S.plats=[];
-S.mosOK=await loadMosaic();S.sotdOK=await loadSotd()}
+S.laterOK=rs[9];if(!S.laterOK)S.later=[];
+S.platOK=rs[10];if(!S.platOK)S.plats=[];
+var more=await Promise.all([loadMosaic(mosP),loadSotd(sdP)]);
+S.mosOK=more[0];S.sotdOK=more[1];S.loadedAt=Date.now()}
+/* S.mut counts your changes (so a refresh that overlaps one can be redone); inOrder() runs saves for the same item one after another */
+S.mut=0;var WQ={};
+function inOrder(k,fn){var q=(WQ[k]||Promise.resolve()).then(fn,fn);WQ[k]=q.then(null,function(){});return q}
 var remoteApi={
 async setDaily(day,it){var v=sdItem(it),r=await sb.from("daily_songs").upsert({day:day,title:v.title,artist:v.artist,album:v.album||null,art:v.art||null,tid:v.tid},{onConflict:"day"});
 if(r.error)return {error:/row-level|permission/i.test(r.error.message||"")?"Only admins can pick the Song of the Day.":"Couldn't save: "+r.error.message};S.sotdOK=await loadSotd();return {}},
 async clearDaily(day){var r=await sb.from("daily_songs").delete().eq("day",day);S.sotdOK=await loadSotd();return r.error?{error:"Couldn't remove it: "+r.error.message}:{}},
 async enterDaily(){var r=await sb.rpc("enter_song_of_the_day");if(r.error||r.data!==true)return {error:"Couldn't enter your review. Try again."};S.sotdOK=await loadSotd();return {}},
-async refresh(){await loadRemote()},
+/* a full refresh; if you changed something while it was loading, load once more so your change is included */
+async refresh(){var m=S.mut;await loadRemote();if(S.mut!==m)await loadRemote()},
 async start(){var x=await sb.auth.getSession(),ss=x.data&&x.data.session;if(!ss)return false;
 S.uid=ss.user.id;S.email=ss.user.email;await loadRemote();if(!S.user){await sb.auth.signOut();return false}return true},
 async signUp(dn,em,pw,pl){
@@ -2170,13 +2181,18 @@ if(r.error){return {error:/not confirmed/i.test(r.error.message||"")?"Confirm yo
 S.uid=r.data.user.id;S.email=r.data.user.email;await loadRemote();return S.user?{}:{error:"Couldn't load your account. Refresh the page."}},
 async signOut(){await sb.auth.signOut();S.user=null;S.uid=null;accts=[];S.reviews=[];S.later=[];S.plats=[];S.mos={};S.platOK=false;S.sotd={days:{},entries:{},admin:false};S.sotdOK=false},
 async saveReview(o,r){var row={title:o.title,artist:o.artist,type:o.type,art:o.art||null,tid:o.tid||null,rating:o.rating,body:o.text,tracks:o.type==="Album"&&o.tracks?o.tracks:null};
-var save=function(rw){return r?sb.from("reviews").update(rw).eq("id",r.id):sb.from("reviews").insert(rw)};
+var save=function(rw){return (r?sb.from("reviews").update(rw).eq("id",r.id):sb.from("reviews").insert(rw)).select("*").single()};
 var res=await save(row),whole=0;
 if(res.error&&/integer/i.test(res.error.message||"")){whole=Math.max(1,Math.round(o.rating));res=await save(Object.assign({},row,{rating:whole}))}
-if(res.error)return {error:res.error.code==="23505"||/already reviewed/i.test(res.error.message||"")?"You've already reviewed this song. Edit your existing review instead.":"Couldn't save: "+res.error.message};await loadRemote();
+if(res.error)return {error:res.error.code==="23505"||/already reviewed/i.test(res.error.message||"")?"You've already reviewed this song. Edit your existing review instead.":"Couldn't save: "+res.error.message};
+S.mut++;var td=ukDay(),wasIn=!!r&&S.sotdOK&&(S.sotd.entries[td]||[]).some(function(e){return String(e.rid)===String(r.id)});
+if(res.data){var nv=revRow(res.data,S.user);if(r)Object.assign(r,nv);else S.reviews.unshift(nv);
+if(S.sotdOK&&(wasIn||sdSame(nv,S.sotd.days[td])))S.sotdOK=await loadSotd()}else await loadRemote();
 if(whole)toast("Saved as "+whole+"/5. The database only accepts whole ratings until its update is run.");return {}},
-async delReview(id){await sb.from("reviews").delete().eq("id",id);await loadRemote()},
-async setPic(url){await sb.from("profiles").update({pic:url||null}).eq("id",S.uid);await loadRemote()},
+async delReview(id){var r=await sb.from("reviews").delete().eq("id",id);if(r.error)throw r.error;S.mut++;
+S.reviews=S.reviews.filter(function(x){return String(x.id)!==String(id)});delete S.likes[id];delete S.likeAt[id];delete S.reposts[id];delete S.comments[id];
+var en=S.sotd&&S.sotd.entries;if(en)Object.keys(en).forEach(function(d){en[d]=en[d].filter(function(x){return String(x.rid)!==String(id)})})},
+async setPic(url){var r=await sb.from("profiles").update({pic:url||null}).eq("id",S.uid);if(r.error){toast("Couldn't update your picture. Try again.");return}S.mut++;var a=me();if(a){if(url&&okPic(url))a.pic=url;else delete a.pic}},
 async setName(n){if(!S.uid)return {error:"x"};var old=S.user,r=await sb.from("profiles").update({username:n}).eq("id",S.uid);
 if(r.error)return {error:r.error.code==="23505"?"That username is taken. Try another.":"Couldn't save: "+r.error.message};
 ["ln_recent","ln_mrecent"].forEach(function(k){var o=store.get(k,{});if(o&&o["u:"+old]){o["u:"+n]=o["u:"+old];delete o["u:"+old];store.set(k,o)}});
@@ -2187,22 +2203,41 @@ if(r.error){S.mosOK=await loadMosaic();return {error:r.error.code==="23505"?(/on
 S.mosOK=await loadMosaic();return {}},
 async moveTile(a,b){if(!S.uid)return {error:"x"};var r=await sb.rpc("mosaic_move",{a:a,b:b});S.mosOK=await loadMosaic();return r.error?{error:"Couldn't move it. Try again."}:{}},
 async clearTile(pos){if(!S.uid)return {error:"x"};var r=await sb.from("mosaic_tiles").delete().eq("user_id",S.uid).eq("pos",pos);S.mosOK=await loadMosaic();return r.error?{error:"Couldn't remove it. Try again."}:{}},
-async toggleFol(n){var t=acct(n);if(!t||!S.uid)return;
-if(isFol(n)){await sb.from("follows").delete().eq("follower",S.uid).eq("following",t.id)}else{await sb.from("follows").insert({following:t.id})}
-await loadRemote()},
+/* following changes on screen straight away; the save happens behind it (in click order), and is undone with a note if it fails */
+async toggleFol(n){var t=acct(n),a=me();if(!t||!a||!S.uid)return;var was=isFol(n);S.mut++;
+a.following=was?(a.following||[]).filter(function(x){return x!==n}):(a.following||[]).concat([n]);
+inOrder("fol:"+t.id,function(){return was?sb.from("follows").delete().eq("follower",S.uid).eq("following",t.id):sb.from("follows").insert({following:t.id})})
+.then(function(r){if(r&&r.error&&r.error.code!=="23505")throw r.error})
+.catch(function(){var b=me();if(b&&isFol(n)!==was)b.following=was?(b.following||[]).concat([n]):(b.following||[]).filter(function(x){return x!==n});toast("Couldn't update who you follow. Try again.");appView()})},
 async markRead(){await sb.from("notifications").update({read:true}).eq("read",false)},
 async sendReview(rid,to){var t=acct(to);if(!t||!S.uid)return {error:"x"};var r=await sb.from("messages").insert({recipient:t.id,review_id:rid});return r.error?{error:r.error.message}:{}},
 async markMsgsRead(){await sb.from("messages").update({read:true}).eq("read",false)},
-async persistToggle(kind,rid,add){if(!S.uid)return;var tb=kind==="likes"?"review_likes":"review_reposts";
-if(add)await sb.from(tb).insert({review_id:rid});else await sb.from(tb).delete().eq("review_id",rid).eq("user_id",S.uid);await loadRemote()},
+/* likes and reposts are already on screen; this just saves them (in click order). If a save fails it's undone, with a note. */
+async persistToggle(kind,rid,add){if(!S.uid)return true;var tb=kind==="likes"?"review_likes":"review_reposts";
+var r=await inOrder(tb+":"+rid,function(){return add?sb.from(tb).insert({review_id:rid}):sb.from(tb).delete().eq("review_id",rid).eq("user_id",S.uid)}).then(null,function(e){return {error:e||{}}});
+if(r&&r.error&&r.error.code!=="23505"){if(((S[kind][rid]||[]).indexOf(S.user)>-1)===add)mutSoc(kind,rid);toast("Couldn't save that. Try again.");return false}return true},
 async setLater(it,add,prev){if(!S.uid)return {error:"x"};var r;
 if(add){r=await sb.from("listen_later").insert({title:it.title,artist:it.artist,type:it.type,art:it.art||null,tid:it.tid})}
 else{var k=lkey(it),cur=(prev||[]).filter(function(x){return lkey(x)===k})[0]||it;r=await sb.from("listen_later").delete().eq("user_id",S.uid).eq("type",cur.type).eq("title",cur.title).eq("artist",cur.artist)}
 if(r.error&&r.error.code!=="23505")return {error:r.error.message};await loadLater();return {}},
-async addComment(rid,text){var r=await sb.from("review_comments").insert({review_id:rid,body:text});await loadRemote();return r.error?{error:r.error.message}:{}},
-async delComment(cid,rid){await sb.from("review_comments").delete().eq("id",cid);await loadRemote()}
+async addComment(rid,text){var r=await sb.from("review_comments").insert({review_id:rid,body:text}).select("id,created_at").single();
+if(r.error||!r.data)return {error:(r.error&&r.error.message)||"x"};S.mut++;
+(S.comments[rid]=S.comments[rid]||[]).push({id:r.data.id,user:S.user,text:text,date:String(r.data.created_at).slice(0,10)});return {}},
+async delComment(cid,rid){var r=await sb.from("review_comments").delete().eq("id",cid);if(r.error){toast("Couldn't delete that comment. Try again.");return}S.mut++;
+var l=S.comments[rid];if(l)S.comments[rid]=l.filter(function(c){return String(c.id)!==String(cid)})}
 };
 var api=REMOTE?remoteApi:localApi;
+/* nothing refetches while you're using the site; when you come back to the tab after a minute or more, everything refreshes
+   quietly in the background, and the page only redraws if something changed (and you're not mid-way through typing) */
+var BGR=0;
+function dataSig(){var a=me();return JSON.stringify([S.reviews.map(function(r){return [r.id,r.rating,r.text]}),accts.map(function(x){return [x.name,x.pic?x.pic.length:0,(x.following||[]).length]}),
+[S.likes,S.reposts,S.comments].map(function(o){return Object.keys(o).map(function(k){return k+":"+o[k].length}).join()}),
+a&&a.notes?a.notes.filter(function(n){return !n.read}).length:0,a&&a.msgs?a.msgs.filter(function(n){return !n.read}).length:0,S.sotdOK?sdSig():""])}
+function bgRefresh(){if(!REMOTE||!S.user||BGR||Date.now()-(S.loadedAt||0)<60000)return;BGR=1;var before=dataSig();
+api.refresh().then(function(){BGR=0;if(!S.user||dataSig()===before)return;var ae=document.activeElement,dl=$("#dlg");
+if((dl&&dl.open)||(ae&&/^(INPUT|TEXTAREA|SELECT)$/.test(ae.tagName)))return;var y=window.scrollY;appView();try{window.scrollTo(0,y)}catch(e){}}).catch(function(){BGR=0})}
+document.addEventListener("visibilitychange",function(){if(document.visibilityState==="visible")bgRefresh()});
+window.addEventListener("pageshow",function(e){if(e.persisted)bgRefresh()});
 if(REMOTE)$("#app").innerHTML='<p class="meta" style="padding:24px">Loading…</p>';
 api.start().then(function(ok){if(ok)appView();else authView()}).catch(function(){$("#app").innerHTML='<p class="meta" style="padding:24px">Couldn\'t connect to the database. Refresh the page to try again.</p>'});
 })();
