@@ -2313,10 +2313,11 @@ function randomFlip(){if(!flipping||done||pool.length<2)return;var t=T[Math.floo
 var u=amzPick(T,t,pool,G.cols);if(!u||u===t.art)return;var im=new Image();t.fl=true;t.next=u;
 im.onload=function(){t.next="";if(done||!flipping){t.fl=false;return}im.className="nf";flip(t,im,Math.random()<.5?"X":"Y");t.art=u;later(function(){t.fl=false},650)};
 im.onerror=function(){t.fl=false;t.next=""};im.src=amzArt(u)}
-iv=setInterval(randomFlip,70);
+/* about 14 tiles mid-turn at any moment, for 3.8 seconds; then a pause while the last ones settle, and the reveal */
+iv=setInterval(randomFlip,45);
 requestAnimationFrame(function(){el.classList.add("in")});
-later(function(){flipping=false;clearInterval(iv)},2300);
-later(reveal,2950);
+later(function(){flipping=false;clearInterval(iv)},3800);
+later(reveal,4450);
 /* one more tile, near the middle, turns over to today's song */
 function reveal(){if(done)return;var cx=W/2,cy=H/2,best=null,bd=1e18;
 T.forEach(function(t){var q=t.q,dx=q.x+q.w/2-cx,dy=q.y+q.h/2-cy,d=dx*dx+dy*dy+Math.random()*q.w*q.w*8;if(d<bd){bd=d;best=t}});
