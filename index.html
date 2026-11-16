@@ -1374,7 +1374,7 @@ var MHOLD=1000,MFL=700,MDIR=["l","u","r","d"];
 /* which sign in/out animation plays next: even turns the left-to-right wave, odd turns the M (its direction moves on each time) */
 function nextFx(){var n=Math.max(0,Math.floor(+store.get("ln_tfx",0)||0));store.set("ln_tfx",(n+1)%1000);return n}
 /* the tile grid for the M transition, and which tiles make up the M (it fills most of the screen) */
-function mGrid(W,H){var tsz=Math.sqrt(W*H/200),cols=Math.max(5,Math.round(W/tsz)),rows=Math.max(5,Math.round(H/tsz)),
+function mGrid(W,H,n){var tsz=Math.sqrt(W*H/(n||200)),cols=Math.max(5,Math.round(W/tsz)),rows=Math.max(5,Math.round(H/tsz)),
 mh=H*.76,mw=Math.min(W*.86,mh*1.8);mh=Math.min(mh,mw/.62);var mx=(W-mw)/2,my=(H-mh)/2,sw=mw<mh?.21:.17,iv=.31+(sw-.17)*1.6,ov=mw<mh?.5:.54,
 P=[[0,0],[sw,0],[.5,ov],[1-sw,0],[1,0],[1,1],[1-sw,1],[1-sw,iv],[.5,.83],[sw,iv],[sw,1],[0,1]],T=[];
 function inM(x,y){var u=(x-mx)/mw,v=(y-my)/mh,c=false;if(u<0||u>1||v<0||v>1)return false;
@@ -1382,20 +1382,21 @@ for(var i=0,j=P.length-1;i<P.length;j=i++){var a=P[i],b=P[j];if((a[1]>v)!==(b[1]
 for(var r=0;r<rows;r++)for(var c=0;c<cols;c++){var x0=Math.round(c*W/cols),x1=Math.round((c+1)*W/cols),y0=Math.round(r*H/rows),y1=Math.round((r+1)*H/rows);
 T.push({x:x0,y:y0,w:x1-x0,h:y1-y0,m:inM((x0+x1)/2,(y0+y1)/2)})}
 return {cols:cols,rows:rows,t:T}}
-/* the sign-in mosaic: review artwork on ~200 tiles (the same grid the sign in/out animations use) */
-var AMZ={el:null,T:[],pool:[],timer:0,busy:false,W:0,H:0,rz:0};
-function amzArt(u){return String(u).replace(/\/\d+x\d+bb\./,"/160x160bb.")}
+/* the sign-in mosaic: review artwork on ~360 tiles, 1.8 times the other tile grids (signing in and out turns these same tiles).
+   Small tiles (phones) load 100px pictures, bigger ones 160px. */
+var AMZ={el:null,T:[],pool:[],timer:0,busy:false,W:0,H:0,rz:0,px:160},AMZN=360;
+function amzArt(u,px){px=px||160;return String(u).replace(/\/\d+x\d+bb\./,"/"+px+"x"+px+"bb.")}
 function amzUniq(list){var seen={},o=[];(list||[]).forEach(function(u){if(okArt(u)&&!seen[u]){seen[u]=1;o.push(u)}});return o}
 function amzShuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a}
 function amzCalm(){try{return !!(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches)}catch(e){return false}}
-function amzBuild(cls){var W=window.innerWidth||document.documentElement.clientWidth||900,H=window.innerHeight||document.documentElement.clientHeight||700,G=mGrid(W,H),pool=amzShuffle(AMZ.pool),h="",old=document.getElementById("amz");
-if(old&&old.parentNode)old.parentNode.removeChild(old);
+function amzBuild(cls){var W=window.innerWidth||document.documentElement.clientWidth||900,H=window.innerHeight||document.documentElement.clientHeight||700,G=mGrid(W,H,AMZN),pool=amzShuffle(AMZ.pool),h="",old=document.getElementById("amz");
+if(old&&old.parentNode)old.parentNode.removeChild(old);AMZ.px=Math.min(W/G.cols,H/G.rows)*(window.devicePixelRatio||1)<=100?100:160;
 G.t.forEach(function(q,i){var u=pool.length?pool[i%pool.length]:"",g=(i*47)%360;
-h+='<div class="at'+(q.m?' m':'')+'" style="left:'+q.x+'px;top:'+q.y+'px;width:'+q.w+'px;height:'+q.h+'px"><div class="ai"><span class="af" style="--g:linear-gradient(135deg,hsl('+g+',45%,38%),hsl('+((g+50)%360)+',50%,26%))">'+(u?'<img src="'+esc(amzArt(u))+'" alt="" decoding="async">':'')+'</span><span class="af ab"></span></div></div>'});
+h+='<div class="at'+(q.m?' m':'')+'" style="left:'+q.x+'px;top:'+q.y+'px;width:'+q.w+'px;height:'+q.h+'px"><div class="ai"><span class="af" style="--g:linear-gradient(135deg,hsl('+g+',45%,38%),hsl('+((g+50)%360)+',50%,26%))">'+(u?'<img src="'+esc(amzArt(u,AMZ.px))+'" alt="" decoding="async">':'')+'</span><span class="af ab"></span></div></div>'});
 var el=document.createElement("div");el.id="amz";el.setAttribute("aria-hidden","true");el.style.width=W+"px";el.style.height=H+"px";el.className=cls||"";el.innerHTML=h;document.body.appendChild(el);
 AMZ.el=el;AMZ.W=W;AMZ.H=H;AMZ.T=[].map.call(el.querySelectorAll(".at"),function(t,i){var ai=t.firstChild;return {el:t,ai:ai,f:[ai.children[0],ai.children[1]],v:0,rot:0,art:pool.length?pool[i%pool.length]:"",q:G.t[i]}});
 return el}
-function amzFill(){if(!AMZ.el||!AMZ.pool.length)return;var p=amzShuffle(AMZ.pool),k=0;AMZ.T.forEach(function(t){if(t.art)return;var u=p[k++%p.length];t.art=u;t.f[t.v].innerHTML='<img src="'+esc(amzArt(u))+'" alt="" decoding="async">'})}
+function amzFill(){if(!AMZ.el||!AMZ.pool.length)return;var p=amzShuffle(AMZ.pool),k=0;AMZ.T.forEach(function(t){if(t.art)return;var u=p[k++%p.length];t.art=u;t.f[t.v].innerHTML='<img src="'+esc(amzArt(u,AMZ.px))+'" alt="" decoding="async">'})}
 function amzTick(){var T=AMZ.T;if(!AMZ.el||AMZ.busy||document.hidden||!T.length||AMZ.pool.length<2)return;
 var t=T[Math.floor(Math.random()*T.length)];if(t.fl)return;
 var shown={};T.forEach(function(x){shown[x.art]=1});var c=AMZ.pool.filter(function(u){return !shown[u]});if(!c.length)c=AMZ.pool.filter(function(u){return u!==t.art});if(!c.length)return;
@@ -1405,19 +1406,19 @@ im.onload=function(){if(!AMZ.el||AMZ.busy){t.fl=false;return}var A=t.f[0],B=t.f[
 t.ai.style.transition="none";if(t.v===1){A.innerHTML="";while(B.firstChild)A.appendChild(B.firstChild)}t.ai.style.transform="none";t.v=0;
 var ax=Math.random()<.5?"X":"Y",sg=Math.random()<.5?1:-1;B.style.transform="rotate"+ax+"(180deg)";B.innerHTML="";im.alt="";im.className="nf";B.appendChild(im);
 void t.ai.offsetWidth;t.ai.style.transition="";t.ai.style.transform="rotate"+ax+"("+(180*sg)+"deg)";t.v=1;t.art=u;setTimeout(function(){t.fl=false},650)};
-im.onerror=function(){t.fl=false};im.src=amzArt(u)}
+im.onerror=function(){t.fl=false};im.src=amzArt(u,AMZ.px)}
 function amzStart(){clearInterval(AMZ.timer);AMZ.timer=0;if(!amzCalm())AMZ.timer=setInterval(amzTick,500)}
 function amzStop(){clearInterval(AMZ.timer);AMZ.timer=0}
 function amzRemove(){amzStop();if(AMZ.el&&AMZ.el.parentNode)AMZ.el.parentNode.removeChild(AMZ.el);AMZ.el=null;AMZ.T=[]}
 /* artwork from reviews on Mosaic; while there are only a few, other releases by the reviewed artists top it up (kept for a day) */
-function amzLoad(){var c=store.get("ln_amz",null);if(c&&Array.isArray(c.a)&&c.a.length){var a=amzUniq(c.a);if(a.length)AMZ.pool=a;if(Date.now()-(+c.t||0)<864e5)return Promise.resolve()}
+function amzLoad(){var c=store.get("ln_amz2",null);if(c&&Array.isArray(c.a)&&c.a.length){var a=amzUniq(c.a);if(a.length)AMZ.pool=a;if(Date.now()-(+c.t||0)<864e5)return Promise.resolve()}
 var rows=REMOTE?sb.from("reviews").select("art,artist").not("art","is",null).order("created_at",{ascending:false}).limit(1000).then(function(r){return r.error?[]:(r.data||[])},function(){return []}):Promise.resolve(S.reviews.map(function(r){return {art:r.art,artist:r.artist}}));
-return rows.then(function(R){var arts=amzUniq(R.map(function(x){return x.art}));if(arts.length>=180)return arts;
+return rows.then(function(R){var arts=amzUniq(R.map(function(x){return x.art}));if(arts.length>=324)return arts;
 var cnt={};R.forEach(function(x){var n=String(x.artist||"").trim();if(n)cnt[n]=(cnt[n]||0)+1});
-var top=Object.keys(cnt).sort(function(x,y){return cnt[y]-cnt[x]}).slice(0,8);
+var top=Object.keys(cnt).sort(function(x,y){return cnt[y]-cnt[x]}).slice(0,12);
 return Promise.all(top.map(function(n){return fetch("https://itunes.apple.com/search?media=music&entity=album&limit=25&term="+encodeURIComponent(n)).then(function(x){return x.ok?x.json():{results:[]}}).then(function(j){return (j.results||[]).filter(function(t){return String(t.artistName||"").toLowerCase()===n.toLowerCase()&&okArt(t.artworkUrl100)}).map(function(t){return t.artworkUrl100})}).catch(function(){return []})}))
-.then(function(more){return amzUniq(arts.concat([].concat.apply([],more))).slice(0,260)})})
-.then(function(all){if(all&&all.length){store.set("ln_amz",{t:Date.now(),a:all});AMZ.pool=all}}).catch(function(){})}
+.then(function(more){return amzUniq(arts.concat([].concat.apply([],more))).slice(0,470)})})
+.then(function(all){if(all&&all.length){store.set("ln_amz2",{t:Date.now(),a:all});AMZ.pool=all}}).catch(function(){})}
 /* the sign-in page: the mosaic sits behind the form */
 function amzBackground(){if(!AMZ.el)amzBuild("");if(AMZ.busy)return;AMZ.el.className="";amzFill();amzStart();amzLoad().then(amzFill)}
 window.addEventListener("resize",function(){if(!AMZ.el||AMZ.busy)return;clearTimeout(AMZ.rz);AMZ.rz=setTimeout(function(){if(!AMZ.el||AMZ.busy)return;var W=window.innerWidth,H=window.innerHeight;if(Math.abs(W-AMZ.W)<2&&Math.abs(H-AMZ.H)<2)return;amzBuild("");amzFill()},200)});
