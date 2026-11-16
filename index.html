@@ -2262,12 +2262,14 @@ h+='<h3 class="sdh">Yesterday</h3><div class="sdy">'+rimg({title:ys.title,artist
 if(S.sotd.admin)h+=sdAdminHTML(today);
 return h+'</section>'}
 /* ---------- Song of the Day intro ----------
-   The first time someone opens the tab while there's a song (once per person on each device): a wall of ~200 covers like the sign-in
+   Plays when someone opens the tab while there's a song, but not again within 15 minutes of the last time it played for them on this
+   device (so hopping back and forth doesn't replay it): a wall of ~200 covers like the sign-in
    page, some flipping at random; they stop, one more turns over to today's song, that tile grows into the centre as the rest dissolve
    into the song's glow, and it lands exactly where the page's cover sits. Tap, click or press a key to skip. Skipped for reduced motion. */
-function sdSeen(){var o=store.get("ln_sdi",null);return !!(o&&o["u:"+S.user])}
+var SDGAP=15*60*1000;
+function sdSeen(){var o=store.get("ln_sdi",null),t=o?+o["u:"+S.user]||0:0,d=Date.now()-t;return t>1&&d>=0&&d<SDGAP}
 function maybeSdIntro(){var s=S.sotd.days[ukDay()];if(!s||!s.art||!S.user||sdSeen()||amzCalm()||document.getElementById("sdi"))return;
-var o=store.get("ln_sdi",{})||{};o["u:"+S.user]=1;store.set("ln_sdi",o);sdIntro(s)}
+var o=store.get("ln_sdi",{})||{};o["u:"+S.user]=Date.now();store.set("ln_sdi",o);sdIntro(s)}
 function sdIntro(s){try{window.scrollTo(0,0)}catch(e){}
 S.sdIntroOn=true;var hc=$(".sotd .sdart");if(hc)hc.classList.add("sdhide");var hw=$(".sotd .sdaw");if(hw)hw.classList.add("sdpre");
 var W=window.innerWidth,H=window.innerHeight,G=mGrid(W,H),key=amzArt(s.art),
