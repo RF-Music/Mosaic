@@ -509,8 +509,8 @@ html.mdragging,html.mdragging *{cursor:grabbing!important}
 .sbox,#rvhost{isolation:isolate;overflow:hidden}
 .aglw{position:relative;width:100%;max-width:240px}
 .aglow{position:absolute;inset:-14%;z-index:-1;border-radius:28%;filter:blur(var(--ab,22px));opacity:var(--ao,.9);pointer-events:none}
-/* a tessellated song: about a second after the ribbon glows gold, a brighter copy of the cover's glow slowly fades in, lingers, and slowly fades out */
-.aglow.abl{inset:-18%;opacity:0;filter:blur(calc(var(--ab,22px)*1.25)) brightness(1.45) saturate(1.25);animation:abloom 6.2s cubic-bezier(.37,0,.63,1) 1.4s both}
+/* a tessellated song: as the ribbon glows gold, a brighter copy of the cover's glow slowly fades in, lingers, and slowly fades out */
+.aglow.abl{inset:-18%;opacity:0;filter:blur(calc(var(--ab,22px)*1.25)) brightness(1.45) saturate(1.25);animation:abloom 6.2s cubic-bezier(.37,0,.63,1) .3s both}
 @keyframes abloom{0%,100%{opacity:0}39%,52%{opacity:var(--ao,.9)}}
 .aglow canvas{display:block;width:100%;height:100%;border-radius:inherit}
 :root[data-theme="light"] .aglow{--ao:.6}
