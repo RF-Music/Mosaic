@@ -904,7 +904,7 @@ a.pl.act{padding:5px}
 #sdi.out .sdib{opacity:0}
 #sdi .at{position:absolute;transform-style:preserve-3d;transition:opacity .55s ease var(--fd,0ms)}
 #sdi.out .at:not(.hero){opacity:0}
-#sdi .ai{position:absolute;inset:1px;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.4,0,.2,1)}
+#sdi .ai{position:absolute;inset:1px;transform-style:preserve-3d;transition:transform .75s cubic-bezier(.4,0,.2,1)}
 #sdi .af{position:absolute;inset:0;overflow:hidden;border-radius:3px;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:var(--g,var(--line))}
 #sdi .ab{transform:rotateY(180deg)}
 #sdi img{display:block;width:100%;height:100%;object-fit:cover;animation:afade .4s ease both}
@@ -2336,18 +2336,18 @@ var sg=Math.random()<.5?1:-1;B.style.transform="rotate"+ax+"(180deg)";B.innerHTM
 void t.ai.offsetWidth;t.ai.style.transition="";t.ai.style.transform="rotate"+ax+"("+(180*sg)+"deg)";t.v=1}
 function randomFlip(){if(!flipping||done||pool.length<2)return;var t=T[Math.floor(Math.random()*T.length)];if(t.fl||t.hero)return;
 var u=amzPick(T,t,pool,G.cols);if(!u||u===t.art)return;var im=new Image();t.fl=true;t.next=u;
-im.onload=function(){t.next="";if(done||!flipping){t.fl=false;return}im.className="nf";flip(t,im,Math.random()<.5?"X":"Y");t.art=u;later(function(){t.fl=false},650)};
+im.onload=function(){t.next="";if(done||!flipping){t.fl=false;return}im.className="nf";flip(t,im,Math.random()<.5?"X":"Y");t.art=u;later(function(){t.fl=false},800)};
 im.onerror=function(){t.fl=false;t.next=""};im.src=amzArt(u)}
-/* about 14 tiles mid-turn at any moment, for 3.8 seconds; then a pause while the last ones settle, and the reveal */
-iv=setInterval(randomFlip,45);
+/* about 11 tiles mid-turn at any moment (each turn takes 0.75s), for 2.3 seconds; then a beat while the last ones settle, and the reveal */
+iv=setInterval(randomFlip,65);
 requestAnimationFrame(function(){el.classList.add("in")});
-later(function(){flipping=false;clearInterval(iv)},3800);
-later(reveal,4450);
+later(function(){flipping=false;clearInterval(iv)},2300);
+later(reveal,3100);
 /* one more tile, near the middle, turns over to today's song */
 function reveal(){if(done)return;var cx=W/2,cy=H/2,best=null,bd=1e18;
 T.forEach(function(t){var q=t.q,dx=q.x+q.w/2-cx,dy=q.y+q.h/2-cy,d=dx*dx+dy*dy+Math.random()*q.w*q.w*8;if(d<bd){bd=d;best=t}});
 var t=best;if(!t){finish();return}t.hero=true;t.el.classList.add("hero");
-function go(){if(done||t.turned)return;t.turned=true;var im=bim.cloneNode();im.className="nf";flip(t,im,"Y");later(grow,850)}
+function go(){if(done||t.turned)return;t.turned=true;var im=bim.cloneNode();im.className="nf";flip(t,im,"Y");later(grow,1000)}
 if(bim.complete&&bim.naturalWidth)go();else{bim.onload=go;bim.onerror=finish;later(go,2000)}}
 /* it grows to where the page's cover is, while the rest fade out from it and the glow shows through */
 function grow(){if(done)return;var t=T.filter(function(x){return x.hero})[0],tg=document.querySelector(".sotd .sdart .cover")||document.querySelector(".sotd .sdart"),r=tg?tg.getBoundingClientRect():null;
