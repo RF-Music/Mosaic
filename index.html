@@ -439,7 +439,7 @@ html.mdragging,html.mdragging *{cursor:grabbing!important}
 .song .sby .ulink{text-decoration-color:color-mix(in srgb,var(--mute) 45%,transparent)}
 .srate{display:flex;align-items:baseline;gap:14px;margin-top:28px}
 .snum{font-size:48px;font-weight:300;letter-spacing:-.03em;line-height:1}
-.sbar{display:inline-block;position:relative;width:132px;aspect-ratio:100/15.56;--sf:var(--star);--se:transparent}
+.sbar{display:inline-block;position:relative;width:132px;aspect-ratio:100/15.56;--sf:var(--star);--se:color-mix(in srgb,var(--mute) 35%,transparent)}
 .sbar::before{content:"";position:absolute;inset:0}
 .sbar::before{background:linear-gradient(90deg,var(--sf) var(--p,0%),var(--se) var(--p,0%));-webkit-mask:var(--sm) center/100% 100% no-repeat;mask:var(--sm) center/100% 100% no-repeat}
 .noyet{font-size:24px;font-weight:300;letter-spacing:-.01em;color:var(--mute);line-height:1.2}
@@ -479,9 +479,9 @@ canvas.soft.now{transition:none}
 :root[data-theme="dark"] .glow{--ow:.52}
 /* the rating: five small, sharp stars as wide as the artwork (white, or dark ink in light mode), the number beside them */
 :root{--sm:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 15.56'%3E%3Cpath d='M10.00 1.68L11.70 6.23L16.56 6.45L12.76 9.47L14.06 14.16L10.00 11.48L5.94 14.16L7.24 9.47L3.44 6.45L8.30 6.23ZM30.00 1.68L31.70 6.23L36.56 6.45L32.76 9.47L34.06 14.16L30.00 11.48L25.94 14.16L27.24 9.47L23.44 6.45L28.30 6.23ZM50.00 1.68L51.70 6.23L56.56 6.45L52.76 9.47L54.06 14.16L50.00 11.48L45.94 14.16L47.24 9.47L43.44 6.45L48.30 6.23ZM70.00 1.68L71.70 6.23L76.56 6.45L72.76 9.47L74.06 14.16L70.00 11.48L65.94 14.16L67.24 9.47L63.44 6.45L68.30 6.23ZM90.00 1.68L91.70 6.23L96.56 6.45L92.76 9.47L94.06 14.16L90.00 11.48L85.94 14.16L87.24 9.47L83.44 6.45L88.30 6.23Z' fill='%23000'/%3E%3C/svg%3E")}
-.rrate{--sf:var(--ink);--se:transparent;display:flex;align-items:center;justify-content:center;gap:7px;color:var(--ink);line-height:1;white-space:nowrap}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .rrate{color:#fff;--sf:#fff;--se:transparent}}
-:root[data-theme="dark"] .rrate{color:#fff;--sf:#fff;--se:transparent}
+.rrate{--sf:var(--ink);--se:rgba(0,0,0,.26);display:flex;align-items:center;justify-content:center;gap:7px;color:var(--ink);line-height:1;white-space:nowrap}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .rrate{color:#fff;--sf:#fff;--se:rgba(255,255,255,.2)}}
+:root[data-theme="dark"] .rrate{color:#fff;--sf:#fff;--se:rgba(255,255,255,.2)}
 .rrate .stars{display:block;position:relative;flex:1 1 0;min-width:0;max-width:132px;aspect-ratio:100/15.56;font-size:0;letter-spacing:0;background:none;color:transparent;-webkit-text-fill-color:transparent}
 .rrate .stars::before{content:"";position:absolute;inset:0}
 .rrate .stars::before{background:linear-gradient(90deg,var(--sf) var(--p,0%),var(--se) var(--p,0%));-webkit-mask:var(--sm) center/100% 100% no-repeat;mask:var(--sm) center/100% 100% no-repeat}
@@ -1793,7 +1793,7 @@ font("500",38);g.fillStyle="rgba(255,255,255,.72)";g.fillText(fitText(g,r.artist
 /* the stars, filled to the tenth, and the number */
 var k=3.6,SBW=100*k,SBH=15.56*k,num=rnum(r.rating).toFixed(1);font("700",52);var nw=g.measureText(num).width,sx=(W-(93.12*k+26+nw))/2-3.44*k;
 g.save();g.beginPath();for(var si=0;si<5;si++){STARPT.forEach(function(q,j){var px=sx+(q[0]+20*si)*k,py=y+q[1]*k;if(j)g.lineTo(px,py);else g.moveTo(px,py)});g.closePath()}g.clip();
-g.fillStyle="#fff";g.fillRect(sx,y,SBW*starPct(r.rating)/100,SBH);g.restore();
+g.fillStyle="rgba(255,255,255,.26)";g.fillRect(sx,y,SBW,SBH);g.fillStyle="#fff";g.fillRect(sx,y,SBW*starPct(r.rating)/100,SBH);g.restore();
 g.textAlign="left";g.fillStyle="#fff";g.fillText(num,sx+96.56*k+26,y+SBH/2+18);g.textAlign="center";y+=56;
 /* the five words, the star of the show */
 if(rv){y+=52;font("700",rv.s);var lh=rv.s*1.16;rv.lines.forEach(function(l,i){quoteLine(g,l,W/2,Math.round(y+i*lh+rv.s*.92))});y+=RH}
