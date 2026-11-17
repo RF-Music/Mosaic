@@ -1088,6 +1088,10 @@ a.pl.act{padding:5px}
 </style>
 </head>
 <body>
+<!-- glows mute whites: each pixel's lowest colour channel says how close to white it is (colours have a low one, whites a high one);
+     only the palest pixels are dimmed, so colours stay exactly as they were. wmute is used while the glow is drawn,
+     wmute2 on the finished glow in browsers that can't filter while drawing (it has been darkened by then, so it starts lower) -->
+<svg width="0" height="0" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" focusable="false"><filter id="wmute" color-interpolation-filters="sRGB"><feColorMatrix in="SourceGraphic" type="matrix" values="0 1 0 0 0 0 0 1 0 0 1 0 0 0 0 0 0 0 1 0" result="a"/><feColorMatrix in="SourceGraphic" type="matrix" values="0 0 1 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0 1 0" result="b"/><feBlend in="SourceGraphic" in2="a" mode="darken" result="c"/><feBlend in="c" in2="b" mode="darken" result="m"/><feComponentTransfer in="m" result="k"><feFuncR type="table" tableValues="1 1 1 1 1 1 1 .98 .93 .85 .72"/><feFuncG type="table" tableValues="1 1 1 1 1 1 1 .98 .93 .85 .72"/><feFuncB type="table" tableValues="1 1 1 1 1 1 1 .98 .93 .85 .72"/></feComponentTransfer><feBlend in="SourceGraphic" in2="k" mode="multiply"/></filter><filter id="wmute2" color-interpolation-filters="sRGB"><feColorMatrix in="SourceGraphic" type="matrix" values="0 1 0 0 0 0 0 1 0 0 1 0 0 0 0 0 0 0 1 0" result="a"/><feColorMatrix in="SourceGraphic" type="matrix" values="0 0 1 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0 1 0" result="b"/><feBlend in="SourceGraphic" in2="a" mode="darken" result="c"/><feBlend in="c" in2="b" mode="darken" result="m"/><feComponentTransfer in="m" result="k"><feFuncR type="table" tableValues="1 1 1 1 1 .95 .85 .64 .6 .6 .6"/><feFuncG type="table" tableValues="1 1 1 1 1 .95 .85 .64 .6 .6 .6"/><feFuncB type="table" tableValues="1 1 1 1 1 .95 .85 .64 .6 .6 .6"/></feComponentTransfer><feBlend in="SourceGraphic" in2="k" mode="multiply"/></filter></svg>
 <div id="app"></div>
 <dialog id="dlg"></dialog>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
@@ -1754,7 +1758,7 @@ function artGlow(t,b){var u=t&&t.art&&okArt(t.art)?t.art:"";return u?'<span clas
 function glowHTML(r){var h=hue(r.title+r.artist),u=r.art&&okArt(r.art)?r.art:"",bg=' style="background:linear-gradient(160deg,hsl('+h+',70%,34%),hsl('+((h+60)%360)+',74%,24%))"';
 return '<span class="glow" aria-hidden="true"><i class="gw"'+bg+'>'+(u?'<canvas class="soft" width="48" height="48" data-soft="'+esc(u)+'" data-blur="1.8"></canvas>':'')+'</i></span>'}
 /* soft canvases: each picture is fetched once; ones already here draw straight away (no fade), new ones fade in when they arrive */
-var SOFT={},SOFTN=0,GLOW={mul:.55,dim:.28,tone:"saturate(1.45) brightness(.72)"};
+var SOFT={},SOFTN=0,GLOW={mul:.55,dim:.28};
 function paintSoft(){[].forEach.call(document.querySelectorAll("canvas[data-soft]"),function(c){var u=c.getAttribute("data-soft"),o=SOFT[u];c.removeAttribute("data-soft");
 if(!o){if(++SOFTN>400){SOFT={};SOFTN=1}o=SOFT[u]={im:new Image(),ok:0,bad:0,q:[]};o.im.decoding="async";
 o.im.onload=function(){o.ok=1;o.q.forEach(function(k){drawSoft(o.im,k,false)});o.q=[]};
@@ -1769,9 +1773,8 @@ y.drawImage(im,m,m,w,h);y.drawImage(im,0,0,1,ih,0,m,m,h);y.drawImage(im,iw-1,0,1
 y.drawImage(im,0,0,1,1,0,0,m,m);y.drawImage(im,iw-1,0,1,1,w+m,0,m,m);y.drawImage(im,0,ih-1,1,1,0,h+m,m,m);y.drawImage(im,iw-1,ih-1,1,1,w+m,h+m,m,m);return p}
 function drawSoft(im,c,now){try{var x=c.getContext("2d"),w=c.width,h=c.height,b=+c.getAttribute("data-blur")||0,f="filter" in x,m=b&&f?Math.ceil(b*3):0,src=m?softPad(im,w,h,m):im;
 x.globalCompositeOperation="source-over";x.globalAlpha=1;x.clearRect(0,0,w,h);
-/* whites toned out: colours a little richer and everything a little dimmer, so white areas glow faintly while colours keep their strength
-   (browsers that can't filter a canvas get the same as a style on it) */
-x.imageSmoothingEnabled=true;x.imageSmoothingQuality="high";if(f)x.filter=(m?"blur("+b+"px) ":"")+GLOW.tone;else c.style.filter=GLOW.tone;x.drawImage(src,-m,-m,w+2*m,h+2*m);
+/* whites muted, colours untouched (the wmute filters at the top of the page) */
+x.imageSmoothingEnabled=true;x.imageSmoothingQuality="high";if(f)x.filter="url(#wmute)"+(m?" blur("+b+"px)":"");else c.style.filter="url(#wmute2)";x.drawImage(src,-m,-m,w+2*m,h+2*m);
 /* darker glows: the picture partly multiplied by itself deepens the darks and keeps its colour, then a veil of black takes the glare off the whites */
 x.globalCompositeOperation="multiply";x.globalAlpha=GLOW.mul;x.drawImage(src,-m,-m,w+2*m,h+2*m);
 x.globalCompositeOperation="source-over";x.globalAlpha=1;if(f)x.filter="none";x.fillStyle="rgba(0,0,0,"+GLOW.dim+")";x.fillRect(0,0,w,h);
