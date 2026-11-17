@@ -153,8 +153,8 @@ nav button[aria-current="true"]{color:var(--ink);border-color:var(--pop)}
 .lifeh{margin-bottom:14px}
 .lifeh h2{margin-bottom:4px}
 .lifeh .meta{margin:0}
-/* as square as it can be: about as many columns as rows (the last row may be short); tiles up to 96px, smaller when it has to fit */
-.lgrid{display:grid;grid-template-columns:repeat(var(--c,8),minmax(0,96px));justify-content:center;gap:3px}
+/* as square as it can be: about as many columns as rows (the last row may be short); tiles up to 96px, and small enough that the whole mosaic fits on the screen (fitLife) */
+.lgrid{display:grid;grid-template-columns:repeat(var(--c,8),var(--t,minmax(0,96px)));justify-content:center;gap:3px}
 .lt{container-type:inline-size}@container (max-width:42px){.lm{display:none}}
 .lt{position:relative;display:block;aspect-ratio:1;padding:0;border:0;border-radius:3px;overflow:hidden;cursor:pointer;background:linear-gradient(135deg,hsl(var(--h),62%,40%),hsl(calc(var(--h) + 60),66%,28%));animation:ltin .45s cubic-bezier(.2,.7,.3,1) backwards;transition:transform .12s,box-shadow .12s}
 .lt img{display:block;width:100%;height:100%;object-fit:cover}
@@ -1630,7 +1630,7 @@ function ddRows(list){return list.map(function(n){return '<button type="button" 
 function ddHTML(k,n,list,cf){var w=k==="fg"?"following":(n===1?"follower":"followers"),t='<b>'+n+'</b> '+w;
 if(!list||!list.length)return t;
 return '<span class="fdd '+k+'" data-k="'+k+'"><button type="button" class="fddb" aria-haspopup="true" aria-expanded="false">'+(cf?CAR+'<span>'+t+'</span>':'<span>'+t+'</span>'+CAR)+'</button><span class="fddw" hidden><span class="fddm" role="menu">'+ddRows(list)+'</span><span class="fcard" hidden></span></span></span>'}
-function igStats(n,a,plus){var rs=S.reviews.filter(function(r){return r.user===n}),rv=rs.length,lk=rs.reduce(function(x,r){return x+likeN(r.id)},0),fgl=((a&&a.following)||[]).filter(acct),fll=followersOf(n);
+function igStats(n,a,plus){var rs=S.reviews.filter(function(r){return r.user===n}),rv=rs.length,lk=rs.reduce(function(x,r){var v=likeN(r.id);return v===Infinity?x:x+v},0),fgl=((a&&a.following)||[]).filter(acct),fll=followersOf(n);
 return '<div class="igs"><span><b>'+rv+'</b> tiled</span><span><b>'+numS(lk)+'</b> '+(lk===1?"like":"likes")+'</span>'+'</div>'+
 '<div class="igs"><span class="ff'+(fgl.length&&fll.length?' pair':'')+'"><span class="fls">'+ddHTML("fl",fll.length,fll)+'</span><span class="fgs">'+ddHTML("fg",fgl.length,fgl,1)+'</span></span>'+(plus||"")+'</div>'}
 function limits(){var a=$("#app").getBoundingClientRect();return {l:Math.max(0,a.left),r:Math.min(window.innerWidth,a.right)}}
@@ -1754,17 +1754,26 @@ function artGlow(t,b){var u=t&&t.art&&okArt(t.art)?t.art:"";return u?'<span clas
 function glowHTML(r){var h=hue(r.title+r.artist),u=r.art&&okArt(r.art)?r.art:"",bg=' style="background:linear-gradient(160deg,hsl('+h+',70%,34%),hsl('+((h+60)%360)+',74%,24%))"';
 return '<span class="glow" aria-hidden="true"><i class="gw"'+bg+'>'+(u?'<canvas class="soft" width="48" height="48" data-soft="'+esc(u)+'" data-blur="1.8"></canvas>':'')+'</i></span>'}
 /* soft canvases: each picture is fetched once; ones already here draw straight away (no fade), new ones fade in when they arrive */
-var SOFT={},SOFTN=0,GLOW={mul:.55,dim:.28};
+var SOFT={},SOFTN=0,GLOW={mul:.55,dim:.28,tone:"saturate(1.45) brightness(.72)"};
 function paintSoft(){[].forEach.call(document.querySelectorAll("canvas[data-soft]"),function(c){var u=c.getAttribute("data-soft"),o=SOFT[u];c.removeAttribute("data-soft");
 if(!o){if(++SOFTN>400){SOFT={};SOFTN=1}o=SOFT[u]={im:new Image(),ok:0,bad:0,q:[]};o.im.decoding="async";
 o.im.onload=function(){o.ok=1;o.q.forEach(function(k){drawSoft(o.im,k,false)});o.q=[]};
 o.im.onerror=function(){o.bad=1;o.q.forEach(function(k){if(k.parentNode)k.parentNode.removeChild(k)});o.q=[]};o.im.src=u}
 if(o.ok)drawSoft(o.im,c,true);else if(o.bad){if(c.parentNode)c.parentNode.removeChild(c)}else o.q.push(c)})}
-function drawSoft(im,c,now){try{var x=c.getContext("2d"),w=c.width,h=c.height,b=+c.getAttribute("data-blur")||0,m=Math.ceil(b*3),f="filter" in x;
+/* the whole picture fills the canvas, edge to edge. The blur would fade its edges (it reaches past them into nothing), so it is drawn on a
+   slightly bigger copy whose border is the picture's own edge pixels stretched outwards, and that border is left outside the canvas */
+var SOFTPAD=null;
+function softPad(im,w,h,m){var p=SOFTPAD||(SOFTPAD=document.createElement("canvas")),y=p.getContext("2d"),iw=im.naturalWidth||im.width,ih=im.naturalHeight||im.height;
+p.width=w+2*m;p.height=h+2*m;y.imageSmoothingEnabled=true;y.imageSmoothingQuality="high";
+y.drawImage(im,m,m,w,h);y.drawImage(im,0,0,1,ih,0,m,m,h);y.drawImage(im,iw-1,0,1,ih,w+m,m,m,h);y.drawImage(im,0,0,iw,1,m,0,w,m);y.drawImage(im,0,ih-1,iw,1,m,h+m,w,m);
+y.drawImage(im,0,0,1,1,0,0,m,m);y.drawImage(im,iw-1,0,1,1,w+m,0,m,m);y.drawImage(im,0,ih-1,1,1,0,h+m,m,m);y.drawImage(im,iw-1,ih-1,1,1,w+m,h+m,m,m);return p}
+function drawSoft(im,c,now){try{var x=c.getContext("2d"),w=c.width,h=c.height,b=+c.getAttribute("data-blur")||0,f="filter" in x,m=b&&f?Math.ceil(b*3):0,src=m?softPad(im,w,h,m):im;
 x.globalCompositeOperation="source-over";x.globalAlpha=1;x.clearRect(0,0,w,h);
-x.imageSmoothingEnabled=true;x.imageSmoothingQuality="high";if(b&&f)x.filter="blur("+b+"px)";x.drawImage(im,-m,-m,w+2*m,h+2*m);
+/* whites toned out: colours a little richer and everything a little dimmer, so white areas glow faintly while colours keep their strength
+   (browsers that can't filter a canvas get the same as a style on it) */
+x.imageSmoothingEnabled=true;x.imageSmoothingQuality="high";if(f)x.filter=(m?"blur("+b+"px) ":"")+GLOW.tone;else c.style.filter=GLOW.tone;x.drawImage(src,-m,-m,w+2*m,h+2*m);
 /* darker glows: the picture partly multiplied by itself deepens the darks and keeps its colour, then a veil of black takes the glare off the whites */
-x.globalCompositeOperation="multiply";x.globalAlpha=GLOW.mul;x.drawImage(im,-m,-m,w+2*m,h+2*m);
+x.globalCompositeOperation="multiply";x.globalAlpha=GLOW.mul;x.drawImage(src,-m,-m,w+2*m,h+2*m);
 x.globalCompositeOperation="source-over";x.globalAlpha=1;if(f)x.filter="none";x.fillStyle="rgba(0,0,0,"+GLOW.dim+")";x.fillRect(0,0,w,h);
 if(now)c.classList.add("now");c.classList.add("on")}catch(e){}}
 function byLine(r,k,na){var u=na?'':'<button type="button" class="avbtn" data-u="'+esc(r.user)+'" aria-label="'+esc(r.user)+'\'s profile" data-name="'+esc(r.user)+'">'+avatar(acct(r.user),"xs")+'</button>';
@@ -2177,9 +2186,12 @@ var ws=ps.map(function(p){try{var l=Infinity,r=-Infinity,tw=document.createTreeW
 while((n=tw.nextNode())){re=/\S+/g;while((m=re.exec(n.data))){rg=document.createRange();rg.setStart(n,m.index);rg.setEnd(n,m.index+m[0].length);rs=rg.getClientRects();
 for(i=0;i<rs.length;i++){if(rs[i].width<1)continue;if(rs[i].left<l)l=rs[i].left;if(rs[i].right>r)r=rs[i].right}}}return r>l?Math.ceil(r-l)+1:0}catch(e){return 0}});
 ps.forEach(function(p,i){if(ws[i])p.style.width=ws[i]+"px"})}
-window.addEventListener("resize",function(){clearTimeout(fitT);fitT=setTimeout(fitReviews,120)});
+window.addEventListener("resize",function(){clearTimeout(fitT);fitT=setTimeout(function(){fitReviews();fitLife()},120)});
 try{if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitReviews)}catch(e){}
-function bind(){paintSoft();fitReviews();
+/* the lifetime mosaic, as big as it can be with every tile on screen at once */
+function fitLife(){var g=document.getElementById("lgrid");if(!g)return;var c=+g.style.getPropertyValue("--c")||8,r=Math.ceil(g.children.length/c),gap=parseFloat(getComputedStyle(g).columnGap)||0,
+H=window.innerHeight-(g.getBoundingClientRect().top+(window.scrollY||0))-16,t=Math.floor(Math.min(96,(g.clientWidth-(c-1)*gap)/c,(H-(r-1)*gap)/r));g.style.setProperty("--t",Math.max(8,t)+"px")}
+function bind(){paintSoft();fitReviews();fitLife();
 document.querySelectorAll("[data-setplat]").forEach(function(b){b.onclick=openPlatDlg});
 var edp=$("#edpl");if(edp)edp.onclick=openPlatDlg;
 var epr=$("#edprof");if(epr)epr.onclick=function(){S.tab="editp";S.stack=[];S.shut=keepShut();appView();try{window.scrollTo(0,0)}catch(e){}};
