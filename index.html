@@ -459,6 +459,28 @@ html.mdragging,html.mdragging *{cursor:grabbing!important}
 .src{margin:18px 0 0;font-size:12px}
 .srevs{margin-top:48px}
 .srevs h2{font-size:18px;font-weight:500;margin:0 0 14px}
+/* a song's page: the same box as writing a review (cover, title and artist on the left; rating, details and buttons on the right) */
+.song.sbox{display:grid;grid-template-columns:minmax(150px,240px) minmax(0,1fr);gap:12px 24px;align-items:start;margin-top:0}
+.sbox .pickbig .cover.hero{width:100%;max-width:240px;font-size:16px;padding:10px}
+.sbox .sbt h1{margin:12px 0 0;font-size:17px;font-weight:600;letter-spacing:-.01em;line-height:1.25;overflow-wrap:anywhere}
+.sbox .sbt .meta{margin-top:3px;font-size:14px}
+.sbox .srate{margin-top:0;gap:12px;align-items:center}
+.sbox .snum{font-size:34px}
+.sbox .scount{margin:6px 0 0}
+.sbox .facts{margin:16px 0}
+.sbox .facts>div{padding:8px 0}
+.sbox .sinfo h2{margin:24px 0 6px}
+.srh{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 14px}
+.srh h2{margin:0}
+.srevs{margin-top:32px}
+/* the glow round the artwork */
+.sbox,#rvhost{isolation:isolate;overflow:hidden}
+.aglw{position:relative;width:100%;max-width:240px}
+.aglow{position:absolute;inset:-14%;z-index:-1;border-radius:28%;filter:blur(22px);opacity:.9;pointer-events:none}
+.aglow canvas{display:block;width:100%;height:100%;border-radius:inherit}
+:root[data-theme="light"] .aglow{opacity:.6}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .aglow{opacity:.6}}
+@media (max-width:600px){.song.sbox{display:block}.sbox .pickbig{flex-wrap:nowrap;margin-bottom:14px}.pickbig .aglw{width:96px;flex:none}.sbox .pickbig .cover.hero{width:96px;font-size:11px;padding:6px}.sbox .sbt h1{margin-top:0}.aglow{filter:blur(14px)}}
 @media (max-width:700px){.song{grid-template-columns:1fr;gap:26px}.song .sleeve{max-width:340px}}
 /* review card: cover and rating on the left, the words on the right, who and when at the foot */
 .rev{grid-template-columns:120px minmax(0,1fr);gap:12px;position:relative}
@@ -1650,6 +1672,8 @@ function rateBox(r,av){var v=rnum(r.rating);return '<div class="rrate'+(av?' wav
 /* the glow behind a review: the cover itself, enlarged to fill the tile (kept square, so some of it is cropped) and softly blurred.
    The blur is done once, on a tiny canvas the browser then just scales up, so there's nothing heavy to redraw while scrolling.
    Covers without artwork use their own two-colour gradient. */
+/* a glow of the cover's own colours around the artwork (writing a review, a song's page): drawn once, softened, behind it */
+function artGlow(t){var u=t&&t.art&&okArt(t.art)?t.art:"";return u?'<span class="aglow" aria-hidden="true"><canvas class="soft" width="48" height="48" data-soft="'+esc(u)+'" data-blur="1.6"></canvas></span>':''}
 function glowHTML(r){var h=hue(r.title+r.artist),u=r.art&&okArt(r.art)?r.art:"",bg=' style="background:linear-gradient(160deg,hsl('+h+',70%,34%),hsl('+((h+60)%360)+',74%,24%))"';
 return '<span class="glow" aria-hidden="true"><i class="gw"'+bg+'>'+(u?'<canvas class="soft" width="48" height="48" data-soft="'+esc(u)+'" data-blur="1.8"></canvas>':'')+'</i></span>'}
 /* soft canvases: each picture is fetched once; ones already here draw straight away (no fade), new ones fade in when they arrive */
@@ -1684,7 +1708,7 @@ function listHTML(){
 var sd=S.tab==="sotd"&&S.sotdOK?standings(ukDay()):null,l=sd?sd.map(function(x){return x.r}):filtered();
 if(!l.length)return '<div class="empty">'+(sd?"No reviews yet. Be the first.":S.tab==="profile"?"You haven't reviewed anything yet. Add your first album or song.":(S.tab==="user"?"No reviews from this person yet.":(S.q?"No reviews match that search.":(S.scope==="fol"?"Reviews from people you follow will show up here.":"No reviews yet. Add the first one."))))+'</div>';
 if(sd)return sd.map(sdRowHTML).join("");
-var nc=S.tab==="song"||!!sd;
+var nc=!!sd;
 return l.map(function(r,i){var rb=rateBox(r,!nc),
 hd=(r.via?'<div class="meta via">↻ '+esc(r.via)+' reposted</div>':'')+(nc?rb:'<h3><a class="tlink" href="#" data-info="rv:'+esc(r.id)+'">'+esc(r.title)+'</a></h3><div class="meta rar">'+esc(r.artist)+(r.type==="Album"?'<span class="tag alb">Album</span>':'')+(r.type==="Album"&&r.tracks&&r.tracks.length?tddHTML(r):'')+'</div><div class="meta rbx">'+esc(r.date)+(r.user===S.user&&!r.via?'<span class="ownb">'+penBtn(r)+'</span>':'')+'</div>'),
 tx=r.text?'<p>'+esc(r.text)+'</p>':'',
@@ -1933,10 +1957,11 @@ function songView(){var s=S.song,alb=s.type==="Album",what=alb?"album":"song",rs
 var rate=n?'<div class="srate"><span class="snum">'+avg.toFixed(2)+'</span><span class="sbar" style="--p:'+starPct(avg)+'%" role="img" aria-label="Average '+avg.toFixed(2)+' out of 5"></span></div><p class="meta scount">Average of '+pl(n,"review")+' on Mosaic</p>'
 :'<div class="srate none"><span class="noyet">No ratings yet</span></div><p class="meta scount">Be the first to review this '+what+'.</p>';
 return '<button type="button" class="linkbtn" data-back="1" style="margin-bottom:14px">← '+esc(backLabel())+'</button>'+
-'<section class="song"><div class="sleeve">'+heroCover(s)+'</div><div class="sinfo"><h1>'+esc(s.title)+'</h1><p class="sby"><button type="button" class="ulink" data-seeq="'+esc(s.artist)+'" title="See Mosaic reviews by this artist">'+esc(s.artist)+'</button></p>'+rate+
+'<section class="song sbox card"><div class="pickbig"><div class="aglw">'+artGlow(s)+heroCover(s)+'</div><div class="sbt"><h1>'+esc(s.title)+'</h1><div class="meta"><button type="button" class="ulink" data-seeq="'+esc(s.artist)+'" title="See Mosaic reviews by this artist">'+esc(s.artist)+'</button></div></div></div><div class="sinfo">'+rate+
 '<dl class="facts" id="sfacts">'+factsHTML()+'</dl><div class="sbtns">'+(mine?'<button type="button" class="btn ink" data-edit="'+esc(mine.id)+'">Edit your review</button>':'<button type="button" class="btn ink" id="srev">Review this '+what+'</button>')+''+(S.laterOK?laterBtn(s):'')+'</div>'+listenRow(s)+'<div id="stracks">'+tracksHTML()+'</div><p class="meta src" id="snote">'+noteHTML()+'</p></div></section>'+
-'<section class="srevs"><h2>Reviews'+(n?' <span class="meta">'+n+'</span>':'')+'</h2>'+(n?'<div class="list cols'+S.cols+'" id="list">'+listHTML()+'</div>':'<div class="empty">Nobody has reviewed this '+what+' yet.</div>')+'</section>'}
+'<section class="srevs"><div class="srh"><h2>Reviews'+(n?' <span class="meta">'+n+'</span>':'')+'</h2>'+(n?layoutSwitch():'')+'</div>'+(n?'<div class="list cols'+S.cols+'" id="list">'+listHTML()+'</div>':'<div class="empty">Nobody has reviewed this '+what+' yet.</div>')+'</section>'}
 function openSong(s){if(!s)return;
+if(S.tab==="song"&&S.song&&mosKey(S.song)===mosKey(s)){try{window.scrollTo({top:0,behavior:"smooth"})}catch(e){window.scrollTo(0,0)}return}
 S.stack.push({tab:S.tab,view:S.view,stab:S.stab,q:S.q,y:window.scrollY||0,song:S.tab==="song"?S.song:null,dmw:S.tab==="msgs"?S.dmWith:null});if(S.stack.length>25)S.stack.shift();
 S.song=s;S.tab="song";S.shut=keepShut();var o=ensureInfo(s);
 appView();try{window.scrollTo(0,0)}catch(e){}
@@ -2039,9 +2064,9 @@ $("#t").value=S.type;$("#s").value=S.sort;
 var sc=$("#sc");if(sc){sc.value=S.scope||"all";sc.onchange=function(e){S.scope=e.target.value;$("#list").innerHTML=listHTML();bind()}}
 $("#t").onchange=function(e){S.type=e.target.value;$("#list").innerHTML=listHTML();bind()};
 $("#s").onchange=function(e){S.sort=e.target.value;$("#list").innerHTML=listHTML();bind()};
+bind()}
 document.querySelectorAll("[data-cols]").forEach(function(b){b.onclick=function(){var n=colsOK(+b.dataset.cols);S.cols=n;store.set("ln_perrow",n);var l=$("#list");if(l){l.classList.remove("cols1","cols2","cols3");l.classList.add("cols"+n)}
 document.querySelectorAll("[data-cols]").forEach(function(x){x.setAttribute("aria-pressed",String(x.dataset.cols===String(n)))});var sg=b.parentNode;if(sg&&sg.classList)sg.classList.toggle("s3",n===3);fitReviews()}});
-bind()}
 if(S.tab==="review"){var pre=S.pre;S.pre=null;openForm(null,$("#rvhost"),pre)}
 if(S.tab==="editp")wireEdit();
 var chg=$("#chg");if(chg){chg.onclick=function(){$("#pic").click()};
@@ -2179,7 +2204,7 @@ drawRes();setS(results.length?"":"Nothing found. Try a different spelling.")})
 function renderSel(){var el=$("#sel",d);
 $("#rf",d).classList.toggle("split",!!chosen);trkSync();
 var dx=chosen?dupSong(chosen,r&&r.id):null;if(dx){dupNote(dx);dupOn=true}else if(dupOn){err("");dupOn=false}
-if(chosen){el.innerHTML='<div class="pickbig">'+cover(chosen)+'<b>'+esc(chosen.title)+'</b><div class="meta">'+esc(chosen.artist)+'</div><button type="button" class="btn ghost sm" id="chs">Change</button></div>';
+if(chosen){el.innerHTML='<div class="pickbig"><div class="aglw">'+artGlow(chosen)+cover(chosen)+'</div><b>'+esc(chosen.title)+'</b><div class="meta">'+esc(chosen.artist)+'</div><button type="button" class="btn ghost sm" id="chs">Change</button></div>';paintSoft();
 $("#chs",d).onclick=function(){chosen=null;manual=false;results=[];renderSel();$("#sq",d).focus()};return}
 if(manual){el.innerHTML='<div class="two"><div><label for="ti">Title</label><input id="ti" maxlength="80" value="'+esc(mv.title)+'"></div><div><label for="ar">Artist</label><input id="ar" maxlength="80" value="'+esc(mv.artist)+'"></div></div><label for="ty">Type</label><select id="ty"><option>Song</option><option>Album</option></select><button type="button" class="linkbtn" id="bk">Search for music instead</button>';
 $("#ty",d).value=mv.type;
