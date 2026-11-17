@@ -377,7 +377,7 @@ button.orb:hover,button.orb:focus-visible{border-color:var(--pop);color:var(--po
 .igs .fdd{display:flex}
 .igs span{color:var(--mute);font-size:14px}.igs b{color:var(--ink);font-weight:600;font-size:16px;margin-right:2px}
 @media (max-width:520px){.prof.ig{gap:14px;padding:16px}.prof.ig .av.big{width:64px;height:64px}.igs{gap:16px}.igt .btn{width:100%}}
-/* favourites mosaic: 6 x 5 tiles beside the profile details, dull grey until filled */
+/* favourites mosaic: 5 x 5 tiles beside the profile details, dull grey until filled */
 .mos{--mg:color-mix(in srgb,var(--ink) 8%,var(--surface));--ml:color-mix(in srgb,var(--ink) 30%,var(--surface));--mh:color-mix(in srgb,var(--ink) 15%,var(--surface));--mp:var(--ink);flex:none;display:grid;grid-template-columns:repeat(5,44px);grid-auto-rows:44px;width:max-content;margin-left:auto}
 .mt{position:relative;min-width:0;aspect-ratio:1/1;border:1px solid transparent;border-radius:4px;padding:0;background:var(--mg);background-clip:padding-box;display:grid;place-items:center}
 button.mt{cursor:pointer;transition:background .12s}
@@ -509,9 +509,9 @@ html.mdragging,html.mdragging *{cursor:grabbing!important}
 .sbox,#rvhost{isolation:isolate;overflow:hidden}
 .aglw{position:relative;width:100%;max-width:240px}
 .aglow{position:absolute;inset:-14%;z-index:-1;border-radius:28%;filter:blur(var(--ab,22px));opacity:var(--ao,.9);pointer-events:none}
-/* a tessellated song: once the gold streak has crossed the ribbon, the glow round the cover pumps once */
-.sart.tz .aglow{animation:apump 1.2s cubic-bezier(.3,.7,.3,1) 1.3s both}
-@keyframes apump{0%,100%{transform:none;opacity:var(--ao,.9);filter:blur(var(--ab,22px))}32%{transform:scale(1.18);opacity:1;filter:blur(var(--ab,22px)) brightness(1.5) saturate(1.3)}}
+/* a tessellated song: about a second after the ribbon glows gold, the glow round the cover slowly blooms, lingers, and fades */
+.sart.tz .aglow{animation:abloom 3.6s cubic-bezier(.45,0,.3,1) 1.7s both}
+@keyframes abloom{0%,100%{transform:none;opacity:var(--ao,.9);filter:blur(var(--ab,22px))}38%,52%{transform:scale(1.15);opacity:1;filter:blur(calc(var(--ab,22px)*1.25)) brightness(1.4) saturate(1.2)}}
 .aglow canvas{display:block;width:100%;height:100%;border-radius:inherit}
 :root[data-theme="light"] .aglow{--ao:.6}
 @media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .aglow{--ao:.6}}
