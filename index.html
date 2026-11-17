@@ -141,7 +141,7 @@ nav button[aria-current="true"]{color:var(--ink);border-color:var(--pop)}
 .tag.tz{color:#fff;border-color:transparent;background:linear-gradient(135deg,#7a5cf5,#c04fd8)}
 .mcap{grid-column:1/-1;margin:8px 0 0;font-size:12px;line-height:1.3;color:var(--mute);text-align:center}
 @media (min-width:841px){.mos.own:not(.started){grid-template-rows:repeat(5,44px) auto}}
-@media (prefers-reduced-motion:reduce){.tessw{animation:none}.tess::after{display:none}}
+@media (prefers-reduced-motion:reduce){.tessw,.sart.tz .aglow{animation:none}.tess::after{display:none}}
 @media (max-width:600px){.sbox .sart{width:96px;flex:none}.tessw{margin-top:7px}.tess{height:22px;padding:0 8px;gap:4px;font-size:8.5px;letter-spacing:.07em;clip-path:polygon(0 0,100% 0,calc(100% - 6px) 50%,100% 100%,0 100%,6px 50%)}.tess svg{display:none}.tiled{margin-top:7px;font-size:11.5px}}
 /* the lifetime mosaic */
 .lifeb{display:inline-flex;align-items:center;gap:7px;margin-top:12px;padding:6px 13px 6px 11px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink);font:500 13px "Montserrat",sans-serif;cursor:pointer;transition:border-color .12s,transform .08s}
@@ -378,7 +378,7 @@ button.orb:hover,button.orb:focus-visible{border-color:var(--pop);color:var(--po
 .igs span{color:var(--mute);font-size:14px}.igs b{color:var(--ink);font-weight:600;font-size:16px;margin-right:2px}
 @media (max-width:520px){.prof.ig{gap:14px;padding:16px}.prof.ig .av.big{width:64px;height:64px}.igs{gap:16px}.igt .btn{width:100%}}
 /* favourites mosaic: 6 x 5 tiles beside the profile details, dull grey until filled */
-.mos{--mg:color-mix(in srgb,var(--ink) 8%,var(--surface));--ml:color-mix(in srgb,var(--ink) 30%,var(--surface));--mh:color-mix(in srgb,var(--ink) 15%,var(--surface));--mp:var(--ink);flex:none;display:grid;grid-template-columns:repeat(6,44px);grid-auto-rows:44px;width:max-content;margin-left:auto}
+.mos{--mg:color-mix(in srgb,var(--ink) 8%,var(--surface));--ml:color-mix(in srgb,var(--ink) 30%,var(--surface));--mh:color-mix(in srgb,var(--ink) 15%,var(--surface));--mp:var(--ink);flex:none;display:grid;grid-template-columns:repeat(5,44px);grid-auto-rows:44px;width:max-content;margin-left:auto}
 .mt{position:relative;min-width:0;aspect-ratio:1/1;border:1px solid transparent;border-radius:4px;padding:0;background:var(--mg);background-clip:padding-box;display:grid;place-items:center}
 button.mt{cursor:pointer;transition:background .12s}
 .mt .ml{font-size:18px;font-weight:700;line-height:1;color:var(--ml)}
@@ -398,7 +398,7 @@ button.mt:hover .mpl,button.mt:focus-visible .mpl{display:grid}
 .mt.on:hover .mto{transform:scale(1.08);box-shadow:0 4px 12px rgba(0,0,0,.35)}
 .mtx{position:absolute;top:-6px;right:-6px;width:18px;height:18px;border-radius:50%;border:0;padding:0;background:var(--ink);color:var(--surface);font-size:13px;line-height:1;display:none;place-items:center;cursor:pointer;z-index:3}
 .mt.on:hover .mtx,.mt.on:focus-within .mtx{display:grid}
-@media (max-width:840px){.mos{flex:0 0 100%;width:auto;grid-template-columns:repeat(6,minmax(0,52px));grid-auto-rows:auto;justify-content:center;margin:6px 0 0}.mt .ml{font-size:19px}}
+@media (max-width:840px){.mos{flex:0 0 100%;width:auto;grid-template-columns:repeat(5,minmax(0,52px));grid-auto-rows:auto;justify-content:center;margin:6px 0 0}.mt .ml{font-size:19px}}
 /* dragging a tile to another spot */
 .mos.own .mt.on{touch-action:none;user-select:none;-webkit-user-select:none}
 .mos.own .mto{cursor:grab}
@@ -508,11 +508,14 @@ html.mdragging,html.mdragging *{cursor:grabbing!important}
 /* the glow round the artwork */
 .sbox,#rvhost{isolation:isolate;overflow:hidden}
 .aglw{position:relative;width:100%;max-width:240px}
-.aglow{position:absolute;inset:-14%;z-index:-1;border-radius:28%;filter:blur(22px);opacity:.9;pointer-events:none}
+.aglow{position:absolute;inset:-14%;z-index:-1;border-radius:28%;filter:blur(var(--ab,22px));opacity:var(--ao,.9);pointer-events:none}
+/* a tessellated song: once the gold streak has crossed the ribbon, the glow round the cover pumps once */
+.sart.tz .aglow{animation:apump 1.2s cubic-bezier(.3,.7,.3,1) 1.3s both}
+@keyframes apump{0%,100%{transform:none;opacity:var(--ao,.9);filter:blur(var(--ab,22px))}32%{transform:scale(1.18);opacity:1;filter:blur(var(--ab,22px)) brightness(1.5) saturate(1.3)}}
 .aglow canvas{display:block;width:100%;height:100%;border-radius:inherit}
-:root[data-theme="light"] .aglow{opacity:.6}
-@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .aglow{opacity:.6}}
-@media (max-width:600px){.song.sbox{display:block}.sbox .pickbig{flex-wrap:nowrap;margin-bottom:14px}.pickbig .aglw{width:96px;flex:none}.sbox .pickbig .cover.hero{width:96px;font-size:11px;padding:6px}.sbox .sbt h1{margin-top:0}.aglow{filter:blur(14px)}}
+:root[data-theme="light"] .aglow{--ao:.6}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .aglow{--ao:.6}}
+@media (max-width:600px){.song.sbox{display:block}.sbox .pickbig{flex-wrap:nowrap;margin-bottom:14px}.pickbig .aglw{width:96px;flex:none}.sbox .pickbig .cover.hero{width:96px;font-size:11px;padding:6px}.sbox .sbt h1{margin-top:0}.aglow{--ab:14px}}
 @media (max-width:700px){.song{grid-template-columns:1fr;gap:26px}.song .sleeve{max-width:340px}}
 /* review card: cover and rating on the left, the words on the right, who and when at the foot */
 .rev{grid-template-columns:120px minmax(0,1fr);gap:12px;position:relative}
@@ -1089,19 +1092,21 @@ var REMOTE=!!sb;
 var S={user:REMOTE?null:store.get("ln_user",null),reviews:REMOTE?[]:(store.get("ln_reviews",null)||[]).filter(function(r){return [1,2,3].indexOf(r.id)<0}),tab:"feed",q:"",type:"All",sort:"new"};
 var soc=REMOTE?{}:store.get("ln_social",{});S.likes=soc.likes||{};S.likeAt=soc.likeAt&&typeof soc.likeAt==="object"?soc.likeAt:{};S.reposts=soc.reposts||{};S.comments=soc.comments||{};S.cm={};S.draft={};S.social=!REMOTE;S.msgOK=!REMOTE;S.sent={};S.info={};S.stack=[];S.cols=colsOK(store.get("ln_perrow",2));S.later=[];S.laterOK=!REMOTE;S.plats=[];S.platOK=!REMOTE;S.mos={};S.mosOK=!REMOTE;S.sotd={days:{},entries:{},admin:false};S.sotdOK=false;S.sdSpan=14;
 /* favourites mosaic (keys are "u:"+username so any username is safe as a key) */
-var MOSL=["C","R","E","A","T","E","","","","","","","","Y","O","U","R","","","","","","","","M","O","S","A","I","C"];
+/* the mosaic is 5x5; while yours is empty its middle row spells FAVES */
+var MOSL=["","","","","","","","","","","F","A","V","E","S","","","","","","","","","",""],MOSN=25;
 function mosOf(n){var t=S.mos["u:"+n];return Array.isArray(t)?t:[]}
 function mosKey(t){return (t.type==="Album"?"Album":"Song")+"|"+String(t.title).toLowerCase()+"|"+String(t.artist).toLowerCase()}
 function mosHas(t){var k=mosKey(t);return mosOf(S.user).some(function(x){return x&&mosKey(x)===k})}
 function mosItem(t){return {title:String(t.title||"").slice(0,200),artist:String(t.artist||"").slice(0,200),type:t.type==="Album"?"Album":"Song",art:okArt(t.art)?upArt(t.art):"",tid:okId(t.tid)?Number(t.tid):null}}
-function syncMos(){var o=store.get("ln_mosaic",{});S.mos={};if(o&&typeof o==="object")Object.keys(o).forEach(function(k){if(k.indexOf("u:")===0&&Array.isArray(o[k]))S.mos[k]=o[k].slice(0,30)});S.mosOK=true}
-function saveMos(){store.set("ln_mosaic",S.mos)}
+function syncMos(){var o=store.get("ln_mosaic",{});S.mos={};if(o&&typeof o==="object"){var old=o.v!==5;Object.keys(o).forEach(function(k){if(k.indexOf("u:")!==0||!Array.isArray(o[k]))return;var a=o[k];
+if(old){var b=[];a.forEach(function(x,i){if(x&&i%6<5&&i<30)b[Math.floor(i/6)*5+i%6]=x});a=b}S.mos[k]=a.slice(0,MOSN)});if(old){S.mos.v=5;saveMos();delete S.mos.v}}S.mosOK=true}
+function saveMos(){var o={v:5};Object.keys(S.mos).forEach(function(k){if(k.indexOf("u:")===0)o[k]=S.mos[k]});store.set("ln_mosaic",o)}
 async function loadMosaic(pre){try{var r=await (pre||sb.from("mosaic_tiles").select("user_id,pos,title,artist,type,art,tid"));if(r.error)return false;var by={},m={};accts.forEach(function(a){by[a.id]=a.name});
-(r.data||[]).forEach(function(x){var n=by[x.user_id];if(!n||!(x.pos>=0&&x.pos<30))return;var k="u:"+n;(m[k]=m[k]||[])[x.pos]={title:x.title,artist:x.artist,type:x.type==="Album"?"Album":"Song",art:okArt(x.art)?x.art:"",tid:x.tid}});S.mos=m;return true}catch(e){return false}}
+(r.data||[]).forEach(function(x){var n=by[x.user_id];if(!n||!(x.pos>=0&&x.pos<MOSN))return;var k="u:"+n;(m[k]=m[k]||[])[x.pos]={title:x.title,artist:x.artist,type:x.type==="Album"?"Album":"Song",art:okArt(x.art)?x.art:"",tid:x.tid}});S.mos=m;return true}catch(e){return false}}
 function mimg(t){return t.art&&okArt(t.art)?'<img src="'+esc(t.art.replace(/\/\d+x\d+bb\./,"/100x100bb."))+'" alt="" loading="lazy" draggable="false">':'<span class="mi">'+esc(String(t.title).charAt(0).toUpperCase())+'</span>'}
 function mosaicHTML(n,own){if(!S.mosOK)return "";var t=mosOf(n);
 var plus='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',h='<div class="mos'+(own?' own':'')+(own&&t.some(function(x){return x})?' started':'')+'" role="group" aria-label="'+(own?'Your mosaic (drag a tile to move it)':esc(n)+'’s mosaic')+'">';
-for(var i=0;i<30;i++){var it=t[i];
+for(var i=0;i<MOSN;i++){var it=t[i];
 if(it){var hu=hue(it.title+it.artist);h+='<div class="mt on" data-mi="'+i+'"><button type="button" class="mto" data-mo="'+i+'" data-mu="'+esc(n)+'" style="background:linear-gradient(135deg,hsl('+hu+',70%,50%),hsl('+((hu+60)%360)+',75%,38%))" title="'+esc(it.title)+' · '+esc(it.artist)+'" aria-label="'+esc(it.title)+' by '+esc(it.artist)+'">'+mimg(it)+'</button>'+(own?'<button type="button" class="mtx" data-mx="'+i+'" aria-label="Remove '+esc(it.title)+' from your mosaic" title="Remove">×</button>':'')+'</div>'}
 else if(own)h+='<button type="button" class="mt" data-mi="'+i+'" data-mp="'+i+'" aria-label="Tessellate a favourite into spot '+(i+1)+'"><span class="ml" aria-hidden="true">'+(MOSL[i]||"")+'</span><span class="mpl" aria-hidden="true">'+plus+'</span></button>';
 else h+='<div class="mt"></div>'}
@@ -1612,7 +1617,7 @@ function ddHTML(k,n,list,cf){var w=k==="fg"?"following":(n===1?"follower":"follo
 if(!list||!list.length)return t;
 return '<span class="fdd '+k+'" data-k="'+k+'"><button type="button" class="fddb" aria-haspopup="true" aria-expanded="false">'+(cf?CAR+'<span>'+t+'</span>':'<span>'+t+'</span>'+CAR)+'</button><span class="fddw" hidden><span class="fddm" role="menu">'+ddRows(list)+'</span><span class="fcard" hidden></span></span></span>'}
 function igStats(n,a,plus){var rs=S.reviews.filter(function(r){return r.user===n}),rv=rs.length,lk=rs.reduce(function(x,r){return x+(S.likes[r.id]||[]).length},0),fgl=((a&&a.following)||[]).filter(acct),fll=followersOf(n);
-return '<div class="igs"><span><b>'+rv+'</b> '+(rv===1?"tile":"tiles")+'</span><span><b>'+lk+'</b> '+(lk===1?"like":"likes")+'</span>'+'</div>'+
+return '<div class="igs"><span><b>'+rv+'</b> tiled</span><span><b>'+lk+'</b> '+(lk===1?"like":"likes")+'</span>'+'</div>'+
 '<div class="igs"><span class="ff'+(fgl.length&&fll.length?' pair':'')+'"><span class="fls">'+ddHTML("fl",fll.length,fll)+'</span><span class="fgs">'+ddHTML("fg",fgl.length,fgl,1)+'</span></span>'+(plus||"")+'</div>'}
 function limits(){var a=$("#app").getBoundingClientRect();return {l:Math.max(0,a.left),r:Math.min(window.innerWidth,a.right)}}
 function closeFdd(){[].forEach.call(document.querySelectorAll(".fdd.open"),function(d){d.classList.remove("open");var w=d.querySelector(".fddw"),b=d.querySelector(".fddb"),c=d.querySelector(".fcard");if(w)w.hidden=true;if(b)b.setAttribute("aria-expanded","false");if(c)c.hidden=true})}
@@ -1684,7 +1689,7 @@ return l.slice().sort(function(a,b){return a.date<b.date?-1:a.date>b.date?1:(+a.
 function lifeMonth(d,o){try{return new Date(String(d).slice(0,10)+"T12:00:00").toLocaleDateString("en-GB",o)}catch(e){return ""}}
 function lifeView(){var u=S.view,l=lifeList(u),n=l.length,mine=u===S.user,px=(window.devicePixelRatio||1)>1.3?160:100,st=Math.max(2,Math.min(14,Math.round(1600/Math.max(1,n)))),prev="";
 var h='<button type="button" class="linkbtn" data-back="1" style="margin-bottom:14px">← '+esc(backLabel())+'</button><section class="page life"><div class="lifeh"><h2>'+(mine?'Your':esc(u)+'’s')+' lifetime mosaic</h2><p class="meta">'+
-(n?pl(n,"tile")+' since '+esc(lifeMonth(l[0].date,{month:"long",year:"numeric"}))+', oldest first':(mine?'Nothing tiled yet. Tap + to start.':'Nothing tiled yet.'))+'</p></div>';
+(n?n+' tiled since '+esc(lifeMonth(l[0].date,{month:"long",year:"numeric"}))+', oldest first':(mine?'Nothing tiled yet. Tap + to start.':'Nothing tiled yet.'))+'</p></div>';
 if(n)h+='<div class="lgrid" id="lgrid">'+l.map(function(r,i){var m=String(r.date).slice(0,7),mk=m!==prev;prev=m;var a=r.art&&okArt(r.art)?amzArt(r.art,px):"",
 lb=r.title+' by '+r.artist+', '+rnum(r.rating).toFixed(1)+' stars, '+lifeMonth(r.date,{day:"numeric",month:"short",year:"numeric"});
 return '<button type="button" class="lt" style="--h:'+hue(r.title+r.artist)+';animation-delay:'+Math.min(i*st,1800)+'ms" data-info="rv:'+esc(r.id)+'" title="'+esc(lb)+'" aria-label="'+esc(lb)+'">'+
@@ -2022,7 +2027,7 @@ function songView(){var s=S.song,alb=s.type==="Album",what=alb?"album":"song",rs
 var rate=n?'<div class="srate"><span class="snum">'+avg.toFixed(2)+'</span><span class="sbar" style="--p:'+starPct(avg)+'%" role="img" aria-label="Average '+avg.toFixed(2)+' out of 5"></span></div><p class="meta scount">Average of '+pl(n,"review")+' on Mosaic</p>'
 :'<div class="srate none"><span class="noyet">No ratings yet</span></div><p class="meta scount">Be the first to tile this '+what+'.</p>';
 return '<button type="button" class="linkbtn" data-back="1" style="margin-bottom:14px">← '+esc(backLabel())+'</button>'+
-'<section class="song sbox card"><div class="pickbig"><div class="sart"><div class="aglw">'+artGlow(s)+heroCover(s)+'</div>'+songBadge(s,rs)+'</div><div class="sbt"><h1>'+esc(s.title)+'</h1><div class="meta"><button type="button" class="ulink" data-seeq="'+esc(s.artist)+'" title="See Mosaic reviews by this artist">'+esc(s.artist)+'</button></div></div></div><div class="sinfo">'+rate+
+'<section class="song sbox card"><div class="pickbig"><div class="sart'+(S.user&&S.mosOK&&mosHas(s)?' tz':'')+'"><div class="aglw">'+artGlow(s)+heroCover(s)+'</div>'+songBadge(s,rs)+'</div><div class="sbt"><h1>'+esc(s.title)+'</h1><div class="meta"><button type="button" class="ulink" data-seeq="'+esc(s.artist)+'" title="See Mosaic reviews by this artist">'+esc(s.artist)+'</button></div></div></div><div class="sinfo">'+rate+
 '<dl class="facts" id="sfacts">'+factsHTML()+'</dl><div class="sbtns">'+(mine?'<button type="button" class="btn ink" data-edit="'+esc(mine.id)+'">Edit your review</button>':'<button type="button" class="btn ink" id="srev">Tile this '+what+'</button>')+''+(S.laterOK?laterBtn(s):'')+'</div>'+listenRow(s)+'<div id="stracks">'+tracksHTML()+'</div><p class="meta src" id="snote">'+noteHTML()+'</p></div></section>'+
 '<section class="srevs"><div class="srh"><h2>Reviews'+(n?' <span class="meta">'+n+'</span>':'')+'</h2>'+(n?layoutSwitch():'')+'</div>'+(n?'<div class="list cols'+S.cols+'" id="list">'+listHTML()+'</div>':'<div class="empty">Nobody has tiled this '+what+' yet.</div>')+'</section>'}
 function openSong(s){if(!s)return;
