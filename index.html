@@ -128,8 +128,21 @@ nav button[aria-current="true"]{color:var(--ink);border-color:var(--pop)}
 .rev .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:6px}
 .tag{font-size:11px;font-weight:500;border:1px solid var(--line);border-radius:5px;padding:1px 7px;color:var(--mute)}
 .tag.rvd{flex:none;margin-left:auto;align-self:center;white-space:nowrap}
-.stess{display:flex;align-items:center;gap:8px;margin:12px 0 0}
-.stess .meta{font-size:13px}
+/* under a song's cover: the Tessellated ribbon (in your mosaic) or the small Tiled mark */
+.sart{width:100%;max-width:240px}
+.tessw{margin-top:10px;animation:tglow 1.8s ease .3s both}
+.tess{position:relative;display:flex;align-items:center;justify-content:center;gap:7px;height:28px;padding:0 14px;overflow:hidden;color:#fff;font:700 11px/1 "Montserrat",sans-serif;letter-spacing:.18em;text-transform:uppercase;background:linear-gradient(135deg,#7a5cf5,#c04fd8);clip-path:polygon(0 0,100% 0,calc(100% - 10px) 50%,100% 100%,0 100%,10px 50%);box-shadow:inset 0 1px 0 rgba(255,222,150,.65),inset 0 -1px 0 rgba(255,222,150,.45)}
+.tess svg{flex:none;width:12px;height:12px}
+.tess::after{content:"";position:absolute;top:-60%;bottom:-60%;left:0;width:34%;background:linear-gradient(90deg,transparent,rgba(255,214,110,.18) 20%,rgba(255,226,150,.95) 46%,#fffbe8 50%,rgba(255,226,150,.95) 54%,rgba(255,214,110,.18) 80%,transparent);transform:translateX(-160%) skewX(-24deg);animation:tshine 1.3s cubic-bezier(.35,.1,.25,1) .45s both;pointer-events:none}
+@keyframes tshine{to{transform:translateX(420%) skewX(-24deg)}}
+@keyframes tglow{0%,100%{filter:drop-shadow(0 0 0 rgba(255,196,80,0))}45%{filter:drop-shadow(0 0 10px rgba(255,196,80,.8))}}
+.tiled{display:flex;align-items:center;gap:6px;margin:10px 0 0;font-size:12.5px;font-weight:500;color:var(--mute)}
+.tiled i{flex:none;width:11px;height:11px;border-radius:3px;background:linear-gradient(135deg,#7a5cf5,#c04fd8)}
+.tag.tz{color:#fff;border-color:transparent;background:linear-gradient(135deg,#7a5cf5,#c04fd8)}
+.mcap{grid-column:1/-1;margin:8px 0 0;font-size:12px;line-height:1.3;color:var(--mute);text-align:center}
+@media (min-width:841px){.mos.own:not(.started){grid-template-rows:repeat(5,44px) auto}}
+@media (prefers-reduced-motion:reduce){.tessw{animation:none}.tess::after{display:none}}
+@media (max-width:600px){.sbox .sart{width:96px;flex:none}.tessw{margin-top:7px}.tess{height:22px;padding:0 8px;gap:4px;font-size:8.5px;letter-spacing:.07em;clip-path:polygon(0 0,100% 0,calc(100% - 6px) 50%,100% 100%,0 100%,6px 50%)}.tess svg{display:none}.tiled{margin-top:7px;font-size:11.5px}}
 /* the lifetime mosaic */
 .lifeb{display:inline-flex;align-items:center;gap:7px;margin-top:12px;padding:6px 13px 6px 11px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink);font:500 13px "Montserrat",sans-serif;cursor:pointer;transition:border-color .12s,transform .08s}
 .lifeb:hover{border-color:color-mix(in srgb,var(--violet) 60%,var(--line))}
@@ -1090,13 +1103,14 @@ function mosaicHTML(n,own){if(!S.mosOK)return "";var t=mosOf(n);
 var plus='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',h='<div class="mos'+(own?' own':'')+(own&&t.some(function(x){return x})?' started':'')+'" role="group" aria-label="'+(own?'Your mosaic (drag a tile to move it)':esc(n)+'’s mosaic')+'">';
 for(var i=0;i<30;i++){var it=t[i];
 if(it){var hu=hue(it.title+it.artist);h+='<div class="mt on" data-mi="'+i+'"><button type="button" class="mto" data-mo="'+i+'" data-mu="'+esc(n)+'" style="background:linear-gradient(135deg,hsl('+hu+',70%,50%),hsl('+((hu+60)%360)+',75%,38%))" title="'+esc(it.title)+' · '+esc(it.artist)+'" aria-label="'+esc(it.title)+' by '+esc(it.artist)+'">'+mimg(it)+'</button>'+(own?'<button type="button" class="mtx" data-mx="'+i+'" aria-label="Remove '+esc(it.title)+' from your mosaic" title="Remove">×</button>':'')+'</div>'}
-else if(own)h+='<button type="button" class="mt" data-mi="'+i+'" data-mp="'+i+'" aria-label="Add a favourite song or album to tile '+(i+1)+'"><span class="ml" aria-hidden="true">'+(MOSL[i]||"")+'</span><span class="mpl" aria-hidden="true">'+plus+'</span></button>';
+else if(own)h+='<button type="button" class="mt" data-mi="'+i+'" data-mp="'+i+'" aria-label="Tessellate a favourite into spot '+(i+1)+'"><span class="ml" aria-hidden="true">'+(MOSL[i]||"")+'</span><span class="mpl" aria-hidden="true">'+plus+'</span></button>';
 else h+='<div class="mt"></div>'}
+if(own&&!t.some(function(x){return x}))h+='<p class="mcap">Tessellate your favourite tiles here</p>';
 return h+'</div>'}
 function openMosPick(pos){var d=$("#dlg"),tm=null,tk=0,res=null,more=false,MK="ln_mrecent";d.className="mosd";
-d.innerHTML='<form method="dialog" id="mf"><h2 style="font-size:20px">Add to your mosaic</h2><p class="meta" style="margin:2px 0 12px">Search for a favourite song or album. It goes in the tile you picked.</p><input id="mq" type="search" placeholder="Search songs and albums" autocomplete="off" aria-label="Search songs and albums"><div class="results mres" id="mr"></div><p class="meta" id="ms" style="margin:6px 0 0"></p><p class="err" id="mer" role="alert"></p><div style="display:flex;justify-content:flex-end;margin-top:6px"><button type="button" class="btn ghost" id="mcx">Cancel</button></div></form>';
+d.innerHTML='<form method="dialog" id="mf"><h2 style="font-size:20px">Tessellate a favourite</h2><p class="meta" style="margin:2px 0 12px">Search for a favourite song or album. It goes in the spot you picked.</p><input id="mq" type="search" placeholder="Search songs and albums" autocomplete="off" aria-label="Search songs and albums"><div class="results mres" id="mr"></div><p class="meta" id="ms" style="margin:6px 0 0"></p><p class="err" id="mer" role="alert"></p><div style="display:flex;justify-content:flex-end;margin-top:6px"><button type="button" class="btn ghost" id="mcx">Cancel</button></div></form>';
 var qi=$("#mq",d),out=$("#mr",d),st=$("#ms",d),er=$("#mer",d);
-function row(it,key){var dup=mosHas(it);return '<button type="button" class="res" data-mk="'+key+'"'+(dup?' disabled':'')+'>'+rimg(it)+'<span><b>'+esc(it.title)+'</b><span class="meta">'+esc(it.artist)+(dup?' · Already in your mosaic':'')+'</span></span><span class="tag '+(it.type==="Album"?"alb":"sng")+'">'+it.type+'</span></button>'}
+function row(it,key){var dup=mosHas(it);return '<button type="button" class="res" data-mk="'+key+'"'+(dup?' disabled':'')+'>'+rimg(it)+'<span><b>'+esc(it.title)+'</b><span class="meta">'+esc(it.artist)+(dup?' · Already tessellated':'')+'</span></span><span class="tag '+(it.type==="Album"?"alb":"sng")+'">'+it.type+'</span></button>'}
 function drawRecent(){var rl=recents(MK);if(!rl.length){out.innerHTML="";return}
 var CLK='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
 out.innerHTML='<div class="mrec"><div class="rh"><span>Recent searches</span><button type="button" class="rclr" data-rclr="1">Clear</button></div>'+rl.slice(0,more?10:2).map(function(t,i){return '<button type="button" class="sg rq" data-rq="'+i+'">'+CLK+'<span>'+esc(t)+'</span></button>'}).join("")+(rl.length>2&&!more?'<button type="button" class="sg more" data-rmore="1" aria-label="Show '+(rl.length-2)+' more recent searches">'+CAR+'</button>':'')+'</div>';
@@ -1598,7 +1612,7 @@ function ddHTML(k,n,list,cf){var w=k==="fg"?"following":(n===1?"follower":"follo
 if(!list||!list.length)return t;
 return '<span class="fdd '+k+'" data-k="'+k+'"><button type="button" class="fddb" aria-haspopup="true" aria-expanded="false">'+(cf?CAR+'<span>'+t+'</span>':'<span>'+t+'</span>'+CAR)+'</button><span class="fddw" hidden><span class="fddm" role="menu">'+ddRows(list)+'</span><span class="fcard" hidden></span></span></span>'}
 function igStats(n,a,plus){var rs=S.reviews.filter(function(r){return r.user===n}),rv=rs.length,lk=rs.reduce(function(x,r){return x+(S.likes[r.id]||[]).length},0),fgl=((a&&a.following)||[]).filter(acct),fll=followersOf(n);
-return '<div class="igs"><span><b>'+rv+'</b> tessellated</span><span><b>'+lk+'</b> '+(lk===1?"like":"likes")+'</span>'+'</div>'+
+return '<div class="igs"><span><b>'+rv+'</b> '+(rv===1?"tile":"tiles")+'</span><span><b>'+lk+'</b> '+(lk===1?"like":"likes")+'</span>'+'</div>'+
 '<div class="igs"><span class="ff'+(fgl.length&&fll.length?' pair':'')+'"><span class="fls">'+ddHTML("fl",fll.length,fll)+'</span><span class="fgs">'+ddHTML("fg",fgl.length,fgl,1)+'</span></span>'+(plus||"")+'</div>'}
 function limits(){var a=$("#app").getBoundingClientRect();return {l:Math.max(0,a.left),r:Math.min(window.innerWidth,a.right)}}
 function closeFdd(){[].forEach.call(document.querySelectorAll(".fdd.open"),function(d){d.classList.remove("open");var w=d.querySelector(".fddw"),b=d.querySelector(".fddb"),c=d.querySelector(".fcard");if(w)w.hidden=true;if(b)b.setAttribute("aria-expanded","false");if(c)c.hidden=true})}
@@ -1656,12 +1670,12 @@ var items=S.res[k];
 if(items===null)return '<div class="empty">Search isn\'t available right now. Profiles still work.</div>';
 if(!items.length)return '<div class="empty">No '+k+' found for “'+q+'”.</div>';
 if(k==="artists")return dbn+items.map(function(a,i){return '<div class="ri"><span class="av big" style="width:48px;height:48px;font-weight:600;color:var(--mute)">'+esc(a.name.charAt(0).toUpperCase())+'</span><div class="rt"><b>'+esc(a.name)+'</b><span class="meta">'+esc(a.genre)+'</span></div><button type="button" class="btn ghost sm" data-seeq="'+esc(a.name)+'">See reviews</button></div>'}).join("");
-return dbn+items.map(function(it,i){var c=revCount(it),id=k+':'+i;return '<div class="ri click" data-row="'+id+'"><button type="button" class="artbtn" data-info="'+id+'" aria-label="About “'+esc(it.title)+'”" title="'+(it.type==="Album"?"Album":"Song")+' details">'+rimg(it)+'</button><button type="button" class="rt" data-rv="'+id+'"><b>'+esc(it.title)+'</b><span class="meta">'+esc(it.artist)+(it.album?' · '+esc(it.album):'')+(c?' · '+pl(c,"review")+' on Mosaic':'')+'</span></button>'+(dupSong(it)?'<span class="tag rvd">Tessellated</span>':'')+'</div>'}).join("")}
+return dbn+items.map(function(it,i){var c=revCount(it),id=k+':'+i;return '<div class="ri click" data-row="'+id+'"><button type="button" class="artbtn" data-info="'+id+'" aria-label="About “'+esc(it.title)+'”" title="'+(it.type==="Album"?"Album":"Song")+' details">'+rimg(it)+'</button><button type="button" class="rt" data-rv="'+id+'"><b>'+esc(it.title)+'</b><span class="meta">'+esc(it.artist)+(it.album?' · '+esc(it.album):'')+(c?' · '+pl(c,"review")+' on Mosaic':'')+'</span></button>'+(mosHas(it)?'<span class="tag rvd tz">Tessellated</span>':dupSong(it)?'<span class="tag rvd">Tiled</span>':'')+'</div>'}).join("")}
 function doSearch(q){if(q.length<2)return;S.rmore=false;armSv();addRecent(q);S.sq=q;S.q="";S.sopen=true;S.stack=[];S.tab="search";S.stab=S.stab||"songs";S.res=null;S.shut=keepShut();S.tk=(S.tk||0)+1;var tk=S.tk;appView();
 searchItunes(q).then(function(r){if(S.tk!==tk||S.tab!=="search")return;S.demo=false;if(!REMOTE&&r.every(function(x){return x===null})){S.res=demoNorm(q);S.demo=true}else S.res=normRes(r);var el=$("#sres");if(el){el.innerHTML=resultsHTML();bind()}})}
 
 function since(a){if(!a||!a.created)return "";var d=new Date(a.created);if(isNaN(d))return "";return d.toLocaleDateString("en-GB",{month:"long",year:"numeric"})}
-/* ---------- the lifetime mosaic: everything someone has tessellated, oldest first, as one wall of covers ---------- */
+/* ---------- the lifetime mosaic: everything someone has tiled, oldest first, as one wall of covers ---------- */
 S.life={};
 var GRIDI='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7.5" height="7.5" rx="1"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1"/></svg>';
 function lifeBtn(u){return '<button type="button" class="lifeb" data-life="'+esc(u)+'">'+GRIDI+'Lifetime mosaic</button>'}
@@ -1670,7 +1684,7 @@ return l.slice().sort(function(a,b){return a.date<b.date?-1:a.date>b.date?1:(+a.
 function lifeMonth(d,o){try{return new Date(String(d).slice(0,10)+"T12:00:00").toLocaleDateString("en-GB",o)}catch(e){return ""}}
 function lifeView(){var u=S.view,l=lifeList(u),n=l.length,mine=u===S.user,px=(window.devicePixelRatio||1)>1.3?160:100,st=Math.max(2,Math.min(14,Math.round(1600/Math.max(1,n)))),prev="";
 var h='<button type="button" class="linkbtn" data-back="1" style="margin-bottom:14px">← '+esc(backLabel())+'</button><section class="page life"><div class="lifeh"><h2>'+(mine?'Your':esc(u)+'’s')+' lifetime mosaic</h2><p class="meta">'+
-(n?n+' tessellated since '+esc(lifeMonth(l[0].date,{month:"long",year:"numeric"}))+', oldest first':(mine?'Nothing tessellated yet. Tap + to start.':'Nothing tessellated yet.'))+'</p></div>';
+(n?pl(n,"tile")+' since '+esc(lifeMonth(l[0].date,{month:"long",year:"numeric"}))+', oldest first':(mine?'Nothing tiled yet. Tap + to start.':'Nothing tiled yet.'))+'</p></div>';
 if(n)h+='<div class="lgrid" id="lgrid">'+l.map(function(r,i){var m=String(r.date).slice(0,7),mk=m!==prev;prev=m;var a=r.art&&okArt(r.art)?amzArt(r.art,px):"",
 lb=r.title+' by '+r.artist+', '+rnum(r.rating).toFixed(1)+' stars, '+lifeMonth(r.date,{day:"numeric",month:"short",year:"numeric"});
 return '<button type="button" class="lt" style="--h:'+hue(r.title+r.artist)+';animation-delay:'+Math.min(i*st,1800)+'ms" data-info="rv:'+esc(r.id)+'" title="'+esc(lb)+'" aria-label="'+esc(lb)+'">'+
@@ -1750,7 +1764,7 @@ t.map(function(x){return '<span class="tdr"><span class="tn">'+(x.n?(multi?x.d+'
 function footHTML(r,na){var g=plgHTML(r);return '<div class="rf'+(g?'':' np')+'">'+byLine(r,"f",na)+g+'</div>'}
 function listHTML(){
 var sd=S.tab==="sotd"&&S.sotdOK?standings(ukDay()):null,l=sd?sd.map(function(x){return x.r}):filtered();
-if(!l.length)return '<div class="empty">'+(sd?"No reviews yet. Be the first.":S.tab==="profile"?"You haven't tessellated anything yet. Tap + to add your first song or album.":(S.tab==="user"?"No reviews from this person yet.":(S.q?"No reviews match that search.":(S.scope==="fol"?"Reviews from people you follow will show up here.":"No reviews yet. Add the first one."))))+'</div>';
+if(!l.length)return '<div class="empty">'+(sd?"No reviews yet. Be the first.":S.tab==="profile"?"You haven't tiled anything yet. Tap + to add your first song or album.":(S.tab==="user"?"No reviews from this person yet.":(S.q?"No reviews match that search.":(S.scope==="fol"?"Reviews from people you follow will show up here.":"No reviews yet. Add the first one."))))+'</div>';
 if(sd)return sd.map(sdRowHTML).join("");
 var nc=!!sd;
 return l.map(function(r,i){var rb=rateBox(r,!nc),
@@ -1998,13 +2012,19 @@ if(f.tab==="msgs")return f.dmw?"Back to your chat with "+f.dmw:"Back to Messages
 if(f.tab==="profile")return "Back to My Mosaic";
 if(f.tab==="user"&&f.view)return "Back to "+f.view+"’s profile";
 return "Back to Recommended"}
+/* under a song's cover: a "Tessellated" ribbon when it's in your mosaic (a gold streak runs across it as the page opens),
+   otherwise a small "Tiled" mark when you've tiled it. "Tessellate" only ever means your mosaic. */
+function songBadge(s,rs){if(!S.user)return "";
+if(S.mosOK&&mosHas(s))return '<div class="tessw" title="In your mosaic"><div class="tess">'+GRIDI+'<span>Tessellated</span></div></div>';
+var m=(rs||[]).filter(function(r){return r.user===S.user})[0];
+return m?'<p class="tiled" title="You’ve tiled this ('+rnum(m.rating).toFixed(1)+')"><i aria-hidden="true"></i>Tiled</p>':""}
 function songView(){var s=S.song,alb=s.type==="Album",what=alb?"album":"song",rs=songReviews(s),n=rs.length,avg=n?rs.reduce(function(a,r){return a+rnum(r.rating)},0)/n:0,mine=dupSong(s);
 var rate=n?'<div class="srate"><span class="snum">'+avg.toFixed(2)+'</span><span class="sbar" style="--p:'+starPct(avg)+'%" role="img" aria-label="Average '+avg.toFixed(2)+' out of 5"></span></div><p class="meta scount">Average of '+pl(n,"review")+' on Mosaic</p>'
-:'<div class="srate none"><span class="noyet">No ratings yet</span></div><p class="meta scount">Be the first to tessellate this '+what+'.</p>';
+:'<div class="srate none"><span class="noyet">No ratings yet</span></div><p class="meta scount">Be the first to tile this '+what+'.</p>';
 return '<button type="button" class="linkbtn" data-back="1" style="margin-bottom:14px">← '+esc(backLabel())+'</button>'+
-'<section class="song sbox card"><div class="pickbig"><div class="aglw">'+artGlow(s)+heroCover(s)+'</div><div class="sbt"><h1>'+esc(s.title)+'</h1><div class="meta"><button type="button" class="ulink" data-seeq="'+esc(s.artist)+'" title="See Mosaic reviews by this artist">'+esc(s.artist)+'</button></div></div></div><div class="sinfo">'+rate+
-''+(mine?'<p class="stess"><span class="tag tess">Tessellated</span><span class="meta">You gave it '+rnum(mine.rating).toFixed(1)+'</span></p>':'')+'<dl class="facts" id="sfacts">'+factsHTML()+'</dl><div class="sbtns">'+(mine?'<button type="button" class="btn ink" data-edit="'+esc(mine.id)+'">Edit your review</button>':'<button type="button" class="btn ink" id="srev">Tessellate this '+what+'</button>')+''+(S.laterOK?laterBtn(s):'')+'</div>'+listenRow(s)+'<div id="stracks">'+tracksHTML()+'</div><p class="meta src" id="snote">'+noteHTML()+'</p></div></section>'+
-'<section class="srevs"><div class="srh"><h2>Reviews'+(n?' <span class="meta">'+n+'</span>':'')+'</h2>'+(n?layoutSwitch():'')+'</div>'+(n?'<div class="list cols'+S.cols+'" id="list">'+listHTML()+'</div>':'<div class="empty">Nobody has tessellated this '+what+' yet.</div>')+'</section>'}
+'<section class="song sbox card"><div class="pickbig"><div class="sart"><div class="aglw">'+artGlow(s)+heroCover(s)+'</div>'+songBadge(s,rs)+'</div><div class="sbt"><h1>'+esc(s.title)+'</h1><div class="meta"><button type="button" class="ulink" data-seeq="'+esc(s.artist)+'" title="See Mosaic reviews by this artist">'+esc(s.artist)+'</button></div></div></div><div class="sinfo">'+rate+
+'<dl class="facts" id="sfacts">'+factsHTML()+'</dl><div class="sbtns">'+(mine?'<button type="button" class="btn ink" data-edit="'+esc(mine.id)+'">Edit your review</button>':'<button type="button" class="btn ink" id="srev">Tile this '+what+'</button>')+''+(S.laterOK?laterBtn(s):'')+'</div>'+listenRow(s)+'<div id="stracks">'+tracksHTML()+'</div><p class="meta src" id="snote">'+noteHTML()+'</p></div></section>'+
+'<section class="srevs"><div class="srh"><h2>Reviews'+(n?' <span class="meta">'+n+'</span>':'')+'</h2>'+(n?layoutSwitch():'')+'</div>'+(n?'<div class="list cols'+S.cols+'" id="list">'+listHTML()+'</div>':'<div class="empty">Nobody has tiled this '+what+' yet.</div>')+'</section>'}
 function openSong(s){if(!s)return;
 if(S.tab==="song"&&S.song&&mosKey(S.song)===mosKey(s)){try{window.scrollTo({top:0,behavior:"smooth"})}catch(e){window.scrollTo(0,0)}return}
 S.stack.push({tab:S.tab,view:S.view,stab:S.stab,q:S.q,y:window.scrollY||0,song:S.tab==="song"?S.song:null,dmw:S.tab==="msgs"?S.dmWith:null});if(S.stack.length>25)S.stack.shift();
@@ -2038,7 +2058,7 @@ var bell=ic+'<path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M1
 var mag=ic+'<circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>';
 var chat=ic+'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>';
 var body;
-if(S.tab==="review"){body='<section class="page"><h2>Tessellate</h2><div class="card" id="rvhost"></div></section>'}
+if(S.tab==="review"){body='<section class="page"><h2>Tile</h2><div class="card" id="rvhost"></div></section>'}
 else if(S.tab==="user"&&acct(S.view)){var vu=S.view,va=acct(vu),vc=S.reviews.filter(function(r){return r.user===vu}).length;
 body='<button type="button" class="linkbtn" data-tab="feed" style="margin-bottom:8px">Back to Recommended</button><section class="prof ig"><div class="pmain"><h2 class="pnm"><span>'+esc(vu)+'</span></h2>'+pavHTML(va,va.plats||[])+'<div class="igm">'+igStats(vu,va,vu!==S.user?'<span class="pbt">'+plusBtn(vu)+dmBtn(vu)+'</span>':'')+est(va)+lifeBtn(vu)+'</div></div>'+mosaicHTML(vu,false)+'</section><div class="list cols'+S.cols+'" id="list">'+listHTML()+'</div>'}
 else if(S.tab==="search"){var stabs=[["songs","Songs"],["albums","Albums"],["profiles","Profiles"],["artists","Artists"]].map(function(t){return '<button type="button" class="stab" role="tab" data-st="'+t[0]+'" aria-selected="'+((S.stab||"songs")===t[0])+'">'+t[1]+'</button>'}).join("");
@@ -2052,10 +2072,10 @@ else if(S.tab==="likes"){body='<section class="page"><h2>My likes and comments</
 else if(S.tab==="editp"&&S.user){body=editHTML()}
 else if(S.tab==="account"){body='<section class="page"><h2>Privacy and account</h2><dl><dt>Username</dt><dd>'+nm+'</dd><dt>Email</dt><dd>'+esc(a&&a.email||"")+'</dd>'+(since(a)?'<dt>Account established</dt><dd>'+since(a)+'</dd>':'')+'<dt>Your data</dt><dd>'+(REMOTE?'Your profile and reviews are saved to your Mosaic account.':'Accounts and reviews are saved in this browser only.')+'</dd></dl></section>'}
 else{body=(prof?'<section class="prof ig"><div class="pmain"><h2 class="pnm"><span>'+nm+'</span></h2>'+pavHTML(a,S.platOK?S.plats:[],1)+'<div class="igm">'+igStats(S.user,a,"")+est(a)+lifeBtn(S.user)+'</div></div>'+mosaicHTML(S.user,true)+'</section>':'')+
-(S.tab==="feed"&&S.q?'<div class="chips"><span class="meta">Showing reviews for</span><button type="button" class="chip" id="clq">'+esc(S.q)+' ×</button></div>':'')+'<div class="tools"><div class="tl"><button class="btn addb" id="add" aria-label="Tessellate" title="Tessellate"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>'+(S.tab==="feed"?'<select id="sc" aria-label="Show"><option value="all">Everyone</option><option value="fol">People I follow</option></select>':'')+'<select id="t" aria-label="Type"><option>All</option><option>Album</option><option>Song</option></select><select id="s" aria-label="Sort"><option value="new">Newest</option><option value="top">Highest rated</option></select></div>'+layoutSwitch()+'</div>'+
+(S.tab==="feed"&&S.q?'<div class="chips"><span class="meta">Showing reviews for</span><button type="button" class="chip" id="clq">'+esc(S.q)+' ×</button></div>':'')+'<div class="tools"><div class="tl"><button class="btn addb" id="add" aria-label="Tile" title="Tile"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>'+(S.tab==="feed"?'<select id="sc" aria-label="Show"><option value="all">Everyone</option><option value="fol">People I follow</option></select>':'')+'<select id="t" aria-label="Type"><option>All</option><option>Album</option><option>Song</option></select><select id="s" aria-label="Sort"><option value="new">Newest</option><option value="top">Highest rated</option></select></div>'+layoutSwitch()+'</div>'+
 '<div class="list cols'+S.cols+'" id="list">'+listHTML()+'</div>'}
 $("#app").innerHTML='<div class="wrap'+(S.tab==="msgs"?' dmw':'')+'"><header class="top"><h2><button type="button" class="wm" data-tab="feed" aria-label="Mosaic home">Mosaic</button></h2><nav><button data-tab="feed" aria-current="'+(S.tab==="feed")+'">Recommended</button>'+(S.sotdOK?'<button data-tab="sotd" aria-current="'+(S.tab==="sotd")+'">Song of the Day</button>':'')+'</nav>'+
-'<div class="sw'+(S.sv?" open":"")+'"><button class="ib" id="sb" aria-label="Search" type="button">'+mag+'</button><input id="q" type="search" placeholder="Search songs to tessellate" aria-label="Search songs" autocomplete="off" readonly value="'+esc(S.sv||"")+'"><div class="sug" id="sug" hidden></div></div>'+
+'<div class="sw'+(S.sv?" open":"")+'"><button class="ib" id="sb" aria-label="Search" type="button">'+mag+'</button><input id="q" type="search" placeholder="Search songs to tile" aria-label="Search songs" autocomplete="off" readonly value="'+esc(S.sv||"")+'"><div class="sug" id="sug" hidden></div></div>'+
 '<div class="right"><div class="mew"><button class="me" aria-haspopup="menu" aria-current="'+mcur+'" aria-label="Your account menu">'+avatar(a)+'<span class="nm">'+nm+'</span></button>'+
 '<div class="menu"><div class="box" role="menu"><button role="menuitem" data-tab="profile">My Mosaic</button><button role="menuitem" data-tab="editp">Edit profile</button>'+(S.laterOK?'<button role="menuitem" data-tab="later">Listen later'+(S.later.length?' <span class="meta">'+S.later.length+'</span>':'')+'</button>':'')+'<button role="menuitem" data-tab="likes">My likes and comments</button><button role="menuitem" data-tab="account">Privacy and account</button><hr><button role="menuitem" id="so">Sign out</button></div></div></div>'+
 '<div class="ibw"><button class="ib" id="nb" aria-label="Notifications" aria-expanded="false">'+bell+(unread?'<i class="dot"></i>':'')+'</button><div class="pop" id="np" hidden><h3>Notifications</h3>'+notesHTML+'</div></div>'+
@@ -2087,7 +2107,7 @@ var mo=sug.querySelector("[data-rmore]");if(mo)mo.onclick=function(){S.rmore=tru
 return}
 if(!sugs.length||!searchHover){sug.hidden=true;sug.innerHTML="";return}
 sug.hidden=false;
-sug.innerHTML='<div class="box" role="listbox">'+sugs.map(function(t,i){return '<button type="button" class="sg'+(i===sh?' on':'')+'" role="option" data-sg="'+i+'">'+rimg(t)+'<span><b>'+esc(t.title)+'</b><span class="meta">'+esc(t.artist)+'</span></span>'+(dupSong(t)?'<span class="tag rvd">Tessellated</span>':'')+'</button>'}).join("")+'<button type="button" class="sg all" data-all="1">See all results for “'+esc(qi.value.trim())+'”</button></div>';
+sug.innerHTML='<div class="box" role="listbox">'+sugs.map(function(t,i){return '<button type="button" class="sg'+(i===sh?' on':'')+'" role="option" data-sg="'+i+'">'+rimg(t)+'<span><b>'+esc(t.title)+'</b><span class="meta">'+esc(t.artist)+'</span></span>'+(mosHas(t)?'<span class="tag rvd tz">Tessellated</span>':dupSong(t)?'<span class="tag rvd">Tiled</span>':'')+'</button>'}).join("")+'<button type="button" class="sg all" data-all="1">See all results for “'+esc(qi.value.trim())+'”</button></div>';
 sug.querySelectorAll("[data-sg]").forEach(function(b){b.onmousedown=function(e){e.preventDefault()};b.onclick=function(){pickSug(+b.dataset.sg)}});
 var all=sug.querySelector("[data-all]");all.onmousedown=function(e){e.preventDefault()};all.onclick=function(){doSearch(qi.value.trim())}}
 function runSug(q){var my=++stk;
@@ -2198,10 +2218,10 @@ var manual=(!!r&&!chosen)||byHand,mv={title:r?r.title:(byHand?pre.title:""),arti
 var saved=r&&r.type==="Album"&&r.tracks?r.tracks:[],tk={list:null,rt:[],ready:false,tok:0,src:null};
 var UPI='<svg width="10" height="7" viewBox="0 0 10 7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 5.5 5 1.5l4 4"/></svg>',DNI='<svg width="10" height="7" viewBox="0 0 10 7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 1.5 5 5.5l4-4"/></svg>';
 if(!host)d.className="";
-d.innerHTML='<form id="rf" method="dialog" class="rvgrid">'+(host?'':'<h2 class="rvh" style="font-size:20px">'+(r?"Edit review":"Tessellate")+'</h2>')+'<div id="sel" class="rvl"></div><div class="rvr">'+
+d.innerHTML='<form id="rf" method="dialog" class="rvgrid">'+(host?'':'<h2 class="rvh" style="font-size:20px">'+(r?"Edit review":"Tile")+'</h2>')+'<div id="sel" class="rvl"></div><div class="rvr">'+
 '<label id="rl">Rating</label><div class="rate" role="group" aria-labelledby="rl"></div>'+
 '<label for="tx">Your thoughts</label><textarea id="tx" rows="2" maxlength="120" placeholder="Five words or fewer" aria-describedby="wc">'+(r?esc(r.text):"")+'</textarea><p class="meta wc" id="wc" aria-live="polite"></p>'+
-'<p class="err" id="re" role="alert"></p><div style="display:flex;gap:10px;justify-content:flex-end;align-items:center;margin-top:8px">'+(r&&!host?'<button type="button" class="linkbtn rdel" id="rdl">Delete review</button>':'')+'<button type="button" class="btn ghost" id="cx">Cancel</button><button class="btn" id="sv" value="x">'+(r?"Save changes":"Tessellate")+'</button></div></div><div class="trk" id="trk" hidden></div></form>';
+'<p class="err" id="re" role="alert"></p><div style="display:flex;gap:10px;justify-content:flex-end;align-items:center;margin-top:8px">'+(r&&!host?'<button type="button" class="linkbtn rdel" id="rdl">Delete review</button>':'')+'<button type="button" class="btn ghost" id="cx">Cancel</button><button class="btn" id="sv" value="x">'+(r?"Save changes":"Tile")+'</button></div></div><div class="trk" id="trk" hidden></div></form>';
 function err(t){$("#re",d).textContent=t;var e2=$("#re2",d);if(e2)e2.textContent=t}
 function dupNote(x){[$("#re",d),$("#re2",d)].forEach(function(e){if(!e)return;e.innerHTML='You’ve already reviewed this '+(x&&x.type==="Album"?"album":"song")+'. <button type="button" class="linkbtn" data-dupe="1">Edit that review</button>';
 e.querySelector("[data-dupe]").onclick=function(){if(host){S.tab="profile";S.stack=[];appView()}else if(d.open)d.close();openForm(x)}})}
@@ -2222,7 +2242,7 @@ function drawTrk(){var el=$("#trk",d);if(!el)return;
 if(!tk.ready){el.innerHTML=trkHead()+'<p class="meta" style="margin:0">Couldn’t load the tracklist right now, so songs can’t be rated one by one.</p>';return}
 var multi=tk.list.some(function(x){return x.d>1}),disc=0,h='<ol class="tracks trate">';
 tk.list.forEach(function(x,i){if(multi&&x.d!==disc){disc=x.d;h+='<li class="disc">Disc '+x.d+'</li>'}h+='<li data-ti="'+i+'"'+(tk.rt[i]>0?' class="on"':'')+'>'+rowIn(i)+'</li>'});
-el.innerHTML=trkHead()+h+'</ol><p class="err" id="re2" role="alert"></p><div class="tfoot"><button type="button" class="btn" id="sv2">'+(r?"Save changes":"Tessellate")+'</button></div>';
+el.innerHTML=trkHead()+h+'</ol><p class="err" id="re2" role="alert"></p><div class="tfoot"><button type="button" class="btn" id="sv2">'+(r?"Save changes":"Tile")+'</button></div>';
 $("#sv2",d).onclick=doSave;el.querySelector(".trate").onclick=onTrk}
 function trkSync(){var el=$("#trk",d),alb=!!chosen&&chosen.type==="Album",rl=$("#rl",d);if(rl)rl.textContent=alb?"Album rating":"Rating";if(!el)return;
 if(!alb){tk.tok++;tk.src=null;tk.list=null;tk.rt=[];tk.ready=false;el.hidden=true;el.innerHTML="";return}
@@ -2285,7 +2305,7 @@ if(!(rating>0)){err(o.type==="Album"?"Choose a star rating for the whole album."
 o.rating=rating;o.text=$("#tx",d).value.trim();if(wordsOf(o.text)>5){err(chained(o.text)?"Reviews are limited to 5 words, and joined-up words like best-album-ever count separately. Shorten it to save.":"Reviews are limited to 5 words. Shorten it to save.");toTop(fromEnd);return}
 o.tracks=o.type==="Album"&&chosen?trkOut():null;
 var bs=[$("#sv",d),$("#sv2",d)].filter(Boolean);bs.forEach(function(x){x.disabled=true});
-api.saveReview(o,r).then(function(res){if(res&&res.error){bs.forEach(function(x){x.disabled=false});err(res.error);return}if(!r)toast("Tessellated.");if(host){S.tab="profile";appView()}else{d.close();appView()}}).catch(function(){bs.forEach(function(x){x.disabled=false});err("Couldn't save. Check your connection and try again.")})}
+api.saveReview(o,r).then(function(res){if(res&&res.error){bs.forEach(function(x){x.disabled=false});err(res.error);return}if(!r)toast("Tiled.");if(host){S.tab="profile";appView()}else{d.close();appView()}}).catch(function(){bs.forEach(function(x){x.disabled=false});err("Couldn't save. Check your connection and try again.")})}
 $("#sv",d).onclick=doSave;
 if(!host)d.showModal()}
 
@@ -2340,7 +2360,7 @@ function sdPlats(){return S.platOK&&S.plats.length?S.plats:["spotify","applemusi
 function sotdView(){var today=ukDay(),s=S.sotd.days[today],st=standings(today),mine=s?dupSong(s):null,ent=st.filter(function(x){return x.user===S.user})[0];
 var h='<section class="page sotd">';
 if(!s)h+='<div class="sdhd"><h2>Song of the Day</h2><span class="meta">'+esc(dayLong(today))+'</span></div><div class="empty">'+(S.sotd.admin?"You haven’t picked today’s song yet. Pick one below.":"Today’s song isn’t up yet. Check back soon.")+'</div>';
-else{var hu=hue(s.title+s.artist),cta=ent?'<button type="button" class="btn ink" data-edit="'+esc(ent.r.id)+'">Edit your entry</button>':mine?'<button type="button" class="btn ink" id="sdenter">Enter your review</button><button type="button" class="btn ghost" data-edit="'+esc(mine.id)+'">Edit it first</button>':'<button type="button" class="btn ink" id="sdrev">Tessellate it</button>';
+else{var hu=hue(s.title+s.artist),cta=ent?'<button type="button" class="btn ink" data-edit="'+esc(ent.r.id)+'">Edit your entry</button>':mine?'<button type="button" class="btn ink" id="sdenter">Enter your review</button><button type="button" class="btn ghost" data-edit="'+esc(mine.id)+'">Edit it first</button>':'<button type="button" class="btn ink" id="sdrev">Tile it</button>';
 /* the glow fills the whole screen behind everything (fixed, so scrolling doesn't redraw it) */
 h+='<div class="sdbg" aria-hidden="true"><i style="background:linear-gradient(160deg,hsl('+hu+',70%,34%),hsl('+((hu+60)%360)+',74%,24%))"></i>'+(s.art?'<canvas class="soft" width="96" height="96" data-soft="'+esc(bigArt(s.art))+'" data-blur="3.4"></canvas>':'')+'</div>'+
 '<div class="sdhero"><p class="sdk">Song of the Day · '+esc(dayLong(today))+'</p>'+
