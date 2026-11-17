@@ -141,7 +141,7 @@ nav button[aria-current="true"]{color:var(--ink);border-color:var(--pop)}
 .tag.tz{color:#fff;border-color:transparent;background:linear-gradient(135deg,#7a5cf5,#c04fd8)}
 .mcap{grid-column:1/-1;margin:8px 0 0;font-size:12px;line-height:1.3;color:var(--mute);text-align:center}
 @media (min-width:841px){.mos.own:not(.started){grid-template-rows:repeat(5,44px) auto}}
-@media (prefers-reduced-motion:reduce){.tessw,.sart.tz .aglow{animation:none}.tess::after{display:none}}
+@media (prefers-reduced-motion:reduce){.tessw,.aglow.abl{animation:none}.tess::after{display:none}}
 @media (max-width:600px){.sbox .sart{width:96px;flex:none}.tessw{margin-top:7px}.tess{height:22px;padding:0 8px;gap:4px;font-size:8.5px;letter-spacing:.07em;clip-path:polygon(0 0,100% 0,calc(100% - 6px) 50%,100% 100%,0 100%,6px 50%)}.tess svg{display:none}.tiled{margin-top:7px;font-size:11.5px}}
 /* the lifetime mosaic */
 .lifeb{display:inline-flex;align-items:center;gap:7px;margin-top:12px;padding:6px 13px 6px 11px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink);font:500 13px "Montserrat",sans-serif;cursor:pointer;transition:border-color .12s,transform .08s}
@@ -509,9 +509,9 @@ html.mdragging,html.mdragging *{cursor:grabbing!important}
 .sbox,#rvhost{isolation:isolate;overflow:hidden}
 .aglw{position:relative;width:100%;max-width:240px}
 .aglow{position:absolute;inset:-14%;z-index:-1;border-radius:28%;filter:blur(var(--ab,22px));opacity:var(--ao,.9);pointer-events:none}
-/* a tessellated song: about a second after the ribbon glows gold, the glow round the cover slowly blooms, lingers, and fades */
-.sart.tz .aglow{animation:abloom 3.6s cubic-bezier(.45,0,.3,1) 1.7s both}
-@keyframes abloom{0%,100%{transform:none;opacity:var(--ao,.9);filter:blur(var(--ab,22px))}38%,52%{transform:scale(1.15);opacity:1;filter:blur(calc(var(--ab,22px)*1.25)) brightness(1.4) saturate(1.2)}}
+/* a tessellated song: about a second after the ribbon glows gold, a brighter copy of the cover's glow slowly fades in, lingers, and slowly fades out */
+.aglow.abl{inset:-18%;opacity:0;filter:blur(calc(var(--ab,22px)*1.25)) brightness(1.45) saturate(1.25);animation:abloom 6.2s cubic-bezier(.37,0,.63,1) 1.4s both}
+@keyframes abloom{0%,100%{opacity:0}39%,52%{opacity:var(--ao,.9)}}
 .aglow canvas{display:block;width:100%;height:100%;border-radius:inherit}
 :root[data-theme="light"] .aglow{--ao:.6}
 @media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .aglow{--ao:.6}}
@@ -1736,7 +1736,7 @@ function rateBox(r,av){var v=rnum(r.rating);return '<div class="rrate'+(av?' wav
    The blur is done once, on a tiny canvas the browser then just scales up, so there's nothing heavy to redraw while scrolling.
    Covers without artwork use their own two-colour gradient. */
 /* a glow of the cover's own colours around the artwork (writing a review, a song's page): drawn once, softened, behind it */
-function artGlow(t){var u=t&&t.art&&okArt(t.art)?t.art:"";return u?'<span class="aglow" aria-hidden="true"><canvas class="soft" width="48" height="48" data-soft="'+esc(u)+'" data-blur="1.6"></canvas></span>':''}
+function artGlow(t,b){var u=t&&t.art&&okArt(t.art)?t.art:"";return u?'<span class="aglow'+(b?' abl':'')+'" aria-hidden="true"><canvas class="soft" width="48" height="48" data-soft="'+esc(u)+'" data-blur="1.6"></canvas></span>':''}
 function glowHTML(r){var h=hue(r.title+r.artist),u=r.art&&okArt(r.art)?r.art:"",bg=' style="background:linear-gradient(160deg,hsl('+h+',70%,34%),hsl('+((h+60)%360)+',74%,24%))"';
 return '<span class="glow" aria-hidden="true"><i class="gw"'+bg+'>'+(u?'<canvas class="soft" width="48" height="48" data-soft="'+esc(u)+'" data-blur="1.8"></canvas>':'')+'</i></span>'}
 /* soft canvases: each picture is fetched once; ones already here draw straight away (no fade), new ones fade in when they arrive */
@@ -2027,7 +2027,7 @@ function songView(){var s=S.song,alb=s.type==="Album",what=alb?"album":"song",rs
 var rate=n?'<div class="srate"><span class="snum">'+avg.toFixed(2)+'</span><span class="sbar" style="--p:'+starPct(avg)+'%" role="img" aria-label="Average '+avg.toFixed(2)+' out of 5"></span></div><p class="meta scount">Average of '+pl(n,"review")+' on Mosaic</p>'
 :'<div class="srate none"><span class="noyet">No ratings yet</span></div><p class="meta scount">Be the first to tile this '+what+'.</p>';
 return '<button type="button" class="linkbtn" data-back="1" style="margin-bottom:14px">← '+esc(backLabel())+'</button>'+
-'<section class="song sbox card"><div class="pickbig"><div class="sart'+(S.user&&S.mosOK&&mosHas(s)?' tz':'')+'"><div class="aglw">'+artGlow(s)+heroCover(s)+'</div>'+songBadge(s,rs)+'</div><div class="sbt"><h1>'+esc(s.title)+'</h1><div class="meta"><button type="button" class="ulink" data-seeq="'+esc(s.artist)+'" title="See Mosaic reviews by this artist">'+esc(s.artist)+'</button></div></div></div><div class="sinfo">'+rate+
+'<section class="song sbox card"><div class="pickbig"><div class="sart"><div class="aglw">'+artGlow(s)+(S.user&&S.mosOK&&mosHas(s)?artGlow(s,1):'')+heroCover(s)+'</div>'+songBadge(s,rs)+'</div><div class="sbt"><h1>'+esc(s.title)+'</h1><div class="meta"><button type="button" class="ulink" data-seeq="'+esc(s.artist)+'" title="See Mosaic reviews by this artist">'+esc(s.artist)+'</button></div></div></div><div class="sinfo">'+rate+
 '<dl class="facts" id="sfacts">'+factsHTML()+'</dl><div class="sbtns">'+(mine?'<button type="button" class="btn ink" data-edit="'+esc(mine.id)+'">Edit your review</button>':'<button type="button" class="btn ink" id="srev">Tile this '+what+'</button>')+''+(S.laterOK?laterBtn(s):'')+'</div>'+listenRow(s)+'<div id="stracks">'+tracksHTML()+'</div><p class="meta src" id="snote">'+noteHTML()+'</p></div></section>'+
 '<section class="srevs"><div class="srh"><h2>Reviews'+(n?' <span class="meta">'+n+'</span>':'')+'</h2>'+(n?layoutSwitch():'')+'</div>'+(n?'<div class="list cols'+S.cols+'" id="list">'+listHTML()+'</div>':'<div class="empty">Nobody has tiled this '+what+' yet.</div>')+'</section>'}
 function openSong(s){if(!s)return;
