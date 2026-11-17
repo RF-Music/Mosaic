@@ -127,6 +127,7 @@ nav button[aria-current="true"]{color:var(--ink);border-color:var(--pop)}
 .rev p{margin:6px 0 0}
 .rev .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:6px}
 .tag{font-size:11px;font-weight:500;border:1px solid var(--line);border-radius:5px;padding:1px 7px;color:var(--mute)}
+.tag.rvd{flex:none;margin-left:auto;align-self:center;white-space:nowrap}
 .empty{text-align:center;color:var(--mute);padding:28px 10px;border:1px dashed var(--line);border-radius:10px}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .rate{display:flex;gap:2px}
@@ -1637,12 +1638,14 @@ var items=S.res[k];
 if(items===null)return '<div class="empty">Search isn\'t available right now. Profiles still work.</div>';
 if(!items.length)return '<div class="empty">No '+k+' found for “'+q+'”.</div>';
 if(k==="artists")return dbn+items.map(function(a,i){return '<div class="ri"><span class="av big" style="width:48px;height:48px;font-weight:600;color:var(--mute)">'+esc(a.name.charAt(0).toUpperCase())+'</span><div class="rt"><b>'+esc(a.name)+'</b><span class="meta">'+esc(a.genre)+'</span></div><button type="button" class="btn ghost sm" data-seeq="'+esc(a.name)+'">See reviews</button></div>'}).join("");
-return dbn+items.map(function(it,i){var c=revCount(it),id=k+':'+i;return '<div class="ri click" data-row="'+id+'"><button type="button" class="artbtn" data-info="'+id+'" aria-label="About “'+esc(it.title)+'”" title="'+(it.type==="Album"?"Album":"Song")+' details">'+rimg(it)+'</button><button type="button" class="rt" data-rv="'+id+'"><b>'+esc(it.title)+'</b><span class="meta">'+esc(it.artist)+(it.album?' · '+esc(it.album):'')+(c?' · '+pl(c,"review")+' on Mosaic':'')+'</span></button></div>'}).join("")}
+return dbn+items.map(function(it,i){var c=revCount(it),id=k+':'+i;return '<div class="ri click" data-row="'+id+'"><button type="button" class="artbtn" data-info="'+id+'" aria-label="About “'+esc(it.title)+'”" title="'+(it.type==="Album"?"Album":"Song")+' details">'+rimg(it)+'</button><button type="button" class="rt" data-rv="'+id+'"><b>'+esc(it.title)+'</b><span class="meta">'+esc(it.artist)+(it.album?' · '+esc(it.album):'')+(c?' · '+pl(c,"review")+' on Mosaic':'')+'</span></button>'+(dupSong(it)?'<span class="tag rvd">Reviewed</span>':'')+'</div>'}).join("")}
 function doSearch(q){if(q.length<2)return;S.rmore=false;armSv();addRecent(q);S.sq=q;S.q="";S.sopen=true;S.stack=[];S.tab="search";S.stab=S.stab||"songs";S.res=null;S.shut=keepShut();S.tk=(S.tk||0)+1;var tk=S.tk;appView();
 searchItunes(q).then(function(r){if(S.tk!==tk||S.tab!=="search")return;S.demo=false;if(!REMOTE&&r.every(function(x){return x===null})){S.res=demoNorm(q);S.demo=true}else S.res=normRes(r);var el=$("#sres");if(el){el.innerHTML=resultsHTML();bind()}})}
 
 function since(a){if(!a||!a.created)return "";var d=new Date(a.created);if(isNaN(d))return "";return d.toLocaleDateString("en-GB",{month:"long",year:"numeric"})}
 function est(a){var t=since(a);return t?'<p class="meta" style="margin:4px 0 0">Est. '+t+'</p>':''}
+/* a search result as a song page to open (used when you've already reviewed it) */
+function songFromHit(it){return {title:it.title,artist:it.artist,type:it.type||"Song",art:it.art||"",tid:it.tid||null,album:it.album||""}}
 function dupSong(it,skip){if(!it||(it.type||"Song")!=="Song"||!S.user)return null;var t=String(it.title).toLowerCase(),a=String(it.artist).toLowerCase();return S.reviews.filter(function(r){return r.user===S.user&&r.type==="Song"&&String(r.id)!==String(skip)&&r.title.toLowerCase()===t&&r.artist.toLowerCase()===a})[0]||null}
 function songReviews(s){var t=s.title.toLowerCase(),a=s.artist.toLowerCase();return S.reviews.filter(function(r){return r.type===s.type&&r.title.toLowerCase()===t&&r.artist.toLowerCase()===a})}
 function filtered(){
@@ -2028,7 +2031,7 @@ var sw=$(".sw"),qi=$("#q"),sug=$("#sug"),sugs=[],sh=-1,stm=null,stk=0;
 searchHover=false;
 function clearSearch(){clearTimeout(stm);stk++;S.sv="";svDue=false;clearTimeout(svT);svT=null;sw.classList.remove("open");qi.value="";qi.blur();qi.readOnly=true;sugs=[];sh=-1;sug.hidden=true;sug.innerHTML=""}
 svClear=clearSearch;
-function pickSug(i){var it=sugs[i];if(!it)return;addRecent(qi.value);S.pre=it;S.tab="review";S.stack=[];S.shut=keepShut();appView()}
+function pickSug(i){var it=sugs[i];if(!it)return;addRecent(qi.value);if(dupSong(it)){openSong(songFromHit(it));return}S.pre=it;S.tab="review";S.stack=[];S.shut=keepShut();appView()}
 function drawSug(){var cq=qi.value.trim();
 if(searchHover&&cq.length<2){var rl=recents();if(!rl.length){sug.hidden=true;sug.innerHTML="";return}
 var CLK='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>';
@@ -2041,18 +2044,19 @@ var mo=sug.querySelector("[data-rmore]");if(mo)mo.onclick=function(){S.rmore=tru
 return}
 if(!sugs.length||!searchHover){sug.hidden=true;sug.innerHTML="";return}
 sug.hidden=false;
-sug.innerHTML='<div class="box" role="listbox">'+sugs.map(function(t,i){return '<button type="button" class="sg'+(i===sh?' on':'')+'" role="option" data-sg="'+i+'">'+rimg(t)+'<span><b>'+esc(t.title)+'</b><span class="meta">'+esc(t.artist)+'</span></span></button>'}).join("")+'<button type="button" class="sg all" data-all="1">See all results for “'+esc(qi.value.trim())+'”</button></div>';
+sug.innerHTML='<div class="box" role="listbox">'+sugs.map(function(t,i){return '<button type="button" class="sg'+(i===sh?' on':'')+'" role="option" data-sg="'+i+'">'+rimg(t)+'<span><b>'+esc(t.title)+'</b><span class="meta">'+esc(t.artist)+'</span></span>'+(dupSong(t)?'<span class="tag rvd">Reviewed</span>':'')+'</button>'}).join("")+'<button type="button" class="sg all" data-all="1">See all results for “'+esc(qi.value.trim())+'”</button></div>';
 sug.querySelectorAll("[data-sg]").forEach(function(b){b.onmousedown=function(e){e.preventDefault()};b.onclick=function(){pickSug(+b.dataset.sg)}});
 var all=sug.querySelector("[data-all]");all.onmousedown=function(e){e.preventDefault()};all.onclick=function(){doSearch(qi.value.trim())}}
 function runSug(q){var my=++stk;
 fetch("https://itunes.apple.com/search?media=music&entity=song&limit=6&term="+encodeURIComponent(q)).then(function(x){if(!x.ok)throw 0;return x.json()}).then(function(j){if(my!==stk)return;
 sugs=(j.results||[]).filter(function(t){return t.trackName&&t.artistName&&okArt(t.artworkUrl100)}).map(function(t){return {title:t.trackName,artist:t.artistName,album:t.collectionName||"",art:upArt(t.artworkUrl100),thumb:okArt(t.artworkUrl60)?t.artworkUrl60:t.artworkUrl100,tid:t.trackId,type:"Song"}});
 sh=-1;drawSug()}).catch(function(){if(my!==stk)return;sugs=REMOTE?[]:demoSongs(q,6);sh=-1;drawSug()})}
-sw.onmouseenter=function(){searchHover=true;qi.readOnly=false;var ae=document.activeElement;if(!ae||!/^(INPUT|TEXTAREA|SELECT)$/.test(ae.tagName))qi.focus({preventScroll:true});drawSug()};
+function qEnd(){var n=qi.value.length;try{qi.setSelectionRange(n,n);qi.scrollLeft=qi.scrollWidth}catch(e){}}
+sw.onmouseenter=function(){searchHover=true;qi.readOnly=false;var ae=document.activeElement;if(!ae||!/^(INPUT|TEXTAREA|SELECT)$/.test(ae.tagName)){qi.focus({preventScroll:true});qEnd()}drawSug()};
 sw.onmouseleave=function(){searchHover=false;S.rmore=false;qi.readOnly=true;qi.blur();sug.hidden=true;if(!qi.value)sw.classList.remove("open");if(svDue)clearSv()};
 qi.addEventListener("blur",function(){if(svDue&&!searchHover)clearSv()});
 $("#sb").onmousedown=function(e){e.preventDefault()};
-$("#sb").onclick=function(){if(qi.value.trim().length>=2){doSearch(qi.value.trim())}else{sw.classList.add("open");qi.readOnly=false;qi.focus()}};
+$("#sb").onclick=function(){if(qi.value.trim().length>=2){doSearch(qi.value.trim())}else{sw.classList.add("open");qi.readOnly=false;qi.focus();qEnd()}};
 qi.onkeydown=function(e){
 if(e.key==="Escape"){clearSearch();return}
 if(e.key==="ArrowDown"||e.key==="ArrowUp"){if(!sugs.length)return;e.preventDefault();sh=(sh+(e.key==="ArrowDown"?1:-1)+sugs.length)%sugs.length;drawSug();return}
@@ -2098,7 +2102,7 @@ document.querySelectorAll("[data-edit]").forEach(function(b){b.onclick=function(
 openForm(S.reviews.filter(function(r){return r.id==b.dataset.edit})[0])}});
 document.querySelectorAll("[data-u]").forEach(function(b){b.onclick=function(){var u=b.dataset.u;S.view=u;S.tab=u===S.user?"profile":"user";S.stack=[];S.shut=keepShut();appView()}});
 document.querySelectorAll("[data-st]").forEach(function(b){b.onclick=function(){S.stab=b.dataset.st;appView()}});
-function reviewFrom(src){var x=String(src).split(":"),it=S.res&&S.res[x[0]]&&S.res[x[0]][+x[1]];if(it){S.pre=it;S.tab="review";S.stack=[];appView()}}
+function reviewFrom(src){var x=String(src).split(":"),it=S.res&&S.res[x[0]]&&S.res[x[0]][+x[1]];if(!it)return;if(dupSong(it)){openSong(songFromHit(it));return}S.pre=it;S.tab="review";S.stack=[];appView()}
 document.querySelectorAll("[data-rv]").forEach(function(b){b.onclick=function(){reviewFrom(b.dataset.rv)}});
 document.querySelectorAll("[data-row]").forEach(function(row){row.onclick=function(e){if(e.target.closest&&e.target.closest("button"))return;reviewFrom(row.dataset.row)}});
 document.querySelectorAll("[data-info]").forEach(function(b){b.onclick=function(e){e.preventDefault();e.stopPropagation();openSong(songOf(b.dataset.info))}});
