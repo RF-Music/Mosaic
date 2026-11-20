@@ -139,11 +139,10 @@ nav button[aria-current="true"]{color:var(--ink);border-color:var(--pop)}
 .tiled{display:flex;align-items:center;gap:6px;margin:10px 0 0;font-size:12.5px;font-weight:500;color:var(--mute)}
 .tiled i{flex:none;width:11px;height:11px;border-radius:3px;background:linear-gradient(135deg,#7a5cf5,#c04fd8)}
 /* not tiled yet: the same mark, gone flat, grey and a bit glum */
-.tiled.not{opacity:.75}.tiled.not i{background:linear-gradient(160deg,#6a6a72,#45454c);transform:rotate(-8deg) translateY(1px);box-shadow:inset 0 1px 2px rgba(0,0,0,.35)}
-/* both marks flip: a quick snap every 1.5 seconds, round each way in turn (right, down, left, up); the grey one keeps its glum tilt */
-.tiled i{animation:tflip 6s cubic-bezier(.35,1.35,.5,1) infinite}.tiled.not i{animation-name:ntflip}
+.tiled.not{opacity:.75}.tiled.not i{background:linear-gradient(160deg,#6a6a72,#45454c);box-shadow:inset 0 1px 2px rgba(0,0,0,.35)}
+/* both marks flip: a quick snap every 1.5 seconds, round each way in turn (right, down, left, up) */
+.tiled i{animation:tflip 6s cubic-bezier(.35,1.35,.5,1) infinite}
 @keyframes tflip{0%,100%{transform:perspective(36px) rotateX(0) rotateY(0)}7%,25%{transform:perspective(36px) rotateX(0) rotateY(180deg)}32%,50%{transform:perspective(36px) rotateX(180deg) rotateY(180deg)}57%,75%{transform:perspective(36px) rotateX(180deg) rotateY(0)}82%{transform:perspective(36px) rotateX(0) rotateY(0)}}
-@keyframes ntflip{0%,100%{transform:perspective(36px) rotate(-8deg) translateY(1px) rotateX(0) rotateY(0)}7%,25%{transform:perspective(36px) rotate(-8deg) translateY(1px) rotateX(0) rotateY(180deg)}32%,50%{transform:perspective(36px) rotate(-8deg) translateY(1px) rotateX(180deg) rotateY(180deg)}57%,75%{transform:perspective(36px) rotate(-8deg) translateY(1px) rotateX(180deg) rotateY(0)}82%{transform:perspective(36px) rotate(-8deg) translateY(1px) rotateX(0) rotateY(0)}}
 @media (prefers-reduced-motion:reduce){.tiled i{animation:none}}
 :root[data-theme="light"] .tiled.not i{background:linear-gradient(160deg,#b9b9c0,#9a9aa2)}@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .tiled.not i{background:linear-gradient(160deg,#b9b9c0,#9a9aa2)}}
 .tag.tz{color:#fff;border-color:transparent;background:linear-gradient(135deg,#7a5cf5,#c04fd8)}
@@ -296,10 +295,10 @@ header.top h2{margin-right:10px}
 /* the song page's rating spread, beside the average: a curve with a marker that clicks into place at each 0.1 */
 .srate{flex-wrap:wrap;row-gap:12px}
 .rdist{position:relative;align-self:center;display:flex;flex-direction:column;gap:3px;margin-left:4px}
-.rdc{display:block;width:120px;height:40px;overflow:visible;cursor:crosshair;touch-action:pan-y;outline:none}
+.rdc{display:block;width:200px;height:60px;overflow:visible;cursor:crosshair;touch-action:pan-y;outline:none}
 .rda{fill:url(#rdg)}
 .rdg1{stop-color:var(--pop);stop-opacity:.42}.rdg2{stop-color:var(--violet);stop-opacity:0}
-.rdl{fill:none;stroke:var(--pop);stroke-width:1.7;stroke-linejoin:round;stroke-linecap:round}
+.rdl{fill:none;stroke:var(--pop);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
 .rdx{stroke:var(--ink);stroke-opacity:.4;stroke-width:1;stroke-dasharray:2 2;opacity:0}
 .rdo{fill:var(--ink);stroke:var(--bg);stroke-width:1.5;opacity:0;transform-box:fill-box;transform-origin:center}
 .rdist.on .rdx,.rdist.on .rdo,.rdist.f .rdx,.rdist.f .rdo{opacity:1}
@@ -309,11 +308,11 @@ header.top h2{margin-right:10px}
 .rdc:focus-visible{outline:2px solid var(--pop);outline-offset:4px;border-radius:4px}
 .rdt{position:absolute;bottom:calc(100% + 2px);left:0;white-space:nowrap;padding:3px 8px;border-radius:6px;background:var(--ink);color:var(--bg);font-size:11px;font-weight:600;line-height:1.35;pointer-events:none;opacity:0;transition:opacity .12s;z-index:3;font-variant-numeric:tabular-nums}
 .rdist.on .rdt{opacity:1}
-.rdlab{display:flex;justify-content:space-between;font-size:10px;line-height:1;color:var(--mute)}
+.rdlab{display:flex;justify-content:space-between;font-size:11px;line-height:1;color:var(--mute)}
 .dsf{margin:-4px 0 14px;font-size:13px;color:var(--mute)}
 .dsf:empty{display:none}
 .dsf .linkbtn{margin-left:8px}
-@media (max-width:520px){.sbox .srate{gap:10px}.rdist{margin-left:0}.rdc{width:96px;height:32px}}
+@media (max-width:520px){.sbox .srate{gap:10px}.rdist{flex:1 1 100%;margin-left:0}.rdc{width:100%;max-width:320px;height:auto;aspect-ratio:200/60}}
 /* the Tile page: a bigger glow, a cover that turns over for details, and a Tile button that grows a little on hover */
 .tpk .aglow{inset:-32%;--ab:38px}
 .tpk .cvf,.tpk .covbtn{display:block;width:100%}
@@ -2608,7 +2607,7 @@ el.addEventListener("touchmove",function(e){e.preventDefault()},{passive:false})
 document.addEventListener("keydown",onKey,true)}
 /* ---------- the song page's rating spread, as a smooth curve. Glide along it and it clicks into place at every 0.1, showing how many tiles gave
    exactly that rating; choose a rating to see just those reviews (arrow keys and Enter work too) ---------- */
-var RDW=120,RDH=40;
+var RDW=200,RDH=60;
 function inDist(r){return S.sdist==null||Math.round(rnum(r.rating)*10)===Math.round(S.sdist*10)}
 function starLab(v){return (v%1?v.toFixed(1):String(v))+"★"}
 function rdDens(rs){var h=Math.max(.18,.35*Math.pow(rs.length||1,-.2)),v=rs.map(function(r){return rnum(r.rating)}),d=[];
@@ -2619,7 +2618,7 @@ for(var i=0;i<p.length-1;i++){var a=p[i-1]||p[i],b=p[i],c=p[i+1],e=p[i+2]||c;s+=
 function distHTML(rs){var line=rdPath(rdDens(rs));
 return '<div class="rdist'+(S.sdist!=null?' f':'')+'"><svg class="rdc" viewBox="0 0 '+RDW+' '+RDH+'" tabindex="0" role="slider" aria-label="How people rated it. Arrow keys move along it, Enter shows just those reviews" aria-valuemin="0" aria-valuemax="5">'+
 '<defs><linearGradient id="rdg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="rdg1"/><stop offset="1" class="rdg2"/></linearGradient></defs>'+
-'<path class="rda" d="'+line+' L'+RDW+' '+RDH+' L0 '+RDH+' Z"/><path class="rdl" d="'+line+'"/><line class="rdx" x1="0" x2="0" y1="0" y2="'+RDH+'"/><circle class="rdo" r="3.2" cx="0" cy="0"/></svg>'+
+'<path class="rda" d="'+line+' L'+RDW+' '+RDH+' L0 '+RDH+' Z"/><path class="rdl" d="'+line+'"/><line class="rdx" x1="0" x2="0" y1="0" y2="'+RDH+'"/><circle class="rdo" r="4" cx="0" cy="0"/></svg>'+
 '<span class="rdt" aria-hidden="true"></span><div class="rdlab" aria-hidden="true"><span>0</span><span>5★</span></div></div>'}
 function wireDist(){var g=document.querySelector(".rdist");if(!g||!S.song)return;var sv=g.querySelector(".rdc"),o=g.querySelector(".rdo"),ln=g.querySelector(".rdx"),t=g.querySelector(".rdt"),
 rs=songReviews(S.song),d=rdDens(rs),cur=null,avg=rs.length?rs.reduce(function(a,r){return a+rnum(r.rating)},0)/rs.length:2.5;
