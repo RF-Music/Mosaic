@@ -333,24 +333,36 @@ header.top h2{margin-right:10px}
 #rf #sv{transition:transform .18s cubic-bezier(.3,.7,.4,1.5),filter .12s}
 #rf #sv:hover:not(:disabled){transform:scale(1.07)}
 #rf #sv:active:not(:disabled){transform:scale(.98)}
-/* searching someone's tiles (profiles) */
-.psr{display:flex;flex-direction:column;align-items:center;gap:4px;margin:-4px 0 14px}
-.psb{display:grid;place-items:center;width:38px;height:38px;padding:0;border:1px solid var(--line);border-radius:50%;background:var(--surface);color:var(--mute);cursor:pointer;transition:color .15s,border-color .15s,transform .15s}
-.psb:hover{color:var(--ink);border-color:color-mix(in srgb,var(--ink) 45%,transparent);transform:scale(1.06)}
-.psb svg{width:17px;height:17px}
-.psbox{display:flex;align-items:center;gap:8px;width:min(340px,100%);height:40px;margin:0;padding:0 5px 0 14px;border:1px solid var(--line);border-radius:999px;background:var(--surface);animation:psin .2s ease-out}
+/* searching someone's tiles (profiles): a magnifier centred over the gap between the two columns. Rest the pointer on it (or tap it)
+   and a box slides out to its right; it stays open while there's a search in it */
+.tools:has(>.psr){position:relative}
+.tools:has(>.psr) .tl{max-width:calc(50% - 27px)}
+.psr{position:relative;height:38px;margin:-4px 0 14px}
+.tools>.psr{position:absolute;inset:0 0 auto;margin:0;pointer-events:none}
+.psbox{position:absolute;top:0;left:calc(50% - 19px);z-index:4;display:flex;align-items:center;box-sizing:border-box;height:38px;border:1px solid var(--line);border-radius:999px;background:var(--surface);pointer-events:auto;transition:border-color .15s}
+.psbox:hover{border-color:color-mix(in srgb,var(--ink) 40%,transparent)}
 .psbox:focus-within{border-color:var(--pop)}
-.psbox svg{flex:none;width:16px;height:16px;color:var(--mute)}
-.psbox input[type=search]{flex:1;min-width:0;height:100%;margin:0;padding:0;border:0;border-radius:0;background:none;box-shadow:none;color:var(--ink);font:inherit;font-size:14px;outline:none}
+.psb{flex:none;display:grid;place-items:center;width:36px;height:36px;padding:0;border:0;border-radius:50%;background:none;color:var(--mute);cursor:pointer;transition:color .15s}
+.psbox:hover .psb,.psbox:focus-within .psb{color:var(--ink)}
+.psb svg{width:17px;height:17px}
+.psbox input[type=search]{width:0;min-width:0;height:100%;margin:0;padding:0;border:0;border-radius:0;background:none;box-shadow:none;color:var(--ink);font:inherit;font-size:14px;outline:none;opacity:0;transition:width .18s ease,opacity .18s}
 .psbox input[type=search]::-webkit-search-cancel-button{display:none}
-.psx{flex:none;width:30px;height:30px;padding:0;border:0;border-radius:50%;background:none;color:var(--mute);font-size:19px;line-height:1;cursor:pointer}
+.psbox:hover input[type=search],.psbox:focus-within input[type=search],.psr.on input[type=search]{width:min(190px,36vw);opacity:1}
+.psn,.psx{display:none}
+.psr.on .psn{display:block;flex:none;padding:0 2px 0 8px;font-size:12px;color:var(--mute);white-space:nowrap}
+.psbox:hover .psx,.psbox:focus-within .psx,.psr.on .psx{display:grid}
+.psx{flex:none;place-items:center;width:30px;height:30px;margin:0 3px 0 2px;padding:0;border:0;border-radius:50%;background:none;color:var(--mute);font-size:19px;line-height:1;cursor:pointer}
 .psx:hover{background:color-mix(in srgb,var(--ink) 8%,transparent);color:var(--ink)}
-.psn{font-size:12px;min-height:1.2em}
-@keyframes psin{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}
-/* on your own profile the search sits in the tools row, at the right */
-.tools .psr{flex-direction:row-reverse;align-items:center;gap:8px;margin:0 0 0 auto}
-.tools .psbox{width:min(260px,52vw)}
-@media (max-width:620px){.tools:has(.psr.open){flex-wrap:wrap}.tools .psr.open{flex:1 1 100%;order:3;margin:0}.tools .psr.open .psbox{flex:1;width:auto}}
+/* phones: Type on the left of the magnifier, Sort on its right; the box takes the whole row while you search */
+@media (max-width:700px){
+.tools:has(>.psr){display:grid;grid-template-columns:38px minmax(0,1fr) 38px minmax(0,1fr) 38px;gap:8px;align-items:start}
+.tools:has(>.psr) .tl{display:contents;max-width:none}
+.tools:has(>.psr) #add{grid-column:1;grid-row:1}
+.tools:has(>.psr) #t{grid-column:2;grid-row:1;width:100%}
+.tools:has(>.psr) #s{grid-column:4/6;grid-row:1;width:100%}
+.psr:focus-within .psbox,.psr.on .psbox{left:0;right:0}
+.psr:focus-within input[type=search],.psr.on input[type=search]{flex:1;width:auto}
+}
 /* the part that plays (Tile page) */
 .clp{margin:12px 0 2px}
 .clph{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
@@ -432,19 +444,46 @@ html.lsopen,html.lsopen body{overflow:hidden}
 .lscm .meta{color:rgba(255,255,255,.5)}
 .lscm .cmf input{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.18)}
 .lscm .cx{color:rgba(255,255,255,.6)}
-.lsgen{position:absolute;left:max(18px,calc(50% - 570px));top:50%;z-index:3;width:240px;transform:translateY(-50%);text-align:center;cursor:default}
-.lsgl{margin:0 0 8px;font-size:11px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:rgba(255,255,255,.6)}
-.lsgf input{box-sizing:border-box;width:100%;height:38px;margin:0;padding:0 14px;border:1px solid rgba(255,255,255,.2);border-radius:999px;background:rgba(0,0,0,.35);color:#fff;font:inherit;font-size:13px;text-align:center;outline:none}
+.lsgen{display:contents}
+.lsgf{position:absolute;left:18px;bottom:18px;z-index:3;width:min(250px,calc(50% - min(200px,50vw - 66px,24vh) - 36px));margin:0}
+.lsgf input{box-sizing:border-box;width:100%;height:38px;margin:0;padding:0 16px;border:1px solid rgba(255,255,255,.2);border-radius:999px;background:rgba(0,0,0,.35);color:#fff;font:inherit;font-size:13px;text-align:left;outline:none}
 .lsgf input:focus{border-color:var(--pop)}
 .lsgf input::placeholder{color:rgba(255,255,255,.45)}
-.lsgc{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:0 10px;max-height:44vh;margin-top:14px;overflow:hidden}
-.lsgw{padding:0 1px;border:0;background:none;font:inherit;font-weight:700;line-height:1.15;letter-spacing:-.01em;cursor:pointer;transition:transform .12s,opacity .12s}
+.lsgc{position:absolute;left:calc((50% - min(200px,50vw - 66px,24vh))/2);top:var(--cy,50%);z-index:3;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:0 12px;width:min(300px,calc(50% - min(200px,50vw - 66px,24vh) - 40px));max-height:56vh;margin:0;overflow:hidden;transform:translate(-50%,-50%);text-align:center;cursor:default;transition:top .2s}
+.lsgc:empty{display:none}
+.lsgw{padding:0 1px;border:0;background:none;color:#a7a7ae;font:inherit;font-weight:700;line-height:1.15;letter-spacing:-.01em;cursor:pointer;transition:transform .12s,opacity .12s}
 .lsgw:hover{transform:scale(1.08);opacity:1!important}
 .lsgw.me{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px}
-.lsgn{margin:0;font-size:12px;color:rgba(255,255,255,.5)}
 .lsg{display:none}
+/* Listen: the buttons sit in a ring around the Tile button, beside the middle of the cover (under the cover on phones) */
+.lsn .lsact{--R:62px;--s:44px;--d:calc(2*var(--R) + var(--s));position:absolute;left:calc(50% + min(200px,50vw - 66px,24vh) + 22px);right:auto;top:var(--cy,50%);bottom:auto;display:block;width:var(--d);height:var(--d);margin:calc(var(--d)/-2) 0 0;transform:none;z-index:3;transition:top .2s}
+.lsn .lsact>*{position:absolute;left:calc(50% + var(--lx,0)*var(--R));top:calc(50% + var(--ly,0)*var(--R));margin:calc(var(--s)/-2) 0 0 calc(var(--s)/-2)}
+.lsn .lsact .sendw>.lsb{position:relative}
+.lsn .lsact .lsb>span{position:absolute;top:-5px;right:-7px;min-width:19px;height:19px;padding:0 5px;box-sizing:border-box;border-radius:10px;background:#fff;color:#111;font-size:10.5px;font-weight:700;line-height:19px;text-align:center;pointer-events:none;box-shadow:0 2px 6px rgba(0,0,0,.35)}
+.lsn .lsact .lstl{--s:62px;left:50%;top:50%;width:62px;height:62px;justify-content:center;gap:3px;border-radius:50%;background:linear-gradient(135deg,#7a5cf5,#c04fd8);box-shadow:0 8px 22px rgba(0,0,0,.35);transition:transform .15s}
+.lsn .lsact .lstl.on{background:rgba(255,255,255,.16)}
+.lsn .lsact .lstl svg,.lsn .lsact .lstl:hover svg{width:20px;height:20px;padding:0;background:none;transform:none}
+.lsn .lsact .lstl:hover{transform:scale(1.06)}
+.lsn .lsact .lstl>span{position:static;min-width:0;height:auto;padding:0;background:none;color:#fff;font-size:10.5px;line-height:1;box-shadow:none}
+.lsn .lsact .tray{left:0;right:auto;top:calc(100% + 8px);margin:0;transform:translateY(-6px)}
+.lsn .lsact .sendw.open .tray{transform:none}
+.lsn .lsact .tray::before{left:0;right:0;top:-10px;bottom:auto;width:auto;height:10px}
 @media (max-width:980px){
 .lsg{display:flex}
+.lss{box-sizing:border-box;padding-bottom:196px}
+.lsin{width:min(440px,calc(100vw - 40px))}
+.lscv{width:min(400px,calc(100vw - 40px),40vh)}
+.lsq{display:-webkit-box;-webkit-line-clamp:3;line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.lsn .lsact{--R:54px;--s:42px;left:50%;top:auto;bottom:34px;margin:0 0 0 calc(var(--d)/-2)}
+.lsn .lsact>*{left:calc(50% + var(--lxm,0)*var(--R));top:calc(50% + var(--lym,0)*var(--R))}
+.lsn .lsact .lstl{--s:56px;left:50%;top:50%;width:56px;height:56px}
+.lsn .lsact .lsb:not(.lstl) svg{width:20px;height:20px;padding:11px}
+.lsn .lsact .tray{position:fixed;left:50%;right:auto;top:auto;bottom:calc(46px + var(--d));margin:0;transform:translate(-50%,6px)}
+.lsn .lsact .sendw.open .tray{transform:translate(-50%,0)}
+.lsn .lsact .tray::before{display:none}
+.lsgen{display:block;position:absolute;cursor:default}
+.lsgf,.lsgc{position:static;width:auto;transform:none}
+.lsgc{margin-top:14px;max-height:40vh}
 .lsgen{left:50%;top:auto;bottom:0;z-index:5;box-sizing:border-box;width:min(460px,100vw);padding:16px 16px 22px;transform:translate(-50%,110%);border-radius:16px 16px 0 0;background:rgba(18,18,22,.95);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:0 -10px 40px rgba(0,0,0,.45);transition:transform .25s ease}
 .lss.gopen .lsgen{transform:translate(-50%,0)}
 .lss.gopen .lsg svg{background:rgba(255,255,255,.26)}
@@ -2367,7 +2406,7 @@ var ws=ps.map(function(p){try{var l=Infinity,r=-Infinity,tw=document.createTreeW
 while((n=tw.nextNode())){re=/\S+/g;while((m=re.exec(n.data))){rg=document.createRange();rg.setStart(n,m.index);rg.setEnd(n,m.index+m[0].length);rs=rg.getClientRects();
 for(i=0;i<rs.length;i++){if(rs[i].width<1)continue;if(rs[i].left<l)l=rs[i].left;if(rs[i].right>r)r=rs[i].right}}}return r>l?Math.ceil(r-l)+1:0}catch(e){return 0}});
 ps.forEach(function(p,i){if(ws[i])p.style.width=ws[i]+"px"})}
-window.addEventListener("resize",function(){clearTimeout(fitT);fitT=setTimeout(function(){fitReviews();fitLife();wireDist()},120)});
+window.addEventListener("resize",function(){clearTimeout(fitT);fitT=setTimeout(function(){fitReviews();fitLife();wireDist();lsCy()},120)});
 try{if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitReviews)}catch(e){}
 /* the lifetime mosaic, as big as it can be with every tile on screen at once */
 function fitLife(){var g=document.getElementById("lgrid");document.documentElement.classList.toggle("lifeon",S.tab==="life");if(!g)return;var c=+g.style.getPropertyValue("--c")||8,r=Math.ceil(g.children.length/c),gap=parseFloat(getComputedStyle(g).columnGap)||0,
@@ -2705,9 +2744,13 @@ if(S.sdist!=null)put(Math.round(S.sdist*10),false)}
 function dsfHTML(){if(S.sdist==null||!S.song)return "";var n=songReviews(S.song).filter(inDist).length;return 'Showing the '+pl(n,"tile")+' rated '+starLab(S.sdist)+'<button type="button" class="linkbtn" data-dclr="1">Show all</button>'}
 function distPaint(){var g=document.querySelector(".rdist");if(g)g.classList.toggle("f",S.sdist!=null);
 var f=$("#dsf");if(f)f.innerHTML=dsfHTML();refreshList()}
-function wireExtras(){var psb=$("#psb");if(psb)psb.onclick=function(){S.pqOpen=true;pqRow();var q=$("#pq");if(q)q.focus()};
-var pq=$("#pq");if(pq){pq.oninput=function(){S.pq=pq.value;refreshList();var n=$("#psn");if(n)n.textContent=pqCount()};pq.onkeydown=function(e){if(e.key==="Escape"){e.preventDefault();pqClose()}}}
-var psx=$("#psx");if(psx)psx.onclick=pqClose;
+function wireExtras(){var pq=$("#pq"),pbx=document.querySelector(".psbox");
+/* like the search at the top: resting the pointer on it opens it, ready to type; moving away closes it unless there's a search in it */
+if(pq&&pbx){pbx.onmouseenter=function(){var ae=document.activeElement;if(ae!==pq&&!(ae&&/^(INPUT|TEXTAREA|SELECT)$/.test(ae.tagName)))try{pq.focus({preventScroll:true});var n=pq.value.length;pq.setSelectionRange(n,n)}catch(e){}};
+pbx.onmouseleave=function(){var ae=document.activeElement;if(ae&&pbx.contains(ae))ae.blur()};
+$("#psb").onclick=function(){pq.focus()};
+pq.oninput=function(){S.pq=pq.value;pbx.parentNode.classList.toggle("on",!!S.pq);refreshList();var n=$("#psn");if(n)n.textContent=pqCount()};
+pq.onkeydown=function(e){if(e.key==="Escape"){e.preventDefault();pqClose()}};$("#psx").onclick=pqClose}
 document.querySelectorAll("[data-listen]").forEach(function(b){b.onclick=openListen});
 wireDist();
 document.querySelectorAll("[data-dclr]").forEach(function(b){b.onclick=function(){S.sdist=null;distPaint()}})}
@@ -2738,11 +2781,9 @@ var MAGI='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-widt
 function fold(t){return String(t||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase()}
 function pqMatch(r){var hay=fold(r.title+" "+r.artist);return fold(S.pq).split(/\s+/).filter(Boolean).every(function(w){return hay.indexOf(w)>-1})}
 function pqCount(){if(!S.pq)return "";var q=S.pq;S.pq="";var t=filtered().length;S.pq=q;var m=filtered().length;return m?m+" of "+pl(t,"tile"):"No matches"}
-function psrHTML(u){if(!S.reviews.some(function(r){return r.user===u}))return "";var on=S.pqOpen||!!S.pq,who=u===S.user?"your":esc(u)+"’s";
-return '<div class="psr'+(on?' open':'')+'">'+(on?'<label class="psbox">'+MAGI+'<input id="pq" type="search" placeholder="Search '+who+' tiles" value="'+esc(S.pq||"")+'" autocomplete="off" aria-label="Search '+who+' tiles"><button type="button" class="psx" id="psx" aria-label="Close search">×</button></label><span class="meta psn" id="psn" aria-live="polite">'+pqCount()+'</span>'
-:'<button type="button" class="psb" id="psb" aria-label="Search '+who+' tiles" title="Search '+who+' tiles">'+MAGI+'</button>')+'</div>'}
-function pqRow(){var r=document.querySelector(".psr");if(r)r.outerHTML=psrHTML(S.tab==="user"?S.view:S.user);wireExtras()}
-function pqClose(){S.pq="";S.pqOpen=false;pqRow();refreshList();var b=$("#psb");if(b)b.focus()}
+function psrHTML(u){if(!S.reviews.some(function(r){return r.user===u}))return "";var who=u===S.user?"your":esc(u)+"’s";
+return '<div class="psr'+(S.pq?' on':'')+'"><div class="psbox"><button type="button" class="psb" id="psb" aria-label="Search '+who+' tiles">'+MAGI+'</button><input id="pq" type="search" placeholder="Search '+who+' tiles" value="'+esc(S.pq||"")+'" autocomplete="off" aria-label="Search '+who+' tiles"><span class="psn" id="psn" aria-live="polite">'+pqCount()+'</span><button type="button" class="psx" id="psx" aria-label="Clear the search" title="Clear">×</button></div></div>'}
+function pqClose(){S.pq="";S.pqOpen=false;var q=$("#pq"),r=document.querySelector(".psr"),n=$("#psn"),ae=document.activeElement;if(q)q.value="";if(ae&&r&&r.contains(ae))ae.blur();if(r)r.classList.remove("on");if(n)n.textContent="";refreshList()}
 /* ---------- "The part that plays": choosing which bit of a song plays, like picking a song for an Instagram story. Apple's preview is
    30 seconds, so you slide a 15-second window along it; that part loops while you choose, and Listen plays it ---------- */
 var CLIPA=null,CLIPW=15,
@@ -2828,15 +2869,18 @@ return '<section class="lss" data-i="'+i+'" aria-label="'+esc(r.title)+' by '+es
 '<p class="lsby">'+avatar(acct(r.user),"xs")+'<b>'+esc(r.user)+'</b><span class="lsr">'+STAR1+rnum(r.rating).toFixed(1)+'</span></p>'+(r.text?'<p class="lsq">“'+esc(r.text)+'”</p>':'')+
 '<p class="lsno" hidden>No preview for this one</p><a class="lsap" href="#" target="_blank" rel="noopener" hidden>Listen on Apple Music ↗</a></div></div>'+
 '<div class="lsact" data-li="'+i+'">'+lsActs(r)+'</div><div class="lscm" hidden></div>'+genHTML(r)+'</section>'}
-function lsActs(r){var id=r.id,s=revSong(r),lk=(S.likes[id]||[]).indexOf(S.user)>-1,rp=(S.reposts[id]||[]).indexOf(S.user)>-1,own=r.user===S.user,done=!!dupSong(s),h="",
+function lsActs(r){var id=r.id,s=revSong(r),lk=(S.likes[id]||[]).indexOf(S.user)>-1,rp=(S.reposts[id]||[]).indexOf(S.user)>-1,own=r.user===S.user,done=!!dupSong(s),it=[],
 c=function(v){return '<span>'+(v?numS(v):'')+'</span>'};
-if(S.social){h+='<button type="button" class="lsb'+(lk?' on':'')+'" data-like="'+id+'" aria-pressed="'+lk+'" aria-label="Like">'+ico("like")+c(likeN(id))+'</button>'+
-'<button type="button" class="lsb lscb'+(LS&&LS.cm===String(id)?' on':'')+'" data-lscm="'+id+'" aria-label="Comments">'+ico("cmt")+c(cmN(id))+'</button>'+
-'<button type="button" class="lsb'+(rp?' on':'')+'" data-rp="'+id+'" aria-pressed="'+rp+'" aria-label="Repost"'+(own?' disabled title="You can’t repost your own review"':'')+'>'+ico("rp")+c(rpN(id))+'</button>'}
-h+='<span class="sendw lssw" data-sw="'+id+'"><button type="button" class="lsb" data-send="'+id+'" aria-label="Share" aria-haspopup="true">'+ico("send")+c(shN(id))+'</button><span class="tray" role="group" aria-label="Share">'+trayHTML(id)+'</span></span>';
-if(S.laterOK){var lt=inLater(r);h+='<button type="button" class="lsb'+(lt?' on':'')+'" data-later="'+id+'" aria-pressed="'+lt+'" aria-label="'+(lt?'Remove from listen later':'Listen later')+'">'+ico("bm")+c(0)+'</button>'}
-h+='<button type="button" class="lsb lsg" data-lsg="1" aria-label="Genres">'+lsIco("tag")+'<span>Genre</span></button>';
-return h+'<button type="button" class="lsb lstl'+(done?' on':'')+'" aria-label="'+(done?'Tiled. Open the '+(r.type==="Album"?'album':'song'):'Tile this '+(r.type==="Album"?'album':'song'))+'">'+lsIco(done?"tick":"plus")+'<span>'+(done?'Tiled':'Tile')+'</span></button>'}
+if(S.social)it.push('<button type="button" class="lsb'+(lk?' on':'')+'" data-like="'+id+'" aria-pressed="'+lk+'" aria-label="Like">'+ico("like")+c(likeN(id))+'</button>',
+'<button type="button" class="lsb lscb'+(LS&&LS.cm===String(id)?' on':'')+'" data-lscm="'+id+'" aria-label="Comments">'+ico("cmt")+c(cmN(id))+'</button>',
+'<button type="button" class="lsb'+(rp?' on':'')+'" data-rp="'+id+'" aria-pressed="'+rp+'" aria-label="Repost"'+(own?' disabled title="You can’t repost your own review"':'')+'>'+ico("rp")+c(rpN(id))+'</button>');
+it.push('<span class="sendw lssw" data-sw="'+id+'"><button type="button" class="lsb" data-send="'+id+'" aria-label="Share" aria-haspopup="true">'+ico("send")+c(shN(id))+'</button><span class="tray" role="group" aria-label="Share">'+trayHTML(id)+'</span></span>');
+if(S.laterOK){var lt=inLater(r);it.push('<button type="button" class="lsb'+(lt?' on':'')+'" data-later="'+id+'" aria-pressed="'+lt+'" aria-label="'+(lt?'Remove from listen later':'Listen later')+'">'+ico("bm")+c(0)+'</button>')}
+/* places round the ring, clockwise from the top: --lx/--ly beside the cover (no Genre button there), --lxm/--lym on phones */
+var nd=it.length;it.push('<button type="button" class="lsb lsg" data-lsg="1" aria-label="Genres">'+lsIco("tag")+'</button>');
+var nm=it.length,pt=function(k,n){var a=(k/n-.25)*2*Math.PI;return [Math.cos(a).toFixed(3),Math.sin(a).toFixed(3)]};
+return it.map(function(h,i){var m=pt(i,nm),st='--lxm:'+m[0]+';--lym:'+m[1];if(i<nd){var d=pt(i,nd);st+=';--lx:'+d[0]+';--ly:'+d[1]}return h.replace(/^<(button|span) /,'<$1 style="'+st+'" ')}).join("")+
+'<button type="button" class="lsb lstl'+(done?' on':'')+'" aria-label="'+(done?'Tiled. Open the '+(r.type==="Album"?'album':'song'):'Tile this '+(r.type==="Album"?'album':'song'))+'">'+lsIco(done?"tick":"plus")+'<span>'+(done?'Tiled':'Tile')+'</span></button>'}
 function openListen(){if(LS)return;clipStop();var items=lsItems();if(!items.length){toast("Nothing to listen to yet");return}
 /* starting a (silent) sound inside the tap lets the previews play afterwards, on phones too */
 var au=new Audio();au.preload="auto";try{au.src=SILENT;var pp=au.play();if(pp&&pp.catch)pp.catch(function(){})}catch(e){}
@@ -2851,9 +2895,9 @@ el.querySelector(".lsx").onclick=closeListen;document.addEventListener("keydown"
 el.addEventListener("click",lsClick);el.addEventListener("submit",lsSubmit);
 lsMore();requestAnimationFrame(function(){el.classList.add("in")});try{LS.list.focus({preventScroll:true})}catch(e){}lsSet(0)}
 function lsMore(){var a=LS.n,b=Math.min(LS.items.length,a+6);if(a>=b)return;var h="";for(var i=a;i<b;i++)h+=lsSlide(LS.items[i],i);
-LS.list.insertAdjacentHTML("beforeend",h);LS.n=b;[].forEach.call(LS.list.querySelectorAll(".lss:not([data-w])"),function(x){x.setAttribute("data-w","1");LS.io.observe(x);lsWire(x)});bind();prevBatch(LS.items.slice(a,b+6))}
+LS.list.insertAdjacentHTML("beforeend",h);LS.n=b;[].forEach.call(LS.list.querySelectorAll(".lss:not([data-w])"),function(x){x.setAttribute("data-w","1");LS.io.observe(x);lsWire(x)});bind();lsCy();prevBatch(LS.items.slice(a,b+6))}
 function lsWire(x){var i=+x.getAttribute("data-i"),r=LS.items[i];
-x.addEventListener("click",function(e){if(!LS||e.target.closest("button,a,input,form,.lscm,.lsgen,.tray"))return;
+x.addEventListener("click",function(e){if(!LS||e.target.closest("button,a,input,form,.lscm,.lsgen,.tray,.lsact"))return;
 if(LS.cm||x.classList.contains("gopen")){x.classList.remove("gopen");if(LS.cm){LS.cm=null;lsRepaint()}return}var now=Date.now();
 if(now-LS.tapT<320){clearTimeout(LS.tapTm);LS.tapT=0;lsLike(i,e,false);return}
 LS.tapT=now;clearTimeout(LS.tapTm);LS.tapTm=setTimeout(function(){if(!LS)return;LS.tapT=0;if(LS.i===i)lsToggle();else lsGo(i)},320)});
@@ -2865,7 +2909,7 @@ var gk=gKey(revSong(L.items[i]));genLoad(gk).then(function(){genPaint(gk)});
 clearTimeout(L.mt);L.mt=setTimeout(function(){if(LS===L&&L.i===i)lsMark(L.items[i])},1200);
 try{L.au.pause()}catch(e){}L.end=0;var bar=x.querySelector(".lspb i");if(bar)bar.style.transform="scaleX(0)";
 if(i>=L.n-3)lsMore();if(i>0)L.el.classList.add("moved");
-var r=L.items[i];prevFor(revSong(r),r).then(function(p){if(!LS||LS.i!==i)return;
+var r=L.items[i];prevFor(revSong(r),r).then(function(p){if(!LS||LS.i!==i)return;requestAnimationFrame(lsCy);
 var ap=x.querySelector(".lsap");if(p.l){ap.href=p.l;ap.hidden=false}
 var tn=x.querySelector(".lstn");if(p.tn&&r.type==="Album"){tn.textContent="Playing “"+p.tn+"”";tn.hidden=false}
 if(!p.u){x.querySelector(".lsno").hidden=false;return}
@@ -2875,6 +2919,7 @@ var pp=LS.au.play();if(pp&&pp.catch)pp.catch(function(){lsState()})});
 var nx=L.items[i+1];if(nx)prevFor(revSong(nx),nx)}
 /* Listen's buttons: like, repost, share and listen later use the same handlers as the tiles (bind); these draw them again from the
    current state, and run the rest: the comments sheet, the genre panel (phones open it as a sheet) and the Tile button */
+function lsCy(){if(!LS)return;[].forEach.call(LS.list.querySelectorAll(".lss"),function(x){var c=x.querySelector(".lscv");if(c)x.style.setProperty("--cy",Math.round(c.offsetTop+c.offsetWidth/2)+"px")})}
 function lsRepaint(){if(!LS)return;[].forEach.call(LS.list.querySelectorAll(".lsact"),function(a){var r=LS.items[+a.getAttribute("data-li")];if(r)a.innerHTML=lsActs(r)});lsCmPaint();bind()}
 function lsCmPaint(){if(!LS)return;[].forEach.call(LS.list.querySelectorAll(".lss"),function(x){var r=LS.items[+x.getAttribute("data-i")],c=x.querySelector(".lscm");if(!r||!c)return;var on=LS.cm===String(r.id);
 c.hidden=!on;if(!on){c.innerHTML="";return}var f=LS.cmFocus||(c.querySelector("input")===document.activeElement);
@@ -2894,13 +2939,13 @@ if(g.length<2){toast("Type a genre, 2 to 24 letters");return}inp.value="";if(!(S
    or takes away your vote. Up to 3 per person per song; kept in the song_genres table (in this browser when offline) ---------- */
 function gKey(s){return (s.type||"Song")+"|"+fold(s.title)+"|"+fold(s.artist)}
 function genNorm(t){return fold(t).replace(/[^a-z0-9 &'+./-]+/g," ").replace(/\s+/g," ").trim().replace(/^[^a-z0-9]+|[^a-z0-9]+$/g,"").slice(0,24).replace(/[^a-z0-9]+$/,"")}
-function genHTML(r){var k=gKey(revSong(r));return '<div class="lsgen" data-gk="'+esc(k)+'"><p class="lsgl">What genre is it?</p><form class="lsgf"><input maxlength="24" placeholder="Type the genre you hear" aria-label="Type the genre you hear" autocomplete="off" enterkeyhint="done"></form><div class="lsgc" aria-live="polite">'+genCloud(k)+'</div></div>'}
-function genCloud(k){var rows=S.gen[k];if(!rows)return '<p class="lsgn">…</p>';if(!rows.length)return '<p class="lsgn">Nobody has said yet</p>';
+function genHTML(r){var k=gKey(revSong(r));return '<div class="lsgen" data-gk="'+esc(k)+'"><form class="lsgf"><input maxlength="24" placeholder="Type the genre you hear" aria-label="Type the genre you hear" autocomplete="off" enterkeyhint="done"></form><div class="lsgc" aria-live="polite">'+genCloud(k)+'</div></div>'}
+function genCloud(k){var rows=S.gen[k];if(!rows||!rows.length)return '';
 var c={},mine={};rows.forEach(function(x){c[x.g]=(c[x.g]||0)+1;if(x.me)mine[x.g]=1});
 var ws=Object.keys(c).sort(function(a,b){return c[b]-c[a]||(a<b?-1:1)}).slice(0,24),mx=c[ws[0]],mn=c[ws[ws.length-1]],o=[];
 ws.forEach(function(w,i){if(i%2)o.push(w);else o.unshift(w)});
 return o.map(function(w,i){var t=mx===mn?.5:(c[w]-mn)/(mx-mn),n=c[w];
-return '<button type="button" class="lsgw'+(mine[w]?' me':'')+'" data-gw="'+esc(w)+'" style="font-size:'+Math.round(12+t*20)+'px;color:'+["#ff7fbd","#a58bff","#5fd3c5","#ffc35c"][(w.length*7+i)%4]+';opacity:'+(.62+.38*t).toFixed(2)+'" title="'+esc(w)+': '+(n===1?'1 person':n+' people')+(mine[w]?', including you (tap to take yours away)':' (tap to add yours)')+'">'+esc(w)+'</button>'}).join("")}
+return '<button type="button" class="lsgw'+(mine[w]?' me':'')+'" data-gw="'+esc(w)+'" style="font-size:'+Math.round(12+t*20)+'px;opacity:'+(.62+.38*t).toFixed(2)+'" title="'+esc(w)+': '+(n===1?'1 person':n+' people')+(mine[w]?', including you (tap to take yours away)':' (tap to add yours)')+'">'+esc(w)+'</button>'}).join("")}
 function genLoad(k,force){if(S.gen[k]&&!force)return Promise.resolve();
 if(!REMOTE){var all=store.get("ln_genres",{});S.gen[k]=((all&&all[k])||[]).map(function(x){return {g:x.g,me:x.u===S.user}});return Promise.resolve()}
 return Promise.resolve(sb.from("song_genres").select("genre,user_id").eq("song_key",k).limit(3000)).then(function(r){if(r.error)throw r.error;S.gen[k]=(r.data||[]).map(function(x){return {g:x.genre,me:x.user_id===S.uid}})}).catch(function(){S.gen[k]=S.gen[k]||[]})}
