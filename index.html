@@ -2708,6 +2708,9 @@ function pqClose(){S.pq="";S.pqOpen=false;pqRow();refreshList();var b=$("#psb");
 var CLIPA=null,CLIPW=15,
 PLAYI='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>',PAUSEI='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" fill="currentColor"/></svg>';
 function clipStop(){if(CLIPA)try{CLIPA.pause()}catch(e){}}
+/* ...and it stops as soon as you click anywhere off the Tile form (the menu, the bell, the search box, another page) or leave the tab */
+document.addEventListener("pointerdown",function(e){if(CLIPA&&!CLIPA.paused&&!(e.target&&e.target.closest&&e.target.closest("#rf")))clipStop()},true);
+document.addEventListener("visibilitychange",function(){if(document.hidden)clipStop()});window.addEventListener("pagehide",clipStop);
 function fmtSec(t){t=Math.max(0,Math.round(t));return Math.floor(t/60)+":"+(t%60<10?"0":"")+t%60}
 function clipHTML(){return '<div class="clp" id="clp"><div class="clph"><label id="clpl">The part that plays</label><span class="meta clpt" id="clpt"></span></div>'+
 '<div class="clpr"><button type="button" class="clpb" id="clpb" aria-label="Play">'+PLAYI+'</button><div class="clps" id="clps" role="slider" tabindex="0" aria-labelledby="clpl" aria-valuemin="0"><div class="clpbars"></div><div class="clpw"><i></i></div></div></div>'+
