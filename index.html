@@ -2253,7 +2253,15 @@ f.onsubmit=function(e){e.preventDefault();var t=i.value.trim();if(!t)return;i.di
 document.querySelectorAll("[data-dcm]").forEach(function(b){b.onclick=function(){api.delComment(b.dataset.dcm,b.dataset.rid).then(function(){refreshList()})}})}
 
 function okArt(u){return typeof u==="string"&&/^https:\/\/[\w.-]+\.mzstatic\.com\//.test(u)}
-document.addEventListener("error",function(e){var t=e.target;if(t&&t.tagName==="IMG"&&t.closest&&t.closest(".cover,.res,.pickbig,.mto,.cvbk,.glow"))t.remove()},true);
+document./* a picture that won't load is tried again (half a second later, then three seconds after that) before its coloured stand-in shows,
+   so one dropped request doesn't cost a song its artwork. (The glow keeps its own copy of each picture once loaded, which is how it
+   could show while the cover beside it, asked for again on every redraw, had failed.) */
+addEventListener("error",function(e){var t=e.target;if(!(t&&t.tagName==="IMG"&&t.closest&&t.closest(".cover,.res,.pickbig,.mto,.cvbk,.glow")))return;
+var n=+t.getAttribute("data-try")||0;if(n<2){t.setAttribute("data-try",n+1);t.style.visibility="hidden";
+setTimeout(function(){if(!t.isConnected)return;var u=t.getAttribute("src");t.removeAttribute("src");t.setAttribute("src",u)},n?3000:500);return}
+t.remove()},true);
+/* (load events never reach the window, so this listens on the document) */
+document.addEventListener("load",function(e){var t=e.target;if(t&&t.tagName==="IMG"&&t.hasAttribute("data-try"))t.style.visibility=""},true);
 
 function openForm(r,host,pre){
 var d=host||$("#dlg"),rating=r?rnum(r.rating):0,results=[],tm=null,ac=null,dupOn=false;
