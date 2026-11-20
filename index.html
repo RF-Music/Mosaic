@@ -292,10 +292,13 @@ header.top h2{margin-right:10px}
 .act[data-rp].on{color:var(--teal)}
 .act[data-like].on svg{fill:currentColor}
 .act:has(>.inf){position:relative}.act>.inf{position:absolute;left:calc(100% - 8px);top:0;font-size:12px;line-height:1;font-weight:600;pointer-events:none}
-/* the song page's rating spread, beside the average: a curve with a marker that clicks into place at each 0.1 */
-.srate{flex-wrap:wrap;row-gap:12px}
-.rdist{position:relative;align-self:center;display:flex;flex-direction:column;gap:3px;margin-left:4px}
-.rdc{display:block;width:200px;height:60px;overflow:visible;cursor:crosshair;touch-action:pan-y;outline:none}
+/* the song page's rating spread: a curve with a marker that clicks into place at each 0.1. The top of the box is in two parts: the average
+   on the left, and the curve filling the right, down in the bottom right corner with space around it (most beside the stars and at the top) */
+.srh2{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:40px;align-items:end}
+.srl{align-self:start;min-width:0}
+.rdist{position:relative;display:flex;flex-direction:column;gap:3px;justify-self:end;width:100%;max-width:460px;margin:22px 6px 0 0}
+.rdc{display:block;width:100%;height:auto;aspect-ratio:2.3;overflow:visible;cursor:crosshair;touch-action:pan-y;outline:none}
+@media (max-width:520px){.srh2{grid-template-columns:minmax(0,1fr)}.rdist{justify-self:stretch;max-width:340px;margin:14px 0 2px}.rdc{aspect-ratio:auto;height:76px}}
 .rda{fill:url(#rdg)}
 .rdg1{stop-color:var(--pop);stop-opacity:.42}.rdg2{stop-color:var(--violet);stop-opacity:0}
 .rdl{fill:none;stroke:var(--pop);stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
@@ -306,13 +309,13 @@ header.top h2{margin-right:10px}
 .rdo.pop{animation:rdpop .2s cubic-bezier(.3,.7,.4,1.4)}
 @keyframes rdpop{0%{transform:scale(1.8)}100%{transform:scale(1)}}
 .rdc:focus-visible{outline:2px solid var(--pop);outline-offset:4px;border-radius:4px}
-.rdt{position:absolute;bottom:calc(100% + 2px);left:0;white-space:nowrap;padding:3px 8px;border-radius:6px;background:var(--ink);color:var(--bg);font-size:11px;font-weight:600;line-height:1.35;pointer-events:none;opacity:0;transition:opacity .12s;z-index:3;font-variant-numeric:tabular-nums}
+.rdt{position:absolute;top:0;left:0;white-space:nowrap;padding:3px 8px;border-radius:6px;background:var(--ink);color:var(--bg);font-size:11px;font-weight:600;line-height:1.35;pointer-events:none;opacity:0;transition:opacity .12s;z-index:3;font-variant-numeric:tabular-nums}
 .rdist.on .rdt{opacity:1}
 .rdlab{display:flex;justify-content:space-between;font-size:11px;line-height:1;color:var(--mute)}
 .dsf{margin:-4px 0 14px;font-size:13px;color:var(--mute)}
 .dsf:empty{display:none}
 .dsf .linkbtn{margin-left:8px}
-@media (max-width:520px){.sbox .srate{gap:10px}.rdist{flex:1 1 100%;margin-left:0}.rdc{width:100%;max-width:320px;height:auto;aspect-ratio:200/60}}
+@media (max-width:520px){.sbox .srate{gap:10px}}
 /* the Tile page: a bigger glow, a cover that turns over for details, and a Tile button that grows a little on hover */
 .tpk .aglow{inset:-32%;--ab:38px}
 .tpk .cvf,.tpk .covbtn{display:block;width:100%}
@@ -328,6 +331,20 @@ header.top h2{margin-right:10px}
 #rf #sv{transition:transform .18s cubic-bezier(.3,.7,.4,1.5),filter .12s}
 #rf #sv:hover:not(:disabled){transform:scale(1.07)}
 #rf #sv:active:not(:disabled){transform:scale(.98)}
+/* searching someone's tiles (profiles) */
+.psr{display:flex;flex-direction:column;align-items:center;gap:4px;margin:-4px 0 14px}
+.psb{display:grid;place-items:center;width:38px;height:38px;padding:0;border:1px solid var(--line);border-radius:50%;background:var(--surface);color:var(--mute);cursor:pointer;transition:color .15s,border-color .15s,transform .15s}
+.psb:hover{color:var(--ink);border-color:color-mix(in srgb,var(--ink) 45%,transparent);transform:scale(1.06)}
+.psb svg{width:17px;height:17px}
+.psbox{display:flex;align-items:center;gap:8px;width:min(340px,100%);height:40px;margin:0;padding:0 5px 0 14px;border:1px solid var(--line);border-radius:999px;background:var(--surface);animation:psin .2s ease-out}
+.psbox:focus-within{border-color:var(--pop)}
+.psbox svg{flex:none;width:16px;height:16px;color:var(--mute)}
+.psbox input[type=search]{flex:1;min-width:0;height:100%;margin:0;padding:0;border:0;border-radius:0;background:none;box-shadow:none;color:var(--ink);font:inherit;font-size:14px;outline:none}
+.psbox input[type=search]::-webkit-search-cancel-button{display:none}
+.psx{flex:none;width:30px;height:30px;padding:0;border:0;border-radius:50%;background:none;color:var(--mute);font-size:19px;line-height:1;cursor:pointer}
+.psx:hover{background:color-mix(in srgb,var(--ink) 8%,transparent);color:var(--ink)}
+.psn{font-size:12px;min-height:1.2em}
+@keyframes psin{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}
 /* the part that plays (Tile page) */
 .clp{margin:12px 0 2px}
 .clph{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
@@ -1846,6 +1863,7 @@ function filtered(){
 if(S.tab==="song"&&S.song)return songReviews(S.song).filter(inDist).sort(function(a,b){return b.id-a.id});
 var l=S.reviews.slice();
 if(S.tab==="profile"||S.tab==="user"){var pn=S.tab==="profile"?S.user:S.view;l=l.filter(function(r){return r.user===pn}).concat(S.reviews.filter(function(r){return r.user!==pn&&(S.reposts[r.id]||[]).indexOf(pn)>-1}).map(function(r){return Object.assign({},r,{via:pn})}))}
+if(S.pq&&(S.tab==="profile"||S.tab==="user"))l=l.filter(pqMatch);
 if(S.tab==="feed"&&S.scope==="fol"){var fl=(me()&&me().following)||[];l=l.filter(function(r){return fl.indexOf(r.user)>-1})}
 if(S.type!=="All")l=l.filter(function(r){return r.type===S.type});
 if(S.tab==="feed"&&!S.q)l=sdThin(l);
@@ -1912,7 +1930,7 @@ t.map(function(o,j){var x=o.x;if(o.v!==pv){rk=j+1;pv=o.v}return '<span class="td
 function footHTML(r,na){var g=plgHTML(r);return '<div class="rf'+(g?'':' np')+'">'+byLine(r,"f",na)+g+'</div>'}
 function listHTML(){
 var sd=S.tab==="sotd"&&S.sotdOK?standings(ukDay()):null,l=sd?sd.map(function(x){return x.r}):filtered();
-if(!l.length)return '<div class="empty">'+(sd?"No reviews yet. Be the first.":S.tab==="profile"?"You haven't tiled anything yet. Tap + to add your first song or album.":(S.tab==="user"?"No reviews from this person yet.":(S.q?"No reviews match that search.":(S.scope==="fol"?"Reviews from people you follow will show up here.":"No reviews yet. Add the first one."))))+'</div>';
+if(!l.length)return '<div class="empty">'+(S.pq&&(S.tab==="profile"||S.tab==="user")?"No tiles match “"+esc(S.pq)+"”.":sd?"No reviews yet. Be the first.":S.tab==="profile"?"You haven't tiled anything yet. Tap + to add your first song or album.":(S.tab==="user"?"No reviews from this person yet.":(S.q?"No reviews match that search.":(S.scope==="fol"?"Reviews from people you follow will show up here.":"No reviews yet. Add the first one."))))+'</div>';
 if(sd)return sd.map(sdRowHTML).join("");
 var nc=!!sd;
 return l.map(function(r,i){var rb=rateBox(r,!nc),
@@ -2168,7 +2186,7 @@ if(S.mosOK&&mosHas(s))return '<div class="tessw" title="In your mosaic"><div cla
 var m=(rs||[]).filter(function(r){return r.user===S.user})[0];
 return m?'<p class="tiled" title="You’ve tiled this ('+rnum(m.rating).toFixed(1)+')"><i aria-hidden="true"></i>Tiled</p>':'<p class="tiled not" title="You haven’t tiled this yet"><i aria-hidden="true"></i>Not tiled</p>'}
 function songView(){var s=S.song,alb=s.type==="Album",what=alb?"album":"song",rs=songReviews(s),n=rs.length,avg=n?rs.reduce(function(a,r){return a+rnum(r.rating)},0)/n:0,mine=dupSong(s);
-var rate=n?'<div class="srate"><span class="snum">'+avg.toFixed(2)+'</span><span class="sbar" style="--p:'+starPct(avg)+'%" role="img" aria-label="Average '+avg.toFixed(2)+' out of 5"></span>'+distHTML(rs)+'</div><p class="meta scount">Average of '+pl(n,"review")+' on Mosaic</p>'
+var rate=n?'<div class="srh2"><div class="srl"><div class="srate"><span class="snum">'+avg.toFixed(2)+'</span><span class="sbar" style="--p:'+starPct(avg)+'%" role="img" aria-label="Average '+avg.toFixed(2)+' out of 5"></span></div><p class="meta scount">Average of '+pl(n,"review")+' on Mosaic</p></div>'+distHTML()+'</div>'
 :'<div class="srate none"><span class="noyet">No ratings yet</span></div><p class="meta scount">Be the first to tile this '+what+'.</p>';
 return '<button type="button" class="linkbtn" data-back="1" style="margin-bottom:14px">← '+esc(backLabel())+'</button>'+
 '<section class="song sbox card"><div class="pickbig"><div class="sart"><div class="aglw">'+artGlow(s)+(S.user&&S.mosOK&&mosHas(s)?artGlow(s,1):'')+heroCover(s)+'</div>'+songBadge(s,rs)+'</div><div class="sbt"><h1>'+esc(s.title)+'</h1><div class="meta"><button type="button" class="ulink" data-seeq="'+esc(s.artist)+'" title="See Mosaic reviews by this artist">'+esc(s.artist)+'</button></div></div></div><div class="sinfo">'+rate+
@@ -2198,6 +2216,7 @@ if(S.tab==="sotd"&&!S.sotdOK)S.tab="feed";
 if(S.tab==="msgs"&&!(S.user&&S.msgOK))S.tab="feed";
 /* S.bq: the search a song was picked from, so its Tile page can lead back there; forgotten once you leave the page */
 if(S.tab!=="review")S.bq=null;
+var pqk=S.tab+"|"+(S.tab==="user"?S.view:"");if(S.pqK!==pqk){S.pqK=pqk;S.pq="";S.pqOpen=false}
 var a=me(),nm=esc(S.user||""),prof=S.tab==="profile",mcur=prof||S.tab==="likes"||S.tab==="account"||S.tab==="later"||S.tab==="editp";
 var cnt=S.reviews.filter(function(r){return r.user===S.user}).length;
 var notes=(a&&a.notes)||[],unread=notes.filter(function(n){return !n.read}).length;
@@ -2211,7 +2230,7 @@ var chat=ic+'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2
 var body;
 if(S.tab==="review"){body='<section class="page">'+(S.bq?'<button type="button" class="linkbtn" id="bks" style="margin-bottom:14px">← Back to search</button><h2 class="vh">Tile</h2>':'<h2>Tile</h2>')+'<div class="card" id="rvhost"></div></section>'}
 else if(S.tab==="user"&&acct(S.view)){var vu=S.view,va=acct(vu),vc=S.reviews.filter(function(r){return r.user===vu}).length;
-body='<button type="button" class="linkbtn" data-tab="feed" style="margin-bottom:8px">Back to Recommended</button><section class="prof ig"><div class="pmain"><h2 class="pnm"><span>'+esc(vu)+'</span></h2>'+pavHTML(va,va.plats||[])+'<div class="igm">'+igStats(vu,va,vu!==S.user?'<span class="pbt">'+plusBtn(vu)+dmBtn(vu)+'</span>':'')+est(va)+lifeBtn(vu)+'</div></div>'+mosaicHTML(vu,false)+'</section><div class="list cols'+S.cols+'" id="list">'+listHTML()+'</div>'}
+body='<button type="button" class="linkbtn" data-tab="feed" style="margin-bottom:8px">Back to Recommended</button><section class="prof ig"><div class="pmain"><h2 class="pnm"><span>'+esc(vu)+'</span></h2>'+pavHTML(va,va.plats||[])+'<div class="igm">'+igStats(vu,va,vu!==S.user?'<span class="pbt">'+plusBtn(vu)+dmBtn(vu)+'</span>':'')+est(va)+lifeBtn(vu)+'</div></div>'+mosaicHTML(vu,false)+'</section>'+psrHTML(vu)+'<div class="list cols'+S.cols+'" id="list">'+listHTML()+'</div>'}
 else if(S.tab==="search"){var stabs=[["songs","Songs"],["albums","Albums"],["profiles","Profiles"],["artists","Artists"]].map(function(t){return '<button type="button" class="stab" role="tab" data-st="'+t[0]+'" aria-selected="'+((S.stab||"songs")===t[0])+'">'+t[1]+'</button>'}).join("");
 body='<section class="page"><h2>Results for “'+esc(S.sq||"")+'”</h2><div class="stabs" role="tablist">'+stabs+'</div><div class="list" id="sres">'+resultsHTML()+'</div></section>'}
 else if(S.tab==="sotd"&&S.sotdOK){body=sotdView()}
@@ -2222,7 +2241,7 @@ else if(S.tab==="later"&&S.laterOK){body=laterView()}
 else if(S.tab==="likes"){body='<section class="page"><h2>My likes and comments</h2><div class="empty">Reviews you like or comment on will show up here.</div></section>'}
 else if(S.tab==="editp"&&S.user){body=editHTML()}
 else if(S.tab==="account"){body='<section class="page"><h2>Privacy and account</h2><dl><dt>Username</dt><dd>'+nm+'</dd><dt>Email</dt><dd>'+esc(a&&a.email||"")+'</dd>'+(since(a)?'<dt>Account established</dt><dd>'+since(a)+'</dd>':'')+'<dt>Your data</dt><dd>'+(REMOTE?'Your profile and reviews are saved to your Mosaic account.':'Accounts and reviews are saved in this browser only.')+'</dd></dl></section>'}
-else{body=(prof?'<section class="prof ig"><div class="pmain"><h2 class="pnm"><span>'+nm+'</span></h2>'+pavHTML(a,S.platOK?S.plats:[],1)+'<div class="igm">'+igStats(S.user,a,"")+est(a)+lifeBtn(S.user)+'</div></div>'+mosaicHTML(S.user,true)+'</section>':'')+
+else{body=(prof?'<section class="prof ig"><div class="pmain"><h2 class="pnm"><span>'+nm+'</span></h2>'+pavHTML(a,S.platOK?S.plats:[],1)+'<div class="igm">'+igStats(S.user,a,"")+est(a)+lifeBtn(S.user)+'</div></div>'+mosaicHTML(S.user,true)+'</section>'+psrHTML(S.user):'')+
 (S.tab==="feed"&&S.q?'<div class="chips"><span class="meta">Showing reviews for</span><button type="button" class="chip" id="clq">'+esc(S.q)+' ×</button></div>':'')+'<div class="tools"><div class="tl"><button class="btn addb" id="add" aria-label="Tile" title="Tile"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>'+(S.tab==="feed"?'<select id="sc" aria-label="Show"><option value="all">Everyone</option><option value="fol">People I follow</option></select>':'')+'<select id="t" aria-label="Type"><option>All</option><option>Album</option><option>Song</option></select><select id="s" aria-label="Sort"><option value="new">Newest</option><option value="top">Highest rated</option><option value="hot">Most interacted</option></select></div>'+layoutSwitch()+'</div>'+
 '<div class="list cols'+S.cols+'" id="list">'+listHTML()+'</div>'}
 $("#app").innerHTML='<div class="wrap'+(S.tab==="msgs"?' dmw':'')+'"><header class="top"><h2><button type="button" class="wm" data-tab="feed" aria-label="Mosaic home">Mosaic</button></h2><nav><button data-tab="feed" aria-current="'+(S.tab==="feed")+'">Recommended</button>'+(S.sotdOK?'<button data-tab="sotd" aria-current="'+(S.tab==="sotd")+'">Song of the Day</button>':'')+(S.reviews.length?'<button type="button" data-listen="1">Listen</button>':'')+'</nav>'+
@@ -2306,7 +2325,7 @@ var ws=ps.map(function(p){try{var l=Infinity,r=-Infinity,tw=document.createTreeW
 while((n=tw.nextNode())){re=/\S+/g;while((m=re.exec(n.data))){rg=document.createRange();rg.setStart(n,m.index);rg.setEnd(n,m.index+m[0].length);rs=rg.getClientRects();
 for(i=0;i<rs.length;i++){if(rs[i].width<1)continue;if(rs[i].left<l)l=rs[i].left;if(rs[i].right>r)r=rs[i].right}}}return r>l?Math.ceil(r-l)+1:0}catch(e){return 0}});
 ps.forEach(function(p,i){if(ws[i])p.style.width=ws[i]+"px"})}
-window.addEventListener("resize",function(){clearTimeout(fitT);fitT=setTimeout(function(){fitReviews();fitLife()},120)});
+window.addEventListener("resize",function(){clearTimeout(fitT);fitT=setTimeout(function(){fitReviews();fitLife();wireDist()},120)});
 try{if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitReviews)}catch(e){}
 /* the lifetime mosaic, as big as it can be with every tile on screen at once */
 function fitLife(){var g=document.getElementById("lgrid");document.documentElement.classList.toggle("lifeon",S.tab==="life");if(!g)return;var c=+g.style.getPropertyValue("--c")||8,r=Math.ceil(g.children.length/c),gap=parseFloat(getComputedStyle(g).columnGap)||0,
@@ -2606,27 +2625,31 @@ el.addEventListener("wheel",function(e){e.preventDefault()},{passive:false});
 el.addEventListener("touchmove",function(e){e.preventDefault()},{passive:false});
 document.addEventListener("keydown",onKey,true)}
 /* ---------- the song page's rating spread, as a smooth curve. Glide along it and it clicks into place at every 0.1, showing how many tiles gave
-   exactly that rating; choose a rating to see just those reviews (arrow keys and Enter work too) ---------- */
-var RDW=200,RDH=60;
+   exactly that rating; choose a rating to see just those reviews (arrow keys and Enter work too).
+   It fills the right of the box's top part, sitting in the bottom right with room left all round (most beside the stars and at the top);
+   on phones it has its own line under the stars ---------- */
 function inDist(r){return S.sdist==null||Math.round(rnum(r.rating)*10)===Math.round(S.sdist*10)}
 function starLab(v){return (v%1?v.toFixed(1):String(v))+"★"}
 function rdDens(rs){var h=Math.max(.18,.35*Math.pow(rs.length||1,-.2)),v=rs.map(function(r){return rnum(r.rating)}),d=[];
 for(var i=0;i<=50;i++){var x=i/10,y=0;v.forEach(function(a){var z=(x-a)/h;y+=Math.exp(-z*z/2)});d.push(y)}var mx=Math.max.apply(null,d)||1;return d.map(function(y){return y/mx})}
-function rdY(d,i){return RDH-1.5-d[i]*(RDH-6)}
-function rdPath(d){var p=d.map(function(y,i){return [i/50*RDW,rdY(d,i)]}),f=function(n){return n.toFixed(1)},s="M"+f(p[0][0])+" "+f(p[0][1]);
+function rdY(d,i,H){return H-2-d[i]*(H-9)}
+function rdPath(d,W,H){var p=d.map(function(y,i){return [i/50*W,rdY(d,i,H)]}),f=function(n){return n.toFixed(1)},s="M"+f(p[0][0])+" "+f(p[0][1]);
 for(var i=0;i<p.length-1;i++){var a=p[i-1]||p[i],b=p[i],c=p[i+1],e=p[i+2]||c;s+=" C"+f(b[0]+(c[0]-a[0])/6)+" "+f(b[1]+(c[1]-a[1])/6)+" "+f(c[0]-(e[0]-b[0])/6)+" "+f(c[1]-(e[1]-b[1])/6)+" "+f(c[0])+" "+f(c[1])}return s}
-function distHTML(rs){var line=rdPath(rdDens(rs));
-return '<div class="rdist'+(S.sdist!=null?' f':'')+'"><svg class="rdc" viewBox="0 0 '+RDW+' '+RDH+'" tabindex="0" role="slider" aria-label="How people rated it. Arrow keys move along it, Enter shows just those reviews" aria-valuemin="0" aria-valuemax="5">'+
+function distHTML(){return '<div class="rdist'+(S.sdist!=null?' f':'')+'"><svg class="rdc" tabindex="0" role="slider" aria-label="How people rated it. Arrow keys move along it, Enter shows just those reviews" aria-valuemin="0" aria-valuemax="5">'+
 '<defs><linearGradient id="rdg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="rdg1"/><stop offset="1" class="rdg2"/></linearGradient></defs>'+
-'<path class="rda" d="'+line+' L'+RDW+' '+RDH+' L0 '+RDH+' Z"/><path class="rdl" d="'+line+'"/><line class="rdx" x1="0" x2="0" y1="0" y2="'+RDH+'"/><circle class="rdo" r="4" cx="0" cy="0"/></svg>'+
+'<path class="rda"/><path class="rdl"/><line class="rdx" x1="0" x2="0" y1="0" y2="0"/><circle class="rdo" r="4" cx="0" cy="0"/></svg>'+
 '<span class="rdt" aria-hidden="true"></span><div class="rdlab" aria-hidden="true"><span>0</span><span>5★</span></div></div>'}
+function rdDraw(g,d){var sv=g.querySelector(".rdc"),r=sv.getBoundingClientRect(),W=Math.max(60,Math.round(r.width)),H=Math.max(24,Math.round(r.height)),line=rdPath(d,W,H);
+sv.setAttribute("viewBox","0 0 "+W+" "+H);g.querySelector(".rdl").setAttribute("d",line);g.querySelector(".rda").setAttribute("d",line+" L"+W+" "+H+" L0 "+H+" Z");g.querySelector(".rdx").setAttribute("y2",String(H));g._W=W;g._H=H}
 function wireDist(){var g=document.querySelector(".rdist");if(!g||!S.song)return;var sv=g.querySelector(".rdc"),o=g.querySelector(".rdo"),ln=g.querySelector(".rdx"),t=g.querySelector(".rdt"),
 rs=songReviews(S.song),d=rdDens(rs),cur=null,avg=rs.length?rs.reduce(function(a,r){return a+rnum(r.rating)},0)/rs.length:2.5;
+rdDraw(g,d);
 function cnt(i){return rs.filter(function(r){return Math.round(rnum(r.rating)*10)===i}).length}
-function put(i,show){var x=(i/50*RDW).toFixed(1),y=rdY(d,i).toFixed(1),k=cnt(i),lab=(i/10).toFixed(1)+"★ · "+(k?pl(k,"tile"):"none");
-if(cur!==i){o.setAttribute("cx",x);o.setAttribute("cy",y);ln.setAttribute("x1",x);ln.setAttribute("x2",x);ln.setAttribute("y1",y);o.classList.remove("pop");void o.getBoundingClientRect();o.classList.add("pop");cur=i}
-/* the label sits over the marker, but never past the curve's right end */
-t.textContent=lab;var gw=g.getBoundingClientRect().width,tw=t.offsetWidth;t.style.left=Math.min(i/50*sv.getBoundingClientRect().width-tw/2,gw-tw)+"px";g.classList.toggle("none",!k);sv.setAttribute("aria-valuenow",(i/10).toFixed(1));sv.setAttribute("aria-valuetext",lab);if(show)g.classList.add("on")}
+function put(i,show){var W=g._W,H=g._H,px=i/50*W,py=rdY(d,i,H),k=cnt(i),lab=(i/10).toFixed(1)+"★ · "+(k?pl(k,"tile"):"none");
+if(cur!==i){o.setAttribute("cx",px.toFixed(1));o.setAttribute("cy",py.toFixed(1));ln.setAttribute("x1",px.toFixed(1));ln.setAttribute("x2",px.toFixed(1));ln.setAttribute("y1",py.toFixed(1));o.classList.remove("pop");void o.getBoundingClientRect();o.classList.add("pop");cur=i}
+/* the label floats just above the marker, and never past the curve's right end (the curve sits low enough that it never reaches the top of the box) */
+t.textContent=lab;var tw=t.offsetWidth,th=t.offsetHeight;t.style.left=Math.min(px-tw/2,W-tw)+"px";t.style.top=(py-th-9)+"px";
+g.classList.toggle("none",!k);sv.setAttribute("aria-valuenow",(i/10).toFixed(1));sv.setAttribute("aria-valuetext",lab);if(show)g.classList.add("on")}
 function at(e){var r=sv.getBoundingClientRect();return Math.min(50,Math.max(1,Math.round((e.clientX-r.left)/r.width*50)))}
 function pick(i){if(!cnt(i))return;var v=i/10;S.sdist=S.sdist!=null&&Math.round(S.sdist*10)===i?null:v;distPaint()}
 sv.onpointermove=sv.onpointerdown=function(e){put(at(e),true)};
@@ -2640,7 +2663,10 @@ if(S.sdist!=null)put(Math.round(S.sdist*10),false)}
 function dsfHTML(){if(S.sdist==null||!S.song)return "";var n=songReviews(S.song).filter(inDist).length;return 'Showing the '+pl(n,"tile")+' rated '+starLab(S.sdist)+'<button type="button" class="linkbtn" data-dclr="1">Show all</button>'}
 function distPaint(){var g=document.querySelector(".rdist");if(g)g.classList.toggle("f",S.sdist!=null);
 var f=$("#dsf");if(f)f.innerHTML=dsfHTML();refreshList()}
-function wireExtras(){document.querySelectorAll("[data-listen]").forEach(function(b){b.onclick=openListen});
+function wireExtras(){var psb=$("#psb");if(psb)psb.onclick=function(){S.pqOpen=true;pqRow();var q=$("#pq");if(q)q.focus()};
+var pq=$("#pq");if(pq){pq.oninput=function(){S.pq=pq.value;refreshList();var n=$("#psn");if(n)n.textContent=pqCount()};pq.onkeydown=function(e){if(e.key==="Escape"){e.preventDefault();pqClose()}}}
+var psx=$("#psx");if(psx)psx.onclick=pqClose;
+document.querySelectorAll("[data-listen]").forEach(function(b){b.onclick=openListen});
 wireDist();
 document.querySelectorAll("[data-dclr]").forEach(function(b){b.onclick=function(){S.sdist=null;distPaint()}})}
 /* ---------- the Tile page's cover turns over to show the song's details. Until you've tiled it the average stays hidden, so it can't sway your rating ---------- */
@@ -2656,6 +2682,17 @@ f.classList.toggle("on",on);fb.setAttribute("aria-expanded",String(on));
 if(on){bk.removeAttribute("tabindex");bk.removeAttribute("aria-hidden");fb.setAttribute("tabindex","-1");try{bk.focus({preventScroll:true})}catch(e){}}
 else{fb.removeAttribute("tabindex");bk.setAttribute("tabindex","-1");bk.setAttribute("aria-hidden","true");try{fb.focus({preventScroll:true})}catch(e){}}}
 fb.onclick=function(){turn(true)};bk.onclick=function(){turn(false)}}
+/* ---------- searching one person's tiles (on profiles): only the songs and albums they've tiled, by title and artist.
+   Every word you type has to match, accents don't matter ("bjork" finds Björk), and the tiles below filter as you type ---------- */
+var MAGI='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>';
+function fold(t){return String(t||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase()}
+function pqMatch(r){var hay=fold(r.title+" "+r.artist);return fold(S.pq).split(/\s+/).filter(Boolean).every(function(w){return hay.indexOf(w)>-1})}
+function pqCount(){if(!S.pq)return "";var q=S.pq;S.pq="";var t=filtered().length;S.pq=q;var m=filtered().length;return m?m+" of "+pl(t,"tile"):"No matches"}
+function psrHTML(u){if(!S.reviews.some(function(r){return r.user===u}))return "";var on=S.pqOpen||!!S.pq,who=u===S.user?"your":esc(u)+"’s";
+return '<div class="psr'+(on?' open':'')+'">'+(on?'<label class="psbox">'+MAGI+'<input id="pq" type="search" placeholder="Search '+who+' tiles" value="'+esc(S.pq||"")+'" autocomplete="off" aria-label="Search '+who+' tiles"><button type="button" class="psx" id="psx" aria-label="Close search">×</button></label><span class="meta psn" id="psn" aria-live="polite">'+pqCount()+'</span>'
+:'<button type="button" class="psb" id="psb" aria-label="Search '+who+' tiles" title="Search '+who+' tiles">'+MAGI+'</button>')+'</div>'}
+function pqRow(){var r=document.querySelector(".psr");if(r)r.outerHTML=psrHTML(S.tab==="user"?S.view:S.user);wireExtras()}
+function pqClose(){S.pq="";S.pqOpen=false;pqRow();refreshList();var b=$("#psb");if(b)b.focus()}
 /* ---------- "The part that plays": choosing which bit of a song plays, like picking a song for an Instagram story. Apple's preview is
    30 seconds, so you slide a 15-second window along it; that part loops while you choose, and Listen plays it ---------- */
 var CLIPA=null,CLIPW=15,
