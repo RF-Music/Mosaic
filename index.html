@@ -161,6 +161,8 @@ nav button[aria-current="true"]{color:var(--ink);border-color:var(--pop)}
 /* as square as it can be: about as many columns as rows (the last row may be short); tiles up to 96px, and small enough that the whole mosaic fits on the screen (fitLife) */
 .lgrid{display:grid;grid-template-columns:repeat(var(--c,8),var(--t,minmax(0,96px)));justify-content:center;gap:3px}
 .lt{container-type:inline-size}@container (max-width:42px){.lm{display:none}}
+/* the lifetime mosaic page never scrolls: it is sized to fit the screen, and nothing past it can be reached */
+html.lifeon,html.lifeon body{overflow:hidden;overscroll-behavior:none}
 .lt{position:relative;display:block;aspect-ratio:1;padding:0;border:0;border-radius:3px;overflow:hidden;cursor:pointer;background:linear-gradient(135deg,hsl(var(--h),62%,40%),hsl(calc(var(--h) + 60),66%,28%));animation:ltin .45s cubic-bezier(.2,.7,.3,1) backwards;transition:transform .12s,box-shadow .12s}
 .lt img{display:block;width:100%;height:100%;object-fit:cover}
 .lt>span{position:absolute;inset:0;display:grid;place-items:center;padding:4px;color:#fff;font:600 9px/1.15 "Montserrat",sans-serif;text-align:center;overflow:hidden}
@@ -2308,7 +2310,7 @@ ps.forEach(function(p,i){if(ws[i])p.style.width=ws[i]+"px"})}
 window.addEventListener("resize",function(){clearTimeout(fitT);fitT=setTimeout(function(){fitReviews();fitLife()},120)});
 try{if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitReviews)}catch(e){}
 /* the lifetime mosaic, as big as it can be with every tile on screen at once */
-function fitLife(){var g=document.getElementById("lgrid");if(!g)return;var c=+g.style.getPropertyValue("--c")||8,r=Math.ceil(g.children.length/c),gap=parseFloat(getComputedStyle(g).columnGap)||0,
+function fitLife(){var g=document.getElementById("lgrid");document.documentElement.classList.toggle("lifeon",S.tab==="life");if(!g)return;var c=+g.style.getPropertyValue("--c")||8,r=Math.ceil(g.children.length/c),gap=parseFloat(getComputedStyle(g).columnGap)||0,
 H=window.innerHeight-(g.getBoundingClientRect().top+(window.scrollY||0))-16,t=Math.floor(Math.min(96,(g.clientWidth-(c-1)*gap)/c,(H-(r-1)*gap)/r));g.style.setProperty("--t",Math.max(8,t)+"px")}
 function bind(){paintSoft();fitReviews();fitLife();wireExtras();if(CLIPA&&!document.getElementById("clp"))clipStop();
 document.querySelectorAll("[data-setplat]").forEach(function(b){b.onclick=openPlatDlg});
