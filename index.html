@@ -347,6 +347,10 @@ header.top h2{margin-right:10px}
 .psx:hover{background:color-mix(in srgb,var(--ink) 8%,transparent);color:var(--ink)}
 .psn{font-size:12px;min-height:1.2em}
 @keyframes psin{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:none}}
+/* on your own profile the search sits in the tools row, at the right */
+.tools .psr{flex-direction:row-reverse;align-items:center;gap:8px;margin:0 0 0 auto}
+.tools .psbox{width:min(260px,52vw)}
+@media (max-width:620px){.tools:has(.psr.open){flex-wrap:wrap}.tools .psr.open{flex:1 1 100%;order:3;margin:0}.tools .psr.open .psbox{flex:1;width:auto}}
 /* the part that plays (Tile page) */
 .clp{margin:12px 0 2px}
 .clph{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
@@ -403,15 +407,53 @@ html.lsopen,html.lsopen body{overflow:hidden}
 .lsb{display:flex;flex-direction:column;align-items:center;gap:5px;background:none;border:0;padding:0;color:#fff;font:inherit;font-size:12px;font-weight:600;cursor:pointer}
 .lsb svg{width:24px;height:24px;padding:13px;border-radius:50%;background:rgba(255,255,255,.13);box-sizing:content-box;transition:transform .15s,background .15s}
 .lsb:hover svg{background:rgba(255,255,255,.22);transform:scale(1.06)}
-.lslk.on svg{fill:#ff5c8a;stroke:#ff5c8a}
 .lstl svg{background:linear-gradient(135deg,#7a5cf5,#c04fd8)}
 .lstl.on svg{background:rgba(255,255,255,.13)}
 .lsb span:empty{display:none}
+/* Listen: the column of buttons, the comments sheet, and the genre cloud */
+.lsact{top:50%;bottom:auto;transform:translateY(-50%);gap:12px;z-index:3}
+.lsb svg{width:22px;height:22px;padding:11px}
+.lsb[data-like].on svg{fill:#ff5c8a;stroke:#ff5c8a}
+.lsb[data-rp].on svg{color:#5fd3c5;background:rgba(95,211,197,.18)}
+.lsb[data-later].on svg{fill:currentColor}
+.lsb.lscb.on svg{background:rgba(255,255,255,.26)}
+.lsb:disabled{opacity:.45;cursor:default}
+.lsb:disabled:hover svg{transform:none;background:rgba(255,255,255,.13)}
+.lsn .tray{left:auto;right:100%;margin:0 10px 0 0;transform:translate(6px,-50%)}
+.lsn .sendw.open .tray{transform:translate(0,-50%)}
+.lscm{position:absolute;left:50%;bottom:0;z-index:5;display:flex;flex-direction:column;width:min(460px,100vw);max-height:62vh;padding:12px 16px 18px;transform:translateX(-50%);border-radius:16px 16px 0 0;background:rgba(18,18,22,.95);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:0 -10px 40px rgba(0,0,0,.45);text-align:left;cursor:default;animation:lsup .22s ease-out}
+.lscm[hidden]{display:none}
+@keyframes lsup{from{transform:translate(-50%,30px);opacity:0}}
+.lscmh{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;font-size:14px}
+.lscx{display:grid;place-items:center;width:32px;height:32px;padding:0;border:0;border-radius:50%;background:rgba(255,255,255,.1);color:#fff;cursor:pointer}
+.lscx svg{width:16px;height:16px}
+.lscm .cmts{display:flex;flex-direction:column;gap:8px;min-height:0;overflow:auto;margin:0;padding:0;border:0;color:#fff;font-size:14px}
+.lscm .cm{display:flex;justify-content:space-between;gap:10px}
+.lscm .meta{color:rgba(255,255,255,.5)}
+.lscm .cmf input{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.18)}
+.lscm .cx{color:rgba(255,255,255,.6)}
+.lsgen{position:absolute;left:max(18px,calc(50% - 570px));top:50%;z-index:3;width:240px;transform:translateY(-50%);text-align:center;cursor:default}
+.lsgl{margin:0 0 8px;font-size:11px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:rgba(255,255,255,.6)}
+.lsgf input{box-sizing:border-box;width:100%;height:38px;margin:0;padding:0 14px;border:1px solid rgba(255,255,255,.2);border-radius:999px;background:rgba(0,0,0,.35);color:#fff;font:inherit;font-size:13px;text-align:center;outline:none}
+.lsgf input:focus{border-color:var(--pop)}
+.lsgf input::placeholder{color:rgba(255,255,255,.45)}
+.lsgc{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:0 10px;max-height:44vh;margin-top:14px;overflow:hidden}
+.lsgw{padding:0 1px;border:0;background:none;font:inherit;font-weight:700;line-height:1.15;letter-spacing:-.01em;cursor:pointer;transition:transform .12s,opacity .12s}
+.lsgw:hover{transform:scale(1.08);opacity:1!important}
+.lsgw.me{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px}
+.lsgn{margin:0;font-size:12px;color:rgba(255,255,255,.5)}
+.lsg{display:none}
+@media (max-width:980px){
+.lsg{display:flex}
+.lsgen{left:50%;top:auto;bottom:0;z-index:5;box-sizing:border-box;width:min(460px,100vw);padding:16px 16px 22px;transform:translate(-50%,110%);border-radius:16px 16px 0 0;background:rgba(18,18,22,.95);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:0 -10px 40px rgba(0,0,0,.45);transition:transform .25s ease}
+.lss.gopen .lsgen{transform:translate(-50%,0)}
+.lss.gopen .lsg svg{background:rgba(255,255,255,.26)}
+}
 .lsx{position:fixed;top:14px;left:14px;z-index:3;display:grid;place-items:center;width:42px;height:42px;padding:0;border:0;border-radius:50%;background:rgba(255,255,255,.14);color:#fff;cursor:pointer}
 .lsx svg{width:20px;height:20px}
 .lsx:hover{background:rgba(255,255,255,.24)}
 .lshint{position:fixed;left:50%;bottom:16px;z-index:2;margin:0;transform:translateX(-50%);font-size:12px;color:rgba(255,255,255,.65);pointer-events:none;transition:opacity .5s}
-.lsn.moved .lshint{opacity:0}
+.lsn.moved .lshint,.lsn:has(.lscm:not([hidden])) .lshint,.lsn:has(.lss.gopen) .lshint{opacity:0}
 .lsheart{position:absolute;z-index:5;width:96px;height:96px;margin:-48px 0 0 -48px;pointer-events:none;animation:lsheart .85s ease-out forwards}
 .lsheart svg{width:100%;height:100%;fill:#ff5c8a;stroke:#ff5c8a;filter:drop-shadow(0 6px 16px rgba(0,0,0,.4))}
 @keyframes lsheart{0%{transform:scale(.3);opacity:0}15%{transform:scale(1.15);opacity:1}30%{transform:scale(1)}100%{transform:translateY(-46px) scale(1);opacity:0}}
@@ -1232,7 +1274,7 @@ set:function(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 var SUPABASE_URL="https://akzscmkkdzikwfrgfmxz.supabase.co",SUPABASE_KEY="sb_publishable_bt6anw7GyR5bGKS_W5jXEQ_yFQnsCpD";
 var sb=(SUPABASE_URL&&SUPABASE_KEY&&window.supabase)?window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY):null;
 var REMOTE=!!sb;
-var S={user:REMOTE?null:store.get("ln_user",null),reviews:REMOTE?[]:(store.get("ln_reviews",null)||[]).filter(function(r){return [1,2,3].indexOf(r.id)<0}),tab:"feed",q:"",type:"All",sort:"new",boost:{},bx:{}};
+var S={user:REMOTE?null:store.get("ln_user",null),reviews:REMOTE?[]:(store.get("ln_reviews",null)||[]).filter(function(r){return [1,2,3].indexOf(r.id)<0}),tab:"feed",q:"",type:"All",sort:"new",boost:{},bx:{},gen:{}};
 /* likes on a review: people who liked it, plus any extra likes added by hand (like_boosts) */
 function likeN(id){return (S.likes[id]||[]).length+(S.boost[id]||0)}
 function numS(n){return n===Infinity?"∞":String(n)}
@@ -1243,7 +1285,7 @@ function cmN(id){return (S.comments[id]||[]).length+((S.bx[id]||{}).c||0)}
 function rpN(id){return (S.reposts[id]||[]).length+((S.bx[id]||{}).r||0)}
 function shN(id){return (S.bx[id]||{}).s||0}
 function interN(r){return likeN(r.id)+cmN(r.id)+rpN(r.id)+shN(r.id)}
-var soc=REMOTE?{}:store.get("ln_social",{});S.likes=soc.likes||{};S.likeAt=soc.likeAt&&typeof soc.likeAt==="object"?soc.likeAt:{};S.reposts=soc.reposts||{};S.comments=soc.comments||{};S.cm={};S.draft={};S.social=!REMOTE;S.msgOK=!REMOTE;S.sent={};S.info={};S.stack=[];S.cols=colsOK(store.get("ln_perrow",2));S.later=[];S.laterOK=!REMOTE;S.plats=[];S.platOK=!REMOTE;S.mos={};S.mosOK=!REMOTE;S.sotd={days:{},entries:{},admin:false};S.sotdOK=false;S.sdSpan=14;
+var soc=REMOTE?{}:store.get("ln_social",{});S.likes=soc.likes||{};S.likeAt=soc.likeAt&&typeof soc.likeAt==="object"?soc.likeAt:{};S.reposts=soc.reposts||{};S.comments=soc.comments||{};S.cm={};S.draft={};S.social=!REMOTE;S.msgOK=!REMOTE;S.sent={};S.info={};S.stack=[];S.cols=2;S.later=[];S.laterOK=!REMOTE;S.plats=[];S.platOK=!REMOTE;S.mos={};S.mosOK=!REMOTE;S.sotd={days:{},entries:{},admin:false};S.sotdOK=false;S.sdSpan=14;
 /* favourites mosaic (keys are "u:"+username so any username is safe as a key) */
 /* the mosaic is 5x5; while yours is empty its middle row spells FAVES */
 var MOSL=["","","","","","","","","","","F","A","V","E","S","","","","","","","","","",""],MOSN=25;
@@ -1350,7 +1392,7 @@ if(own)h+='<button type="button" class="orb ed" id="edprof" style="'+pos(n-1)+'"
 return '<span class="orbit">'+h+'</span>'}
 function pavHTML(a,ids,own){var o=orbitHTML(ids,own);return '<div class="pav'+(o?' has':'')+'">'+avatar(a,"big")+o+'</div>'}
 function editHTML(){var a=me()||{};
-return '<button type="button" class="linkbtn" data-tab="profile" style="margin-bottom:8px">← Back to My Mosaic</button><section class="page dash"><h2>Edit profile</h2>'+
+return '<button type="button" class="linkbtn" data-tab="profile" style="margin-bottom:8px">← Back to my profile</button><section class="page dash"><h2>Edit profile</h2>'+
 '<div class="card dsec"><h3>Profile picture</h3><div class="dpic">'+avatar(a,"big")+'<div class="row2"><button type="button" class="btn ghost sm" id="chg">Change picture</button>'+(a.pic?'<button type="button" class="btn ghost sm" id="rmp">Remove picture</button>':'')+'</div><input id="pic" type="file" accept="image/*" hidden></div></div>'+
 '<div class="card dsec"><h3>Username</h3><form id="dnf" class="dline" novalidate><input id="dnn" value="'+esc(S.user||"")+'" autocomplete="username" aria-label="Username" spellcheck="false" autocapitalize="none"><button class="btn sm" id="dns">Save</button></form><p class="err" id="dne" role="alert"></p></div>'+
 (S.platOK?'<div class="card dsec" id="dplat"><h3>Listening apps</h3>'+platPicker(S.plats)+'<p class="err" id="dpe" role="alert"></p><div class="dfoot"><button type="button" class="btn sm" id="dps">Save listening apps</button></div></div>':'')+
@@ -1970,7 +2012,7 @@ function trayHTML(id){var h='<span class="trw"><button type="button" class="avs 
 if(S.msgOK){var fr=friends();h+='<span class="trw trf">';if(!fr.length)h+='<span class="meta tnone">Follow people to send them reviews</span>';
 fr.slice(0,8).forEach(function(n){h+='<button type="button" class="avs'+(S.sent[id+":"+n]?" sent":"")+'" data-name="'+esc(n)+'" data-to="'+esc(n)+'" data-rid="'+id+'" aria-label="Send to '+esc(n)+'">'+avatar(acct(n))+'<i class="ok">✓</i></button>'});h+='</span>'}
 return h}
-function refreshList(fid){var el=$("#list");if(!el)return;el.innerHTML=listHTML();bind();syncSongLater();if(S.tab==="sotd")sdRefresh();if(fid){var f=document.getElementById(fid);if(f)f.focus()}}
+function refreshList(fid){if(LS)setTimeout(lsRepaint,0);var el=$("#list");if(!el)return;el.innerHTML=listHTML();bind();syncSongLater();if(S.tab==="sotd")sdRefresh();if(fid){var f=document.getElementById(fid);if(f)f.focus()}}
 function sendText(r){var t=String(r.text||"").trim();return (t?'“'+t+'” — '+r.title:'“'+r.title+'”')+' by '+r.artist+', rated '+rnum(r.rating).toFixed(1)+'/5 on Mosaic'}
 async function copyReview(r,btn){var text=sendText(r),url=location.href.split("#")[0],msg="Copied";
 try{if(navigator.share){await navigator.share({title:"Mosaic",text:text,url:url});return}}catch(e){if(e&&e.name==="AbortError")return}
@@ -2178,7 +2220,7 @@ if(f.tab==="later")return "Back to Listen later";
 if(f.tab==="sotd")return "Back to Song of the Day";
 if(f.tab==="life")return f.view===S.user?"Back to your lifetime mosaic":"Back to "+f.view+"’s lifetime mosaic";
 if(f.tab==="msgs")return f.dmw?"Back to your chat with "+f.dmw:"Back to Messages";
-if(f.tab==="profile")return "Back to My Mosaic";
+if(f.tab==="profile")return "Back to my profile";
 if(f.tab==="user"&&f.view)return "Back to "+f.view+"’s profile";
 return "Back to Recommended"}
 /* under a song's cover: a "Tessellated" ribbon when it's in your mosaic (a gold streak runs across it as the page opens),
@@ -2208,11 +2250,8 @@ appView();try{window.scrollTo(0,f.y||0)}catch(e){}
 if(o)o.p=loadInfo(f.song,o)}
 
 function colsOK(v){return v===3?3:2}
-function layoutSwitch(){var h='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true">',
-two=h+'<rect x="3" y="4" width="8" height="7" rx="1.5"/><rect x="13" y="4" width="8" height="7" rx="1.5"/><rect x="3" y="13" width="8" height="7" rx="1.5"/><rect x="13" y="13" width="8" height="7" rx="1.5"/></svg>',
-three=h+'<rect x="3" y="4" width="5" height="7" rx="1"/><rect x="9.5" y="4" width="5" height="7" rx="1"/><rect x="16" y="4" width="5" height="7" rx="1"/><rect x="3" y="13" width="5" height="7" rx="1"/><rect x="9.5" y="13" width="5" height="7" rx="1"/><rect x="16" y="13" width="5" height="7" rx="1"/></svg>',
-bs=[[2,"Two reviews",two],[3,"Three reviews",three]];
-return '<div class="seg'+(S.cols===3?' s3':'')+'" role="group" aria-label="Reviews per row">'+bs.map(function(b){var t=b[1]+' per row';return '<button type="button" data-cols="'+b[0]+'" aria-pressed="'+(S.cols===b[0])+'" aria-label="'+t+'" title="'+t+'">'+b[2]+'</button>'}).join("")+'</div>'}
+/* two tiles per row everywhere (the 2-or-3 switch is gone) */
+function layoutSwitch(){return ""}
 function appView(){
 if(S.tab==="sotd"&&!S.sotdOK)S.tab="feed";
 if(S.tab==="msgs"&&!(S.user&&S.msgOK))S.tab="feed";
@@ -2243,13 +2282,13 @@ else if(S.tab==="later"&&S.laterOK){body=laterView()}
 else if(S.tab==="likes"){body='<section class="page"><h2>My likes and comments</h2><div class="empty">Reviews you like or comment on will show up here.</div></section>'}
 else if(S.tab==="editp"&&S.user){body=editHTML()}
 else if(S.tab==="account"){body='<section class="page"><h2>Privacy and account</h2><dl><dt>Username</dt><dd>'+nm+'</dd><dt>Email</dt><dd>'+esc(a&&a.email||"")+'</dd>'+(since(a)?'<dt>Account established</dt><dd>'+since(a)+'</dd>':'')+'<dt>Your data</dt><dd>'+(REMOTE?'Your profile and reviews are saved to your Mosaic account.':'Accounts and reviews are saved in this browser only.')+'</dd></dl></section>'}
-else{body=(prof?'<section class="prof ig"><div class="pmain"><h2 class="pnm"><span>'+nm+'</span></h2>'+pavHTML(a,S.platOK?S.plats:[],1)+'<div class="igm">'+igStats(S.user,a,"")+est(a)+lifeBtn(S.user)+'</div></div>'+mosaicHTML(S.user,true)+'</section>'+psrHTML(S.user):'')+
-(S.tab==="feed"&&S.q?'<div class="chips"><span class="meta">Showing reviews for</span><button type="button" class="chip" id="clq">'+esc(S.q)+' ×</button></div>':'')+'<div class="tools"><div class="tl"><button class="btn addb" id="add" aria-label="Tile" title="Tile"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>'+(S.tab==="feed"?'<select id="sc" aria-label="Show"><option value="all">Everyone</option><option value="fol">People I follow</option></select>':'')+'<select id="t" aria-label="Type"><option>All</option><option>Album</option><option>Song</option></select><select id="s" aria-label="Sort"><option value="new">Newest</option><option value="top">Highest rated</option><option value="hot">Most interacted</option></select></div>'+layoutSwitch()+'</div>'+
+else{body=(prof?'<section class="prof ig"><div class="pmain"><h2 class="pnm"><span>'+nm+'</span></h2>'+pavHTML(a,S.platOK?S.plats:[],1)+'<div class="igm">'+igStats(S.user,a,"")+est(a)+lifeBtn(S.user)+'</div></div>'+mosaicHTML(S.user,true)+'</section>':'')+
+(S.tab==="feed"&&S.q?'<div class="chips"><span class="meta">Showing reviews for</span><button type="button" class="chip" id="clq">'+esc(S.q)+' ×</button></div>':'')+'<div class="tools"><div class="tl"><button class="btn addb" id="add" aria-label="Tile" title="Tile"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>'+(S.tab==="feed"?'<select id="sc" aria-label="Show"><option value="all">Everyone</option><option value="fol">People I follow</option></select>':'')+'<select id="t" aria-label="Type"><option>All</option><option>Album</option><option>Song</option></select><select id="s" aria-label="Sort"><option value="new">Newest</option><option value="top">Highest rated</option><option value="hot">Most interacted</option></select></div>'+(prof?psrHTML(S.user):'')+'</div>'+
 '<div class="list cols'+S.cols+'" id="list">'+listHTML()+'</div>'}
 $("#app").innerHTML='<div class="wrap'+(S.tab==="msgs"?' dmw':'')+'"><header class="top"><h2><button type="button" class="wm" data-tab="feed" aria-label="Mosaic home">'+logoSVG()+'</button></h2><nav><button data-tab="feed" aria-current="'+(S.tab==="feed")+'">Recommended</button>'+(S.sotdOK?'<button data-tab="sotd" aria-current="'+(S.tab==="sotd")+'">Song of the Day</button>':'')+(S.reviews.length?'<button type="button" data-listen="1">Listen</button>':'')+'</nav>'+
 '<div class="sw'+(S.sv?" open":"")+'"><button class="ib" id="sb" aria-label="Search" type="button">'+mag+'</button><input id="q" type="search" placeholder="Search songs to tile" aria-label="Search songs" autocomplete="off" readonly value="'+esc(S.sv||"")+'"><div class="sug" id="sug" hidden></div></div>'+
 '<div class="right"><div class="mew"><button class="me" aria-haspopup="menu" aria-current="'+mcur+'" aria-label="Your account menu">'+avatar(a)+'<span class="nm">'+nm+'</span></button>'+
-'<div class="menu"><div class="box" role="menu"><button role="menuitem" data-tab="profile">My Mosaic</button><button role="menuitem" data-tab="editp">Edit profile</button>'+(S.laterOK?'<button role="menuitem" data-tab="later">Listen later'+(S.later.length?' <span class="meta">'+S.later.length+'</span>':'')+'</button>':'')+'<button role="menuitem" data-tab="likes">My likes and comments</button><button role="menuitem" data-tab="account">Privacy and account</button><hr><button role="menuitem" id="so">Sign out</button></div></div></div>'+
+'<div class="menu"><div class="box" role="menu"><button role="menuitem" data-tab="profile">My profile</button>'+(S.laterOK?'<button role="menuitem" data-tab="later">Listen later'+(S.later.length?' <span class="meta">'+S.later.length+'</span>':'')+'</button>':'')+'<button role="menuitem" data-tab="likes">My likes and comments</button><button role="menuitem" data-tab="account">Privacy and account</button><hr><button role="menuitem" id="so">Sign out</button></div></div></div>'+
 '<div class="ibw"><button class="ib" id="nb" aria-label="Notifications" aria-expanded="false">'+bell+(unread?'<i class="dot"></i>':'')+'</button><div class="pop" id="np" hidden><h3>Notifications</h3>'+notesHTML+'</div></div>'+
 (S.msgOK?'<div class="ibw"><button class="ib" id="mb" type="button" aria-label="Messages'+(munread?', '+munread+' unread':'')+'" aria-current="'+(S.tab==="msgs")+'">'+chat+(munread?'<i class="mbn" aria-hidden="true">'+(munread>9?"9+":munread)+'</i>':'')+'</button></div>':'')+'</div></header>'+body+'</div>';
 var mew=$(".mew");if(S.shut){mew.classList.add("shut");S.shut=false}
@@ -2738,7 +2777,7 @@ au.preload="auto";au.src=url;lay()}
 /* ---------- Listen: swipe up through tiles. Each cover fills the screen and glows while Apple's 30-second preview plays; one tap pauses, a double tap likes.
    The previews come from Apple, and every slide links back to the song on Apple Music. ---------- */
 var LS=null,PREV={},SILENT="data:audio/wav;base64,UklGRjQAAABXQVZFZm10IBAAAAABAAEAQB8AAIA+AAACABAAZGF0YRAAAAAAAAAAAAAAAAAAAAAAAAAA",
-LSI={plus:'<path d="M12 5v14M5 12h14"/>',tick:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',x:'<path d="M6 6l12 12M18 6L6 18"/>'};
+LSI={tag:'<path d="M3.5 12.2V4.5a1 1 0 0 1 1-1h7.7l8.3 8.3a1 1 0 0 1 0 1.4l-7.1 7.1a1 1 0 0 1-1.4 0z"/><circle cx="8" cy="8" r="1.4"/>',plus:'<path d="M12 5v14M5 12h14"/>',tick:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',x:'<path d="M6 6l12 12M18 6L6 18"/>'};
 function okPrev(u){u=String(u||"");return /^https:\/\/[a-z0-9.-]+\.(apple\.com|mzstatic\.com)\/[^\s"'<>]+$/i.test(u)?u:""}
 function okLink(u){u=String(u||"");return /^https:\/\/(music|itunes|geo\.music)\.apple\.com\/[^\s"'<>]+$/i.test(u)?u:""}
 function lsIco(k){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+LSI[k]+'</svg>'}
@@ -2787,8 +2826,16 @@ return '<section class="lss" data-i="'+i+'" aria-label="'+esc(r.title)+' by '+es
 '<div class="lsmeta"><h3><button type="button" class="lsti" title="Open the '+(r.type==="Album"?'album':'song')+'">'+esc(r.title)+'</button></h3><p class="lsar">'+esc(r.artist)+(r.type==="Album"?' · Album':'')+'</p><p class="lstn" hidden></p>'+
 '<p class="lsby">'+avatar(acct(r.user),"xs")+'<b>'+esc(r.user)+'</b><span class="lsr">'+STAR1+rnum(r.rating).toFixed(1)+'</span></p>'+(r.text?'<p class="lsq">“'+esc(r.text)+'”</p>':'')+
 '<p class="lsno" hidden>No preview for this one</p><a class="lsap" href="#" target="_blank" rel="noopener" hidden>Listen on Apple Music ↗</a></div></div>'+
-'<div class="lsact">'+(S.social?'<button type="button" class="lsb lslk'+(on?' on':'')+'" aria-pressed="'+on+'" aria-label="Like">'+ico("like")+'<span>'+(ln?numS(ln):'')+'</span></button>':'')+
-'<button type="button" class="lsb lstl'+(done?' on':'')+'" aria-label="'+(done?'Tiled. Open the '+(r.type==="Album"?'album':'song'):'Tile this '+(r.type==="Album"?'album':'song'))+'">'+lsIco(done?"tick":"plus")+'<span>'+(done?'Tiled':'Tile')+'</span></button></div></section>'}
+'<div class="lsact" data-li="'+i+'">'+lsActs(r)+'</div><div class="lscm" hidden></div>'+genHTML(r)+'</section>'}
+function lsActs(r){var id=r.id,s=revSong(r),lk=(S.likes[id]||[]).indexOf(S.user)>-1,rp=(S.reposts[id]||[]).indexOf(S.user)>-1,own=r.user===S.user,done=!!dupSong(s),h="",
+c=function(v){return '<span>'+(v?numS(v):'')+'</span>'};
+if(S.social){h+='<button type="button" class="lsb'+(lk?' on':'')+'" data-like="'+id+'" aria-pressed="'+lk+'" aria-label="Like">'+ico("like")+c(likeN(id))+'</button>'+
+'<button type="button" class="lsb lscb'+(LS&&LS.cm===String(id)?' on':'')+'" data-lscm="'+id+'" aria-label="Comments">'+ico("cmt")+c(cmN(id))+'</button>'+
+'<button type="button" class="lsb'+(rp?' on':'')+'" data-rp="'+id+'" aria-pressed="'+rp+'" aria-label="Repost"'+(own?' disabled title="You can’t repost your own review"':'')+'>'+ico("rp")+c(rpN(id))+'</button>'}
+h+='<span class="sendw lssw" data-sw="'+id+'"><button type="button" class="lsb" data-send="'+id+'" aria-label="Share" aria-haspopup="true">'+ico("send")+c(shN(id))+'</button><span class="tray" role="group" aria-label="Share">'+trayHTML(id)+'</span></span>';
+if(S.laterOK){var lt=inLater(r);h+='<button type="button" class="lsb'+(lt?' on':'')+'" data-later="'+id+'" aria-pressed="'+lt+'" aria-label="'+(lt?'Remove from listen later':'Listen later')+'">'+ico("bm")+c(0)+'</button>'}
+h+='<button type="button" class="lsb lsg" data-lsg="1" aria-label="Genres">'+lsIco("tag")+'<span>Genre</span></button>';
+return h+'<button type="button" class="lsb lstl'+(done?' on':'')+'" aria-label="'+(done?'Tiled. Open the '+(r.type==="Album"?'album':'song'):'Tile this '+(r.type==="Album"?'album':'song'))+'">'+lsIco(done?"tick":"plus")+'<span>'+(done?'Tiled':'Tile')+'</span></button>'}
 function openListen(){if(LS)return;clipStop();var items=lsItems();if(!items.length){toast("Nothing to listen to yet");return}
 /* starting a (silent) sound inside the tap lets the previews play afterwards, on phones too */
 var au=new Audio();au.preload="auto";try{au.src=SILENT;var pp=au.play();if(pp&&pp.catch)pp.catch(function(){})}catch(e){}
@@ -2800,19 +2847,20 @@ LS.io=new IntersectionObserver(function(es){es.forEach(function(e){if(LS&&e.isIn
 au.addEventListener("timeupdate",lsProg);au.addEventListener("play",lsState);au.addEventListener("pause",lsState);
 au.addEventListener("ended",function(){if(LS)lsGo(LS.i+1)});
 el.querySelector(".lsx").onclick=closeListen;document.addEventListener("keydown",lsKey,true);
+el.addEventListener("click",lsClick);el.addEventListener("submit",lsSubmit);
 lsMore();requestAnimationFrame(function(){el.classList.add("in")});try{LS.list.focus({preventScroll:true})}catch(e){}lsSet(0)}
 function lsMore(){var a=LS.n,b=Math.min(LS.items.length,a+6);if(a>=b)return;var h="";for(var i=a;i<b;i++)h+=lsSlide(LS.items[i],i);
-LS.list.insertAdjacentHTML("beforeend",h);LS.n=b;[].forEach.call(LS.list.querySelectorAll(".lss:not([data-w])"),function(x){x.setAttribute("data-w","1");LS.io.observe(x);lsWire(x)});paintSoft();prevBatch(LS.items.slice(a,b+6))}
+LS.list.insertAdjacentHTML("beforeend",h);LS.n=b;[].forEach.call(LS.list.querySelectorAll(".lss:not([data-w])"),function(x){x.setAttribute("data-w","1");LS.io.observe(x);lsWire(x)});bind();prevBatch(LS.items.slice(a,b+6))}
 function lsWire(x){var i=+x.getAttribute("data-i"),r=LS.items[i];
-x.addEventListener("click",function(e){if(!LS||e.target.closest("button,a"))return;var now=Date.now();
+x.addEventListener("click",function(e){if(!LS||e.target.closest("button,a,input,form,.lscm,.lsgen,.tray"))return;
+if(LS.cm||x.classList.contains("gopen")){x.classList.remove("gopen");if(LS.cm){LS.cm=null;lsRepaint()}return}var now=Date.now();
 if(now-LS.tapT<320){clearTimeout(LS.tapTm);LS.tapT=0;lsLike(i,e,false);return}
 LS.tapT=now;clearTimeout(LS.tapTm);LS.tapTm=setTimeout(function(){if(!LS)return;LS.tapT=0;if(LS.i===i)lsToggle();else lsGo(i)},320)});
-var lk=x.querySelector(".lslk");if(lk)lk.onclick=function(){lsLike(i,null,true)};
-x.querySelector(".lstl").onclick=function(){var s=revSong(r);closeListen();if(dupSong(s)){openSong(s);return}
-S.pre={title:r.title,artist:r.artist,art:r.art,tid:r.tid,type:r.type};S.bq=null;S.tab="review";S.stack=[];S.shut=keepShut();appView();try{window.scrollTo(0,0)}catch(e){}};
 x.querySelector(".lsti").onclick=function(){closeListen();openSong(revSong(r))}}
 function lsSet(i){var L=LS;if(!L||i===L.i||i<0||i>=L.n)return;if(L.cur)L.cur.classList.remove("cur","playing","paused");
 var x=L.list.querySelector('.lss[data-i="'+i+'"]');L.i=i;L.cur=x;if(!x)return;x.classList.add("cur");
+if(L.cm){L.cm=null;lsRepaint()}[].forEach.call(L.list.querySelectorAll(".lss.gopen"),function(g){g.classList.remove("gopen")});
+var gk=gKey(revSong(L.items[i]));genLoad(gk).then(function(){genPaint(gk)});
 clearTimeout(L.mt);L.mt=setTimeout(function(){if(LS===L&&L.i===i)lsMark(L.items[i])},1200);
 try{L.au.pause()}catch(e){}L.end=0;var bar=x.querySelector(".lspb i");if(bar)bar.style.transform="scaleX(0)";
 if(i>=L.n-3)lsMore();if(i>0)L.el.classList.add("moved");
@@ -2824,6 +2872,44 @@ var c=r.type==="Song"&&r.clip!=null?+r.clip:null;LS.st0=c||0;LS.end=c!=null?c+CL
 LS.au.src=p.u+(c?"#t="+c:"");if(c)LS.au.addEventListener("loadedmetadata",function(){if(LS&&Math.abs(LS.au.currentTime-c)>.5)try{LS.au.currentTime=c}catch(e){}},{once:true});
 var pp=LS.au.play();if(pp&&pp.catch)pp.catch(function(){lsState()})});
 var nx=L.items[i+1];if(nx)prevFor(revSong(nx),nx)}
+/* Listen's buttons: like, repost, share and listen later use the same handlers as the tiles (bind); these draw them again from the
+   current state, and run the rest: the comments sheet, the genre panel (phones open it as a sheet) and the Tile button */
+function lsRepaint(){if(!LS)return;[].forEach.call(LS.list.querySelectorAll(".lsact"),function(a){var r=LS.items[+a.getAttribute("data-li")];if(r)a.innerHTML=lsActs(r)});lsCmPaint();bind()}
+function lsCmPaint(){if(!LS)return;[].forEach.call(LS.list.querySelectorAll(".lss"),function(x){var r=LS.items[+x.getAttribute("data-i")],c=x.querySelector(".lscm");if(!r||!c)return;var on=LS.cm===String(r.id);
+c.hidden=!on;if(!on){c.innerHTML="";return}var f=LS.cmFocus||(c.querySelector("input")===document.activeElement);
+c.innerHTML='<div class="lscmh"><b>Comments</b><button type="button" class="lscx" data-lscx="1" aria-label="Close comments">'+lsIco("x")+'</button></div>'+cmtsHTML(String(r.id)).replace('id="cmi'+r.id+'"','id="lcmi'+r.id+'"');
+LS.cmFocus=false;if(f){var inp=c.querySelector("input");if(inp)inp.focus()}})}
+function lsClick(e){if(!LS)return;var t=e.target,b;
+if(b=t.closest("[data-lscm]")){var id=b.getAttribute("data-lscm");LS.cm=LS.cm===id?null:id;LS.cmFocus=!!LS.cm;lsRepaint();return}
+if(t.closest("[data-lscx]")){LS.cm=null;lsRepaint();return}
+if(b=t.closest("[data-lsg]")){var x=b.closest(".lss");if(x)x.classList.toggle("gopen");return}
+if(b=t.closest(".lstl")){var r=LS.items[+b.closest(".lss").getAttribute("data-i")];if(!r)return;var s=revSong(r);closeListen();if(dupSong(s)){openSong(s);return}
+S.pre={title:r.title,artist:r.artist,art:r.art,tid:r.tid,type:r.type};S.bq=null;S.tab="review";S.stack=[];S.shut=keepShut();appView();try{window.scrollTo(0,0)}catch(_){}return}
+if(b=t.closest("[data-gw]")){var g=b.closest(".lsgen");if(g)genToggle(g.getAttribute("data-gk"),b.getAttribute("data-gw"))}}
+function lsSubmit(e){var f=e.target.closest&&e.target.closest(".lsgf");if(!f)return;e.preventDefault();var inp=f.querySelector("input"),k=f.closest(".lsgen").getAttribute("data-gk"),g=genNorm(inp.value);
+if(g.length<2){toast("Type a genre, 2 to 24 letters");return}inp.value="";if(!(S.gen[k]||[]).some(function(x){return x.me&&x.g===g}))genToggle(k,g)}
+/* ---------- the genre cloud: on the left of each Listen slide (a sheet on phones), people type the genre they hear. Every answer is a
+   word in the cloud, bigger the more people gave it, the most-given in the middle; your own are underlined, and tapping a word adds
+   or takes away your vote. Up to 3 per person per song; kept in the song_genres table (in this browser when offline) ---------- */
+function gKey(s){return (s.type||"Song")+"|"+fold(s.title)+"|"+fold(s.artist)}
+function genNorm(t){return fold(t).replace(/[^a-z0-9 &'+./-]+/g," ").replace(/\s+/g," ").trim().replace(/^[^a-z0-9]+|[^a-z0-9]+$/g,"").slice(0,24).replace(/[^a-z0-9]+$/,"")}
+function genHTML(r){var k=gKey(revSong(r));return '<div class="lsgen" data-gk="'+esc(k)+'"><p class="lsgl">What genre is it?</p><form class="lsgf"><input maxlength="24" placeholder="Type the genre you hear" aria-label="Type the genre you hear" autocomplete="off" enterkeyhint="done"></form><div class="lsgc" aria-live="polite">'+genCloud(k)+'</div></div>'}
+function genCloud(k){var rows=S.gen[k];if(!rows)return '<p class="lsgn">…</p>';if(!rows.length)return '<p class="lsgn">Nobody has said yet</p>';
+var c={},mine={};rows.forEach(function(x){c[x.g]=(c[x.g]||0)+1;if(x.me)mine[x.g]=1});
+var ws=Object.keys(c).sort(function(a,b){return c[b]-c[a]||(a<b?-1:1)}).slice(0,24),mx=c[ws[0]],mn=c[ws[ws.length-1]],o=[];
+ws.forEach(function(w,i){if(i%2)o.push(w);else o.unshift(w)});
+return o.map(function(w,i){var t=mx===mn?.5:(c[w]-mn)/(mx-mn),n=c[w];
+return '<button type="button" class="lsgw'+(mine[w]?' me':'')+'" data-gw="'+esc(w)+'" style="font-size:'+Math.round(12+t*20)+'px;color:'+["#ff7fbd","#a58bff","#5fd3c5","#ffc35c"][(w.length*7+i)%4]+';opacity:'+(.62+.38*t).toFixed(2)+'" title="'+esc(w)+': '+(n===1?'1 person':n+' people')+(mine[w]?', including you (tap to take yours away)':' (tap to add yours)')+'">'+esc(w)+'</button>'}).join("")}
+function genLoad(k,force){if(S.gen[k]&&!force)return Promise.resolve();
+if(!REMOTE){var all=store.get("ln_genres",{});S.gen[k]=((all&&all[k])||[]).map(function(x){return {g:x.g,me:x.u===S.user}});return Promise.resolve()}
+return Promise.resolve(sb.from("song_genres").select("genre,user_id").eq("song_key",k).limit(3000)).then(function(r){if(r.error)throw r.error;S.gen[k]=(r.data||[]).map(function(x){return {g:x.genre,me:x.user_id===S.uid}})}).catch(function(){S.gen[k]=S.gen[k]||[]})}
+function genPaint(k){[].forEach.call(document.querySelectorAll(".lsgen"),function(g){if(g.getAttribute("data-gk")===k)g.querySelector(".lsgc").innerHTML=genCloud(k)})}
+function genToggle(k,g){if(!S.user)return;var rows=S.gen[k]||(S.gen[k]=[]),has=rows.some(function(x){return x.me&&x.g===g});
+if(!has&&rows.filter(function(x){return x.me}).length>=3){toast("You can give a song up to 3 genres. Tap one of yours to take it away first.");return}
+if(has)S.gen[k]=rows.filter(function(x){return !(x.me&&x.g===g)});else rows.push({g:g,me:true});genPaint(k);
+var p;if(!REMOTE){var all=store.get("ln_genres",{}),l=(all[k]||[]).filter(function(x){return !(x.u===S.user&&x.g===g)});if(!has)l.push({g:g,u:S.user});all[k]=l;store.set("ln_genres",all);p=Promise.resolve({})}
+else p=Promise.resolve(has?sb.from("song_genres").delete().eq("song_key",k).eq("genre",g).eq("user_id",S.uid):sb.from("song_genres").insert({song_key:k,genre:g}));
+p.then(function(r){if(r&&r.error){toast(has?"Couldn't take that away. Try again.":"Couldn't add that. Try again.");genLoad(k,true).then(function(){genPaint(k)})}},function(){toast("Couldn't save that. Check your connection.");genLoad(k,true).then(function(){genPaint(k)})})}
 function lsReal(){return !!(LS&&LS.au.src&&LS.au.src.indexOf("data:")!==0)}
 function lsState(){if(!LS||!LS.cur)return;var real=lsReal(),p=real&&!LS.au.paused;LS.cur.classList.toggle("playing",p);LS.cur.classList.toggle("paused",real&&!p)}
 function lsToggle(){if(!lsReal())return;var a=LS.au;if(a.paused){var pp=a.play();if(pp&&pp.catch)pp.catch(function(){})}else a.pause()}
@@ -2834,9 +2920,10 @@ function lsGo(i){if(!LS||i<0)return;if(i>=LS.n)lsMore();var x=LS.list.querySelec
 /* a double tap only ever likes (with a heart where you tapped); the heart button turns it on and off */
 function lsLike(i,e,btn){var r=LS&&LS.items[i];if(!r||!S.social||!S.user)return;var x=LS.list.querySelector('.lss[data-i="'+i+'"]'),on=(S.likes[r.id]||[]).indexOf(S.user)>-1;
 if(e&&x){var hb=document.createElement("span"),rc=x.getBoundingClientRect();hb.className="lsheart";hb.innerHTML=ico("like");hb.style.left=(e.clientX-rc.left)+"px";hb.style.top=(e.clientY-rc.top)+"px";x.appendChild(hb);setTimeout(function(){if(hb.parentNode)hb.parentNode.removeChild(hb)},900)}
-if(on&&!btn)return;var add=mutSoc("likes",String(r.id));lsLikeUI(i);api.persistToggle("likes",String(r.id),add).then(function(ok){if(ok===false&&LS)lsLikeUI(i)})}
-function lsLikeUI(i){var r=LS.items[i],b=LS.list.querySelector('.lss[data-i="'+i+'"] .lslk');if(!r||!b)return;var on=(S.likes[r.id]||[]).indexOf(S.user)>-1,n=likeN(r.id);b.classList.toggle("on",on);b.setAttribute("aria-pressed",String(on));b.querySelector("span").textContent=n?numS(n):""}
+if(on&&!btn)return;var add=mutSoc("likes",String(r.id));refreshList();api.persistToggle("likes",String(r.id),add).then(function(ok){if(ok===false)refreshList()})}
 function lsKey(e){if(!LS)return;var k=e.key,t=e.target,hit=true;
+if(t&&t.closest&&t.closest("input,textarea")){if(k==="Escape"){e.preventDefault();e.stopPropagation();t.blur()}return}
+if(k==="Escape"&&(LS.cm||LS.list.querySelector(".lss.gopen"))){e.preventDefault();e.stopPropagation();LS.cm=null;lsRepaint();[].forEach.call(LS.list.querySelectorAll(".lss.gopen"),function(g){g.classList.remove("gopen")});return}
 if(k==="Escape")closeListen();else if(k==="ArrowDown"||k==="PageDown")lsGo(LS.i+1);else if(k==="ArrowUp"||k==="PageUp")lsGo(LS.i-1);
 else if(k===" "&&!(t&&t.closest&&t.closest("button,a")))lsToggle();else hit=false;
 if(hit){e.preventDefault();e.stopPropagation()}}
