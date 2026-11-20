@@ -140,6 +140,11 @@ nav button[aria-current="true"]{color:var(--ink);border-color:var(--pop)}
 .tiled i{flex:none;width:11px;height:11px;border-radius:3px;background:linear-gradient(135deg,#7a5cf5,#c04fd8)}
 /* not tiled yet: the same mark, gone flat, grey and a bit glum */
 .tiled.not{opacity:.75}.tiled.not i{background:linear-gradient(160deg,#6a6a72,#45454c);transform:rotate(-8deg) translateY(1px);box-shadow:inset 0 1px 2px rgba(0,0,0,.35)}
+/* both marks flip: a quick snap every 1.5 seconds, round each way in turn (right, down, left, up); the grey one keeps its glum tilt */
+.tiled i{animation:tflip 6s cubic-bezier(.35,1.35,.5,1) infinite}.tiled.not i{animation-name:ntflip}
+@keyframes tflip{0%,100%{transform:perspective(36px) rotateX(0) rotateY(0)}7%,25%{transform:perspective(36px) rotateX(0) rotateY(180deg)}32%,50%{transform:perspective(36px) rotateX(180deg) rotateY(180deg)}57%,75%{transform:perspective(36px) rotateX(180deg) rotateY(0)}82%{transform:perspective(36px) rotateX(0) rotateY(0)}}
+@keyframes ntflip{0%,100%{transform:perspective(36px) rotate(-8deg) translateY(1px) rotateX(0) rotateY(0)}7%,25%{transform:perspective(36px) rotate(-8deg) translateY(1px) rotateX(0) rotateY(180deg)}32%,50%{transform:perspective(36px) rotate(-8deg) translateY(1px) rotateX(180deg) rotateY(180deg)}57%,75%{transform:perspective(36px) rotate(-8deg) translateY(1px) rotateX(180deg) rotateY(0)}82%{transform:perspective(36px) rotate(-8deg) translateY(1px) rotateX(0) rotateY(0)}}
+@media (prefers-reduced-motion:reduce){.tiled i{animation:none}}
 :root[data-theme="light"] .tiled.not i{background:linear-gradient(160deg,#b9b9c0,#9a9aa2)}@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .tiled.not i{background:linear-gradient(160deg,#b9b9c0,#9a9aa2)}}
 .tag.tz{color:#fff;border-color:transparent;background:linear-gradient(135deg,#7a5cf5,#c04fd8)}
 .mcap{grid-column:1/-1;margin:8px 0 0;font-size:12px;line-height:1.3;color:var(--mute);text-align:center}
@@ -310,11 +315,36 @@ header.top h2{margin-right:10px}
 /* the Tile page: a bigger glow, a cover that turns over for details, and a Tile button that grows a little on hover */
 .tpk .aglow{inset:-32%;--ab:38px}
 .tpk .cvf,.tpk .covbtn{display:block;width:100%}
-.cvv.hid{display:flex;align-items:center;justify-content:flex-end;gap:.35em;font-weight:500;color:rgba(255,255,255,.82)}
+.cvv.hid{display:flex;align-items:center;justify-content:flex-end;gap:.35em;font-weight:500;color:rgba(255,255,255,.82)}.hidt{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.tpf .cvd{padding:5cqw 7.5cqw}.tpf .cvr{gap:4cqw}
+.tpf .cvl{gap:2.4cqw;font-size:clamp(7.5px,3.6cqw,10.5px);letter-spacing:.07em}
+.tpf .cvl svg{width:clamp(10px,5cqw,14px);height:clamp(10px,5cqw,14px)}
+.tpf .cvv{font-size:clamp(10px,5.2cqw,14px)}
+.tpf .cvv[title]{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;white-space:normal;line-height:1.2;overflow-wrap:anywhere}
+/* on the small cover (phones) each row is just its icon and value, on one line; the hidden average is just the lock */
+@container (max-width:140px){.tpf .cvd{padding:5cqw 8cqw}.tpf .cvv{font-size:9.5px}.tpf .hidt{display:none}.tpf .cvv[title]{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
 .cvv .lk{flex:none;width:.95em;height:.95em;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round}
 #rf #sv{transition:transform .18s cubic-bezier(.3,.7,.4,1.5),filter .12s}
 #rf #sv:hover:not(:disabled){transform:scale(1.07)}
 #rf #sv:active:not(:disabled){transform:scale(.98)}
+/* the part that plays (Tile page) */
+.clp{margin:12px 0 2px}
+.clph{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.clph label{margin:0}
+.clpt{font-size:12.5px;font-variant-numeric:tabular-nums}
+.clpr{display:flex;align-items:center;gap:10px;margin-top:8px}
+.clpb{flex:none;display:grid;place-items:center;width:40px;height:40px;padding:0;border:0;border-radius:50%;background:var(--ink);color:var(--bg);cursor:pointer;transition:transform .15s}
+.clpb:hover{transform:scale(1.06)}
+.clpb svg{width:16px;height:16px}
+.clps{position:relative;flex:1;min-width:0;height:48px;border-radius:10px;background:color-mix(in srgb,var(--ink) 6%,transparent);cursor:grab;touch-action:none;user-select:none;outline:none}
+.clps:active{cursor:grabbing}
+.clps:focus-visible{box-shadow:0 0 0 2px var(--pop)}
+.clpbars{position:absolute;left:0;right:0;top:9px;bottom:9px;display:flex;align-items:center;gap:2px;padding:0 3px}
+.clpbars i{flex:1;min-width:0;border-radius:2px;background:color-mix(in srgb,var(--mute) 40%,transparent);transition:background .12s}
+.clpbars i.in{background:var(--ink)}
+.clpw{position:absolute;top:1px;bottom:1px;border:2.5px solid var(--ink);border-radius:9px;pointer-events:none;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.25)}
+.clpw i{position:absolute;left:0;bottom:0;width:100%;height:3px;background:linear-gradient(90deg,var(--pop),var(--violet));transform:scaleX(0);transform-origin:left}
+.clpn{margin:6px 0 0;font-size:12px}
 /* Listen */
 html.lsopen,html.lsopen body{overflow:hidden}
 .lsn{position:fixed;inset:0;z-index:650;background:#050507;color:#fff;opacity:0;transition:opacity .25s ease}
@@ -357,7 +387,7 @@ html.lsopen,html.lsopen body{overflow:hidden}
 .lstl svg{background:linear-gradient(135deg,#7a5cf5,#c04fd8)}
 .lstl.on svg{background:rgba(255,255,255,.13)}
 .lsb span:empty{display:none}
-.lsx{position:fixed;top:14px;right:14px;z-index:3;display:grid;place-items:center;width:42px;height:42px;padding:0;border:0;border-radius:50%;background:rgba(255,255,255,.14);color:#fff;cursor:pointer}
+.lsx{position:fixed;top:14px;left:14px;z-index:3;display:grid;place-items:center;width:42px;height:42px;padding:0;border:0;border-radius:50%;background:rgba(255,255,255,.14);color:#fff;cursor:pointer}
 .lsx svg{width:20px;height:20px}
 .lsx:hover{background:rgba(255,255,255,.24)}
 .lshint{position:fixed;left:50%;bottom:16px;z-index:2;margin:0;transform:translateX(-50%);font-size:12px;color:rgba(255,255,255,.65);pointer-events:none;transition:opacity .5s}
@@ -2280,7 +2310,7 @@ try{if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitReviews
 /* the lifetime mosaic, as big as it can be with every tile on screen at once */
 function fitLife(){var g=document.getElementById("lgrid");if(!g)return;var c=+g.style.getPropertyValue("--c")||8,r=Math.ceil(g.children.length/c),gap=parseFloat(getComputedStyle(g).columnGap)||0,
 H=window.innerHeight-(g.getBoundingClientRect().top+(window.scrollY||0))-16,t=Math.floor(Math.min(96,(g.clientWidth-(c-1)*gap)/c,(H-(r-1)*gap)/r));g.style.setProperty("--t",Math.max(8,t)+"px")}
-function bind(){paintSoft();fitReviews();fitLife();wireExtras();
+function bind(){paintSoft();fitReviews();fitLife();wireExtras();if(CLIPA&&!document.getElementById("clp"))clipStop();
 document.querySelectorAll("[data-setplat]").forEach(function(b){b.onclick=openPlatDlg});
 var edp=$("#edpl");if(edp)edp.onclick=openPlatDlg;
 var epr=$("#edprof");if(epr)epr.onclick=function(){S.tab="editp";S.stack=[];S.shut=keepShut();appView();try{window.scrollTo(0,0)}catch(e){}};
@@ -2349,11 +2379,16 @@ if(!chosen&&!r&&pre&&(okArt(pre.art)||pre.demo))chosen={title:pre.title,artist:p
 var byHand=!chosen&&!r&&!!pre&&!!pre.title;
 var manual=(!!r&&!chosen)||byHand,mv={title:r?r.title:(byHand?pre.title:""),artist:r?r.artist:(byHand?pre.artist:""),type:r?r.type:(byHand&&pre.type)||"Song"};
 var saved=r&&r.type==="Album"&&r.tracks?r.tracks:[],tk={list:null,rt:[],ready:false,tok:0,src:null};
+/* the part that plays: its start in seconds (songs only; null until chosen, which means the whole preview) */
+var clip=r&&r.type==="Song"&&r.clip!=null?+r.clip:null;
+function clipRender(){var a=$("#clpa",d);if(!a)return;var cs=chosen?Object.assign({},chosen,{type:chosen.type||"Song"}):null,k=cs&&cs.type==="Song"?infoKey(cs):"";if(a._k===k)return;a._k=k;clipStop();a.innerHTML="";
+if(!k){clip=null;return}if(r&&infoKey(revSong(r))!==k)clip=null;else if(!r)clip=null;
+var s=cs,my=a._t=(a._t||0)+1;prevFor(s,null).then(function(p){if(a._t!==my||!a.isConnected||!p.u)return;a.innerHTML=clipHTML();clipWire(a,p.u,s,clip,function(v){clip=v})})}
 var UPI='<svg width="10" height="7" viewBox="0 0 10 7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 5.5 5 1.5l4 4"/></svg>',DNI='<svg width="10" height="7" viewBox="0 0 10 7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 1.5 5 5.5l4-4"/></svg>';
 if(!host)d.className="";
 d.innerHTML='<form id="rf" method="dialog" class="rvgrid">'+(host?'':'<h2 class="rvh" style="font-size:20px">'+(r?"Edit review":"Tile")+'</h2>')+'<div id="sel" class="rvl"></div><div class="rvr">'+
 '<label id="rl">Rating</label><div class="rate" role="group" aria-labelledby="rl"></div>'+
-'<label for="tx">Your thoughts</label><textarea id="tx" rows="2" maxlength="120" placeholder="Five words or fewer" aria-describedby="wc">'+(r?esc(r.text):"")+'</textarea><p class="meta wc" id="wc" aria-live="polite"></p>'+
+'<label for="tx">Your thoughts</label><textarea id="tx" rows="2" maxlength="120" placeholder="Five words or fewer" aria-describedby="wc">'+(r?esc(r.text):"")+'</textarea><p class="meta wc" id="wc" aria-live="polite"></p><div id="clpa"></div>'+
 '<p class="err" id="re" role="alert"></p><div style="display:flex;gap:10px;justify-content:flex-end;align-items:center;margin-top:8px">'+(r&&!host?'<button type="button" class="linkbtn rdel" id="rdl">Delete review</button>':'')+'<button type="button" class="btn ghost" id="cx">Cancel</button><button class="btn" id="sv" value="x">'+(r?"Save changes":"Tile")+'</button></div></div><div class="trk" id="trk" hidden></div></form>';
 function err(t){$("#re",d).textContent=t;var e2=$("#re2",d);if(e2)e2.textContent=t}
 function dupNote(x){[$("#re",d),$("#re2",d)].forEach(function(e){if(!e)return;e.innerHTML='You’ve already reviewed this '+(x&&x.type==="Album"?"album":"song")+'. <button type="button" class="linkbtn" data-dupe="1">Edit that review</button>';
@@ -2407,7 +2442,7 @@ $("#rf",d).classList.toggle("split",!!chosen);trkSync();
 var dx=chosen?dupSong(chosen,r&&r.id):null;if(dx){dupNote(dx);dupOn=true}else if(dupOn){err("");dupOn=false}
 if(chosen){var told=!!(r||dx);el.innerHTML='<div class="pickbig tpk"><div class="aglw">'+artGlow(chosen)+'<div class="cvf tpf" id="tpf" data-k="'+esc(infoKey(chosen))+'"><div class="cvi"><button type="button" class="covbtn" aria-expanded="false" aria-label="Turn over for details about “'+esc(chosen.title)+'”" title="Turn over for details">'+cover(chosen)+'</button><button type="button" class="cvbk" tabindex="-1" aria-hidden="true"></button></div></div></div>'+
 (told?'<p class="tiled"><i aria-hidden="true"></i>Tiled</p>':'<p class="tiled not" title="You haven’t tiled this yet"><i aria-hidden="true"></i>Not tiled</p>')+'<b>'+esc(chosen.title)+'</b><div class="meta">'+esc(chosen.artist)+'</div><button type="button" class="btn ghost sm" id="chs">Change</button></div>';paintSoft();tileFlip($("#tpf",d),chosen,!told);
-$("#chs",d).onclick=function(){chosen=null;manual=false;results=[];renderSel();$("#sq",d).focus()};return}
+$("#chs",d).onclick=function(){chosen=null;manual=false;results=[];renderSel();$("#sq",d).focus()};clipRender();return}clipRender();
 if(manual){el.innerHTML='<div class="two"><div><label for="ti">Title</label><input id="ti" maxlength="80" value="'+esc(mv.title)+'"></div><div><label for="ar">Artist</label><input id="ar" maxlength="80" value="'+esc(mv.artist)+'"></div></div><label for="ty">Type</label><select id="ty"><option>Song</option><option>Album</option></select><button type="button" class="linkbtn" id="bk">Search for music instead</button>';
 $("#ty",d).value=mv.type;
 $("#bk",d).onclick=function(){mv={title:$("#ti",d).value,artist:$("#ar",d).value,type:$("#ty",d).value};manual=false;renderSel()};return}
@@ -2437,11 +2472,11 @@ else{err("Search for music and choose it, or enter it yourself.");return}
 var dx=dupSong(o,r&&r.id);if(dx){dupNote(dx);dupOn=true;toTop(fromEnd);return}
 if(!(rating>0)){err(o.type==="Album"?"Choose a star rating for the whole album.":"Choose a star rating.");toTop(fromEnd);return}
 o.rating=rating;o.text=$("#tx",d).value.trim();if(wordsOf(o.text)>5){err(chained(o.text)?"Reviews are limited to 5 words, and joined-up words like best-album-ever count separately. Shorten it to save.":"Reviews are limited to 5 words. Shorten it to save.");toTop(fromEnd);return}
-o.tracks=o.type==="Album"&&chosen?trkOut():null;
+o.tracks=o.type==="Album"&&chosen?trkOut():null;o.clip=o.type==="Song"&&chosen&&clip!=null?clip:null;
 var bs=[$("#sv",d),$("#sv2",d)].filter(Boolean);bs.forEach(function(x){x.disabled=true});
 api.saveReview(o,r).then(function(res){if(res&&res.error){bs.forEach(function(x){x.disabled=false});err(res.error);return}if(!r)toast("Tiled.");if(host){S.tab="profile";appView()}else{d.close();appView()}}).catch(function(){bs.forEach(function(x){x.disabled=false});err("Couldn't save. Check your connection and try again.")})}
 $("#sv",d).onclick=doSave;
-if(!host)d.showModal()}
+if(!host){d.addEventListener("close",clipStop,{once:true});d.showModal()}}
 
 /* ---------- Song of the Day ----------
    One song a day, picked by an admin. Everyone can review it (five words or fewer); saving a review of the day's song enters it.
@@ -2610,8 +2645,8 @@ document.querySelectorAll("[data-dclr]").forEach(function(b){b.onclick=function(
 /* ---------- the Tile page's cover turns over to show the song's details. Until you've tiled it the average stays hidden, so it can't sway your rating ---------- */
 var LOCKI='<svg class="lk" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9.5" rx="2"/><path d="M8.5 11V8a3.5 3.5 0 0 1 7 0v3"/></svg>';
 function tileBack(s,hide){var o=S.info[infoKey(s)]||{},w=!!o.busy,rs=songReviews(s),n=rs.length,av=n?(rs.reduce(function(a,x){return a+rnum(x.rating)},0)/n).toFixed(2):"";
-function row(ic,k,v,wait,extra){return '<span class="cvr"><span class="cvl"><svg viewBox="0 0 24 24" aria-hidden="true">'+CVI[ic]+'</svg><span class="cvt">'+k+'</span></span><span class="cvv'+(v?'':' na')+'">'+(v?esc(v)+(extra||''):(wait?'…':'—'))+'</span></span>'}
-var a=hide?'<span class="cvr"><span class="cvl"><svg viewBox="0 0 24 24" aria-hidden="true">'+CVI.avg+'</svg><span class="cvt">Avg rating</span></span><span class="cvv hid" title="Shown once you’ve tiled it, so it can’t sway your rating">'+LOCKI+'After you tile</span></span>':row("avg","Avg rating",av,false,n?'<span class="cnt">('+n+')</span>':'');
+function row(ic,k,v,wait,extra){return '<span class="cvr"><span class="cvl"><svg viewBox="0 0 24 24" aria-hidden="true">'+CVI[ic]+'</svg><span class="cvt">'+k+'</span></span><span class="cvv'+(v?'':' na')+'"'+(v&&ic==="alb"?' title="'+esc(v)+'"':'')+'>'+(v?esc(v)+(extra||''):(wait?'…':'—'))+'</span></span>'}
+var a=hide?'<span class="cvr"><span class="cvl"><svg viewBox="0 0 24 24" aria-hidden="true">'+CVI.avg+'</svg><span class="cvt">Avg rating</span></span><span class="cvv hid" title="Shown once you’ve tiled it, so it can’t sway your rating">'+LOCKI+'<span class="hidt">After you tile</span></span></span>':row("avg","Avg rating",av,false,n?'<span class="cnt">('+n+')</span>':'');
 return (s.art&&okArt(s.art)?'<img class="cbg" src="'+esc(s.art)+'" alt="">':'')+'<span class="vh">Hide details. </span><span class="cvd">'+a+(s.type==="Album"?row("rel","Released",fmtRel(o),w)+row("len","Length",fmtTotal(o.ms),w)+row("trk","Tracks",o.count?String(o.count):"",w):row("alb","Album",o.album||"",w)+row("rel","Released",fmtRel(o),w)+row("len","Length",fmtLen(o.ms),w)+row("bpm","BPM",o.bpm?String(o.bpm):"",w||o.bpmBusy))+'</span>'}
 function tileFlip(f,s,hide){if(!f)return;var fb=f.querySelector(".covbtn"),bk=f.querySelector(".cvbk");f._s=s;f._h=hide;
 function turn(on){if(f._ft&&Date.now()-f._ft<560)return;f._ft=Date.now();
@@ -2620,6 +2655,35 @@ f.classList.toggle("on",on);fb.setAttribute("aria-expanded",String(on));
 if(on){bk.removeAttribute("tabindex");bk.removeAttribute("aria-hidden");fb.setAttribute("tabindex","-1");try{bk.focus({preventScroll:true})}catch(e){}}
 else{fb.removeAttribute("tabindex");bk.setAttribute("tabindex","-1");bk.setAttribute("aria-hidden","true");try{fb.focus({preventScroll:true})}catch(e){}}}
 fb.onclick=function(){turn(true)};bk.onclick=function(){turn(false)}}
+/* ---------- "The part that plays": choosing which bit of a song plays, like picking a song for an Instagram story. Apple's preview is
+   30 seconds, so you slide a 15-second window along it; that part loops while you choose, and Listen plays it ---------- */
+var CLIPA=null,CLIPW=15,
+PLAYI='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg>',PAUSEI='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" fill="currentColor"/></svg>';
+function clipStop(){if(CLIPA)try{CLIPA.pause()}catch(e){}}
+function fmtSec(t){t=Math.max(0,Math.round(t));return Math.floor(t/60)+":"+(t%60<10?"0":"")+t%60}
+function clipHTML(){return '<div class="clp" id="clp"><div class="clph"><label id="clpl">The part that plays</label><span class="meta clpt" id="clpt"></span></div>'+
+'<div class="clpr"><button type="button" class="clpb" id="clpb" aria-label="Play">'+PLAYI+'</button><div class="clps" id="clps" role="slider" tabindex="0" aria-labelledby="clpl" aria-valuemin="0"><div class="clpbars"></div><div class="clpw"><i></i></div></div></div>'+
+'<p class="meta clpn">Drag to pick the 15 seconds that play in Listen</p></div>'}
+function clipWire(a,url,s,start,set){var au=CLIPA||(CLIPA=new Audio()),dur=30,st=start!=null?start:0,drag=null,
+sl=a.querySelector(".clps"),w=a.querySelector(".clpw"),pr=w.querySelector("i"),pb=a.querySelector(".clpb"),tl=a.querySelector(".clpt"),bars=a.querySelector(".clpbars"),rnd=seeded(strHash(String(s.tid||s.title+s.artist))),h="";
+/* the bars are a pattern made from the song, not its real sound */
+for(var i=0;i<56;i++)h+='<i style="height:'+Math.round(28+72*Math.abs(Math.sin(i*.42+rnd()*2.4))*(.5+.5*rnd()))+'%"></i>';bars.innerHTML=h;
+function len(){return Math.min(CLIPW,dur)}
+function lay(){var L=len();st=Math.min(Math.max(0,st),Math.max(0,dur-L));w.style.left=(st/dur*100)+"%";w.style.width=(L/dur*100)+"%";tl.textContent=fmtSec(st)+" – "+fmtSec(st+L);
+sl.setAttribute("aria-valuemax",String(Math.round(dur-L)));sl.setAttribute("aria-valuenow",String(Math.round(st)));sl.setAttribute("aria-valuetext","From "+tl.textContent);
+var b=bars.children;for(var i=0;i<b.length;i++){var c=(i+.5)/b.length*dur;b[i].classList.toggle("in",c>=st&&c<=st+L)}}
+function go(keep){if(keep)set(Math.round(st*10)/10);try{au.currentTime=st}catch(e){}var pp=au.play();if(pp&&pp.catch)pp.catch(function(){})}
+function at(e){var r=sl.getBoundingClientRect();return (e.clientX-r.left)/r.width*dur}
+au.onloadedmetadata=function(){if(isFinite(au.duration)&&au.duration>1)dur=au.duration;lay()};
+au.ontimeupdate=function(){var L=len();if(au.currentTime>=st+L-.05||au.currentTime<st-.4)au.currentTime=st;pr.style.transform="scaleX("+Math.min(1,Math.max(0,(au.currentTime-st)/L))+")"};
+au.onplay=au.onpause=function(){if(!pb.isConnected)return;pb.innerHTML=au.paused?PLAYI:PAUSEI;pb.setAttribute("aria-label",au.paused?"Play":"Pause");a.classList.toggle("on",!au.paused)};
+pb.onclick=function(){if(au.paused)go(false);else au.pause()};
+sl.onpointerdown=function(e){var x=at(e),L=len();drag={off:x>=st&&x<=st+L?x-st:L/2};st=x-drag.off;lay();try{sl.setPointerCapture(e.pointerId)}catch(_){}e.preventDefault()};
+sl.onpointermove=function(e){if(!drag)return;st=at(e)-drag.off;lay()};
+sl.onpointerup=sl.onpointercancel=function(){if(!drag)return;drag=null;go(true)};
+sl.onkeydown=function(e){var k=e.key;if(k==="ArrowRight"||k==="ArrowUp")st+=1;else if(k==="ArrowLeft"||k==="ArrowDown")st-=1;else if(k==="Home")st=0;else if(k==="End")st=dur;else return;e.preventDefault();lay();go(true)};
+au.oncanplay=function(){au.oncanplay=null;if(a.isConnected)go(false)};
+au.preload="auto";au.src=url;lay()}
 /* ---------- Listen: swipe up through tiles. Each cover fills the screen and glows while Apple's 30-second preview plays; one tap pauses, a double tap likes.
    The previews come from Apple, and every slide links back to the song on Apple Music. ---------- */
 var LS=null,PREV={},SILENT="data:audio/wav;base64,UklGRjQAAABXQVZFZm10IBAAAAABAAEAQB8AAIA+AAACABAAZGF0YRAAAAAAAAAAAAAAAAAAAAAAAAAA",
@@ -2655,7 +2719,7 @@ return '<section class="lss" data-i="'+i+'" aria-label="'+esc(r.title)+' by '+es
 '<p class="lsno" hidden>No preview for this one</p><a class="lsap" href="#" target="_blank" rel="noopener" hidden>Listen on Apple Music ↗</a></div></div>'+
 '<div class="lsact">'+(S.social?'<button type="button" class="lsb lslk'+(on?' on':'')+'" aria-pressed="'+on+'" aria-label="Like">'+ico("like")+'<span>'+(ln?numS(ln):'')+'</span></button>':'')+
 '<button type="button" class="lsb lstl'+(done?' on':'')+'" aria-label="'+(done?'Tiled. Open the '+(r.type==="Album"?'album':'song'):'Tile this '+(r.type==="Album"?'album':'song'))+'">'+lsIco(done?"tick":"plus")+'<span>'+(done?'Tiled':'Tile')+'</span></button></div></section>'}
-function openListen(){if(LS)return;var items=lsItems();if(!items.length){toast("Nothing to listen to yet");return}
+function openListen(){if(LS)return;clipStop();var items=lsItems();if(!items.length){toast("Nothing to listen to yet");return}
 /* starting a (silent) sound inside the tap lets the previews play afterwards, on phones too */
 var au=new Audio();au.preload="auto";try{au.src=SILENT;var pp=au.play();if(pp&&pp.catch)pp.catch(function(){})}catch(e){}
 var el=document.createElement("div");el.className="lsn";el.setAttribute("role","dialog");el.setAttribute("aria-modal","true");el.setAttribute("aria-label","Listen");
@@ -2679,18 +2743,22 @@ S.pre={title:r.title,artist:r.artist,art:r.art,tid:r.tid,type:r.type};S.bq=null;
 x.querySelector(".lsti").onclick=function(){closeListen();openSong(revSong(r))}}
 function lsSet(i){var L=LS;if(!L||i===L.i||i<0||i>=L.n)return;if(L.cur)L.cur.classList.remove("cur","playing","paused");
 var x=L.list.querySelector('.lss[data-i="'+i+'"]');L.i=i;L.cur=x;if(!x)return;x.classList.add("cur");
-try{L.au.pause()}catch(e){}var bar=x.querySelector(".lspb i");if(bar)bar.style.transform="scaleX(0)";
+try{L.au.pause()}catch(e){}L.end=0;var bar=x.querySelector(".lspb i");if(bar)bar.style.transform="scaleX(0)";
 if(i>=L.n-3)lsMore();if(i>0)L.el.classList.add("moved");
 var r=L.items[i];prevFor(revSong(r),r).then(function(p){if(!LS||LS.i!==i)return;
 var ap=x.querySelector(".lsap");if(p.l){ap.href=p.l;ap.hidden=false}
 var tn=x.querySelector(".lstn");if(p.tn&&r.type==="Album"){tn.textContent="Playing “"+p.tn+"”";tn.hidden=false}
 if(!p.u){x.querySelector(".lsno").hidden=false;return}
-LS.au.src=p.u;var pp=LS.au.play();if(pp&&pp.catch)pp.catch(function(){lsState()})});
+var c=r.type==="Song"&&r.clip!=null?+r.clip:null;LS.st0=c||0;LS.end=c!=null?c+CLIPW:0;
+LS.au.src=p.u+(c?"#t="+c:"");if(c)LS.au.addEventListener("loadedmetadata",function(){if(LS&&Math.abs(LS.au.currentTime-c)>.5)try{LS.au.currentTime=c}catch(e){}},{once:true});
+var pp=LS.au.play();if(pp&&pp.catch)pp.catch(function(){lsState()})});
 var nx=L.items[i+1];if(nx)prevFor(revSong(nx),nx)}
 function lsReal(){return !!(LS&&LS.au.src&&LS.au.src.indexOf("data:")!==0)}
 function lsState(){if(!LS||!LS.cur)return;var real=lsReal(),p=real&&!LS.au.paused;LS.cur.classList.toggle("playing",p);LS.cur.classList.toggle("paused",real&&!p)}
 function lsToggle(){if(!lsReal())return;var a=LS.au;if(a.paused){var pp=a.play();if(pp&&pp.catch)pp.catch(function(){})}else a.pause()}
-function lsProg(){if(!LS||!LS.cur||!lsReal())return;var a=LS.au,d=a.duration&&isFinite(a.duration)?a.duration:30,b=LS.cur.querySelector(".lspb i");if(b)b.style.transform="scaleX("+Math.min(1,(a.currentTime||0)/d)+")"}
+function lsProg(){if(!LS||!LS.cur||!lsReal())return;var a=LS.au,t=a.currentTime||0,b=LS.cur.querySelector(".lspb i");
+if(LS.end){if(t>=LS.end){LS.end=0;a.pause();lsGo(LS.i+1);return}if(b)b.style.transform="scaleX("+Math.min(1,Math.max(0,(t-LS.st0)/CLIPW))+")";return}
+var d=a.duration&&isFinite(a.duration)?a.duration:30;if(b)b.style.transform="scaleX("+Math.min(1,t/d)+")"}
 function lsGo(i){if(!LS||i<0)return;if(i>=LS.n)lsMore();var x=LS.list.querySelector('.lss[data-i="'+i+'"]');if(!x)return;try{x.scrollIntoView({behavior:"smooth",block:"start"})}catch(e){x.scrollIntoView()}}
 /* a double tap only ever likes (with a heart where you tapped); the heart button turns it on and off */
 function lsLike(i,e,btn){var r=LS&&LS.items[i];if(!r||!S.social||!S.user)return;var x=LS.list.querySelector('.lss[data-i="'+i+'"]'),on=(S.likes[r.id]||[]).indexOf(S.user)>-1;
@@ -2781,7 +2849,7 @@ async delComment(cid,rid){S.comments[rid]=(S.comments[rid]||[]).filter(function(
 };
 function notifyLocal(kind,rid){var r=S.reviews.filter(function(x){return String(x.id)===String(rid)})[0];if(!r||r.user===S.user)return;var o=acct(r.user);if(!o)return;o.notes=(o.notes||[]).filter(function(n){return kind==="comment"||!(n.by===S.user&&n.kind===kind&&String(n.rid)===String(rid))});o.notes.unshift({by:S.user,date:new Date().toISOString().slice(0,10),read:false,kind:kind,rid:rid});o.notes=o.notes.slice(0,30);store.set("ln_accounts",accts)}
 /* one review row from the database, as the page uses it */
-function revRow(x,name){return {id:x.id,title:x.title,artist:x.artist,type:x.type,art:x.art||"",tid:x.tid,rating:rnum(x.rating),text:x.body||"",tracks:cleanTracks(x.tracks),user:name,date:String(x.created_at).slice(0,10)}}
+function revRow(x,name){return {id:x.id,title:x.title,artist:x.artist,type:x.type,art:x.art||"",tid:x.tid,clip:x.clip==null||!isFinite(+x.clip)?null:+x.clip,rating:rnum(x.rating),text:x.body||"",tracks:cleanTracks(x.tracks),user:name,date:String(x.created_at).slice(0,10)}}
 /* the full load: every request goes out at once (one round trip instead of seven).
    It runs when you sign in, when the page opens, and quietly when you come back to the tab; actions don't trigger it. */
 async function loadRemote(){
@@ -2841,7 +2909,7 @@ var r=await sb.auth.signInWithPassword({email:email,password:pw});
 if(r.error){return {error:/not confirmed/i.test(r.error.message||"")?"Confirm your email first, then sign in.":"Username, email or password is incorrect."}}
 S.uid=r.data.user.id;S.email=r.data.user.email;await loadRemote();return S.user?{}:{error:"Couldn't load your account. Refresh the page."}},
 async signOut(){await sb.auth.signOut();dmReset();S.user=null;S.uid=null;accts=[];S.reviews=[];S.later=[];S.plats=[];S.mos={};S.platOK=false;S.sotd={days:{},entries:{},admin:false};S.sotdOK=false},
-async saveReview(o,r){var row={title:o.title,artist:o.artist,type:o.type,art:o.art||null,tid:o.tid||null,rating:o.rating,body:o.text,tracks:o.type==="Album"&&o.tracks?o.tracks:null};
+async saveReview(o,r){var row={title:o.title,artist:o.artist,type:o.type,art:o.art||null,tid:o.tid||null,rating:o.rating,body:o.text,tracks:o.type==="Album"&&o.tracks?o.tracks:null,clip:o.type==="Song"&&o.clip!=null?o.clip:null};
 var save=function(rw){return (r?sb.from("reviews").update(rw).eq("id",r.id):sb.from("reviews").insert(rw)).select("*").single()};
 var res=await save(row),whole=0;
 if(res.error&&/integer/i.test(res.error.message||"")){whole=Math.max(1,Math.round(o.rating));res=await save(Object.assign({},row,{rating:whole}))}
