@@ -2744,10 +2744,29 @@ function prevBatch(list){var ids=[],by={};list.forEach(function(r){var s=revSong
 ids=ids.slice(0,100);if(!ids.length)return;var p=ituneRows("https://itunes.apple.com/lookup?id="+ids.join(","));
 ids.forEach(function(id){var o=by[id];PREV[o.k]=p.then(function(rows){var t=rows.filter(function(x){return x.wrapperType==="track"&&String(x.trackId)===String(id)})[0];
 if(t)return {u:okPrev(t.previewUrl),l:okLink(t.trackViewUrl)};delete PREV[o.k];return prevFor(o.s,o.r)},function(){delete PREV[o.k];return prevFor(o.s,o.r)})})}
-/* the tiles to listen through: what you're looking at (the feed with its filters, a profile), one per song, otherwise everything newest first; on a song's page that song comes first */
-function lsItems(){var src=/^(feed|profile|user)$/.test(S.tab)?filtered():S.reviews.slice().sort(function(a,b){return b.id-a.id}),seen={},out=[];
-if(S.tab==="song"&&S.song){var k0=infoKey(S.song);src=src.filter(function(r){return infoKey(revSong(r))===k0}).concat(src)}
-src.forEach(function(r){if(!r.art||!okArt(r.art))return;var k=infoKey(revSong(r));if(seen[k])return;seen[k]=1;out.push(r)});return out.slice(0,100)}
+/* ---------- what Listen plays, and in what order. Each tile gets a score:
+   - newer tiles count a bit more (fading over about a month)
+   - tiles with more likes, comments, reposts and shares are pushed a bit harder, on a log scale so one huge count can't take over
+   - anything you've already seen in Listen is pushed right down, and comes back gradually over the next few weeks; a song you've
+     heard through someone else's tile is pushed down half as hard, and each extra time you've seen something pushes it down a bit more
+   - your own tiles count for half
+   The order is then drawn at random, weighted by score, so it's different every time you open Listen. The tiles come from what you're
+   looking at (the feed with its filters, a profile), otherwise everyone's; one per song, the best-scoring one; on a song's page that
+   song comes first. What you've seen is remembered in this browser. ---------- */
+var LSEEN="ln_lseen";
+function lsSeenAll(){var o=store.get(LSEEN,{});return o&&typeof o==="object"&&!Array.isArray(o)?o:{}}
+function lsMark(r){var o=lsSeenAll(),now=Date.now();["r:"+r.id,"s:"+infoKey(revSong(r))].forEach(function(k){var e=o[k]||{n:0,t:0};o[k]={n:Math.min(9,(+e.n||0)+1),t:now}});
+var ks=Object.keys(o);if(ks.length>800)ks.sort(function(a,b){return o[a].t-o[b].t}).slice(0,ks.length-700).forEach(function(k){delete o[k]});store.set(LSEEN,o)}
+function lsFade(e,now){var d=Math.max(0,(now-e.t)/864e5);return (.1+.9*(1-Math.exp(-d/10)))*Math.pow(.8,Math.max(0,(+e.n||1)-1))}
+function lsScore(r,seen,now){var I=likeN(r.id)+2*cmN(r.id)+2*rpN(r.id)+shN(r.id);I=isFinite(I)?Math.min(1000,I):1000;
+var t=Date.parse(r.date),age=isFinite(t)?Math.max(0,(now-t)/864e5):0,fresh=.55+Math.exp(-age/30),eng=1+.3*Math.log2(1+I),
+er=seen["r:"+r.id],es=seen["s:"+infoKey(revSong(r))],sf=er?lsFade(er,now):es?.5+.5*lsFade(es,now):1;
+return fresh*eng*sf*(r.user===S.user?.5:1)}
+function lsItems(){var src=/^(feed|profile|user)$/.test(S.tab)?filtered():S.reviews.slice(),seen=lsSeenAll(),now=Date.now(),best={};
+src.forEach(function(r){if(!r.art||!okArt(r.art))return;var k=infoKey(revSong(r)),sc=lsScore(r,seen,now);if(!best[k]||sc>best[k].sc)best[k]={r:r,sc:sc}});
+var pool=Object.keys(best).map(function(k){return {r:best[k].r,k:k,w:Math.pow(Math.random(),1/Math.max(1e-6,best[k].sc))}}).sort(function(a,b){return b.w-a.w});
+if(S.tab==="song"&&S.song){var k0=infoKey(S.song),i0=-1;pool.forEach(function(x,i){if(i0<0&&x.k===k0)i0=i});if(i0>0)pool.unshift(pool.splice(i0,1)[0])}
+return pool.slice(0,100).map(function(x){return x.r})}
 function lsSlide(r,i){var s=revSong(r),on=(S.likes[r.id]||[]).indexOf(S.user)>-1,ln=likeN(r.id),done=!!dupSong(s);
 return '<section class="lss" data-i="'+i+'" aria-label="'+esc(r.title)+' by '+esc(r.artist)+'">'+
 '<div class="lsbg" aria-hidden="true"><canvas class="soft" width="48" height="48" data-soft="'+esc(r.art)+'" data-blur="2.4"></canvas></div>'+
@@ -2781,6 +2800,7 @@ S.pre={title:r.title,artist:r.artist,art:r.art,tid:r.tid,type:r.type};S.bq=null;
 x.querySelector(".lsti").onclick=function(){closeListen();openSong(revSong(r))}}
 function lsSet(i){var L=LS;if(!L||i===L.i||i<0||i>=L.n)return;if(L.cur)L.cur.classList.remove("cur","playing","paused");
 var x=L.list.querySelector('.lss[data-i="'+i+'"]');L.i=i;L.cur=x;if(!x)return;x.classList.add("cur");
+clearTimeout(L.mt);L.mt=setTimeout(function(){if(LS===L&&L.i===i)lsMark(L.items[i])},1200);
 try{L.au.pause()}catch(e){}L.end=0;var bar=x.querySelector(".lspb i");if(bar)bar.style.transform="scaleX(0)";
 if(i>=L.n-3)lsMore();if(i>0)L.el.classList.add("moved");
 var r=L.items[i];prevFor(revSong(r),r).then(function(p){if(!LS||LS.i!==i)return;
@@ -2807,7 +2827,7 @@ function lsKey(e){if(!LS)return;var k=e.key,t=e.target,hit=true;
 if(k==="Escape")closeListen();else if(k==="ArrowDown"||k==="PageDown")lsGo(LS.i+1);else if(k==="ArrowUp"||k==="PageUp")lsGo(LS.i-1);
 else if(k===" "&&!(t&&t.closest&&t.closest("button,a")))lsToggle();else hit=false;
 if(hit){e.preventDefault();e.stopPropagation()}}
-function closeListen(){if(!LS)return;var L=LS;LS=null;clearTimeout(L.st);clearTimeout(L.tapTm);try{L.io.disconnect()}catch(e){}
+function closeListen(){if(!LS)return;var L=LS;LS=null;clearTimeout(L.st);clearTimeout(L.tapTm);clearTimeout(L.mt);try{L.io.disconnect()}catch(e){}
 try{L.au.pause();L.au.removeAttribute("src");L.au.load()}catch(e){}
 document.removeEventListener("keydown",lsKey,true);document.documentElement.classList.remove("lsopen");L.el.classList.remove("in");
 setTimeout(function(){if(L.el.parentNode)L.el.parentNode.removeChild(L.el)},250);refreshList()}
