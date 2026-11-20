@@ -286,6 +286,81 @@ header.top h2{margin-right:10px}
 .act[data-rp].on{color:var(--teal)}
 .act[data-like].on svg{fill:currentColor}
 .act:has(>.inf){position:relative}.act>.inf{position:absolute;left:calc(100% - 8px);top:0;font-size:12px;line-height:1;font-weight:600;pointer-events:none}
+/* the song page's rating spread, beside the average */
+.srate{flex-wrap:wrap;row-gap:12px}
+.rdist{align-self:center;display:flex;flex-direction:column;gap:4px;margin-left:4px}
+.rdbars{display:flex;align-items:flex-end;gap:3px;height:42px}
+.rdb{position:relative;flex:none;display:flex;align-items:flex-end;width:9px;height:100%;padding:0;border:0;background:none;cursor:pointer}
+.rdb i{display:block;width:100%;height:var(--h);min-height:2px;border-radius:2px 2px 1px 1px;background:color-mix(in srgb,var(--mute) 50%,transparent);transition:background .15s,opacity .15s}
+.rdb:disabled{cursor:default}
+.rdb:not(:disabled):hover i,.rdb.on i,.rdb:focus-visible i{background:linear-gradient(180deg,var(--pop),var(--violet))}
+.rdist.f .rdb:not(.on) i{opacity:.35}
+.rdb::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 7px);left:50%;transform:translateX(-50%);white-space:nowrap;padding:3px 8px;border-radius:6px;background:var(--ink);color:var(--bg);font-size:11px;font-weight:600;line-height:1.35;pointer-events:none;opacity:0;transition:opacity .12s;z-index:3}
+.rdb:not(:disabled):hover::after,.rdb:focus-visible::after{opacity:1}
+.rdlab{display:flex;justify-content:space-between;font-size:10px;line-height:1;color:var(--mute)}
+.dsf{margin:-4px 0 14px;font-size:13px;color:var(--mute)}
+.dsf:empty{display:none}
+.dsf .linkbtn{margin-left:8px}
+@media (max-width:520px){.sbox .srate{gap:10px}.rdist{margin-left:0}.rdbars{gap:2px;height:34px}.rdb{width:7px}}
+/* the Tile page: a bigger glow, a cover that turns over for details, and a Tile button that grows a little on hover */
+.tpk .aglow{inset:-32%;--ab:38px}
+.tpk .cvf,.tpk .covbtn{display:block;width:100%}
+.cvv.hid{display:flex;align-items:center;justify-content:flex-end;gap:.35em;font-weight:500;color:rgba(255,255,255,.82)}
+.cvv .lk{flex:none;width:.95em;height:.95em;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round}
+#rf #sv{transition:transform .18s cubic-bezier(.3,.7,.4,1.5),filter .12s}
+#rf #sv:hover:not(:disabled){transform:scale(1.07)}
+#rf #sv:active:not(:disabled){transform:scale(.98)}
+/* Listen */
+html.lsopen,html.lsopen body{overflow:hidden}
+.lsn{position:fixed;inset:0;z-index:650;background:#050507;color:#fff;opacity:0;transition:opacity .25s ease}
+.lsn.in{opacity:1}
+.lsl{position:absolute;inset:0;overflow-x:hidden;overflow-y:auto;scroll-snap-type:y mandatory;overscroll-behavior:contain;scrollbar-width:none;outline:none}
+.lsl::-webkit-scrollbar{display:none}
+.lss{position:relative;height:100vh;height:100dvh;scroll-snap-align:start;scroll-snap-stop:always;overflow:hidden;display:flex;align-items:center;justify-content:center;isolation:isolate;cursor:pointer}
+.lsbg{position:absolute;inset:-6%;z-index:-2;opacity:.62}
+.lsbg canvas{display:block;width:100%;height:100%;object-fit:cover}
+.lss::after{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(ellipse at 50% 42%,rgba(5,5,7,.1),rgba(5,5,7,.72) 78%),linear-gradient(180deg,rgba(5,5,7,.15),rgba(5,5,7,.5))}
+.lsin{display:flex;flex-direction:column;align-items:center;width:min(440px,calc(100vw - 132px));text-align:center}
+.lscv{width:min(400px,calc(100vw - 132px),48vh)}
+.lscv .aglw{position:relative;width:100%;max-width:none}
+.lscv .cover{width:100%;max-width:none;border-radius:10px;font-size:20px;padding:14px;box-shadow:0 30px 60px -22px rgba(0,0,0,.75)}
+.lscv .aglow{inset:-26%;--ab:40px;--ao:.95}
+.lss.playing .lscv .aglow{animation:lsbreathe 5s ease-in-out infinite}
+@keyframes lsbreathe{50%{transform:scale(1.08)}}
+.lsst{position:absolute;inset:0;z-index:1;display:grid;place-items:center;opacity:0;transition:opacity .2s;pointer-events:none}
+.lsst svg{width:26px;height:26px;padding:20px;border-radius:50%;background:rgba(0,0,0,.5);fill:#fff;box-sizing:content-box}
+.lss.paused .lsst{opacity:1}
+.lspb{width:100%;height:3px;margin-top:14px;border-radius:2px;background:rgba(255,255,255,.2);overflow:hidden}
+.lspb i{display:block;height:100%;background:#fff;transform:scaleX(0);transform-origin:left;transition:transform .25s linear}
+.lsmeta{margin-top:16px;max-width:100%}
+.lsmeta h3{margin:0;line-height:1.2}
+.lsti{background:none;border:0;padding:0;color:#fff;font:inherit;font-size:22px;font-weight:700;cursor:pointer;text-align:center}
+.lsti:hover{text-decoration:underline}
+.lsar{margin:4px 0 0;color:rgba(255,255,255,.75)}
+.lstn{margin:3px 0 0;font-size:12.5px;color:rgba(255,255,255,.6)}
+.lsby{display:flex;align-items:center;justify-content:center;gap:8px;margin:14px 0 0;font-size:14px}
+.lsr{display:inline-flex;align-items:center;gap:3px;color:var(--star);font-weight:600}
+.lsq{margin:8px 0 0;font-size:15px;line-height:1.4;color:rgba(255,255,255,.92)}
+.lsno{margin:12px 0 0;font-size:13px;color:rgba(255,255,255,.6)}
+.lsap{display:inline-block;margin-top:12px;font-size:12px;color:rgba(255,255,255,.7)}
+.lsap:hover{color:#fff}
+.lsact{position:absolute;right:max(12px,calc(50% - 340px));bottom:18%;display:flex;flex-direction:column;gap:18px;align-items:center}
+.lsb{display:flex;flex-direction:column;align-items:center;gap:5px;background:none;border:0;padding:0;color:#fff;font:inherit;font-size:12px;font-weight:600;cursor:pointer}
+.lsb svg{width:24px;height:24px;padding:13px;border-radius:50%;background:rgba(255,255,255,.13);box-sizing:content-box;transition:transform .15s,background .15s}
+.lsb:hover svg{background:rgba(255,255,255,.22);transform:scale(1.06)}
+.lslk.on svg{fill:#ff5c8a;stroke:#ff5c8a}
+.lstl svg{background:linear-gradient(135deg,#7a5cf5,#c04fd8)}
+.lstl.on svg{background:rgba(255,255,255,.13)}
+.lsb span:empty{display:none}
+.lsx{position:fixed;top:14px;right:14px;z-index:3;display:grid;place-items:center;width:42px;height:42px;padding:0;border:0;border-radius:50%;background:rgba(255,255,255,.14);color:#fff;cursor:pointer}
+.lsx svg{width:20px;height:20px}
+.lsx:hover{background:rgba(255,255,255,.24)}
+.lshint{position:fixed;left:50%;bottom:16px;z-index:2;margin:0;transform:translateX(-50%);font-size:12px;color:rgba(255,255,255,.65);pointer-events:none;transition:opacity .5s}
+.lsn.moved .lshint{opacity:0}
+.lsheart{position:absolute;z-index:5;width:96px;height:96px;margin:-48px 0 0 -48px;pointer-events:none;animation:lsheart .85s ease-out forwards}
+.lsheart svg{width:100%;height:100%;fill:#ff5c8a;stroke:#ff5c8a;filter:drop-shadow(0 6px 16px rgba(0,0,0,.4))}
+@keyframes lsheart{0%{transform:scale(.3);opacity:0}15%{transform:scale(1.15);opacity:1}30%{transform:scale(1)}100%{transform:translateY(-46px) scale(1);opacity:0}}
+@media (prefers-reduced-motion:reduce){.lss.playing .lscv .aglow,.lsheart{animation:none}#rf #sv{transition:none}}
 .cmts{margin-top:8px;border-top:1px solid var(--line);padding-top:8px;display:grid;gap:6px}
 .cm{display:flex;justify-content:space-between;gap:8px;font-size:13px}
 .cm .cx{background:none;border:0;color:var(--mute);cursor:pointer;font-size:16px;line-height:1;padding:0 4px}
@@ -943,7 +1018,7 @@ a.pl.act{padding:5px}
 .sdrows .cmts{margin:-4px 0 2px;padding:8px 12px;border-radius:10px;background:color-mix(in srgb,var(--surface) 86%,transparent);border:1px solid var(--line)}
 .crown{color:#e0a526}
 /* the intro */
-#sdi{position:fixed;inset:0;z-index:600;overflow:hidden;cursor:pointer;opacity:0;transition:opacity .25s ease}
+#sdi{position:fixed;inset:0;z-index:600;overflow:hidden;cursor:default;opacity:0;transition:opacity .25s ease}
 #sdi.in{opacity:1}
 #sdi.gone{opacity:0;transition:opacity .2s ease}
 #sdi .sdib{position:absolute;inset:0;background:var(--bg);transition:opacity .9s ease .1s}
@@ -959,8 +1034,6 @@ a.pl.act{padding:5px}
 #sdi .at.big .ai{inset:0}
 #sdi .at.hero .af{transition:border-radius 1s ease,box-shadow 1s ease}
 #sdi .at.big .af{border-radius:6px;box-shadow:0 1px 2px rgba(0,0,0,.3),0 34px 70px -22px rgba(0,0,0,.65)}
-#sdi .sdis{position:absolute;right:16px;bottom:14px;z-index:3;font-size:12px;color:#fff;opacity:.75;padding:4px 10px;border-radius:999px;background:rgba(0,0,0,.35)}
-#sdi.out .sdis{opacity:0;transition:opacity .3s}
 .sdy{display:flex;gap:12px;align-items:center;background:color-mix(in srgb,var(--surface) 86%,transparent);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
 .sdy .rart{width:56px;height:56px}
 .sdy p{margin:4px 0 0}
@@ -1734,7 +1807,7 @@ function songFromHit(it){return {title:it.title,artist:it.artist,type:it.type||"
 function dupSong(it,skip){if(!it||(it.type||"Song")!=="Song"||!S.user)return null;var t=String(it.title).toLowerCase(),a=String(it.artist).toLowerCase();return S.reviews.filter(function(r){return r.user===S.user&&r.type==="Song"&&String(r.id)!==String(skip)&&r.title.toLowerCase()===t&&r.artist.toLowerCase()===a})[0]||null}
 function songReviews(s){var t=s.title.toLowerCase(),a=s.artist.toLowerCase();return S.reviews.filter(function(r){return r.type===s.type&&r.title.toLowerCase()===t&&r.artist.toLowerCase()===a})}
 function filtered(){
-if(S.tab==="song"&&S.song)return songReviews(S.song).sort(function(a,b){return b.id-a.id});
+if(S.tab==="song"&&S.song)return songReviews(S.song).filter(inDist).sort(function(a,b){return b.id-a.id});
 var l=S.reviews.slice();
 if(S.tab==="profile"||S.tab==="user"){var pn=S.tab==="profile"?S.user:S.view;l=l.filter(function(r){return r.user===pn}).concat(S.reviews.filter(function(r){return r.user!==pn&&(S.reposts[r.id]||[]).indexOf(pn)>-1}).map(function(r){return Object.assign({},r,{via:pn})}))}
 if(S.tab==="feed"&&S.scope==="fol"){var fl=(me()&&me().following)||[];l=l.filter(function(r){return fl.indexOf(r.user)>-1})}
@@ -2024,7 +2097,8 @@ o.busy=false;var want=s.type==="Song"&&REMOTE&&!o.failed;o.bpmBusy=want;paintInf
 if(!want)return;
 try{o.bpm=await fetchBpm(s,o.ms)}catch(e){o.bpm=null}
 o.bpmBusy=false;paintInfo(k)}
-function paintInfo(k){paintBacks(k);if(S.tab!=="song"||!S.song||infoKey(S.song)!==k)return;
+function paintInfo(k){paintBacks(k);var tf=document.getElementById("tpf");if(tf&&tf._s&&tf.classList.contains("on")&&tf.getAttribute("data-k")===k){var tb=tf.querySelector(".cvbk");if(tb)tb.innerHTML=tileBack(tf._s,tf._h)}
+if(S.tab!=="song"||!S.song||infoKey(S.song)!==k)return;
 var f=$("#sfacts"),t=$("#stracks"),n=$("#snote");if(f)f.innerHTML=factsHTML();if(t)t.innerHTML=tracksHTML();if(n)n.innerHTML=noteHTML();bind()}
 function factsHTML(){var s=S.song,o=S.info[infoKey(s)]||{},alb=s.type==="Album",wait=!!o.busy,year=o.year||(alb&&/^\d{4}$/.test(s.album)?s.album:"");
 function row(k,v,w,raw){return '<div><dt>'+k+'</dt><dd'+(v?'':' class="na"')+'>'+(v?(raw||esc(v)):(w?'…':'—'))+'</dd></div>'}
@@ -2058,22 +2132,22 @@ if(S.mosOK&&mosHas(s))return '<div class="tessw" title="In your mosaic"><div cla
 var m=(rs||[]).filter(function(r){return r.user===S.user})[0];
 return m?'<p class="tiled" title="You’ve tiled this ('+rnum(m.rating).toFixed(1)+')"><i aria-hidden="true"></i>Tiled</p>':'<p class="tiled not" title="You haven’t tiled this yet"><i aria-hidden="true"></i>Not tiled</p>'}
 function songView(){var s=S.song,alb=s.type==="Album",what=alb?"album":"song",rs=songReviews(s),n=rs.length,avg=n?rs.reduce(function(a,r){return a+rnum(r.rating)},0)/n:0,mine=dupSong(s);
-var rate=n?'<div class="srate"><span class="snum">'+avg.toFixed(2)+'</span><span class="sbar" style="--p:'+starPct(avg)+'%" role="img" aria-label="Average '+avg.toFixed(2)+' out of 5"></span></div><p class="meta scount">Average of '+pl(n,"review")+' on Mosaic</p>'
+var rate=n?'<div class="srate"><span class="snum">'+avg.toFixed(2)+'</span><span class="sbar" style="--p:'+starPct(avg)+'%" role="img" aria-label="Average '+avg.toFixed(2)+' out of 5"></span>'+distHTML(rs)+'</div><p class="meta scount">Average of '+pl(n,"review")+' on Mosaic</p>'
 :'<div class="srate none"><span class="noyet">No ratings yet</span></div><p class="meta scount">Be the first to tile this '+what+'.</p>';
 return '<button type="button" class="linkbtn" data-back="1" style="margin-bottom:14px">← '+esc(backLabel())+'</button>'+
 '<section class="song sbox card"><div class="pickbig"><div class="sart"><div class="aglw">'+artGlow(s)+(S.user&&S.mosOK&&mosHas(s)?artGlow(s,1):'')+heroCover(s)+'</div>'+songBadge(s,rs)+'</div><div class="sbt"><h1>'+esc(s.title)+'</h1><div class="meta"><button type="button" class="ulink" data-seeq="'+esc(s.artist)+'" title="See Mosaic reviews by this artist">'+esc(s.artist)+'</button></div></div></div><div class="sinfo">'+rate+
 '<dl class="facts" id="sfacts">'+factsHTML()+'</dl><div class="sbtns">'+(mine?'<button type="button" class="btn ink" data-edit="'+esc(mine.id)+'">Edit your review</button>':'<button type="button" class="btn ink" id="srev">Tile this '+what+'</button>')+''+(S.laterOK?laterBtn(s):'')+'</div>'+listenRow(s)+'<div id="stracks">'+tracksHTML()+'</div><p class="meta src" id="snote">'+noteHTML()+'</p></div></section>'+
-'<section class="srevs"><div class="srh"><h2>Reviews'+(n?' <span class="meta">'+n+'</span>':'')+'</h2>'+(n?layoutSwitch():'')+'</div>'+(n?'<div class="list cols'+S.cols+'" id="list">'+listHTML()+'</div>':'<div class="empty">Nobody has tiled this '+what+' yet.</div>')+'</section>'}
+'<section class="srevs"><div class="srh"><h2>Reviews'+(n?' <span class="meta">'+n+'</span>':'')+'</h2>'+(n?layoutSwitch():'')+'</div>'+(n?'<p class="dsf" id="dsf">'+dsfHTML()+'</p>':'')+(n?'<div class="list cols'+S.cols+'" id="list">'+listHTML()+'</div>':'<div class="empty">Nobody has tiled this '+what+' yet.</div>')+'</section>'}
 function openSong(s){if(!s)return;
 if(S.tab==="song"&&S.song&&mosKey(S.song)===mosKey(s)){try{window.scrollTo({top:0,behavior:"smooth"})}catch(e){window.scrollTo(0,0)}return}
 S.stack.push({tab:S.tab,view:S.view,stab:S.stab,q:S.q,y:window.scrollY||0,song:S.tab==="song"?S.song:null,dmw:S.tab==="msgs"?S.dmWith:null});if(S.stack.length>25)S.stack.shift();
-S.song=s;S.tab="song";S.shut=keepShut();var o=ensureInfo(s);
+S.song=s;S.sdist=null;S.tab="song";S.shut=keepShut();var o=ensureInfo(s);
 appView();try{window.scrollTo(0,0)}catch(e){}
 if(o)o.p=loadInfo(s,o)}
 function goBack(){var f=S.stack.pop();
 if(!f){S.tab="feed";S.q="";S.shut=keepShut();appView();return}
 S.tab=f.tab;S.view=f.view;S.stab=f.stab;S.q=f.q||"";if(f.tab==="msgs"){S.dmWith=f.dmw||null;S.dmNew=false}S.shut=keepShut();
-var o=null;if(f.song){S.song=f.song;o=ensureInfo(f.song)}
+var o=null;if(f.song){S.song=f.song;S.sdist=null;o=ensureInfo(f.song)}
 appView();try{window.scrollTo(0,f.y||0)}catch(e){}
 if(o)o.p=loadInfo(f.song,o)}
 
@@ -2115,7 +2189,7 @@ else if(S.tab==="account"){body='<section class="page"><h2>Privacy and account</
 else{body=(prof?'<section class="prof ig"><div class="pmain"><h2 class="pnm"><span>'+nm+'</span></h2>'+pavHTML(a,S.platOK?S.plats:[],1)+'<div class="igm">'+igStats(S.user,a,"")+est(a)+lifeBtn(S.user)+'</div></div>'+mosaicHTML(S.user,true)+'</section>':'')+
 (S.tab==="feed"&&S.q?'<div class="chips"><span class="meta">Showing reviews for</span><button type="button" class="chip" id="clq">'+esc(S.q)+' ×</button></div>':'')+'<div class="tools"><div class="tl"><button class="btn addb" id="add" aria-label="Tile" title="Tile"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>'+(S.tab==="feed"?'<select id="sc" aria-label="Show"><option value="all">Everyone</option><option value="fol">People I follow</option></select>':'')+'<select id="t" aria-label="Type"><option>All</option><option>Album</option><option>Song</option></select><select id="s" aria-label="Sort"><option value="new">Newest</option><option value="top">Highest rated</option><option value="hot">Most interacted</option></select></div>'+layoutSwitch()+'</div>'+
 '<div class="list cols'+S.cols+'" id="list">'+listHTML()+'</div>'}
-$("#app").innerHTML='<div class="wrap'+(S.tab==="msgs"?' dmw':'')+'"><header class="top"><h2><button type="button" class="wm" data-tab="feed" aria-label="Mosaic home">Mosaic</button></h2><nav><button data-tab="feed" aria-current="'+(S.tab==="feed")+'">Recommended</button>'+(S.sotdOK?'<button data-tab="sotd" aria-current="'+(S.tab==="sotd")+'">Song of the Day</button>':'')+'</nav>'+
+$("#app").innerHTML='<div class="wrap'+(S.tab==="msgs"?' dmw':'')+'"><header class="top"><h2><button type="button" class="wm" data-tab="feed" aria-label="Mosaic home">Mosaic</button></h2><nav><button data-tab="feed" aria-current="'+(S.tab==="feed")+'">Recommended</button>'+(S.sotdOK?'<button data-tab="sotd" aria-current="'+(S.tab==="sotd")+'">Song of the Day</button>':'')+(S.reviews.length?'<button type="button" data-listen="1">Listen</button>':'')+'</nav>'+
 '<div class="sw'+(S.sv?" open":"")+'"><button class="ib" id="sb" aria-label="Search" type="button">'+mag+'</button><input id="q" type="search" placeholder="Search songs to tile" aria-label="Search songs" autocomplete="off" readonly value="'+esc(S.sv||"")+'"><div class="sug" id="sug" hidden></div></div>'+
 '<div class="right"><div class="mew"><button class="me" aria-haspopup="menu" aria-current="'+mcur+'" aria-label="Your account menu">'+avatar(a)+'<span class="nm">'+nm+'</span></button>'+
 '<div class="menu"><div class="box" role="menu"><button role="menuitem" data-tab="profile">My Mosaic</button><button role="menuitem" data-tab="editp">Edit profile</button>'+(S.laterOK?'<button role="menuitem" data-tab="later">Listen later'+(S.later.length?' <span class="meta">'+S.later.length+'</span>':'')+'</button>':'')+'<button role="menuitem" data-tab="likes">My likes and comments</button><button role="menuitem" data-tab="account">Privacy and account</button><hr><button role="menuitem" id="so">Sign out</button></div></div></div>'+
@@ -2201,7 +2275,7 @@ try{if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitReviews
 /* the lifetime mosaic, as big as it can be with every tile on screen at once */
 function fitLife(){var g=document.getElementById("lgrid");if(!g)return;var c=+g.style.getPropertyValue("--c")||8,r=Math.ceil(g.children.length/c),gap=parseFloat(getComputedStyle(g).columnGap)||0,
 H=window.innerHeight-(g.getBoundingClientRect().top+(window.scrollY||0))-16,t=Math.floor(Math.min(96,(g.clientWidth-(c-1)*gap)/c,(H-(r-1)*gap)/r));g.style.setProperty("--t",Math.max(8,t)+"px")}
-function bind(){paintSoft();fitReviews();fitLife();
+function bind(){paintSoft();fitReviews();fitLife();wireExtras();
 document.querySelectorAll("[data-setplat]").forEach(function(b){b.onclick=openPlatDlg});
 var edp=$("#edpl");if(edp)edp.onclick=openPlatDlg;
 var epr=$("#edprof");if(epr)epr.onclick=function(){S.tab="editp";S.stack=[];S.shut=keepShut();appView();try{window.scrollTo(0,0)}catch(e){}};
@@ -2326,7 +2400,8 @@ drawRes();setS(results.length?"":"Nothing found. Try a different spelling.")})
 function renderSel(){var el=$("#sel",d);
 $("#rf",d).classList.toggle("split",!!chosen);trkSync();
 var dx=chosen?dupSong(chosen,r&&r.id):null;if(dx){dupNote(dx);dupOn=true}else if(dupOn){err("");dupOn=false}
-if(chosen){el.innerHTML='<div class="pickbig"><div class="aglw">'+artGlow(chosen)+cover(chosen)+'</div><b>'+esc(chosen.title)+'</b><div class="meta">'+esc(chosen.artist)+'</div><button type="button" class="btn ghost sm" id="chs">Change</button></div>';paintSoft();
+if(chosen){var told=!!(r||dx);el.innerHTML='<div class="pickbig tpk"><div class="aglw">'+artGlow(chosen)+'<div class="cvf tpf" id="tpf" data-k="'+esc(infoKey(chosen))+'"><div class="cvi"><button type="button" class="covbtn" aria-expanded="false" aria-label="Turn over for details about “'+esc(chosen.title)+'”" title="Turn over for details">'+cover(chosen)+'</button><button type="button" class="cvbk" tabindex="-1" aria-hidden="true"></button></div></div></div>'+
+(told?'<p class="tiled"><i aria-hidden="true"></i>Tiled</p>':'<p class="tiled not" title="You haven’t tiled this yet"><i aria-hidden="true"></i>Not tiled</p>')+'<b>'+esc(chosen.title)+'</b><div class="meta">'+esc(chosen.artist)+'</div><button type="button" class="btn ghost sm" id="chs">Change</button></div>';paintSoft();tileFlip($("#tpf",d),chosen,!told);
 $("#chs",d).onclick=function(){chosen=null;manual=false;results=[];renderSel();$("#sq",d).focus()};return}
 if(manual){el.innerHTML='<div class="two"><div><label for="ti">Title</label><input id="ti" maxlength="80" value="'+esc(mv.title)+'"></div><div><label for="ar">Artist</label><input id="ar" maxlength="80" value="'+esc(mv.artist)+'"></div></div><label for="ty">Type</label><select id="ty"><option>Song</option><option>Album</option></select><button type="button" class="linkbtn" id="bk">Search for music instead</button>';
 $("#ty",d).value=mv.type;
@@ -2448,7 +2523,7 @@ el=document.createElement("div"),h='<div class="sdib"></div>',timers=[],done=fal
 var arts=amzSpread(G,pool);
 G.t.forEach(function(q,i){var u=arts[i],g=(i*47)%360;
 h+='<div class="at" style="left:'+q.x+'px;top:'+q.y+'px;width:'+q.w+'px;height:'+q.h+'px"><div class="ai"><span class="af" style="--g:linear-gradient(135deg,hsl('+g+',45%,38%),hsl('+((g+50)%360)+',50%,26%))">'+(u?'<img src="'+esc(amzArt(u))+'" alt="" decoding="async">':'')+'</span><span class="af ab"></span></div></div>'});
-el.id="sdi";el.setAttribute("aria-hidden","true");el.innerHTML=h+'<span class="sdis">Tap to skip</span>';document.body.appendChild(el);
+el.id="sdi";el.setAttribute("aria-hidden","true");el.innerHTML=h;document.body.appendChild(el);
 var T=[].map.call(el.querySelectorAll(".at"),function(t,i){var ai=t.firstChild;return {el:t,ai:ai,f:[ai.children[0],ai.children[1]],v:0,q:G.t[i],art:arts[i]}});
 bim.decoding="async";bim.src=bigArt(s.art);
 function later(fn,ms){timers.push(setTimeout(fn,ms))}
@@ -2483,11 +2558,124 @@ function finish(){if(done)return;done=true;flipping=false;clearInterval(iv);time
 var c=$(".sotd .sdart");if(c)c.classList.remove("sdhide");var cw=$(".sotd .sdaw");if(cw)cw.classList.remove("sdpre");
 el.classList.add("gone");setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el)},250);
 document.removeEventListener("keydown",onKey,true)}
-function onKey(e){var k=e.key;if(k==="Escape"||k==="Enter"||k===" "){e.preventDefault();finish()}else if(/^(Arrow|Page|Home|End)/.test(k))e.preventDefault()}
-el.addEventListener("click",finish);
+/* it plays through: clicks, taps and keys do nothing until it has finished (so nothing underneath gets pressed either) */
+function onKey(e){var k=e.key;if(k==="Escape"||k==="Enter"||k===" "||k==="Tab"||/^(Arrow|Page|Home|End)/.test(k)){e.preventDefault();e.stopPropagation()}}
+el.addEventListener("click",function(e){e.preventDefault();e.stopPropagation()});
 el.addEventListener("wheel",function(e){e.preventDefault()},{passive:false});
 el.addEventListener("touchmove",function(e){e.preventDefault()},{passive:false});
 document.addEventListener("keydown",onKey,true)}
+/* ---------- the song page's rating spread: a bar for each half star, ½ to 5. Hover or tap a bar for its count; choosing one shows just those reviews ---------- */
+function rbin(v){return Math.min(10,Math.max(1,Math.round(rnum(v)*2)))/2}
+function inDist(r){return S.sdist==null||rbin(r.rating)===S.sdist}
+function starLab(v){return (v%1?v.toFixed(1):String(v))+"★"}
+function distHTML(rs){var c=[0,0,0,0,0,0,0,0,0,0],n=rs.length;rs.forEach(function(r){c[rbin(r.rating)*2-1]++});var mx=Math.max.apply(null,c)||1;
+return '<div class="rdist'+(S.sdist!=null?' f':'')+'" role="group" aria-label="How people rated it. Choose a bar to see just those reviews"><div class="rdbars">'+c.map(function(k,i){var v=(i+1)/2,on=S.sdist===v,tip=starLab(v)+" · "+pl(k,"tile")+(k?" · "+Math.round(k/n*100)+"%":"");
+return '<button type="button" class="rdb'+(on?' on':'')+'" data-dist="'+v+'" data-tip="'+esc(tip)+'" aria-label="'+esc(tip)+'" aria-pressed="'+on+'"'+(k?'':' disabled')+' style="--h:'+(k?Math.max(8,Math.round(k/mx*100)):0)+'%"><i></i></button>'}).join("")+
+'</div><div class="rdlab" aria-hidden="true"><span>½</span><span>5★</span></div></div>'}
+function dsfHTML(){if(S.sdist==null||!S.song)return "";var n=songReviews(S.song).filter(inDist).length;return 'Showing the '+pl(n,"tile")+' rated '+starLab(S.sdist)+'<button type="button" class="linkbtn" data-dclr="1">Show all</button>'}
+function distPaint(){var g=document.querySelector(".rdist");if(g){g.classList.toggle("f",S.sdist!=null);[].forEach.call(g.querySelectorAll("[data-dist]"),function(b){var on=+b.dataset.dist===S.sdist;b.classList.toggle("on",on);b.setAttribute("aria-pressed",String(on))})}
+var f=$("#dsf");if(f)f.innerHTML=dsfHTML();refreshList()}
+function wireExtras(){document.querySelectorAll("[data-listen]").forEach(function(b){b.onclick=openListen});
+document.querySelectorAll("[data-dist]").forEach(function(b){b.onclick=function(){var v=+b.dataset.dist;S.sdist=S.sdist===v?null:v;distPaint()}});
+document.querySelectorAll("[data-dclr]").forEach(function(b){b.onclick=function(){S.sdist=null;distPaint()}})}
+/* ---------- the Tile page's cover turns over to show the song's details. Until you've tiled it the average stays hidden, so it can't sway your rating ---------- */
+var LOCKI='<svg class="lk" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9.5" rx="2"/><path d="M8.5 11V8a3.5 3.5 0 0 1 7 0v3"/></svg>';
+function tileBack(s,hide){var o=S.info[infoKey(s)]||{},w=!!o.busy,rs=songReviews(s),n=rs.length,av=n?(rs.reduce(function(a,x){return a+rnum(x.rating)},0)/n).toFixed(2):"";
+function row(ic,k,v,wait,extra){return '<span class="cvr"><span class="cvl"><svg viewBox="0 0 24 24" aria-hidden="true">'+CVI[ic]+'</svg><span class="cvt">'+k+'</span></span><span class="cvv'+(v?'':' na')+'">'+(v?esc(v)+(extra||''):(wait?'…':'—'))+'</span></span>'}
+var a=hide?'<span class="cvr"><span class="cvl"><svg viewBox="0 0 24 24" aria-hidden="true">'+CVI.avg+'</svg><span class="cvt">Avg rating</span></span><span class="cvv hid" title="Shown once you’ve tiled it, so it can’t sway your rating">'+LOCKI+'After you tile</span></span>':row("avg","Avg rating",av,false,n?'<span class="cnt">('+n+')</span>':'');
+return (s.art&&okArt(s.art)?'<img class="cbg" src="'+esc(s.art)+'" alt="">':'')+'<span class="vh">Hide details. </span><span class="cvd">'+a+(s.type==="Album"?row("rel","Released",fmtRel(o),w)+row("len","Length",fmtTotal(o.ms),w)+row("trk","Tracks",o.count?String(o.count):"",w):row("alb","Album",o.album||"",w)+row("rel","Released",fmtRel(o),w)+row("len","Length",fmtLen(o.ms),w)+row("bpm","BPM",o.bpm?String(o.bpm):"",w||o.bpmBusy))+'</span>'}
+function tileFlip(f,s,hide){if(!f)return;var fb=f.querySelector(".covbtn"),bk=f.querySelector(".cvbk");f._s=s;f._h=hide;
+function turn(on){if(f._ft&&Date.now()-f._ft<560)return;f._ft=Date.now();
+if(on){var o=ensureInfo(s);bk.innerHTML=tileBack(s,hide);if(o)o.p=loadInfo(s,o)}
+f.classList.toggle("on",on);fb.setAttribute("aria-expanded",String(on));
+if(on){bk.removeAttribute("tabindex");bk.removeAttribute("aria-hidden");fb.setAttribute("tabindex","-1");try{bk.focus({preventScroll:true})}catch(e){}}
+else{fb.removeAttribute("tabindex");bk.setAttribute("tabindex","-1");bk.setAttribute("aria-hidden","true");try{fb.focus({preventScroll:true})}catch(e){}}}
+fb.onclick=function(){turn(true)};bk.onclick=function(){turn(false)}}
+/* ---------- Listen: swipe up through tiles. Each cover fills the screen and glows while Apple's 30-second preview plays; one tap pauses, a double tap likes.
+   The previews come from Apple, and every slide links back to the song on Apple Music. ---------- */
+var LS=null,PREV={},SILENT="data:audio/wav;base64,UklGRjQAAABXQVZFZm10IBAAAAABAAEAQB8AAIA+AAACABAAZGF0YRAAAAAAAAAAAAAAAAAAAAAAAAAA",
+LSI={plus:'<path d="M12 5v14M5 12h14"/>',tick:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',x:'<path d="M6 6l12 12M18 6L6 18"/>'};
+function okPrev(u){u=String(u||"");return /^https:\/\/[a-z0-9.-]+\.(apple\.com|mzstatic\.com)\/[^\s"'<>]+$/i.test(u)?u:""}
+function okLink(u){u=String(u||"");return /^https:\/\/(music|itunes|geo\.music)\.apple\.com\/[^\s"'<>]+$/i.test(u)?u:""}
+function lsIco(k){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+LSI[k]+'</svg>'}
+/* a song's preview and Apple Music link; for an album, the reviewer's favourite track if they rated tracks, otherwise the first */
+function prevFor(s,r){var k=infoKey(s);if(PREV[k])return PREV[k];
+return PREV[k]=(async function(){var alb=s.type==="Album",id=okId(s.tid),low=function(v){return String(v||"").toLowerCase()};
+if(!id){var hit=(await ituneRows("https://itunes.apple.com/search?media=music&limit=10&entity="+(alb?"album":"song")+"&term="+encodeURIComponent(s.title+" "+s.artist))).filter(function(x){return low(alb?x.collectionName:x.trackName)===low(s.title)&&low(x.artistName)===low(s.artist)})[0];
+id=hit?okId(alb?hit.collectionId:hit.trackId):"";if(!id)return {u:"",l:""}}
+var rows=await ituneRows("https://itunes.apple.com/lookup?id="+id+(alb?"&entity=song&limit=200":""));
+if(!alb){var t=rows.filter(function(x){return x.wrapperType==="track"})[0];return {u:t?okPrev(t.previewUrl):"",l:t?okLink(t.trackViewUrl):""}}
+var col=rows.filter(function(x){return x.wrapperType==="collection"})[0],tr=rows.filter(function(x){return x.wrapperType==="track"&&okPrev(x.previewUrl)}).sort(function(a,b){return (a.discNumber||1)-(b.discNumber||1)||(a.trackNumber||0)-(b.trackNumber||0)}),
+fav=((r&&r.tracks)||[]).slice().sort(function(a,b){return rnum(b.r)-rnum(a.r)})[0],tf=fav?tr.filter(function(x){return low(x.trackName)===low(fav.t)})[0]:null,t2=tf||tr[0];
+return {u:t2?okPrev(t2.previewUrl):"",l:okLink(col&&col.collectionViewUrl)||(t2?okLink(t2.trackViewUrl):""),tn:t2?String(t2.trackName||""):""}})().catch(function(){delete PREV[k];return {u:"",l:"",bad:1}})}
+/* songs with an iTunes id are looked up many at a time, so swiping fast doesn't run into Apple's limits */
+function prevBatch(list){var ids=[],by={};list.forEach(function(r){var s=revSong(r),id=okId(s.tid),k=infoKey(s);if(s.type!=="Song"||!id||PREV[k]||by[id])return;ids.push(id);by[id]={s:s,r:r,k:k}});
+ids=ids.slice(0,100);if(!ids.length)return;var p=ituneRows("https://itunes.apple.com/lookup?id="+ids.join(","));
+ids.forEach(function(id){var o=by[id];PREV[o.k]=p.then(function(rows){var t=rows.filter(function(x){return x.wrapperType==="track"&&String(x.trackId)===String(id)})[0];
+if(t)return {u:okPrev(t.previewUrl),l:okLink(t.trackViewUrl)};delete PREV[o.k];return prevFor(o.s,o.r)},function(){delete PREV[o.k];return prevFor(o.s,o.r)})})}
+/* the tiles to listen through: what you're looking at (the feed with its filters, a profile), one per song, otherwise everything newest first; on a song's page that song comes first */
+function lsItems(){var src=/^(feed|profile|user)$/.test(S.tab)?filtered():S.reviews.slice().sort(function(a,b){return b.id-a.id}),seen={},out=[];
+if(S.tab==="song"&&S.song){var k0=infoKey(S.song);src=src.filter(function(r){return infoKey(revSong(r))===k0}).concat(src)}
+src.forEach(function(r){if(!r.art||!okArt(r.art))return;var k=infoKey(revSong(r));if(seen[k])return;seen[k]=1;out.push(r)});return out.slice(0,100)}
+function lsSlide(r,i){var s=revSong(r),on=(S.likes[r.id]||[]).indexOf(S.user)>-1,ln=likeN(r.id),done=!!dupSong(s);
+return '<section class="lss" data-i="'+i+'" aria-label="'+esc(r.title)+' by '+esc(r.artist)+'">'+
+'<div class="lsbg" aria-hidden="true"><canvas class="soft" width="48" height="48" data-soft="'+esc(r.art)+'" data-blur="2.4"></canvas></div>'+
+'<div class="lsin"><div class="lscv"><div class="aglw">'+artGlow(s)+heroCover(s)+'<span class="lsst" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span></div><div class="lspb" aria-hidden="true"><i></i></div></div>'+
+'<div class="lsmeta"><h3><button type="button" class="lsti" title="Open the '+(r.type==="Album"?'album':'song')+'">'+esc(r.title)+'</button></h3><p class="lsar">'+esc(r.artist)+(r.type==="Album"?' · Album':'')+'</p><p class="lstn" hidden></p>'+
+'<p class="lsby">'+avatar(acct(r.user),"xs")+'<b>'+esc(r.user)+'</b><span class="lsr">'+STAR1+rnum(r.rating).toFixed(1)+'</span></p>'+(r.text?'<p class="lsq">“'+esc(r.text)+'”</p>':'')+
+'<p class="lsno" hidden>No preview for this one</p><a class="lsap" href="#" target="_blank" rel="noopener" hidden>Listen on Apple Music ↗</a></div></div>'+
+'<div class="lsact">'+(S.social?'<button type="button" class="lsb lslk'+(on?' on':'')+'" aria-pressed="'+on+'" aria-label="Like">'+ico("like")+'<span>'+(ln?numS(ln):'')+'</span></button>':'')+
+'<button type="button" class="lsb lstl'+(done?' on':'')+'" aria-label="'+(done?'Tiled. Open the '+(r.type==="Album"?'album':'song'):'Tile this '+(r.type==="Album"?'album':'song'))+'">'+lsIco(done?"tick":"plus")+'<span>'+(done?'Tiled':'Tile')+'</span></button></div></section>'}
+function openListen(){if(LS)return;var items=lsItems();if(!items.length){toast("Nothing to listen to yet");return}
+/* starting a (silent) sound inside the tap lets the previews play afterwards, on phones too */
+var au=new Audio();au.preload="auto";try{au.src=SILENT;var pp=au.play();if(pp&&pp.catch)pp.catch(function(){})}catch(e){}
+var el=document.createElement("div");el.className="lsn";el.setAttribute("role","dialog");el.setAttribute("aria-modal","true");el.setAttribute("aria-label","Listen");
+el.innerHTML='<div class="lsl" tabindex="-1"></div><button type="button" class="lsx" aria-label="Close">'+lsIco("x")+'</button><p class="lshint">Swipe or scroll for the next one</p>';
+document.body.appendChild(el);document.documentElement.classList.add("lsopen");
+LS={items:items,au:au,el:el,list:el.firstChild,i:-1,n:0,tapT:0};
+LS.io=new IntersectionObserver(function(es){es.forEach(function(e){if(LS&&e.isIntersecting&&e.intersectionRatio>=.6){var i=+e.target.getAttribute("data-i");clearTimeout(LS.st);LS.st=setTimeout(function(){if(LS)lsSet(i)},120)}})},{root:LS.list,threshold:[.6]});
+au.addEventListener("timeupdate",lsProg);au.addEventListener("play",lsState);au.addEventListener("pause",lsState);
+au.addEventListener("ended",function(){if(LS)lsGo(LS.i+1)});
+el.querySelector(".lsx").onclick=closeListen;document.addEventListener("keydown",lsKey,true);
+lsMore();requestAnimationFrame(function(){el.classList.add("in")});try{LS.list.focus({preventScroll:true})}catch(e){}lsSet(0)}
+function lsMore(){var a=LS.n,b=Math.min(LS.items.length,a+6);if(a>=b)return;var h="";for(var i=a;i<b;i++)h+=lsSlide(LS.items[i],i);
+LS.list.insertAdjacentHTML("beforeend",h);LS.n=b;[].forEach.call(LS.list.querySelectorAll(".lss:not([data-w])"),function(x){x.setAttribute("data-w","1");LS.io.observe(x);lsWire(x)});paintSoft();prevBatch(LS.items.slice(a,b+6))}
+function lsWire(x){var i=+x.getAttribute("data-i"),r=LS.items[i];
+x.addEventListener("click",function(e){if(!LS||e.target.closest("button,a"))return;var now=Date.now();
+if(now-LS.tapT<320){clearTimeout(LS.tapTm);LS.tapT=0;lsLike(i,e,false);return}
+LS.tapT=now;clearTimeout(LS.tapTm);LS.tapTm=setTimeout(function(){if(!LS)return;LS.tapT=0;if(LS.i===i)lsToggle();else lsGo(i)},320)});
+var lk=x.querySelector(".lslk");if(lk)lk.onclick=function(){lsLike(i,null,true)};
+x.querySelector(".lstl").onclick=function(){var s=revSong(r);closeListen();if(dupSong(s)){openSong(s);return}
+S.pre={title:r.title,artist:r.artist,art:r.art,tid:r.tid,type:r.type};S.bq=null;S.tab="review";S.stack=[];S.shut=keepShut();appView();try{window.scrollTo(0,0)}catch(e){}};
+x.querySelector(".lsti").onclick=function(){closeListen();openSong(revSong(r))}}
+function lsSet(i){var L=LS;if(!L||i===L.i||i<0||i>=L.n)return;if(L.cur)L.cur.classList.remove("cur","playing","paused");
+var x=L.list.querySelector('.lss[data-i="'+i+'"]');L.i=i;L.cur=x;if(!x)return;x.classList.add("cur");
+try{L.au.pause()}catch(e){}var bar=x.querySelector(".lspb i");if(bar)bar.style.transform="scaleX(0)";
+if(i>=L.n-3)lsMore();if(i>0)L.el.classList.add("moved");
+var r=L.items[i];prevFor(revSong(r),r).then(function(p){if(!LS||LS.i!==i)return;
+var ap=x.querySelector(".lsap");if(p.l){ap.href=p.l;ap.hidden=false}
+var tn=x.querySelector(".lstn");if(p.tn&&r.type==="Album"){tn.textContent="Playing “"+p.tn+"”";tn.hidden=false}
+if(!p.u){x.querySelector(".lsno").hidden=false;return}
+LS.au.src=p.u;var pp=LS.au.play();if(pp&&pp.catch)pp.catch(function(){lsState()})});
+var nx=L.items[i+1];if(nx)prevFor(revSong(nx),nx)}
+function lsReal(){return !!(LS&&LS.au.src&&LS.au.src.indexOf("data:")!==0)}
+function lsState(){if(!LS||!LS.cur)return;var real=lsReal(),p=real&&!LS.au.paused;LS.cur.classList.toggle("playing",p);LS.cur.classList.toggle("paused",real&&!p)}
+function lsToggle(){if(!lsReal())return;var a=LS.au;if(a.paused){var pp=a.play();if(pp&&pp.catch)pp.catch(function(){})}else a.pause()}
+function lsProg(){if(!LS||!LS.cur||!lsReal())return;var a=LS.au,d=a.duration&&isFinite(a.duration)?a.duration:30,b=LS.cur.querySelector(".lspb i");if(b)b.style.transform="scaleX("+Math.min(1,(a.currentTime||0)/d)+")"}
+function lsGo(i){if(!LS||i<0)return;if(i>=LS.n)lsMore();var x=LS.list.querySelector('.lss[data-i="'+i+'"]');if(!x)return;try{x.scrollIntoView({behavior:"smooth",block:"start"})}catch(e){x.scrollIntoView()}}
+/* a double tap only ever likes (with a heart where you tapped); the heart button turns it on and off */
+function lsLike(i,e,btn){var r=LS&&LS.items[i];if(!r||!S.social||!S.user)return;var x=LS.list.querySelector('.lss[data-i="'+i+'"]'),on=(S.likes[r.id]||[]).indexOf(S.user)>-1;
+if(e&&x){var hb=document.createElement("span"),rc=x.getBoundingClientRect();hb.className="lsheart";hb.innerHTML=ico("like");hb.style.left=(e.clientX-rc.left)+"px";hb.style.top=(e.clientY-rc.top)+"px";x.appendChild(hb);setTimeout(function(){if(hb.parentNode)hb.parentNode.removeChild(hb)},900)}
+if(on&&!btn)return;var add=mutSoc("likes",String(r.id));lsLikeUI(i);api.persistToggle("likes",String(r.id),add).then(function(ok){if(ok===false&&LS)lsLikeUI(i)})}
+function lsLikeUI(i){var r=LS.items[i],b=LS.list.querySelector('.lss[data-i="'+i+'"] .lslk');if(!r||!b)return;var on=(S.likes[r.id]||[]).indexOf(S.user)>-1,n=likeN(r.id);b.classList.toggle("on",on);b.setAttribute("aria-pressed",String(on));b.querySelector("span").textContent=n?numS(n):""}
+function lsKey(e){if(!LS)return;var k=e.key,t=e.target,hit=true;
+if(k==="Escape")closeListen();else if(k==="ArrowDown"||k==="PageDown")lsGo(LS.i+1);else if(k==="ArrowUp"||k==="PageUp")lsGo(LS.i-1);
+else if(k===" "&&!(t&&t.closest&&t.closest("button,a")))lsToggle();else hit=false;
+if(hit){e.preventDefault();e.stopPropagation()}}
+function closeListen(){if(!LS)return;var L=LS;LS=null;clearTimeout(L.st);clearTimeout(L.tapTm);try{L.io.disconnect()}catch(e){}
+try{L.au.pause();L.au.removeAttribute("src");L.au.load()}catch(e){}
+document.removeEventListener("keydown",lsKey,true);document.documentElement.classList.remove("lsopen");L.el.classList.remove("in");
+setTimeout(function(){if(L.el.parentNode)L.el.parentNode.removeChild(L.el)},250);refreshList()}
 function sdAdminHTML(today){var h='<h3 class="sdh">Pick the songs <span class="meta">Only you can see this</span></h3><ol class="sdpick">';
 for(var i=0;i<S.sdSpan;i++){var day=dayAdd(today,i),s=S.sotd.days[day],nm=dayName(day,today);
 h+='<li><span class="sdd">'+esc(nm)+'</span>'+(s?'<span class="sds">'+rimg({title:s.title,artist:s.artist,thumb:s.art})+'<span><b>'+esc(s.title)+'</b><span class="meta">'+esc(s.artist)+'</span></span></span><button type="button" class="btn ghost sm" data-sdpick="'+day+'">Change</button><button type="button" class="sdx" data-sdclr="'+day+'" aria-label="Remove the song for '+esc(nm)+'" title="Remove">×</button>':'<span class="sds meta">No song yet</span><button type="button" class="btn ghost sm" data-sdpick="'+day+'">Pick</button>')+'</li>'}
