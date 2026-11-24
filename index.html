@@ -472,7 +472,7 @@ html.lsopen,html.lsopen body{overflow:hidden}
 .lsgc{position:absolute;left:calc((50% - var(--chw)) / 2 - 26px);top:var(--cy,50%);z-index:4;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:0 12px;width:min(340px,calc(50% - var(--chw) - 100px));max-height:calc(2*var(--chw) - 96px);margin:0;overflow:visible;transform:translate(-50%,-50%);text-align:center;cursor:default}
 .lsgf{position:absolute;right:calc(50% + var(--chw) + 16px);top:calc(var(--ct,30%) + 2*var(--chw) - 32px);z-index:4;width:min(196px,calc(50% - var(--chw) - 32px));margin:0}
 .lsn .lsgf input{height:32px;padding:0 14px;font-size:12.5px}
-.lsgf input::-webkit-calendar-picker-indicator{display:none!important}
+input[list="gdl"]::-webkit-calendar-picker-indicator{display:none!important}
 .lss:not(.gopen) .lsgc,.lss:not(.gopen) .lsgf{opacity:0;visibility:hidden;pointer-events:none;transition:opacity .2s,visibility 0s .2s}
 .lss.gopen .lsgc,.lss.gopen .lsgf{opacity:1;visibility:visible;transition:opacity .2s}
 .lsgw{position:relative}
@@ -760,6 +760,24 @@ html.mdragging,html.mdragging *{cursor:grabbing!important}
 .srevs{margin-top:48px}
 .srevs h2{font-size:18px;font-weight:500;margin:0 0 14px}
 /* a song's page: the same box as writing a review (cover, title and artist on the left; rating, details and buttons on the right) */
+.song.sbox{grid-template-rows:auto 1fr}
+.song.sbox>.pickbig{grid-column:1;grid-row:1}
+.song.sbox>.sinfo{grid-column:2;grid-row:1/span 2}
+/* G, just under the cover's bottom-right corner: opens the genre cloud in the space below the cover, and a box to add yours along the bottom of the box */
+.sgrow{display:flex;align-items:center;gap:10px;margin-top:10px}
+.sgrow>.tiled,.sgrow>.tessw{margin-top:0}
+.sgb{flex:none;margin-left:auto;display:grid;place-items:center;box-sizing:border-box;width:34px;height:34px;padding:0;border:1px solid var(--line);border-radius:50%;background:var(--surface);color:var(--ink);cursor:pointer;transition:border-color .15s,color .15s}
+.sgb svg{width:17px;height:17px}
+.sgb:hover,.sgb[aria-expanded="true"]{border-color:var(--pop);color:var(--pop)}
+.sgc{grid-column:1;grid-row:2;position:relative;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:0 12px;max-height:280px;margin:6px 0 0;overflow:visible;text-align:center}
+.sgc[hidden]{display:none}
+.sgc.lay{display:block}
+.sgc.lay .lsgw{position:absolute;margin:0}
+.sgc .lsgw{color:var(--mute)}
+.sgc .lsgw::after{background:var(--ink);color:var(--bg)}
+.sgf{grid-column:1/-1;grid-row:3;margin:16px 0 0}
+.sgf[hidden]{display:none}
+.sgf input{box-sizing:border-box;width:100%}
 .song.sbox{display:grid;grid-template-columns:minmax(150px,240px) minmax(0,1fr);gap:12px 24px;align-items:start;margin-top:0}
 .sbox .pickbig .cover.hero{width:100%;max-width:240px;font-size:16px;padding:10px}
 .sbox .sbt h1{margin:12px 0 0;font-size:17px;font-weight:600;letter-spacing:-.01em;line-height:1.25;overflow-wrap:anywhere}
@@ -2216,6 +2234,7 @@ function mutSoc(kind,rid){S.mut=(S.mut||0)+1;var a=S[kind][rid]=S[kind][rid]||[]
 /* song and album pages */
 /* clicking a card's artwork turns the tile over: the song's details are on the back */
 var FLIP={},FLIPAT="",MON=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+var GICO='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.4 7.5A7 7 0 1 0 19 12h-6"/></svg>';
 var CVI={alb:'<rect x="2" y="5" width="14" height="14" rx="1.2"/><path d="M16 6.9a5.5 5.5 0 1 1 0 10.2"/><circle cx="18" cy="12" r="1.5"/><circle cx="6.6" cy="9.6" r="1.4"/><path d="M4.2 17l3.6-3.6 2.4 2.4 1.6-1.6 2 2" stroke-width="1.4"/>',
 loc:'<path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><circle cx="12" cy="10" r="2.3"/>',
 rel:'<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
@@ -2355,12 +2374,12 @@ function songBadge(s,rs){if(!S.user)return "";
 if(S.mosOK&&mosHas(s))return '<div class="tessw" title="In your mosaic"><div class="tess">'+GRIDI+'<span>Tessellated</span></div></div>';
 var m=(rs||[]).filter(function(r){return r.user===S.user})[0];
 return m?'<p class="tiled" title="You’ve tiled this ('+rnum(m.rating).toFixed(1)+')"><i aria-hidden="true"></i>Tiled</p>':'<p class="tiled not" title="You haven’t tiled this yet"><i aria-hidden="true"></i>Not tiled</p>'}
-function songView(){var s=S.song,alb=s.type==="Album",what=alb?"album":"song",rs=songReviews(s),n=rs.length,avg=n?rs.reduce(function(a,r){return a+rnum(r.rating)},0)/n:0,mine=dupSong(s);
+function songView(){var s=S.song,alb=s.type==="Album",what=alb?"album":"song",rs=songReviews(s),n=rs.length,avg=n?rs.reduce(function(a,r){return a+rnum(r.rating)},0)/n:0,mine=dupSong(s),gk=gKey(s),gOpen=S.sgOpen===gk;
 var rate=n?'<div class="srh2"><div class="srl"><div class="srate"><span class="snum">'+avg.toFixed(2)+'</span><span class="sbar" style="--p:'+starPct(avg)+'%" role="img" aria-label="Average '+avg.toFixed(2)+' out of 5"></span></div><p class="meta scount">Average of '+pl(n,"review")+' on Mosaic</p></div>'+distHTML()+'</div>'
 :'<div class="srate none"><span class="noyet">No ratings yet</span></div><p class="meta scount">Be the first to tile this '+what+'.</p>';
 return '<button type="button" class="linkbtn" data-back="1" style="margin-bottom:14px">← '+esc(backLabel())+'</button>'+
-'<section class="song sbox card"><div class="pickbig"><div class="sart"><div class="aglw">'+artGlow(s)+(S.user&&S.mosOK&&mosHas(s)?artGlow(s,1):'')+heroCover(s)+'</div>'+songBadge(s,rs)+'</div><div class="sbt"><h1>'+esc(s.title)+'</h1><div class="meta"><button type="button" class="ulink" data-seeq="'+esc(s.artist)+'" title="See Mosaic reviews by this artist">'+esc(s.artist)+'</button></div></div></div><div class="sinfo">'+rate+
-'<dl class="facts" id="sfacts">'+factsHTML()+'</dl><div class="sbtns">'+(mine?'<button type="button" class="btn ink" data-edit="'+esc(mine.id)+'">Edit your review</button>':'<button type="button" class="btn ink" id="srev">Tile this '+what+'</button>')+''+(S.laterOK?laterBtn(s):'')+'</div>'+listenRow(s)+'<div id="stracks">'+tracksHTML()+'</div><p class="meta src" id="snote">'+noteHTML()+'</p></div></section>'+
+'<section class="song sbox card"><div class="pickbig"><div class="sart"><div class="aglw">'+artGlow(s)+(S.user&&S.mosOK&&mosHas(s)?artGlow(s,1):'')+heroCover(s)+'</div><div class="sgrow">'+songBadge(s,rs)+'<button type="button" class="sgb" id="sgb" aria-expanded="'+gOpen+'" aria-label="Genres: what people call this '+what+'" title="Genres">'+GICO+'</button></div></div><div class="sbt"><h1>'+esc(s.title)+'</h1><div class="meta"><button type="button" class="ulink" data-seeq="'+esc(s.artist)+'" title="See Mosaic reviews by this artist">'+esc(s.artist)+'</button></div></div></div><div class="sgc" data-gk="'+esc(gk)+'" aria-live="polite"'+(gOpen?'>'+genCloud(gk):' hidden>')+'</div><div class="sinfo">'+rate+
+'<dl class="facts" id="sfacts">'+factsHTML()+'</dl><div class="sbtns">'+(mine?'<button type="button" class="btn ink" data-edit="'+esc(mine.id)+'">Edit your review</button>':'<button type="button" class="btn ink" id="srev">Tile this '+what+'</button>')+''+(S.laterOK?laterBtn(s):'')+'</div>'+listenRow(s)+'<div id="stracks">'+tracksHTML()+'</div><p class="meta src" id="snote">'+noteHTML()+'</p></div><form class="sgf" data-gk="'+esc(gk)+'"'+(gOpen?'':' hidden')+'><input maxlength="24" placeholder="Add a genre" aria-label="Add the genre you hear" autocomplete="off" enterkeyhint="done" list="gdl"></form></section>'+
 '<section class="srevs"><div class="srh"><h2>Reviews'+(n?' <span class="meta">'+n+'</span>':'')+'</h2>'+(n?layoutSwitch():'')+'</div>'+(n?'<p class="dsf" id="dsf">'+dsfHTML()+'</p>':'')+(n?'<div class="list cols'+S.cols+'" id="list">'+listHTML()+'</div>':'<div class="empty">Nobody has tiled this '+what+' yet.</div>')+'</section>'}
 function openSong(s){if(!s)return;
 if(S.tab==="song"&&S.song&&mosKey(S.song)===mosKey(s)){try{window.scrollTo({top:0,behavior:"smooth"})}catch(e){window.scrollTo(0,0)}return}
@@ -2833,7 +2852,14 @@ if(S.sdist!=null)put(Math.round(S.sdist*10),false)}
 function dsfHTML(){if(S.sdist==null||!S.song)return "";var n=songReviews(S.song).filter(inDist).length;return 'Showing the '+pl(n,"tile")+' rated '+starLab(S.sdist)+'<button type="button" class="linkbtn" data-dclr="1">Show all</button>'}
 function distPaint(){var g=document.querySelector(".rdist");if(g)g.classList.toggle("f",S.sdist!=null);
 var f=$("#dsf");if(f)f.innerHTML=dsfHTML();refreshList()}
-function wireExtras(){var pq=$("#pq"),pbx=document.querySelector(".psbox");
+/* the song page's G: opens the genre cloud under the cover (the words thrown out of the G) and the box along the bottom to add yours */
+function wireSongGenre(){var G=$("#sgb"),box=document.querySelector(".sgc"),f=document.querySelector(".sgf");if(!G||!box||!f)return;var k=box.getAttribute("data-gk");genDL();
+G.onclick=function(){var on=box.hidden;box.hidden=!on;f.hidden=!on;G.setAttribute("aria-expanded",String(on));S.sgOpen=on?k:null;if(!on)return;
+genPaint(k);genLayout(box);genThrowFrom(box,G,false);genLoad(k,true).then(function(){if(genPaint(k))genThrowFrom(box,G,false)})};
+box.onclick=function(e){var w=e.target.closest&&e.target.closest("[data-gw]");if(w)genToggle(k,w.getAttribute("data-gw"))};
+f.onsubmit=function(e){e.preventDefault();genSubmit(f.querySelector("input"),k)};
+if(!box.hidden){box.removeAttribute("data-sig");genPaint(k);genLoad(k,true).then(function(){genPaint(k)})}}
+function wireExtras(){wireSongGenre();var pq=$("#pq"),pbx=document.querySelector(".psbox");
 /* like the search at the top: resting the pointer on it opens it, ready to type; moving away closes it unless there's a search in it */
 if(pq&&pbx){pbx.onmouseenter=function(){var ae=document.activeElement;if(ae!==pq&&!(ae&&/^(INPUT|TEXTAREA|SELECT)$/.test(ae.tagName)))try{pq.focus({preventScroll:true});var n=pq.value.length;pq.setSelectionRange(n,n)}catch(e){}};
 pbx.onmouseleave=function(){var ae=document.activeElement;if(ae&&pbx.contains(ae))ae.blur()};
@@ -2972,7 +2998,7 @@ function openListen(){if(LS)return;clipStop();var items=lsItems();if(!items.leng
 /* starting a (silent) sound inside the tap lets the previews play afterwards, on phones too */
 var au=new Audio();au.preload="auto";try{au.src=SILENT;var pp=au.play();if(pp&&pp.catch)pp.catch(function(){})}catch(e){}
 var el=document.createElement("div");el.className="lsn";el.setAttribute("role","dialog");el.setAttribute("aria-modal","true");el.setAttribute("aria-label","Listen");
-el.innerHTML='<div class="lsl" tabindex="-1"></div><button type="button" class="lsx" aria-label="Close">'+lsIco("x")+'</button><p class="lshint">Swipe or scroll for the next one</p><datalist id="lsgdl">'+GLIST.map(function(g){return '<option value="'+esc(g)+'">'}).join("")+'</datalist>';
+el.innerHTML='<div class="lsl" tabindex="-1"></div><button type="button" class="lsx" aria-label="Close">'+lsIco("x")+'</button><p class="lshint">Swipe or scroll for the next one</p>';genDL();
 document.body.appendChild(el);document.documentElement.classList.add("lsopen");
 LS={items:items,au:au,el:el,list:el.firstChild,i:-1,n:0,tapT:0};
 LS.io=new IntersectionObserver(function(es){es.forEach(function(e){if(LS&&e.isIntersecting&&e.intersectionRatio>=.6){var i=+e.target.getAttribute("data-i");clearTimeout(LS.st);LS.st=setTimeout(function(){if(LS)lsSet(i)},120)}})},{root:LS.list,threshold:[.6]});
@@ -3034,8 +3060,8 @@ if(b=t.closest(".lsib")){var xs=b.closest(".lss");if(xs)lsInfo(xs,!xs.classList.
 if(b=t.closest(".lstk")){var r=LS.items[+b.closest(".lss").getAttribute("data-i")];if(!r)return;var s=revSong(r);closeListen();if(dupSong(s)){openSong(s);return}
 S.pre={title:r.title,artist:r.artist,art:r.art,tid:r.tid,type:r.type};S.bq=null;S.tab="review";S.stack=[];S.shut=keepShut();appView();try{window.scrollTo(0,0)}catch(_){}return}
 if(b=t.closest("[data-gw]")){var g=b.closest(".lsgen");if(g)genToggle(g.getAttribute("data-gk"),b.getAttribute("data-gw"))}}
-function lsSubmit(e){var f=e.target.closest&&e.target.closest(".lsgf");if(!f)return;e.preventDefault();var inp=f.querySelector("input"),k=f.closest(".lsgen").getAttribute("data-gk");
-if(genNorm(inp.value).length<2)return;var x=genFix(inp.value);
+function lsSubmit(e){var f=e.target.closest&&e.target.closest(".lsgf");if(!f)return;e.preventDefault();genSubmit(f.querySelector("input"),f.closest(".lsgen").getAttribute("data-gk"))}
+function genSubmit(inp,k){if(genNorm(inp.value).length<2)return;var x=genFix(inp.value);
 if(!x){toast("That doesn’t look like a genre. Try something like house, jazz or drill.");try{inp.select()}catch(_){}return}
 if(x.near){inp.value=x.g;toast("Did you mean “"+x.g+"”? Press Enter to add it.");return}
 var g=x.g,me=genMe();inp.value="";
@@ -3058,7 +3084,7 @@ var bad=false,f=g.replace(/[a-z0-9&]+/g,function(t){if(GWD.has(t))return t;var c
 if(bad)return null;f=GAL[f]||f;return genOK(f)&&f.length<=24?{g:f,near:true}:null}
 function gKey(s){return (s.type||"Song")+"|"+fold(s.title)+"|"+fold(s.artist)}
 function genNorm(t){return fold(t).replace(/[^a-z0-9 &'+./-]+/g," ").replace(/\s+/g," ").trim().replace(/^[^a-z0-9]+|[^a-z0-9]+$/g,"").slice(0,24).replace(/[^a-z0-9]+$/,"")}
-function genHTML(r){var k=gKey(revSong(r));return '<div class="lsgen" data-gk="'+esc(k)+'"><form class="lsgf"><input maxlength="24" placeholder="Add a genre" aria-label="Add the genre you hear" autocomplete="off" enterkeyhint="done" list="lsgdl"></form><div class="lsgc" aria-live="polite">'+genCloud(k)+'</div></div>'}
+function genHTML(r){var k=gKey(revSong(r));return '<div class="lsgen" data-gk="'+esc(k)+'"><form class="lsgf"><input maxlength="24" placeholder="Add a genre" aria-label="Add the genre you hear" autocomplete="off" enterkeyhint="done" list="gdl"></form><div class="lsgc" aria-live="polite">'+genCloud(k)+'</div></div>'}
 function genCloud(k){var rows=S.gen[k];if(!rows||!rows.length)return '';var me=genMe(),c={},mine={};
 rows.forEach(function(x){c[x.g]=(c[x.g]||0)+1;if(x.u===me)mine[x.g]=1});
 var ws=Object.keys(c).sort(function(a,b){return c[b]-c[a]||(a<b?-1:1)}).slice(0,30),top=c[ws[0]];
@@ -3080,14 +3106,16 @@ function genMe(){return REMOTE?S.uid:S.user}
 function genLoad(k,force){if(S.gen[k]&&!force)return Promise.resolve();
 if(!REMOTE){var all=store.get("ln_genres",{});S.gen[k]=((all&&all[k])||[]).map(function(x){return {g:x.g,u:x.u}});return Promise.resolve()}
 return Promise.resolve(sb.from("song_genres").select("genre,user_id").eq("song_key",k).limit(3000)).then(function(r){if(r.error)throw r.error;S.gen[k]=(r.data||[]).map(function(x){return {g:x.genre,u:x.user_id}})}).catch(function(){S.gen[k]=S.gen[k]||[]})}
-function genPaint(k){var ch=false;[].forEach.call(document.querySelectorAll(".lsgen"),function(g){if(g.getAttribute("data-gk")!==k)return;var b=g.querySelector(".lsgc"),h=genCloud(k);
+function genPaint(k){var ch=false;[].forEach.call(document.querySelectorAll(".lsgen,.sgc"),function(g){if(g.getAttribute("data-gk")!==k)return;var b=g.classList.contains("sgc")?g:g.querySelector(".lsgc"),h=genCloud(k);
 if(b.getAttribute("data-sig")===h&&(b.classList.contains("lay")||!h))return;b.setAttribute("data-sig",h);b.innerHTML=h;genLayout(b);ch=true});return ch}
 /* opening G throws the words out from it into their places (on phones they pop up in the sheet) */
-function genThrow(x){var c=x.querySelector(".lsgc"),G=x.querySelector(".lsib");if(!c||!G||matchMedia("(prefers-reduced-motion: reduce)").matches)return;
-var gr=G.getBoundingClientRect(),gx=gr.left+gr.width/2,gy=gr.top+gr.height/2,sheet=matchMedia("(max-width:980px)").matches;
+function genThrow(x){genThrowFrom(x.querySelector(".lsgc"),x.querySelector(".lsib"),matchMedia("(max-width:980px)").matches)}
+function genThrowFrom(c,G,sheet){if(!c||!G||matchMedia("(prefers-reduced-motion: reduce)").matches)return;var gr=G.getBoundingClientRect(),gx=gr.left+gr.width/2,gy=gr.top+gr.height/2;
 [].filter.call(c.querySelectorAll(".lsgw"),function(w){return w.style.display!=="none"}).forEach(function(w,i){var r=w.getBoundingClientRect(),o=+(w.style.opacity||1),
 from=sheet?{transform:"scale(.3)",opacity:0}:{transform:"translate("+Math.round(gx-r.left-r.width/2)+"px,"+Math.round(gy-r.top-r.height/2)+"px) scale(.25)",opacity:0};
 try{w.animate([from,{transform:"none",opacity:o}],{duration:sheet?380:640,delay:(sheet?150:0)+i*45,easing:"cubic-bezier(.2,1.25,.4,1)",fill:"backwards"})}catch(_){}})}
+/* one list of genre suggestions for every genre box on the site */
+function genDL(){if(document.getElementById("gdl"))return;var dl=document.createElement("datalist");dl.id="gdl";dl.innerHTML=GLIST.map(function(g){return '<option value="'+esc(g)+'">'}).join("");document.body.appendChild(dl)}
 function genToggle(k,g){if(!S.user)return;var me=genMe(),rows=S.gen[k]||(S.gen[k]=[]),has=rows.some(function(x){return x.u===me&&x.g===g});
 if(!has&&rows.filter(function(x){return x.u===me}).length>=3){toast("You can give a song up to 3 genres. Tap one of yours to take it away first.");return}
 if(has)S.gen[k]=rows.filter(function(x){return !(x.u===me&&x.g===g)});else rows.push({g:g,u:me});genPaint(k);
