@@ -2264,9 +2264,9 @@ function fmtRel(o){var m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(o.rel||"");return m?MO
 function backRows(r,ls){var s=revSong(r),o=S.info[infoKey(s)]||{},w=!!o.busy,rs=songReviews(s),n=rs.length,av=n?(rs.reduce(function(a,x){return a+rnum(x.rating)},0)/n).toFixed(2):"",ct=n?'<span class="cnt">('+n+')</span>':"";
 function row(ic,k,v,wait,extra){return '<span class="cvr"><span class="cvl"><svg viewBox="0 0 24 24" aria-hidden="true">'+CVI[ic]+'</svg><span class="cvt">'+k+'</span></span><span class="cvv'+(v?'':' na')+'"'+(v&&ic==="alb"?' title="'+esc(v)+'"':'')+'>'+(v?esc(v)+(extra||''):(wait?'…':'—'))+'</span></span>'}
 var pd=/^(\d{4})-(\d{2})-(\d{2})$/.exec(okDate(r.date)),po=pd?row("pst","Posted",(+pd[3])+" "+MON[+pd[2]-1]+" "+pd[1]):"",A=row("avg","Avg rating",av,false,ct);
-if(ls){A=distBack(rs,r.id);po=row("loc","From",o.loc||"",!!o.locBusy)}
-if(r.type==="Album")return A+row("rel","Released",fmtRel(o),w)+row("len","Length",fmtTotal(o.ms),w)+row("trk","Tracks",o.count?String(o.count):"",w)+po;
-return A+row("alb","Album",o.album||"",w)+row("rel","Released",fmtRel(o),w)+row("len","Length",fmtLen(o.ms),w)+row("bpm","BPM",o.bpm?String(o.bpm):"",w||o.bpmBusy)+po}
+var fr="";if(ls){A=distBack(rs,r.id);fr=row("loc","From",o.loc||"",!!o.locBusy);po=""}
+if(r.type==="Album")return A+row("rel","Released",fmtRel(o),w)+fr+row("len","Length",fmtTotal(o.ms),w)+row("trk","Tracks",o.count?String(o.count):"",w)+po;
+return A+row("alb","Album",o.album||"",w)+row("rel","Released",fmtRel(o),w)+fr+row("len","Length",fmtLen(o.ms),w)+row("bpm","BPM",o.bpm?String(o.bpm):"",w||o.bpmBusy)+po}
 function backInner(r,ls){return (r.art&&okArt(r.art)?'<img class="cbg" src="'+esc(r.art)+'" alt="">':'')+'<span class="vh">Hide details. </span><span class="cvd">'+backRows(r,ls)+'</span>'}
 /* how everyone rated it, as a curve (like the song page), with the average at its top left and a dot on the curve where it falls */
 function distBack(rs,id){var n=rs.length,st='<svg viewBox="0 0 24 24" aria-hidden="true">'+CVI.avg+'</svg>';
