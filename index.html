@@ -453,9 +453,13 @@ html.lsopen,html.lsopen body{overflow:hidden}
 .lsib svg{width:18px;height:18px}
 .lscf .covbtn{cursor:inherit;border-radius:10px}
 .lscf .cvbk{border-radius:10px;cursor:inherit}
-.lscf .cvv{font-size:clamp(12px,5.4cqw,21px)}
-.lscf .cvl{font-size:clamp(9px,3.4cqw,13px)}
-.lscf .cvl svg{width:clamp(12px,5cqw,19px);height:clamp(12px,5cqw,19px)}
+/* the back of the big cover is the home page tile's back, just bigger: icons and values only, everything in proportion */
+.lscf .cvd{padding:4cqw 7cqw}
+.lscf .cvr{gap:3cqw}
+.lscf .cvv{font-size:6.2cqw;font-weight:600}
+.lscf .cvl svg{width:6.4cqw;height:6.4cqw}
+.lscf .cvt{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.lscf .cnt{display:none}
 .lss.lsflip .lsst{opacity:0!important}
 .lsgen{display:contents}
 .lsgc{position:absolute;left:calc((50% - var(--chw)) / 2 - 26px);top:var(--cy,50%);z-index:4;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:0 12px;width:min(340px,calc(50% - var(--chw) - 100px));max-height:calc(2*var(--chw) - 96px);margin:0;overflow:visible;transform:translate(-50%,-50%);text-align:center;cursor:default}
