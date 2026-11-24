@@ -445,11 +445,11 @@ html.lsopen,html.lsopen body{overflow:hidden}
 .lscm .cmf input{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.18)}
 .lscm .cx{color:rgba(255,255,255,.6)}
 .lsgen{display:contents}
-.lsgf{position:absolute;left:18px;bottom:18px;z-index:3;width:min(250px,calc(50% - min(200px,50vw - 66px,24vh) - 36px));margin:0}
+.lsgf{position:absolute;left:18px;bottom:18px;z-index:3;width:min(250px,calc(50% - var(--chw) - 36px));margin:0}
 .lsgf input{box-sizing:border-box;width:100%;height:38px;margin:0;padding:0 16px;border:1px solid rgba(255,255,255,.2);border-radius:999px;background:rgba(0,0,0,.35);color:#fff;font:inherit;font-size:13px;text-align:left;outline:none}
 .lsgf input:focus{border-color:var(--pop)}
 .lsgf input::placeholder{color:rgba(255,255,255,.45)}
-.lsgc{position:absolute;left:calc((50% - min(200px,50vw - 66px,24vh))/2);top:var(--cy,50%);z-index:3;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:0 12px;width:min(300px,calc(50% - min(200px,50vw - 66px,24vh) - 40px));max-height:56vh;margin:0;overflow:hidden;transform:translate(-50%,-50%);text-align:center;cursor:default;transition:top .2s}
+.lsgc{position:absolute;left:calc((50% - var(--chw))/2);top:var(--cy,50%);z-index:3;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:0 12px;width:min(300px,calc(50% - var(--chw) - 40px));max-height:56vh;margin:0;overflow:hidden;transform:translate(-50%,-50%);text-align:center;cursor:default;transition:top .2s}
 .lsgc:empty{display:none}
 .lsgw{padding:0 1px;border:0;background:none;color:#a7a7ae;font:inherit;font-weight:700;line-height:1.15;letter-spacing:-.01em;cursor:pointer;transition:transform .12s,opacity .12s}
 .lsgw:hover{transform:scale(1.08);opacity:1!important}
@@ -457,49 +457,50 @@ html.lsopen,html.lsopen body{overflow:hidden}
 .lsgc.lay{display:block}
 .lsgc.lay .lsgw{position:absolute;margin:0}
 .lsg{display:none}
-/* Listen: down the right-hand side of the cover, top to bottom: the ear (your apps), the buttons, and Tile last */
-.lsside{position:absolute;left:calc(50% + min(200px,50vw - 66px,24vh) + 18px);top:var(--cy,50%);z-index:3;display:flex;flex-direction:column;justify-content:space-between;align-items:center;gap:8px;width:54px;min-height:calc(2*min(200px,50vw - 66px,24vh));transform:translateY(-50%);transition:top .2s}
-.lsn .lsside .lsact{display:contents}
-.lsn .lsside .lsb{position:relative}
-.lsn .lsside .lsb svg{width:20px;height:20px;padding:11px}
-.lsn .lsside .lsb>span{position:absolute;top:-5px;right:-7px;min-width:19px;height:19px;padding:0 5px;box-sizing:border-box;border-radius:10px;background:#fff;color:#111;font-size:10.5px;font-weight:700;line-height:19px;text-align:center;pointer-events:none;box-shadow:0 2px 6px rgba(0,0,0,.35)}
-.lsn .lsside .lstl{width:52px;height:52px;justify-content:center;gap:2px;border-radius:50%;background:linear-gradient(135deg,#7a5cf5,#c04fd8);box-shadow:0 8px 22px rgba(0,0,0,.35);transition:transform .15s}
-.lsn .lsside .lstl.on{background:rgba(255,255,255,.16)}
-.lsn .lsside .lstl svg,.lsn .lsside .lstl:hover svg{width:19px;height:19px;padding:0;background:none;transform:none}
-.lsn .lsside .lstl:hover{transform:scale(1.06)}
-.lsn .lsside .lstl>span{position:static;min-width:0;height:auto;padding:0;background:none;color:#fff;font-size:10px;line-height:1;box-shadow:none}
-.lsn .lsside .tray{left:100%;right:auto;top:50%;margin:0 0 0 10px;transform:translate(-6px,-50%)}
-.lsn .lsside .sendw.open .tray{transform:translate(0,-50%)}
-.lsn .lsside .tray::before{left:-10px;right:auto;top:0;bottom:0;width:10px;height:auto}
-.lsn .lsside .ear{position:relative;display:flex;flex-direction:column;align-items:center}
-.lsn .lsside .earb{box-sizing:border-box;width:42px;height:42px;justify-content:center;padding:0;border-radius:50%;background:rgba(255,255,255,.13);color:#fff}
-.lsn .lsside .earb:hover,.lsn .lsside .ear.open .earb{background:rgba(255,255,255,.24);color:#fff}
-.lsn .lsside .earb>svg:first-child{width:20px;height:20px}
-.lsn .lsside .beads{position:absolute;left:calc(100% + 10px);top:0;z-index:6;gap:8px;padding:0}
-.lsn .lsside .beads::before{top:16px;bottom:16px;background:rgba(255,255,255,.35)}
-.lsn .lsside .bead{width:32px;height:32px}
-/* the review and its stars come first: big gold stars, the words in large type, who wrote it underneath */
-.lscv .tiled{margin:10px 0 0;color:rgba(255,255,255,.75)}
+/* Listen: the ear just off the cover's top-right corner; the buttons in a small stack beside it, like first, level with the middle of the cover */
+.lsn{--chw:min(200px,50vw - 66px,23vh)}
+.lscv{width:calc(2*var(--chw))}
+.lsear,.lsn .lsact{position:absolute;left:calc(50% + var(--chw) + 16px);z-index:3}
+.lsear{top:var(--ct,30%);transition:top .2s}
+.lsn .lsact{top:var(--gt,40%);right:auto;bottom:auto;display:flex;flex-direction:column;align-items:center;gap:6px;transform:none;transition:top .2s}
+.lsn .lsact .lsb{position:relative}
+.lsn .lsact .lsb svg{width:18px;height:18px;padding:9px}
+.lsn .lsact .lsb>span{position:absolute;top:-4px;right:-6px;min-width:16px;height:16px;padding:0 4px;box-sizing:border-box;border-radius:8px;background:#fff;color:#111;font-size:9.5px;font-weight:700;line-height:16px;text-align:center;pointer-events:none;box-shadow:0 2px 5px rgba(0,0,0,.35)}
+.lsn .lsact .tray{left:100%;right:auto;top:50%;margin:0 0 0 10px;transform:translate(-6px,-50%)}
+.lsn .lsact .sendw.open .tray{transform:translate(0,-50%)}
+.lsn .lsact .tray::before{left:-10px;right:auto;top:0;bottom:0;width:10px;height:auto}
+.lsn .lsear .ear{position:relative;display:flex;flex-direction:column;align-items:center}
+.lsn .lsear .earb{box-sizing:border-box;width:36px;height:36px;justify-content:center;padding:0;border-radius:50%;background:rgba(255,255,255,.13);color:#fff}
+.lsn .lsear .earb:hover,.lsn .lsear .ear.open .earb{background:rgba(255,255,255,.24);color:#fff}
+.lsn .lsear .earb>svg:first-child{width:18px;height:18px}
+.lsn .lsear .beads{position:absolute;left:calc(100% + 10px);top:0;z-index:6;gap:8px;padding:0}
+.lsn .lsear .beads::before{top:16px;bottom:16px;background:rgba(255,255,255,.35)}
+.lsn .lsear .bead{width:32px;height:32px}
+/* under the cover: Tiled, or Not tiled (tap it to tile it) */
+.lscv .lstk{display:flex;align-items:center;gap:6px;margin:10px 0 0;padding:0;border:0;background:none;font:inherit;font-size:12.5px;font-weight:500;color:rgba(255,255,255,.75);cursor:pointer}
+.lscv .lstk:hover{color:#fff}
+/* above the cover: who wrote it, the review in large type, then big gold stars across the top of the cover */
+.lstop{width:100%;margin:0 0 14px}
 .lsti{font-size:18px}
 .lsar{font-size:13.5px;color:rgba(255,255,255,.65)}
-.lsrate{display:flex;align-items:center;justify-content:center;gap:10px;margin:16px 0 0;line-height:1}
-.lsrate .stars{display:block;position:relative;flex:none;width:158px;max-width:none;min-width:0;aspect-ratio:100/15.56;font-size:0;background:none;color:transparent;-webkit-text-fill-color:transparent}
+.lsrate{display:flex;align-items:center;justify-content:center;gap:12px;margin:14px 0 0;line-height:1}
+.lsrate .stars{display:block;position:relative;flex:none;width:min(220px,calc(2*var(--chw) - 70px));max-width:none;min-width:0;aspect-ratio:100/15.56;font-size:0;background:none;color:transparent;-webkit-text-fill-color:transparent}
 .lsrate .stars::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--star) var(--p,0%),rgba(255,255,255,.2) var(--p,0%));-webkit-mask:var(--sm) center/100% 100% no-repeat;mask:var(--sm) center/100% 100% no-repeat}
-.lsrate b{font-size:24px;font-weight:700;color:var(--star)}
-.lsq{margin:12px 0 0;font-size:19px;line-height:1.45;font-weight:500;color:#fff;display:-webkit-box;-webkit-line-clamp:4;line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
-.lsby{margin:12px 0 0;font-size:13px;color:rgba(255,255,255,.7)}
+.lsrate b{font-size:26px;font-weight:700;color:var(--star)}
+.lsq{margin:8px 0 0;font-size:19px;line-height:1.45;font-weight:500;color:#fff;display:-webkit-box;-webkit-line-clamp:4;line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.lsby{margin:0;font-size:13px;color:rgba(255,255,255,.7)}
 .lsby b{font-weight:600}
 @media (max-width:980px){
 .lsg{display:flex}
-.lsside{left:calc(50% + min(200px,50vw - 66px,24vh) + 6px);width:50px;min-height:0;justify-content:center;gap:9px}
-.lsn .lsside .lsb:not(.lstl) svg{width:19px;height:19px;padding:10px}
-.lsn .lsside .earb{width:39px;height:39px}
-.lsn .lsside .lstl{width:46px;height:46px}
-.lsn .lsside .tray{left:auto;right:100%;margin:0 10px 0 0;transform:translate(6px,-50%)}
-.lsn .lsside .tray::before{display:none}
-.lsn .lsside .beads{left:auto;right:calc(100% + 8px)}
+.lsear,.lsn .lsact{left:calc(50% + var(--chw) + 10px)}
+.lsn .lsact{gap:5px}
+.lsn .lsact .lsb svg{width:17px;height:17px;padding:8px}
+.lsn .lsear .earb{width:33px;height:33px}
+.lsn .lsact .tray{left:auto;right:100%;margin:0 10px 0 0;transform:translate(6px,-50%)}
+.lsn .lsact .tray::before{display:none}
+.lsn .lsear .beads{left:auto;right:calc(100% + 8px)}
 .lsq{width:min(440px,calc(100vw - 40px));position:relative;left:50%;transform:translateX(-50%);font-size:16px;-webkit-line-clamp:3;line-clamp:3}
-.lsrate .stars{width:132px}
+.lsrate .stars{width:160px}
 .lsrate b{font-size:21px}
 .lsgen{display:block;position:absolute;cursor:default}
 .lsgf{position:static;width:auto;transform:none}
@@ -2882,17 +2883,17 @@ src.forEach(function(r){if(!r.art||!okArt(r.art))return;var k=infoKey(revSong(r)
 var pool=Object.keys(best).map(function(k){return {r:best[k].r,k:k,w:Math.pow(Math.random(),1/Math.max(1e-6,best[k].sc))}}).sort(function(a,b){return b.w-a.w});
 if(S.tab==="song"&&S.song){var k0=infoKey(S.song),i0=-1;pool.forEach(function(x,i){if(i0<0&&x.k===k0)i0=i});if(i0>0)pool.unshift(pool.splice(i0,1)[0])}
 return pool.slice(0,100).map(function(x){return x.r})}
-function lsSlide(r,i){var s=revSong(r),done=!!dupSong(s),v=rnum(r.rating);
+function lsSlide(r,i){var s=revSong(r),done=!!dupSong(s),v=rnum(r.rating),what=r.type==="Album"?"album":"song";
 return '<section class="lss" data-i="'+i+'" aria-label="'+esc(r.title)+' by '+esc(r.artist)+'">'+
 '<div class="lsbg" aria-hidden="true"><canvas class="soft" width="48" height="48" data-soft="'+esc(r.art)+'" data-blur="2.4"></canvas></div>'+
-'<div class="lsin"><div class="lscv"><div class="aglw">'+artGlow(s)+heroCover(s)+'<span class="lsst" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span></div><div class="lspb" aria-hidden="true"><i></i></div>'+
-(done?'<p class="tiled" title="You’ve tiled this"><i aria-hidden="true"></i>Tiled</p>':'<p class="tiled not" title="You haven’t tiled this yet"><i aria-hidden="true"></i>Not tiled</p>')+'</div>'+
-'<div class="lsmeta"><h3><button type="button" class="lsti" title="Open the '+(r.type==="Album"?'album':'song')+'">'+esc(r.title)+'</button></h3><p class="lsar">'+esc(r.artist)+(r.type==="Album"?' · Album':'')+'</p><p class="lstn" hidden></p>'+
-'<div class="lsrate" role="img" aria-label="Rated '+v.toFixed(1)+' out of 5"><span class="stars" style="--p:'+starPct(v)+'%"></span><b>'+v.toFixed(1)+'</b></div>'+
-(r.text?'<p class="lsq">“'+esc(r.text)+'”</p>':'')+'<p class="lsby">'+avatar(acct(r.user),"xs")+'<b>'+esc(r.user)+'</b></p>'+
+'<div class="lsin"><div class="lstop"><p class="lsby">'+avatar(acct(r.user),"xs")+'<b>'+esc(r.user)+'</b></p>'+(r.text?'<p class="lsq">“'+esc(r.text)+'”</p>':'')+
+'<div class="lsrate" role="img" aria-label="Rated '+v.toFixed(1)+' out of 5"><span class="stars" style="--p:'+starPct(v)+'%"></span><b>'+v.toFixed(1)+'</b></div></div>'+
+'<div class="lscv"><div class="aglw">'+artGlow(s)+heroCover(s)+'<span class="lsst" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span></div><div class="lspb" aria-hidden="true"><i></i></div>'+
+'<button type="button" class="tiled lstk'+(done?'" title="You’ve tiled this. Open the '+what+'"':' not" title="You haven’t tiled this yet. Tile it"')+'><i aria-hidden="true"></i>'+(done?'Tiled':'Not tiled')+'</button></div>'+
+'<div class="lsmeta"><h3><button type="button" class="lsti" title="Open the '+what+'">'+esc(r.title)+'</button></h3><p class="lsar">'+esc(r.artist)+(r.type==="Album"?' · Album':'')+'</p><p class="lstn" hidden></p>'+
 '<p class="lsno" hidden>No preview for this one</p><a class="lsap" href="#" target="_blank" rel="noopener" hidden>Listen on Apple Music ↗</a></div></div>'+
-'<div class="lsside">'+earHTML(r,sdPlats())+'<div class="lsact" data-li="'+i+'">'+lsActs(r)+'</div></div><div class="lscm" hidden></div>'+genHTML(r)+'</section>'}
-function lsActs(r){var id=r.id,s=revSong(r),lk=(S.likes[id]||[]).indexOf(S.user)>-1,rp=(S.reposts[id]||[]).indexOf(S.user)>-1,own=r.user===S.user,done=!!dupSong(s),it=[],
+'<div class="lsear">'+earHTML(r,sdPlats())+'</div><div class="lsact" data-li="'+i+'">'+lsActs(r)+'</div><div class="lscm" hidden></div>'+genHTML(r)+'</section>'}
+function lsActs(r){var id=r.id,s=revSong(r),lk=(S.likes[id]||[]).indexOf(S.user)>-1,rp=(S.reposts[id]||[]).indexOf(S.user)>-1,own=r.user===S.user,it=[],
 c=function(v){return '<span>'+(v?numS(v):'')+'</span>'};
 if(S.social)it.push('<button type="button" class="lsb'+(lk?' on':'')+'" data-like="'+id+'" aria-pressed="'+lk+'" aria-label="Like">'+ico("like")+c(likeN(id))+'</button>',
 '<button type="button" class="lsb lscb'+(LS&&LS.cm===String(id)?' on':'')+'" data-lscm="'+id+'" aria-label="Comments">'+ico("cmt")+c(cmN(id))+'</button>',
@@ -2900,8 +2901,7 @@ if(S.social)it.push('<button type="button" class="lsb'+(lk?' on':'')+'" data-lik
 it.push('<span class="sendw lssw" data-sw="'+id+'"><button type="button" class="lsb" data-send="'+id+'" aria-label="Share" aria-haspopup="true">'+ico("send")+c(shN(id))+'</button><span class="tray" role="group" aria-label="Share">'+trayHTML(id)+'</span></span>');
 if(S.laterOK){var lt=inLater(r);it.push('<button type="button" class="lsb'+(lt?' on':'')+'" data-later="'+id+'" aria-pressed="'+lt+'" aria-label="'+(lt?'Remove from listen later':'Listen later')+'">'+ico("bm")+c(0)+'</button>')}
 it.push('<button type="button" class="lsb lsg" data-lsg="1" aria-label="Genres">'+lsIco("tag")+'</button>');
-return it.join("")+
-'<button type="button" class="lsb lstl'+(done?' on':'')+'" aria-label="'+(done?'Tiled. Open the '+(r.type==="Album"?'album':'song'):'Tile this '+(r.type==="Album"?'album':'song'))+'">'+lsIco(done?"tick":"plus")+'<span>'+(done?'Tiled':'Tile')+'</span></button>'}
+return it.join("")}
 function openListen(){if(LS)return;clipStop();var items=lsItems();if(!items.length){toast("Nothing to listen to yet");return}
 /* starting a (silent) sound inside the tap lets the previews play afterwards, on phones too */
 var au=new Audio();au.preload="auto";try{au.src=SILENT;var pp=au.play();if(pp&&pp.catch)pp.catch(function(){})}catch(e){}
@@ -2940,7 +2940,9 @@ var pp=LS.au.play();if(pp&&pp.catch)pp.catch(function(){lsState()})});
 var nx=L.items[i+1];if(nx)prevFor(revSong(nx),nx)}
 /* Listen's buttons: like, repost, share and listen later use the same handlers as the tiles (bind); these draw them again from the
    current state, and run the rest: the comments sheet, the genre panel (phones open it as a sheet) and the Tile button */
-function lsCy(){if(!LS)return;[].forEach.call(LS.list.querySelectorAll(".lss"),function(x){var c=x.querySelector(".lscv");if(c)x.style.setProperty("--cy",Math.round(c.offsetTop+c.offsetWidth/2)+"px")})}
+function lsCy(){if(!LS)return;[].forEach.call(LS.list.querySelectorAll(".lss"),function(x){var c=x.querySelector(".lscv");if(!c)return;
+var ct=c.offsetTop,cy=ct+c.offsetWidth/2,g=x.querySelector(".lsact"),e=x.querySelector(".lsear"),gh=g?g.offsetHeight:0,eh=e?e.offsetHeight:0;
+x.style.setProperty("--ct",ct+"px");x.style.setProperty("--cy",Math.round(cy)+"px");x.style.setProperty("--gt",Math.round(Math.max(cy-gh/2,ct+(eh?eh+12:0)))+"px")})}
 function lsRepaint(){if(!LS)return;[].forEach.call(LS.list.querySelectorAll(".lsact"),function(a){var r=LS.items[+a.getAttribute("data-li")];if(r)a.innerHTML=lsActs(r)});lsCmPaint();bind()}
 function lsCmPaint(){if(!LS)return;[].forEach.call(LS.list.querySelectorAll(".lss"),function(x){var r=LS.items[+x.getAttribute("data-i")],c=x.querySelector(".lscm");if(!r||!c)return;var on=LS.cm===String(r.id);
 c.hidden=!on;if(!on){c.innerHTML="";return}var f=LS.cmFocus||(c.querySelector("input")===document.activeElement);
@@ -2950,7 +2952,7 @@ function lsClick(e){if(!LS)return;var t=e.target,b;
 if(b=t.closest("[data-lscm]")){var id=b.getAttribute("data-lscm");LS.cm=LS.cm===id?null:id;LS.cmFocus=!!LS.cm;lsRepaint();return}
 if(t.closest("[data-lscx]")){LS.cm=null;lsRepaint();return}
 if(b=t.closest("[data-lsg]")){var x=b.closest(".lss");if(x)x.classList.toggle("gopen");return}
-if(b=t.closest(".lstl")){var r=LS.items[+b.closest(".lss").getAttribute("data-i")];if(!r)return;var s=revSong(r);closeListen();if(dupSong(s)){openSong(s);return}
+if(b=t.closest(".lstk")){var r=LS.items[+b.closest(".lss").getAttribute("data-i")];if(!r)return;var s=revSong(r);closeListen();if(dupSong(s)){openSong(s);return}
 S.pre={title:r.title,artist:r.artist,art:r.art,tid:r.tid,type:r.type};S.bq=null;S.tab="review";S.stack=[];S.shut=keepShut();appView();try{window.scrollTo(0,0)}catch(_){}return}
 if(b=t.closest("[data-gw]")){var g=b.closest(".lsgen");if(g)genToggle(g.getAttribute("data-gk"),b.getAttribute("data-gw"))}}
 function lsSubmit(e){var f=e.target.closest&&e.target.closest(".lsgf");if(!f)return;e.preventDefault();var inp=f.querySelector("input"),k=f.closest(".lsgen").getAttribute("data-gk"),g=genNorm(inp.value);
