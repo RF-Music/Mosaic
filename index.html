@@ -780,7 +780,7 @@ html.mdragging,html.mdragging *{cursor:grabbing!important}
 .sgb svg{width:17px;height:17px}
 .sgb:hover,.sgb[aria-expanded="true"]{border-color:var(--pop);color:var(--pop)}
 .sgc{grid-column:1;grid-row:2;position:relative;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:0 12px;max-height:280px;margin:6px 0 0;overflow:visible;text-align:center}
-.sgc[hidden]{display:none}
+.sgc[hidden]{display:none!important}
 .sgc.lay{display:block}
 .sgc.lay .lsgw{position:absolute;margin:0}
 .sgc .lsgw{color:var(--mute)}
@@ -2413,6 +2413,7 @@ if(S.tab==="sotd"&&!S.sotdOK)S.tab="feed";
 if(S.tab==="msgs"&&!(S.user&&S.msgOK))S.tab="feed";
 /* S.bq: the search a song was picked from, so its Tile page can lead back there; forgotten once you leave the page */
 if(S.tab!=="review")S.bq=null;
+var sgk=S.tab==="song"&&S.song?gKey(S.song):"";if(S.sgK!==sgk){S.sgK=sgk;S.sgOpen=null}
 var pqk=S.tab+"|"+(S.tab==="user"?S.view:"");if(S.pqK!==pqk){S.pqK=pqk;S.pq="";S.pqOpen=false}
 var a=me(),nm=esc(S.user||""),prof=S.tab==="profile",mcur=prof||S.tab==="likes"||S.tab==="account"||S.tab==="later"||S.tab==="editp";
 var cnt=S.reviews.filter(function(r){return r.user===S.user}).length;
@@ -3080,8 +3081,8 @@ if(!x){toast("That doesn’t look like a genre. Try something like house, jazz o
 if(x.near){inp.value=x.g;toast("Did you mean “"+x.g+"”? Press Enter to add it.");return}
 var g=x.g,me=genMe();inp.value="";
 if((S.gen[k]||[]).some(function(r){return r.u===me&&r.g===g})){toast("You’ve already said “"+g+"” for this one");return}genToggle(k,g)}
-/* ---------- the genre cloud: G (just off the cover's top-left corner) throws out the words people have given this song, biggest
-   (most votes) in the middle; tap a word to add your vote or take yours away, up to 3 per person per song, kept in song_genres.
+/* ---------- the genre cloud: i on Listen, G on a song's page, throws out the words people have given this song, biggest
+   (most votes) in the middle; tap a word to add your vote or take yours away, up to 10 per person per song, kept in song_genres.
    Only genres go in: a genre is kept if every word in it is a music word and it names a genre, either a genre word (house, jazz, drill...)
    or a known phrase (hip hop, drum and bass...). The same lists check it again on the server (song_genres_check), near-misses ("jaaz")
    are offered back as the real word, and the box suggests genres as you type ---------- */
@@ -3131,7 +3132,7 @@ try{w.animate([from,{transform:"none",opacity:o}],{duration:sheet?380:640,delay:
 /* one list of genre suggestions for every genre box on the site */
 function genDL(){if(document.getElementById("gdl"))return;var dl=document.createElement("datalist");dl.id="gdl";dl.innerHTML=GLIST.map(function(g){return '<option value="'+esc(g)+'">'}).join("");document.body.appendChild(dl)}
 function genToggle(k,g){if(!S.user)return;var me=genMe(),rows=S.gen[k]||(S.gen[k]=[]),has=rows.some(function(x){return x.u===me&&x.g===g});
-if(!has&&rows.filter(function(x){return x.u===me}).length>=3){toast("You can give a song up to 3 genres. Tap one of yours to take it away first.");return}
+if(!has&&rows.filter(function(x){return x.u===me}).length>=10){toast("You can give a song up to 10 genres. Tap one of yours to take it away first.");return}
 if(has)S.gen[k]=rows.filter(function(x){return !(x.u===me&&x.g===g)});else rows.push({g:g,u:me});genPaint(k);
 var p;if(!REMOTE){var all=store.get("ln_genres",{}),l=(all[k]||[]).filter(function(x){return !(x.u===S.user&&x.g===g)});if(!has)l.push({g:g,u:S.user});all[k]=l;store.set("ln_genres",all);p=Promise.resolve({})}
 else p=Promise.resolve(has?sb.from("song_genres").delete().eq("song_key",k).eq("genre",g).eq("user_id",S.uid):sb.from("song_genres").insert({song_key:k,genre:g}));
