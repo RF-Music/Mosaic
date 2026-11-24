@@ -505,12 +505,17 @@ input[list="gdl"]::-webkit-calendar-picker-indicator{display:none!important}
 .lsn .lsact .sendw.open .tray{transform:translate(0,-50%)}
 .lsn .lsact .tray::before{left:-10px;right:auto;top:0;bottom:0;width:10px;height:auto}
 .lsn .lsear .ear{position:relative;display:flex;flex-direction:column;align-items:center}
-.lsn .lsear .earb{box-sizing:border-box;width:36px;height:36px;justify-content:center;padding:0;border-radius:50%;background:rgba(255,255,255,.13);color:#fff}
+.lsn .lsear .earb{box-sizing:border-box;width:36px;height:36px;flex-direction:row;justify-content:center;gap:1px;padding:0;border-radius:50%;background:rgba(255,255,255,.13);color:#fff}
+.lsn .lsear .earb .earc{margin:0 -2px 0 0;transform:rotate(-90deg)}
+.lsn .lsear .ear.open .earc{transform:rotate(90deg)}
 .lsn .lsear .earb:hover,.lsn .lsear .ear.open .earb{background:rgba(255,255,255,.24);color:#fff}
 .lsn .lsear .earb>svg:first-child{width:18px;height:18px}
-.lsn .lsear .beads{position:absolute;left:calc(100% + 10px);top:0;z-index:6;gap:8px;padding:0}
-.lsn .lsear .beads::before{top:16px;bottom:16px;background:rgba(255,255,255,.35)}
-.lsn .lsear .bead{width:32px;height:32px}
+.lsn .lsear .beads{position:absolute;left:0;top:0;z-index:6;display:block;width:100%;height:100%;padding:0}
+.lsn .lsear .beads[hidden]{display:none}
+.lsn .lsear .beads::before{display:none}
+.lsn .lsear .bead{position:absolute;left:50%;top:50%;width:32px;height:32px;margin:-16px 0 0 -16px;transform:translate(var(--bx),var(--by));animation:lsburst .45s cubic-bezier(.2,1.35,.4,1) backwards;animation-delay:calc(var(--i)*35ms)}
+.lsn .lsear .bead:hover,.lsn .lsear .bead:focus-visible{transform:translate(var(--bx),var(--by)) scale(1.1)}
+@keyframes lsburst{from{transform:translate(0,0) scale(.2);opacity:0}}
 /* under the cover: Tiled, or Not tiled (tap it to tile it) */
 .lscv .lstk{display:flex;align-items:center;gap:6px;margin:10px 0 0;padding:0;border:0;background:none;font:inherit;font-size:12.5px;font-weight:500;color:rgba(255,255,255,.75);cursor:pointer}
 .lscv .lstk:hover{color:#fff}
@@ -532,7 +537,8 @@ input[list="gdl"]::-webkit-calendar-picker-indicator{display:none!important}
 .lsn .lsear .earb{width:33px;height:33px}
 .lsn .lsact .tray{left:auto;right:100%;margin:0 10px 0 0;transform:translate(6px,-50%)}
 .lsn .lsact .tray::before{display:none}
-.lsn .lsear .beads{left:auto;right:calc(100% + 8px)}
+.lsn .lsear .bead{transform:translate(var(--bxl),var(--by))}
+.lsn .lsear .bead:hover,.lsn .lsear .bead:focus-visible{transform:translate(var(--bxl),var(--by)) scale(1.1)}
 .lsq{width:min(440px,calc(100vw - 40px));position:relative;left:50%;transform:translateX(-50%);font-size:16px;-webkit-line-clamp:3;line-clamp:3}
 .lsrate .stars{width:160px}
 .lsrate b{font-size:21px}
@@ -2990,7 +2996,7 @@ return '<section class="lss" data-i="'+i+'" aria-label="'+esc(r.title)+' by '+es
 '<button type="button" class="tiled lstk'+(done?'" title="You’ve tiled this. Open the '+what+'"':' not" title="You haven’t tiled this yet. Tile it"')+'><i aria-hidden="true"></i>'+(done?'Tiled':'Not tiled')+'</button></div>'+
 '<div class="lsmeta"><h3><button type="button" class="lsti" title="Open the '+what+'">'+esc(r.title)+'</button></h3><p class="lsar">'+esc(r.artist)+(r.type==="Album"?' · Album':'')+'</p><p class="lstn" hidden></p>'+
 '<p class="lsno" hidden>No preview for this one</p><a class="lsap" href="#" target="_blank" rel="noopener" hidden>Listen on Apple Music ↗</a></div></div>'+
-'<button type="button" class="lsib" aria-expanded="false" aria-label="Details and genres" title="Details and genres"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.3 9.8H12v7.9"/><path d="M9.9 17.7h4.2"/><path d="M12 6.2h.01" stroke-width="2.8"/></svg></button><div class="lsear">'+earHTML(r,sdPlats())+'</div><div class="lsact" data-li="'+i+'">'+lsActs(r)+'</div><div class="lscm" hidden></div>'+genHTML(r)+'</section>'}
+'<button type="button" class="lsib" aria-expanded="false" aria-label="Details and genres" title="Details and genres"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.3 9.8H12v7.9"/><path d="M9.9 17.7h4.2"/><path d="M12 6.2h.01" stroke-width="2.8"/></svg></button><div class="lsear">'+lsEar(r)+'</div><div class="lsact" data-li="'+i+'">'+lsActs(r)+'</div><div class="lscm" hidden></div>'+genHTML(r)+'</section>'}
 function lsActs(r){var id=r.id,s=revSong(r),lk=(S.likes[id]||[]).indexOf(S.user)>-1,rp=(S.reposts[id]||[]).indexOf(S.user)>-1,own=r.user===S.user,it=[],
 c=function(v){return '<span>'+(v?numS(v):'')+'</span>'};
 if(S.social)it.push('<button type="button" class="lsb'+(lk?' on':'')+'" data-like="'+id+'" aria-pressed="'+lk+'" aria-label="Like">'+ico("like")+c(likeN(id))+'</button>',
@@ -3053,6 +3059,9 @@ var gp=x.querySelector(".lsgen"),k=gp.getAttribute("data-gk");genPaint(k);genLay
 /* leaving a slide puts its details away without the turn */
 function lsInfoReset(x){var f=x.querySelector(".lscf"),cv=f&&f.querySelector(".cvi");x.classList.remove("gopen","lsflip");var b=x.querySelector(".lsib");if(b)b.setAttribute("aria-expanded","false");
 if(f&&f.classList.contains("on")){cv.style.transition="none";cv.style.transform="";f.classList.remove("on");void cv.offsetWidth;cv.style.transition=""}}
+/* the ear's apps, placed round it in a fan centred on its right: wider apart and further out the more apps there are */
+function lsEar(r){var ids=sdPlats(),n=ids.length,sp=n>1?Math.min(150,(n-1)*40):0,st=n>1?sp/(n-1):0,R=Math.round(Math.min(92,Math.max(58,st?40/(st*Math.PI/180):58)));
+return earHTML(r,ids).replace(/--i:(\d+)"/g,function(m,i){var a=(-sp/2+(+i)*st)*Math.PI/180,x=Math.round(Math.cos(a)*R),y=Math.round(Math.sin(a)*R);return '--i:'+i+';--bx:'+x+'px;--by:'+y+'px;--bxl:'+(-x)+'px"'})}
 function lsRepaint(){if(!LS)return;[].forEach.call(LS.list.querySelectorAll(".lsact"),function(a){var r=LS.items[+a.getAttribute("data-li")];if(r)a.innerHTML=lsActs(r)});lsCmPaint();bind()}
 function lsCmPaint(){if(!LS)return;[].forEach.call(LS.list.querySelectorAll(".lss"),function(x){var r=LS.items[+x.getAttribute("data-i")],c=x.querySelector(".lscm");if(!r||!c)return;var on=LS.cm===String(r.id);
 c.hidden=!on;if(!on){c.innerHTML="";return}var f=LS.cmFocus||(c.querySelector("input")===document.activeElement);
