@@ -453,36 +453,57 @@ html.lsopen,html.lsopen body{overflow:hidden}
 .lsgc:empty{display:none}
 .lsgw{padding:0 1px;border:0;background:none;color:#a7a7ae;font:inherit;font-weight:700;line-height:1.15;letter-spacing:-.01em;cursor:pointer;transition:transform .12s,opacity .12s}
 .lsgw:hover{transform:scale(1.08);opacity:1!important}
-.lsgw.me{text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:4px}
+.lsgw{white-space:nowrap}
+.lsgc.lay{display:block}
+.lsgc.lay .lsgw{position:absolute;margin:0}
 .lsg{display:none}
-/* Listen: the buttons sit in a ring around the Tile button, beside the middle of the cover (under the cover on phones) */
-.lsn .lsact{--R:62px;--s:44px;--d:calc(2*var(--R) + var(--s));position:absolute;left:calc(50% + min(200px,50vw - 66px,24vh) + 22px);right:auto;top:var(--cy,50%);bottom:auto;display:block;width:var(--d);height:var(--d);margin:calc(var(--d)/-2) 0 0;transform:none;z-index:3;transition:top .2s}
-.lsn .lsact>*{position:absolute;left:calc(50% + var(--lx,0)*var(--R));top:calc(50% + var(--ly,0)*var(--R));margin:calc(var(--s)/-2) 0 0 calc(var(--s)/-2)}
-.lsn .lsact .sendw>.lsb{position:relative}
-.lsn .lsact .lsb>span{position:absolute;top:-5px;right:-7px;min-width:19px;height:19px;padding:0 5px;box-sizing:border-box;border-radius:10px;background:#fff;color:#111;font-size:10.5px;font-weight:700;line-height:19px;text-align:center;pointer-events:none;box-shadow:0 2px 6px rgba(0,0,0,.35)}
-.lsn .lsact .lstl{--s:62px;left:50%;top:50%;width:62px;height:62px;justify-content:center;gap:3px;border-radius:50%;background:linear-gradient(135deg,#7a5cf5,#c04fd8);box-shadow:0 8px 22px rgba(0,0,0,.35);transition:transform .15s}
-.lsn .lsact .lstl.on{background:rgba(255,255,255,.16)}
-.lsn .lsact .lstl svg,.lsn .lsact .lstl:hover svg{width:20px;height:20px;padding:0;background:none;transform:none}
-.lsn .lsact .lstl:hover{transform:scale(1.06)}
-.lsn .lsact .lstl>span{position:static;min-width:0;height:auto;padding:0;background:none;color:#fff;font-size:10.5px;line-height:1;box-shadow:none}
-.lsn .lsact .tray{left:0;right:auto;top:calc(100% + 8px);margin:0;transform:translateY(-6px)}
-.lsn .lsact .sendw.open .tray{transform:none}
-.lsn .lsact .tray::before{left:0;right:0;top:-10px;bottom:auto;width:auto;height:10px}
+/* Listen: down the right-hand side of the cover, top to bottom: the ear (your apps), the buttons, and Tile last */
+.lsside{position:absolute;left:calc(50% + min(200px,50vw - 66px,24vh) + 18px);top:var(--cy,50%);z-index:3;display:flex;flex-direction:column;justify-content:space-between;align-items:center;gap:8px;width:54px;min-height:calc(2*min(200px,50vw - 66px,24vh));transform:translateY(-50%);transition:top .2s}
+.lsn .lsside .lsact{display:contents}
+.lsn .lsside .lsb{position:relative}
+.lsn .lsside .lsb svg{width:20px;height:20px;padding:11px}
+.lsn .lsside .lsb>span{position:absolute;top:-5px;right:-7px;min-width:19px;height:19px;padding:0 5px;box-sizing:border-box;border-radius:10px;background:#fff;color:#111;font-size:10.5px;font-weight:700;line-height:19px;text-align:center;pointer-events:none;box-shadow:0 2px 6px rgba(0,0,0,.35)}
+.lsn .lsside .lstl{width:52px;height:52px;justify-content:center;gap:2px;border-radius:50%;background:linear-gradient(135deg,#7a5cf5,#c04fd8);box-shadow:0 8px 22px rgba(0,0,0,.35);transition:transform .15s}
+.lsn .lsside .lstl.on{background:rgba(255,255,255,.16)}
+.lsn .lsside .lstl svg,.lsn .lsside .lstl:hover svg{width:19px;height:19px;padding:0;background:none;transform:none}
+.lsn .lsside .lstl:hover{transform:scale(1.06)}
+.lsn .lsside .lstl>span{position:static;min-width:0;height:auto;padding:0;background:none;color:#fff;font-size:10px;line-height:1;box-shadow:none}
+.lsn .lsside .tray{left:100%;right:auto;top:50%;margin:0 0 0 10px;transform:translate(-6px,-50%)}
+.lsn .lsside .sendw.open .tray{transform:translate(0,-50%)}
+.lsn .lsside .tray::before{left:-10px;right:auto;top:0;bottom:0;width:10px;height:auto}
+.lsn .lsside .ear{position:relative;display:flex;flex-direction:column;align-items:center}
+.lsn .lsside .earb{box-sizing:border-box;width:42px;height:42px;justify-content:center;padding:0;border-radius:50%;background:rgba(255,255,255,.13);color:#fff}
+.lsn .lsside .earb:hover,.lsn .lsside .ear.open .earb{background:rgba(255,255,255,.24);color:#fff}
+.lsn .lsside .earb>svg:first-child{width:20px;height:20px}
+.lsn .lsside .beads{position:absolute;left:calc(100% + 10px);top:0;z-index:6;gap:8px;padding:0}
+.lsn .lsside .beads::before{top:16px;bottom:16px;background:rgba(255,255,255,.35)}
+.lsn .lsside .bead{width:32px;height:32px}
+/* the review and its stars come first: big gold stars, the words in large type, who wrote it underneath */
+.lscv .tiled{margin:10px 0 0;color:rgba(255,255,255,.75)}
+.lsti{font-size:18px}
+.lsar{font-size:13.5px;color:rgba(255,255,255,.65)}
+.lsrate{display:flex;align-items:center;justify-content:center;gap:10px;margin:16px 0 0;line-height:1}
+.lsrate .stars{display:block;position:relative;flex:none;width:158px;max-width:none;min-width:0;aspect-ratio:100/15.56;font-size:0;background:none;color:transparent;-webkit-text-fill-color:transparent}
+.lsrate .stars::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--star) var(--p,0%),rgba(255,255,255,.2) var(--p,0%));-webkit-mask:var(--sm) center/100% 100% no-repeat;mask:var(--sm) center/100% 100% no-repeat}
+.lsrate b{font-size:24px;font-weight:700;color:var(--star)}
+.lsq{margin:12px 0 0;font-size:19px;line-height:1.45;font-weight:500;color:#fff;display:-webkit-box;-webkit-line-clamp:4;line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.lsby{margin:12px 0 0;font-size:13px;color:rgba(255,255,255,.7)}
+.lsby b{font-weight:600}
 @media (max-width:980px){
 .lsg{display:flex}
-.lss{box-sizing:border-box;padding-bottom:196px}
-.lsin{width:min(440px,calc(100vw - 40px))}
-.lscv{width:min(400px,calc(100vw - 40px),40vh)}
-.lsq{display:-webkit-box;-webkit-line-clamp:3;line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
-.lsn .lsact{--R:54px;--s:42px;left:50%;top:auto;bottom:34px;margin:0 0 0 calc(var(--d)/-2)}
-.lsn .lsact>*{left:calc(50% + var(--lxm,0)*var(--R));top:calc(50% + var(--lym,0)*var(--R))}
-.lsn .lsact .lstl{--s:56px;left:50%;top:50%;width:56px;height:56px}
-.lsn .lsact .lsb:not(.lstl) svg{width:20px;height:20px;padding:11px}
-.lsn .lsact .tray{position:fixed;left:50%;right:auto;top:auto;bottom:calc(46px + var(--d));margin:0;transform:translate(-50%,6px)}
-.lsn .lsact .sendw.open .tray{transform:translate(-50%,0)}
-.lsn .lsact .tray::before{display:none}
+.lsside{left:calc(50% + min(200px,50vw - 66px,24vh) + 6px);width:50px;min-height:0;justify-content:center;gap:9px}
+.lsn .lsside .lsb:not(.lstl) svg{width:19px;height:19px;padding:10px}
+.lsn .lsside .earb{width:39px;height:39px}
+.lsn .lsside .lstl{width:46px;height:46px}
+.lsn .lsside .tray{left:auto;right:100%;margin:0 10px 0 0;transform:translate(6px,-50%)}
+.lsn .lsside .tray::before{display:none}
+.lsn .lsside .beads{left:auto;right:calc(100% + 8px)}
+.lsq{width:min(440px,calc(100vw - 40px));position:relative;left:50%;transform:translateX(-50%);font-size:16px;-webkit-line-clamp:3;line-clamp:3}
+.lsrate .stars{width:132px}
+.lsrate b{font-size:21px}
 .lsgen{display:block;position:absolute;cursor:default}
-.lsgf,.lsgc{position:static;width:auto;transform:none}
+.lsgf{position:static;width:auto;transform:none}
+.lsgc{position:relative;left:auto;top:auto;width:auto;transform:none}
 .lsgc{margin-top:14px;max-height:40vh}
 .lsgen{left:50%;top:auto;bottom:0;z-index:5;box-sizing:border-box;width:min(460px,100vw);padding:16px 16px 22px;transform:translate(-50%,110%);border-radius:16px 16px 0 0;background:rgba(18,18,22,.95);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:0 -10px 40px rgba(0,0,0,.45);transition:transform .25s ease}
 .lss.gopen .lsgen{transform:translate(-50%,0)}
@@ -2406,7 +2427,7 @@ var ws=ps.map(function(p){try{var l=Infinity,r=-Infinity,tw=document.createTreeW
 while((n=tw.nextNode())){re=/\S+/g;while((m=re.exec(n.data))){rg=document.createRange();rg.setStart(n,m.index);rg.setEnd(n,m.index+m[0].length);rs=rg.getClientRects();
 for(i=0;i<rs.length;i++){if(rs[i].width<1)continue;if(rs[i].left<l)l=rs[i].left;if(rs[i].right>r)r=rs[i].right}}}return r>l?Math.ceil(r-l)+1:0}catch(e){return 0}});
 ps.forEach(function(p,i){if(ws[i])p.style.width=ws[i]+"px"})}
-window.addEventListener("resize",function(){clearTimeout(fitT);fitT=setTimeout(function(){fitReviews();fitLife();wireDist();lsCy()},120)});
+window.addEventListener("resize",function(){clearTimeout(fitT);fitT=setTimeout(function(){fitReviews();fitLife();wireDist();lsCy();[].forEach.call(document.querySelectorAll(".lsgc"),genLayout)},120)});
 try{if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitReviews)}catch(e){}
 /* the lifetime mosaic, as big as it can be with every tile on screen at once */
 function fitLife(){var g=document.getElementById("lgrid");document.documentElement.classList.toggle("lifeon",S.tab==="life");if(!g)return;var c=+g.style.getPropertyValue("--c")||8,r=Math.ceil(g.children.length/c),gap=parseFloat(getComputedStyle(g).columnGap)||0,
@@ -2861,14 +2882,16 @@ src.forEach(function(r){if(!r.art||!okArt(r.art))return;var k=infoKey(revSong(r)
 var pool=Object.keys(best).map(function(k){return {r:best[k].r,k:k,w:Math.pow(Math.random(),1/Math.max(1e-6,best[k].sc))}}).sort(function(a,b){return b.w-a.w});
 if(S.tab==="song"&&S.song){var k0=infoKey(S.song),i0=-1;pool.forEach(function(x,i){if(i0<0&&x.k===k0)i0=i});if(i0>0)pool.unshift(pool.splice(i0,1)[0])}
 return pool.slice(0,100).map(function(x){return x.r})}
-function lsSlide(r,i){var s=revSong(r),on=(S.likes[r.id]||[]).indexOf(S.user)>-1,ln=likeN(r.id),done=!!dupSong(s);
+function lsSlide(r,i){var s=revSong(r),done=!!dupSong(s),v=rnum(r.rating);
 return '<section class="lss" data-i="'+i+'" aria-label="'+esc(r.title)+' by '+esc(r.artist)+'">'+
 '<div class="lsbg" aria-hidden="true"><canvas class="soft" width="48" height="48" data-soft="'+esc(r.art)+'" data-blur="2.4"></canvas></div>'+
-'<div class="lsin"><div class="lscv"><div class="aglw">'+artGlow(s)+heroCover(s)+'<span class="lsst" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span></div><div class="lspb" aria-hidden="true"><i></i></div></div>'+
+'<div class="lsin"><div class="lscv"><div class="aglw">'+artGlow(s)+heroCover(s)+'<span class="lsst" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span></div><div class="lspb" aria-hidden="true"><i></i></div>'+
+(done?'<p class="tiled" title="You’ve tiled this"><i aria-hidden="true"></i>Tiled</p>':'<p class="tiled not" title="You haven’t tiled this yet"><i aria-hidden="true"></i>Not tiled</p>')+'</div>'+
 '<div class="lsmeta"><h3><button type="button" class="lsti" title="Open the '+(r.type==="Album"?'album':'song')+'">'+esc(r.title)+'</button></h3><p class="lsar">'+esc(r.artist)+(r.type==="Album"?' · Album':'')+'</p><p class="lstn" hidden></p>'+
-'<p class="lsby">'+avatar(acct(r.user),"xs")+'<b>'+esc(r.user)+'</b><span class="lsr">'+STAR1+rnum(r.rating).toFixed(1)+'</span></p>'+(r.text?'<p class="lsq">“'+esc(r.text)+'”</p>':'')+
+'<div class="lsrate" role="img" aria-label="Rated '+v.toFixed(1)+' out of 5"><span class="stars" style="--p:'+starPct(v)+'%"></span><b>'+v.toFixed(1)+'</b></div>'+
+(r.text?'<p class="lsq">“'+esc(r.text)+'”</p>':'')+'<p class="lsby">'+avatar(acct(r.user),"xs")+'<b>'+esc(r.user)+'</b></p>'+
 '<p class="lsno" hidden>No preview for this one</p><a class="lsap" href="#" target="_blank" rel="noopener" hidden>Listen on Apple Music ↗</a></div></div>'+
-'<div class="lsact" data-li="'+i+'">'+lsActs(r)+'</div><div class="lscm" hidden></div>'+genHTML(r)+'</section>'}
+'<div class="lsside">'+earHTML(r,sdPlats())+'<div class="lsact" data-li="'+i+'">'+lsActs(r)+'</div></div><div class="lscm" hidden></div>'+genHTML(r)+'</section>'}
 function lsActs(r){var id=r.id,s=revSong(r),lk=(S.likes[id]||[]).indexOf(S.user)>-1,rp=(S.reposts[id]||[]).indexOf(S.user)>-1,own=r.user===S.user,done=!!dupSong(s),it=[],
 c=function(v){return '<span>'+(v?numS(v):'')+'</span>'};
 if(S.social)it.push('<button type="button" class="lsb'+(lk?' on':'')+'" data-like="'+id+'" aria-pressed="'+lk+'" aria-label="Like">'+ico("like")+c(likeN(id))+'</button>',
@@ -2876,10 +2899,8 @@ if(S.social)it.push('<button type="button" class="lsb'+(lk?' on':'')+'" data-lik
 '<button type="button" class="lsb'+(rp?' on':'')+'" data-rp="'+id+'" aria-pressed="'+rp+'" aria-label="Repost"'+(own?' disabled title="You can’t repost your own review"':'')+'>'+ico("rp")+c(rpN(id))+'</button>');
 it.push('<span class="sendw lssw" data-sw="'+id+'"><button type="button" class="lsb" data-send="'+id+'" aria-label="Share" aria-haspopup="true">'+ico("send")+c(shN(id))+'</button><span class="tray" role="group" aria-label="Share">'+trayHTML(id)+'</span></span>');
 if(S.laterOK){var lt=inLater(r);it.push('<button type="button" class="lsb'+(lt?' on':'')+'" data-later="'+id+'" aria-pressed="'+lt+'" aria-label="'+(lt?'Remove from listen later':'Listen later')+'">'+ico("bm")+c(0)+'</button>')}
-/* places round the ring, clockwise from the top: --lx/--ly beside the cover (no Genre button there), --lxm/--lym on phones */
-var nd=it.length;it.push('<button type="button" class="lsb lsg" data-lsg="1" aria-label="Genres">'+lsIco("tag")+'</button>');
-var nm=it.length,pt=function(k,n){var a=(k/n-.25)*2*Math.PI;return [Math.cos(a).toFixed(3),Math.sin(a).toFixed(3)]};
-return it.map(function(h,i){var m=pt(i,nm),st='--lxm:'+m[0]+';--lym:'+m[1];if(i<nd){var d=pt(i,nd);st+=';--lx:'+d[0]+';--ly:'+d[1]}return h.replace(/^<(button|span) /,'<$1 style="'+st+'" ')}).join("")+
+it.push('<button type="button" class="lsb lsg" data-lsg="1" aria-label="Genres">'+lsIco("tag")+'</button>');
+return it.join("")+
 '<button type="button" class="lsb lstl'+(done?' on':'')+'" aria-label="'+(done?'Tiled. Open the '+(r.type==="Album"?'album':'song'):'Tile this '+(r.type==="Album"?'album':'song'))+'">'+lsIco(done?"tick":"plus")+'<span>'+(done?'Tiled':'Tile')+'</span></button>'}
 function openListen(){if(LS)return;clipStop();var items=lsItems();if(!items.length){toast("Nothing to listen to yet");return}
 /* starting a (silent) sound inside the tap lets the previews play afterwards, on phones too */
@@ -2942,14 +2963,25 @@ function genNorm(t){return fold(t).replace(/[^a-z0-9 &'+./-]+/g," ").replace(/\s
 function genHTML(r){var k=gKey(revSong(r));return '<div class="lsgen" data-gk="'+esc(k)+'"><form class="lsgf"><input maxlength="24" placeholder="Type the genre you hear" aria-label="Type the genre you hear" autocomplete="off" enterkeyhint="done"></form><div class="lsgc" aria-live="polite">'+genCloud(k)+'</div></div>'}
 function genCloud(k){var rows=S.gen[k];if(!rows||!rows.length)return '';
 var c={},mine={};rows.forEach(function(x){c[x.g]=(c[x.g]||0)+1;if(x.me)mine[x.g]=1});
-var ws=Object.keys(c).sort(function(a,b){return c[b]-c[a]||(a<b?-1:1)}).slice(0,24),mx=c[ws[0]],mn=c[ws[ws.length-1]],o=[];
-ws.forEach(function(w,i){if(i%2)o.push(w);else o.unshift(w)});
-return o.map(function(w,i){var t=mx===mn?.5:(c[w]-mn)/(mx-mn),n=c[w];
-return '<button type="button" class="lsgw'+(mine[w]?' me':'')+'" data-gw="'+esc(w)+'" style="font-size:'+Math.round(12+t*20)+'px;opacity:'+(.62+.38*t).toFixed(2)+'" title="'+esc(w)+': '+(n===1?'1 person':n+' people')+(mine[w]?', including you (tap to take yours away)':' (tap to add yours)')+'">'+esc(w)+'</button>'}).join("")}
+/* size goes with how many people said it: one person is the smallest, and each repeat makes the word bigger */
+var ws=Object.keys(c).sort(function(a,b){return c[b]-c[a]||(a<b?-1:1)}).slice(0,30),top=Math.log(Math.max(3,c[ws[0]]));
+return ws.map(function(w){var n=c[w],t=Math.log(n)/top;
+return '<button type="button" class="lsgw" data-gw="'+esc(w)+'" style="font-size:'+Math.round(13+25*t)+'px;opacity:'+(.62+.38*Math.min(1,t+.15)).toFixed(2)+'" title="'+esc(w)+': '+(n===1?'1 person':n+' people')+(mine[w]?', including you (tap to take yours away)':' (tap to add yours)')+'">'+esc(w)+'</button>'}).join("")}
+/* the biggest word goes in the middle and the rest spiral out round it, each in the first free spot */
+function genLayout(box){if(!box)return;var ws=[].slice.call(box.querySelectorAll(".lsgw"));box.classList.remove("lay");box.style.height="";
+ws.forEach(function(w){w.style.left=w.style.top=w.style.display=""});var W=box.clientWidth;if(!ws.length||!W)return;
+var mh=parseFloat(getComputedStyle(box).maxHeight),H=Math.min(isNaN(mh)?1e4:mh,innerHeight*.56),put=[];
+ws.map(function(w){return {w:w,bw:w.offsetWidth+8,bh:w.offsetHeight}}).forEach(function(o){
+for(var t=0;t<160;t+=.1){var x=Math.cos(t)*t*2.4,y=Math.sin(t)*t*1.1,l=x-o.bw/2,tp=y-o.bh/2;
+if(l<-W/2||l+o.bw>W/2||tp<-H/2||tp+o.bh>H/2)continue;
+if(put.some(function(p){return l<p.l+p.bw&&p.l<l+o.bw&&tp<p.t+p.bh&&p.t<tp+o.bh}))continue;
+o.l=l;o.t=tp;put.push(o);return}o.w.style.display="none"});
+if(!put.length)return;var y0=Math.min.apply(null,put.map(function(p){return p.t})),y1=Math.max.apply(null,put.map(function(p){return p.t+p.bh}));
+box.classList.add("lay");box.style.height=Math.ceil(y1-y0)+"px";put.forEach(function(p){p.w.style.left=Math.round(W/2+p.l+4)+"px";p.w.style.top=Math.round(p.t-y0)+"px"})}
 function genLoad(k,force){if(S.gen[k]&&!force)return Promise.resolve();
 if(!REMOTE){var all=store.get("ln_genres",{});S.gen[k]=((all&&all[k])||[]).map(function(x){return {g:x.g,me:x.u===S.user}});return Promise.resolve()}
 return Promise.resolve(sb.from("song_genres").select("genre,user_id").eq("song_key",k).limit(3000)).then(function(r){if(r.error)throw r.error;S.gen[k]=(r.data||[]).map(function(x){return {g:x.genre,me:x.user_id===S.uid}})}).catch(function(){S.gen[k]=S.gen[k]||[]})}
-function genPaint(k){[].forEach.call(document.querySelectorAll(".lsgen"),function(g){if(g.getAttribute("data-gk")===k)g.querySelector(".lsgc").innerHTML=genCloud(k)})}
+function genPaint(k){[].forEach.call(document.querySelectorAll(".lsgen"),function(g){if(g.getAttribute("data-gk")!==k)return;var b=g.querySelector(".lsgc");b.innerHTML=genCloud(k);genLayout(b)})}
 function genToggle(k,g){if(!S.user)return;var rows=S.gen[k]||(S.gen[k]=[]),has=rows.some(function(x){return x.me&&x.g===g});
 if(!has&&rows.filter(function(x){return x.me}).length>=3){toast("You can give a song up to 3 genres. Tap one of yours to take it away first.");return}
 if(has)S.gen[k]=rows.filter(function(x){return !(x.me&&x.g===g)});else rows.push({g:g,me:true});genPaint(k);
