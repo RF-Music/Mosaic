@@ -448,6 +448,15 @@ html.lsopen,html.lsopen body{overflow:hidden}
 .lsgb{position:absolute;left:calc(50% - var(--chw) - 52px);top:var(--ct,30%);z-index:4;display:grid;place-items:center;box-sizing:border-box;width:36px;height:36px;padding:0;border:0;border-radius:50%;background:rgba(255,255,255,.13);color:#fff;font:700 15px/1 "Montserrat",sans-serif;cursor:pointer;transition:background .15s,top .2s}
 .lsgb:hover,.lss.gopen .lsgb{background:rgba(255,255,255,.26)}
 .lsgb svg{width:18px;height:18px}
+.lsib{position:absolute;left:calc(50% - var(--chw) - 52px);top:calc(var(--ct,30%) + 42px);z-index:4;display:grid;place-items:center;box-sizing:border-box;width:36px;height:36px;padding:0;border:0;border-radius:50%;background:rgba(255,255,255,.13);color:#fff;cursor:pointer;transition:background .15s,top .2s}
+.lsib:hover,.lss.lsflip .lsib{background:rgba(255,255,255,.26)}
+.lsib svg{width:18px;height:18px}
+.lscf .covbtn{cursor:inherit;border-radius:10px}
+.lscf .cvbk{border-radius:10px;cursor:inherit}
+.lscf .cvv{font-size:clamp(12px,5.4cqw,21px)}
+.lscf .cvl{font-size:clamp(9px,3.4cqw,13px)}
+.lscf .cvl svg{width:clamp(12px,5cqw,19px);height:clamp(12px,5cqw,19px)}
+.lss.lsflip .lsst{opacity:0!important}
 .lsgen{display:contents}
 .lsgc{position:absolute;left:calc((50% - var(--chw)) / 2 - 26px);top:var(--cy,50%);z-index:4;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:0 12px;width:min(340px,calc(50% - var(--chw) - 100px));max-height:calc(2*var(--chw) - 96px);margin:0;overflow:visible;transform:translate(-50%,-50%);text-align:center;cursor:default}
 .lsgf{position:absolute;right:calc(50% + var(--chw) + 16px);top:calc(var(--ct,30%) + 2*var(--chw) - 32px);z-index:4;width:min(196px,calc(50% - var(--chw) - 32px));margin:0}
@@ -512,8 +521,9 @@ html.lsopen,html.lsopen body{overflow:hidden}
 .lsq{width:min(440px,calc(100vw - 40px));position:relative;left:50%;transform:translateX(-50%);font-size:16px;-webkit-line-clamp:3;line-clamp:3}
 .lsrate .stars{width:160px}
 .lsrate b{font-size:21px}
-.lsgb{left:calc(50% - var(--chw) - 43px);width:33px;height:33px}
-.lsgb svg{width:17px;height:17px}
+.lsgb,.lsib{left:calc(50% - var(--chw) - 43px);width:33px;height:33px}
+.lsgb svg,.lsib svg{width:17px;height:17px}
+.lsib{top:calc(var(--ct,30%) + 38px)}
 .lsgen{position:absolute;left:50%;bottom:0;z-index:5;display:flex;flex-direction:column;gap:12px;box-sizing:border-box;width:min(460px,100vw);padding:22px 16px 22px;border-radius:16px 16px 0 0;background:rgba(18,18,22,.95);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:0 -10px 40px rgba(0,0,0,.45);transform:translate(-50%,110%);transition:transform .25s ease;cursor:default}
 .lss.gopen .lsgen{transform:translate(-50%,0)}
 .lsgc{position:relative;left:auto;top:auto;order:1;width:auto;max-height:40vh;transform:none}
@@ -2897,11 +2907,11 @@ return '<section class="lss" data-i="'+i+'" aria-label="'+esc(r.title)+' by '+es
 '<div class="lsbg" aria-hidden="true"><canvas class="soft" width="48" height="48" data-soft="'+esc(r.art)+'" data-blur="2.4"></canvas></div>'+
 '<div class="lsin"><div class="lstop"><p class="lsby">'+avatar(acct(r.user),"xs")+'<b>'+esc(r.user)+'</b></p>'+(r.text?'<p class="lsq">“'+esc(r.text)+'”</p>':'')+
 '<div class="lsrate" role="img" aria-label="Rated '+v.toFixed(1)+' out of 5"><span class="stars" style="--p:'+starPct(v)+'%"></span><b>'+v.toFixed(1)+'</b></div></div>'+
-'<div class="lscv"><div class="aglw">'+artGlow(s)+heroCover(s)+'<span class="lsst" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span></div><div class="lspb" aria-hidden="true"><i></i></div>'+
+'<div class="lscv"><div class="aglw">'+artGlow(s)+'<div class="cvf lscf" data-rid="'+esc(String(r.id))+'" data-k="'+esc(infoKey(s))+'"><div class="cvi"><div class="covbtn">'+heroCover(s)+'</div><div class="cvbk" aria-hidden="true"></div></div></div><span class="lsst" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span></div><div class="lspb" aria-hidden="true"><i></i></div>'+
 '<button type="button" class="tiled lstk'+(done?'" title="You’ve tiled this. Open the '+what+'"':' not" title="You haven’t tiled this yet. Tile it"')+'><i aria-hidden="true"></i>'+(done?'Tiled':'Not tiled')+'</button></div>'+
 '<div class="lsmeta"><h3><button type="button" class="lsti" title="Open the '+what+'">'+esc(r.title)+'</button></h3><p class="lsar">'+esc(r.artist)+(r.type==="Album"?' · Album':'')+'</p><p class="lstn" hidden></p>'+
 '<p class="lsno" hidden>No preview for this one</p><a class="lsap" href="#" target="_blank" rel="noopener" hidden>Listen on Apple Music ↗</a></div></div>'+
-'<button type="button" class="lsgb" data-lsg="1" aria-expanded="false" aria-label="Genre: see what people call it, and say what you hear" title="Genre"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.4 7.5A7 7 0 1 0 19 12h-6"/></svg></button><div class="lsear">'+earHTML(r,sdPlats())+'</div><div class="lsact" data-li="'+i+'">'+lsActs(r)+'</div><div class="lscm" hidden></div>'+genHTML(r)+'</section>'}
+'<button type="button" class="lsgb" data-lsg="1" aria-expanded="false" aria-label="Genre: see what people call it, and say what you hear" title="Genre"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17.4 7.5A7 7 0 1 0 19 12h-6"/></svg></button><button type="button" class="lsib" aria-expanded="false" aria-label="Song details" title="Details"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.3 9.8H12v7.9"/><path d="M9.9 17.7h4.2"/><path d="M12 6.2h.01" stroke-width="2.8"/></svg></button><div class="lsear">'+earHTML(r,sdPlats())+'</div><div class="lsact" data-li="'+i+'">'+lsActs(r)+'</div><div class="lscm" hidden></div>'+genHTML(r)+'</section>'}
 function lsActs(r){var id=r.id,s=revSong(r),lk=(S.likes[id]||[]).indexOf(S.user)>-1,rp=(S.reposts[id]||[]).indexOf(S.user)>-1,own=r.user===S.user,it=[],
 c=function(v){return '<span>'+(v?numS(v):'')+'</span>'};
 if(S.social)it.push('<button type="button" class="lsb'+(lk?' on':'')+'" data-like="'+id+'" aria-pressed="'+lk+'" aria-label="Like">'+ico("like")+c(likeN(id))+'</button>',
@@ -2919,7 +2929,7 @@ document.body.appendChild(el);document.documentElement.classList.add("lsopen");
 LS={items:items,au:au,el:el,list:el.firstChild,i:-1,n:0,tapT:0};
 LS.io=new IntersectionObserver(function(es){es.forEach(function(e){if(LS&&e.isIntersecting&&e.intersectionRatio>=.6){var i=+e.target.getAttribute("data-i");clearTimeout(LS.st);LS.st=setTimeout(function(){if(LS)lsSet(i)},120)}})},{root:LS.list,threshold:[.6]});
 au.addEventListener("timeupdate",lsProg);au.addEventListener("play",lsState);au.addEventListener("pause",lsState);
-au.addEventListener("ended",function(){if(LS)lsGo(LS.i+1)});
+au.addEventListener("ended",function(){if(LS&&LS.au.src){try{LS.au.currentTime=LS.st0||0;var pp=LS.au.play();if(pp&&pp.catch)pp.catch(function(){})}catch(e){}}});
 el.querySelector(".lsx").onclick=closeListen;document.addEventListener("keydown",lsKey,true);
 el.addEventListener("click",lsClick);el.addEventListener("submit",lsSubmit);
 lsMore();requestAnimationFrame(function(){el.classList.add("in")});try{LS.list.focus({preventScroll:true})}catch(e){}lsSet(0)}
@@ -2951,6 +2961,11 @@ var nx=L.items[i+1];if(nx)prevFor(revSong(nx),nx)}
 function lsCy(){if(!LS)return;[].forEach.call(LS.list.querySelectorAll(".lss"),function(x){var c=x.querySelector(".lscv");if(!c)return;
 var ct=c.offsetTop,cy=ct+c.offsetWidth/2,g=x.querySelector(".lsact"),e=x.querySelector(".lsear"),gh=g?g.offsetHeight:0,eh=e?e.offsetHeight:0;
 x.style.setProperty("--ct",ct+"px");x.style.setProperty("--cy",Math.round(cy)+"px");x.style.setProperty("--gt",Math.round(Math.max(ct+c.offsetWidth-gh,ct+(eh?eh+12:0)))+"px")})}
+/* turns the cover over (a random way each time, like the home page tiles) to show the details on its back */
+function lsFlip(x,on){var f=x.querySelector(".lscf"),cv=f&&f.querySelector(".cvi"),r=LS&&LS.items[+x.getAttribute("data-i")];if(!cv||!r||(f._ft&&Date.now()-f._ft<560))return false;
+if(on){var s=revSong(r),o=ensureInfo(s);f.querySelector(".cvbk").innerHTML=backInner(r);if(o)o.p=loadInfo(s,o)}
+var d=FDIR[Math.floor(Math.random()*FDIR.length)],ax=d[0],sg=d[1];cv.style.transition="none";f.dataset.ax=ax;cv.style.transform="rotate"+ax+"("+(on?0:-sg*180)+"deg)";void cv.offsetWidth;cv.style.transition="";
+f.classList.toggle("on",on);cv.style.transform="rotate"+ax+"("+(on?sg*180:0)+"deg)";f._ft=Date.now();x.classList.toggle("lsflip",on);return true}
 function lsRepaint(){if(!LS)return;[].forEach.call(LS.list.querySelectorAll(".lsact"),function(a){var r=LS.items[+a.getAttribute("data-li")];if(r)a.innerHTML=lsActs(r)});lsCmPaint();bind()}
 function lsCmPaint(){if(!LS)return;[].forEach.call(LS.list.querySelectorAll(".lss"),function(x){var r=LS.items[+x.getAttribute("data-i")],c=x.querySelector(".lscm");if(!r||!c)return;var on=LS.cm===String(r.id);
 c.hidden=!on;if(!on){c.innerHTML="";return}var f=LS.cmFocus||(c.querySelector("input")===document.activeElement);
@@ -2959,6 +2974,7 @@ LS.cmFocus=false;if(f){var inp=c.querySelector("input");if(inp)inp.focus()}})}
 function lsClick(e){if(!LS)return;var t=e.target,b;
 if(b=t.closest("[data-lscm]")){var id=b.getAttribute("data-lscm");LS.cm=LS.cm===id?null:id;LS.cmFocus=!!LS.cm;lsRepaint();return}
 if(t.closest("[data-lscx]")){LS.cm=null;lsRepaint();return}
+if(b=t.closest(".lsib")){var xs=b.closest(".lss"),fc=xs&&xs.querySelector(".lscf");if(fc){var fo=!fc.classList.contains("on");if(lsFlip(xs,fo))b.setAttribute("aria-expanded",fo)}return}
 if(b=t.closest("[data-lsg]")){var x=b.closest(".lss");if(!x)return;var on=x.classList.toggle("gopen");b.setAttribute("aria-expanded",on);if(!on)return;
 var gp=x.querySelector(".lsgen"),k=gp.getAttribute("data-gk");genPaint(k);genLayout(gp.querySelector(".lsgc"));genThrow(x);genLoad(k,true).then(function(){if(genPaint(k))genThrow(x)});return}
 if(b=t.closest(".lstk")){var r=LS.items[+b.closest(".lss").getAttribute("data-i")];if(!r)return;var s=revSong(r);closeListen();if(dupSong(s)){openSong(s);return}
@@ -3029,7 +3045,7 @@ function lsReal(){return !!(LS&&LS.au.src&&LS.au.src.indexOf("data:")!==0)}
 function lsState(){if(!LS||!LS.cur)return;var real=lsReal(),p=real&&!LS.au.paused;LS.cur.classList.toggle("playing",p);LS.cur.classList.toggle("paused",real&&!p)}
 function lsToggle(){if(!lsReal())return;var a=LS.au;if(a.paused){var pp=a.play();if(pp&&pp.catch)pp.catch(function(){})}else a.pause()}
 function lsProg(){if(!LS||!LS.cur||!lsReal())return;var a=LS.au,t=a.currentTime||0,b=LS.cur.querySelector(".lspb i");
-if(LS.end){if(t>=LS.end){LS.end=0;a.pause();lsGo(LS.i+1);return}if(b)b.style.transform="scaleX("+Math.min(1,Math.max(0,(t-LS.st0)/CLIPW))+")";return}
+if(LS.end){if(t>=LS.end){try{a.currentTime=LS.st0}catch(e){}return}if(b)b.style.transform="scaleX("+Math.min(1,Math.max(0,(t-LS.st0)/CLIPW))+")";return}
 var d=a.duration&&isFinite(a.duration)?a.duration:30;if(b)b.style.transform="scaleX("+Math.min(1,t/d)+")"}
 function lsGo(i){if(!LS||i<0)return;if(i>=LS.n)lsMore();var x=LS.list.querySelector('.lss[data-i="'+i+'"]');if(!x)return;try{x.scrollIntoView({behavior:"smooth",block:"start"})}catch(e){x.scrollIntoView()}}
 /* a double tap only ever likes (with a heart where you tapped); the heart button turns it on and off */
