@@ -2290,7 +2290,7 @@ function loadLoc(s,o){if(o.loc!=null||o.locBusy)return;var who=String(s.artist||
 if(!who){o.loc="";return}if(typeof mem[key]==="string"){o.loc=mem[key];return}o.locBusy=true;
 fetch("https://musicbrainz.org/ws/2/artist/?query="+encodeURIComponent('artist:"'+who.replace(/"/g,"")+'"')+"&fmt=json&limit=5").then(function(x){if(!x.ok)throw 0;return x.json()}).then(function(j){
 var a=(j.artists||[]).filter(function(x){return +x.score>=90&&fold(x.name)===key})[0],city=a&&a["begin-area"]&&a["begin-area"].name,ctry=a?(a.country?locName(a.country):(a.area&&a.area.name)||""):"";
-o.loc=city&&ctry&&fold(city)!==fold(ctry)?city+", "+ctry:(city||ctry||"");mem[key]=o.loc;store.set("ln_loc",mem)}).catch(function(){o.loc=""}).then(function(){o.locBusy=false;paintBacks(infoKey(s))})}
+o.loc=city&&ctry&&fold(city)!==fold(ctry)?city+", "+ctry:(city||ctry||"");mem[key]=o.loc;store.set("ln_loc",mem)}).catch(function(){o.loc=""}).then(function(){o.locBusy=false;paintInfo(infoKey(s))})}
 function covBtn(r){var at=S.tab+"|"+(S.view||"");if(at!==FLIPAT){FLIP={};FLIPAT=at}
 var id=String(r.id),on=!!FLIP[id];
 return '<div class="cvf'+(on?' on':'')+'" data-rid="'+esc(id)+'" data-k="'+esc(infoKey(revSong(r)))+'"><div class="cvi">'+
@@ -2349,9 +2349,10 @@ if(S.tab!=="song"||!S.song||infoKey(S.song)!==k)return;
 var f=$("#sfacts"),t=$("#stracks"),n=$("#snote");if(f)f.innerHTML=factsHTML();if(t)t.innerHTML=tracksHTML();if(n)n.innerHTML=noteHTML();bind()}
 function factsHTML(){var s=S.song,o=S.info[infoKey(s)]||{},alb=s.type==="Album",wait=!!o.busy,year=o.year||(alb&&/^\d{4}$/.test(s.album)?s.album:"");
 function row(k,v,w,raw){return '<div><dt>'+k+'</dt><dd'+(v?'':' class="na"')+'>'+(v?(raw||esc(v)):(w?'…':'—'))+'</dd></div>'}
-if(alb)return row("Released",year,wait)+row("Tracks",o.count?String(o.count):"",wait)+row("Length",fmtTotal(o.ms),wait)+(o.genre?row("Genre",o.genre):"");
+var fr=row("From",o.loc||"",!!o.locBusy);
+if(alb)return row("Released",year,wait)+fr+row("Tracks",o.count?String(o.count):"",wait)+row("Length",fmtTotal(o.ms),wait)+(o.genre?row("Genre",o.genre):"");
 var al=o.album||s.album||"";
-return row("Album",al,wait,o.albumId&&al?'<button type="button" class="ulink" data-alb="1">'+esc(al)+'</button>':"")+row("Released",year,wait)+row("Length",fmtLen(o.ms),wait)+row("BPM",o.bpm?String(o.bpm):"",wait||o.bpmBusy)}
+return row("Album",al,wait,o.albumId&&al?'<button type="button" class="ulink" data-alb="1">'+esc(al)+'</button>':"")+row("Released",year,wait)+fr+row("Length",fmtLen(o.ms),wait)+row("BPM",o.bpm?String(o.bpm):"",wait||o.bpmBusy)}
 function trackAvgs(s){var m={};songReviews(s).forEach(function(r){(r.tracks||[]).forEach(function(x){var k=x.t.toLowerCase();(m[k]=m[k]||[]).push(x.r)})});return m}
 function tracksHTML(){var s=S.song,o=S.info[infoKey(s)]||{},t=o.tracks;if(s.type!=="Album"||!t||!t.length)return "";
 var av=trackAvgs(s),multi=t.some(function(x){return x.d>1}),disc=0,h='<h2>Tracks</h2><ol class="tracks">';
@@ -2378,7 +2379,7 @@ function songBadge(s,rs){if(!S.user)return "";
 if(S.mosOK&&mosHas(s))return '<div class="tessw" title="In your mosaic"><div class="tess">'+GRIDI+'<span>Tessellated</span></div></div>';
 var m=(rs||[]).filter(function(r){return r.user===S.user})[0];
 return m?'<p class="tiled" title="You’ve tiled this ('+rnum(m.rating).toFixed(1)+')"><i aria-hidden="true"></i>Tiled</p>':'<p class="tiled not" title="You haven’t tiled this yet"><i aria-hidden="true"></i>Not tiled</p>'}
-function songView(){var s=S.song,alb=s.type==="Album",what=alb?"album":"song",rs=songReviews(s),n=rs.length,avg=n?rs.reduce(function(a,r){return a+rnum(r.rating)},0)/n:0,mine=dupSong(s),gk=gKey(s),gOpen=S.sgOpen===gk;
+function songView(){var s=S.song,alb=s.type==="Album",what=alb?"album":"song",rs=songReviews(s),n=rs.length,avg=n?rs.reduce(function(a,r){return a+rnum(r.rating)},0)/n:0,mine=dupSong(s),gk=gKey(s),gOpen=S.sgOpen===gk,io=S.info[infoKey(s)];if(io)loadLoc(s,io);
 var rate=n?'<div class="srh2"><div class="srl"><div class="srate"><span class="snum">'+avg.toFixed(2)+'</span><span class="sbar" style="--p:'+starPct(avg)+'%" role="img" aria-label="Average '+avg.toFixed(2)+' out of 5"></span></div><p class="meta scount">Average of '+pl(n,"review")+' on Mosaic</p></div>'+distHTML()+'</div>'
 :'<div class="srate none"><span class="noyet">No ratings yet</span></div><p class="meta scount">Be the first to tile this '+what+'.</p>';
 return '<button type="button" class="linkbtn" data-back="1" style="margin-bottom:14px">← '+esc(backLabel())+'</button>'+
@@ -2388,7 +2389,7 @@ return '<button type="button" class="linkbtn" data-back="1" style="margin-bottom
 function openSong(s){if(!s)return;
 if(S.tab==="song"&&S.song&&mosKey(S.song)===mosKey(s)){try{window.scrollTo({top:0,behavior:"smooth"})}catch(e){window.scrollTo(0,0)}return}
 S.stack.push({tab:S.tab,view:S.view,stab:S.stab,q:S.q,y:window.scrollY||0,song:S.tab==="song"?S.song:null,dmw:S.tab==="msgs"?S.dmWith:null});if(S.stack.length>25)S.stack.shift();
-S.song=s;S.sdist=null;S.tab="song";S.shut=keepShut();var o=ensureInfo(s);
+S.song=s;S.sdist=null;S.tab="song";S.shut=keepShut();var o=ensureInfo(s);loadLoc(s,S.info[infoKey(s)]);
 appView();try{window.scrollTo(0,0)}catch(e){}
 if(o)o.p=loadInfo(s,o)}
 function goBack(){var f=S.stack.pop();
