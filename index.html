@@ -444,20 +444,23 @@ html.lsopen,html.lsopen body{overflow:hidden}
 .lscm .meta{color:rgba(255,255,255,.5)}
 .lscm .cmf input{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.18)}
 .lscm .cx{color:rgba(255,255,255,.6)}
-.lsgen{display:contents}
-.lsgf{position:absolute;left:18px;bottom:18px;z-index:3;width:min(250px,calc(50% - var(--chw) - 36px));margin:0}
+/* Genre: a G just off the cover's top-left corner; it opens a panel beside it with the word cloud and a box to say what you hear */
+.lsgb{position:absolute;left:calc(50% - var(--chw) - 52px);top:var(--ct,30%);z-index:4;display:grid;place-items:center;box-sizing:border-box;width:36px;height:36px;padding:0;border:0;border-radius:50%;background:rgba(255,255,255,.13);color:#fff;font:700 15px/1 "Montserrat",sans-serif;cursor:pointer;transition:background .15s,top .2s}
+.lsgb:hover,.lss.gopen .lsgb{background:rgba(255,255,255,.26)}
+.lsgen{position:absolute;right:calc(50% + var(--chw) + 62px);top:var(--ct,30%);z-index:5;display:flex;flex-direction:column;gap:12px;box-sizing:border-box;width:min(320px,calc(50% - var(--chw) - 78px));padding:14px;border-radius:16px;background:rgba(18,18,22,.92);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:0 18px 50px rgba(0,0,0,.5);cursor:default;opacity:0;visibility:hidden;transform:translateX(10px) scale(.97);transform-origin:top right;transition:opacity .18s,transform .18s,visibility 0s .18s}
+.lss.gopen .lsgen{opacity:1;visibility:visible;transform:none;transition-delay:0s}
+.lsgf{order:2;margin:0}
 .lsgf input{box-sizing:border-box;width:100%;height:38px;margin:0;padding:0 16px;border:1px solid rgba(255,255,255,.2);border-radius:999px;background:rgba(0,0,0,.35);color:#fff;font:inherit;font-size:13px;text-align:left;outline:none}
 .lsgf input:focus{border-color:var(--pop)}
 .lsgf input::placeholder{color:rgba(255,255,255,.45)}
-.lsgc{position:absolute;left:calc((50% - var(--chw))/2);top:var(--cy,50%);z-index:3;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:0 12px;width:min(300px,calc(50% - var(--chw) - 40px));max-height:56vh;margin:0;overflow:hidden;transform:translate(-50%,-50%);text-align:center;cursor:default;transition:top .2s}
+.lsgc{position:relative;order:1;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:0 12px;max-height:50vh;margin:0;overflow:hidden;text-align:center}
 .lsgc:empty{display:none}
 .lsgw{padding:0 1px;border:0;background:none;color:#a7a7ae;font:inherit;font-weight:700;line-height:1.15;letter-spacing:-.01em;cursor:pointer;transition:transform .12s,opacity .12s}
 .lsgw:hover{transform:scale(1.08);opacity:1!important}
 .lsgw{white-space:nowrap}
 .lsgc.lay{display:block}
 .lsgc.lay .lsgw{position:absolute;margin:0}
-.lsg{display:none}
-/* Listen: the ear just off the cover's top-right corner; the buttons in a small stack beside it, like first, level with the middle of the cover */
+/* Listen: the ear just off the cover's top-right corner; the buttons in a small stack beside it, like first, the last one level with the bottom of the cover */
 .lsn{--chw:min(200px,50vw - 66px,23vh)}
 .lscv{width:calc(2*var(--chw))}
 .lsear,.lsn .lsact{position:absolute;left:calc(50% + var(--chw) + 16px);z-index:3}
@@ -491,7 +494,6 @@ html.lsopen,html.lsopen body{overflow:hidden}
 .lsby{margin:0;font-size:13px;color:rgba(255,255,255,.7)}
 .lsby b{font-weight:600}
 @media (max-width:980px){
-.lsg{display:flex}
 .lsear,.lsn .lsact{left:calc(50% + var(--chw) + 10px)}
 .lsn .lsact{gap:5px}
 .lsn .lsact .lsb svg{width:17px;height:17px;padding:8px}
@@ -502,13 +504,10 @@ html.lsopen,html.lsopen body{overflow:hidden}
 .lsq{width:min(440px,calc(100vw - 40px));position:relative;left:50%;transform:translateX(-50%);font-size:16px;-webkit-line-clamp:3;line-clamp:3}
 .lsrate .stars{width:160px}
 .lsrate b{font-size:21px}
-.lsgen{display:block;position:absolute;cursor:default}
-.lsgf{position:static;width:auto;transform:none}
-.lsgc{position:relative;left:auto;top:auto;width:auto;transform:none}
-.lsgc{margin-top:14px;max-height:40vh}
-.lsgen{left:50%;top:auto;bottom:0;z-index:5;box-sizing:border-box;width:min(460px,100vw);padding:16px 16px 22px;transform:translate(-50%,110%);border-radius:16px 16px 0 0;background:rgba(18,18,22,.95);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:0 -10px 40px rgba(0,0,0,.45);transition:transform .25s ease}
+.lsgb{left:calc(50% - var(--chw) - 43px);width:33px;height:33px;font-size:14px}
+.lsgen{right:auto;left:50%;top:auto;bottom:0;width:min(460px,100vw);padding:16px 16px 22px;border-radius:16px 16px 0 0;background:rgba(18,18,22,.95);box-shadow:0 -10px 40px rgba(0,0,0,.45);opacity:1;visibility:visible;transform:translate(-50%,110%);transition:transform .25s ease}
 .lss.gopen .lsgen{transform:translate(-50%,0)}
-.lss.gopen .lsg svg{background:rgba(255,255,255,.26)}
+.lsgc{max-height:40vh}
 }
 .lsx{position:fixed;top:14px;left:14px;z-index:3;display:grid;place-items:center;width:42px;height:42px;padding:0;border:0;border-radius:50%;background:rgba(255,255,255,.14);color:#fff;cursor:pointer}
 .lsx svg{width:20px;height:20px}
@@ -2892,7 +2891,7 @@ return '<section class="lss" data-i="'+i+'" aria-label="'+esc(r.title)+' by '+es
 '<button type="button" class="tiled lstk'+(done?'" title="You’ve tiled this. Open the '+what+'"':' not" title="You haven’t tiled this yet. Tile it"')+'><i aria-hidden="true"></i>'+(done?'Tiled':'Not tiled')+'</button></div>'+
 '<div class="lsmeta"><h3><button type="button" class="lsti" title="Open the '+what+'">'+esc(r.title)+'</button></h3><p class="lsar">'+esc(r.artist)+(r.type==="Album"?' · Album':'')+'</p><p class="lstn" hidden></p>'+
 '<p class="lsno" hidden>No preview for this one</p><a class="lsap" href="#" target="_blank" rel="noopener" hidden>Listen on Apple Music ↗</a></div></div>'+
-'<div class="lsear">'+earHTML(r,sdPlats())+'</div><div class="lsact" data-li="'+i+'">'+lsActs(r)+'</div><div class="lscm" hidden></div>'+genHTML(r)+'</section>'}
+'<button type="button" class="lsgb" data-lsg="1" aria-expanded="false" aria-label="Genre: see what people call it, and say what you hear" title="Genre">G</button><div class="lsear">'+earHTML(r,sdPlats())+'</div><div class="lsact" data-li="'+i+'">'+lsActs(r)+'</div><div class="lscm" hidden></div>'+genHTML(r)+'</section>'}
 function lsActs(r){var id=r.id,s=revSong(r),lk=(S.likes[id]||[]).indexOf(S.user)>-1,rp=(S.reposts[id]||[]).indexOf(S.user)>-1,own=r.user===S.user,it=[],
 c=function(v){return '<span>'+(v?numS(v):'')+'</span>'};
 if(S.social)it.push('<button type="button" class="lsb'+(lk?' on':'')+'" data-like="'+id+'" aria-pressed="'+lk+'" aria-label="Like">'+ico("like")+c(likeN(id))+'</button>',
@@ -2900,7 +2899,6 @@ if(S.social)it.push('<button type="button" class="lsb'+(lk?' on':'')+'" data-lik
 '<button type="button" class="lsb'+(rp?' on':'')+'" data-rp="'+id+'" aria-pressed="'+rp+'" aria-label="Repost"'+(own?' disabled title="You can’t repost your own review"':'')+'>'+ico("rp")+c(rpN(id))+'</button>');
 it.push('<span class="sendw lssw" data-sw="'+id+'"><button type="button" class="lsb" data-send="'+id+'" aria-label="Share" aria-haspopup="true">'+ico("send")+c(shN(id))+'</button><span class="tray" role="group" aria-label="Share">'+trayHTML(id)+'</span></span>');
 if(S.laterOK){var lt=inLater(r);it.push('<button type="button" class="lsb'+(lt?' on':'')+'" data-later="'+id+'" aria-pressed="'+lt+'" aria-label="'+(lt?'Remove from listen later':'Listen later')+'">'+ico("bm")+c(0)+'</button>')}
-it.push('<button type="button" class="lsb lsg" data-lsg="1" aria-label="Genres">'+lsIco("tag")+'</button>');
 return it.join("")}
 function openListen(){if(LS)return;clipStop();var items=lsItems();if(!items.length){toast("Nothing to listen to yet");return}
 /* starting a (silent) sound inside the tap lets the previews play afterwards, on phones too */
@@ -2925,8 +2923,8 @@ LS.tapT=now;clearTimeout(LS.tapTm);LS.tapTm=setTimeout(function(){if(!LS)return;
 x.querySelector(".lsti").onclick=function(){closeListen();openSong(revSong(r))}}
 function lsSet(i){var L=LS;if(!L||i===L.i||i<0||i>=L.n)return;if(L.cur)L.cur.classList.remove("cur","playing","paused");
 var x=L.list.querySelector('.lss[data-i="'+i+'"]');L.i=i;L.cur=x;if(!x)return;x.classList.add("cur");
-if(L.cm){L.cm=null;lsRepaint()}[].forEach.call(L.list.querySelectorAll(".lss.gopen"),function(g){g.classList.remove("gopen")});
-var gk=gKey(revSong(L.items[i]));genLoad(gk).then(function(){genPaint(gk)});
+if(L.cm){L.cm=null;lsRepaint()}[].forEach.call(L.list.querySelectorAll(".lss.gopen"),function(g){g.classList.remove("gopen");var gb=g.querySelector(".lsgb");if(gb)gb.setAttribute("aria-expanded","false")});
+var gk=gKey(revSong(L.items[i]));genLoad(gk,true).then(function(){genPaint(gk)});
 clearTimeout(L.mt);L.mt=setTimeout(function(){if(LS===L&&L.i===i)lsMark(L.items[i])},1200);
 try{L.au.pause()}catch(e){}L.end=0;var bar=x.querySelector(".lspb i");if(bar)bar.style.transform="scaleX(0)";
 if(i>=L.n-3)lsMore();if(i>0)L.el.classList.add("moved");
@@ -2942,7 +2940,7 @@ var nx=L.items[i+1];if(nx)prevFor(revSong(nx),nx)}
    current state, and run the rest: the comments sheet, the genre panel (phones open it as a sheet) and the Tile button */
 function lsCy(){if(!LS)return;[].forEach.call(LS.list.querySelectorAll(".lss"),function(x){var c=x.querySelector(".lscv");if(!c)return;
 var ct=c.offsetTop,cy=ct+c.offsetWidth/2,g=x.querySelector(".lsact"),e=x.querySelector(".lsear"),gh=g?g.offsetHeight:0,eh=e?e.offsetHeight:0;
-x.style.setProperty("--ct",ct+"px");x.style.setProperty("--cy",Math.round(cy)+"px");x.style.setProperty("--gt",Math.round(Math.max(cy-gh/2,ct+(eh?eh+12:0)))+"px")})}
+x.style.setProperty("--ct",ct+"px");x.style.setProperty("--cy",Math.round(cy)+"px");x.style.setProperty("--gt",Math.round(Math.max(ct+c.offsetWidth-gh,ct+(eh?eh+12:0)))+"px")})}
 function lsRepaint(){if(!LS)return;[].forEach.call(LS.list.querySelectorAll(".lsact"),function(a){var r=LS.items[+a.getAttribute("data-li")];if(r)a.innerHTML=lsActs(r)});lsCmPaint();bind()}
 function lsCmPaint(){if(!LS)return;[].forEach.call(LS.list.querySelectorAll(".lss"),function(x){var r=LS.items[+x.getAttribute("data-i")],c=x.querySelector(".lscm");if(!r||!c)return;var on=LS.cm===String(r.id);
 c.hidden=!on;if(!on){c.innerHTML="";return}var f=LS.cmFocus||(c.querySelector("input")===document.activeElement);
@@ -2951,27 +2949,29 @@ LS.cmFocus=false;if(f){var inp=c.querySelector("input");if(inp)inp.focus()}})}
 function lsClick(e){if(!LS)return;var t=e.target,b;
 if(b=t.closest("[data-lscm]")){var id=b.getAttribute("data-lscm");LS.cm=LS.cm===id?null:id;LS.cmFocus=!!LS.cm;lsRepaint();return}
 if(t.closest("[data-lscx]")){LS.cm=null;lsRepaint();return}
-if(b=t.closest("[data-lsg]")){var x=b.closest(".lss");if(x)x.classList.toggle("gopen");return}
+if(b=t.closest("[data-lsg]")){var x=b.closest(".lss");if(!x)return;var on=x.classList.toggle("gopen");b.setAttribute("aria-expanded",on);if(!on)return;
+var gp=x.querySelector(".lsgen"),k=gp.getAttribute("data-gk");genLayout(gp.querySelector(".lsgc"));genLoad(k,true).then(function(){genPaint(k)});
+if(matchMedia("(hover:hover)").matches){var inp=gp.querySelector("input");if(inp)try{inp.focus({preventScroll:true})}catch(_){}}return}
 if(b=t.closest(".lstk")){var r=LS.items[+b.closest(".lss").getAttribute("data-i")];if(!r)return;var s=revSong(r);closeListen();if(dupSong(s)){openSong(s);return}
 S.pre={title:r.title,artist:r.artist,art:r.art,tid:r.tid,type:r.type};S.bq=null;S.tab="review";S.stack=[];S.shut=keepShut();appView();try{window.scrollTo(0,0)}catch(_){}return}
 if(b=t.closest("[data-gw]")){var g=b.closest(".lsgen");if(g)genToggle(g.getAttribute("data-gk"),b.getAttribute("data-gw"))}}
 function lsSubmit(e){var f=e.target.closest&&e.target.closest(".lsgf");if(!f)return;e.preventDefault();var inp=f.querySelector("input"),k=f.closest(".lsgen").getAttribute("data-gk"),g=genNorm(inp.value);
-if(g.length<2){toast("Type a genre, 2 to 24 letters");return}inp.value="";if(!(S.gen[k]||[]).some(function(x){return x.me&&x.g===g}))genToggle(k,g)}
+if(g.length<2){toast("Type a genre, 2 to 24 letters");return}inp.value="";var me=genMe();
+if((S.gen[k]||[]).some(function(x){return x.u===me&&x.g===g})){toast("You’ve already said “"+g+"” for this one");return}genToggle(k,g)}
 /* ---------- the genre cloud: on the left of each Listen slide (a sheet on phones), people type the genre they hear. Every answer is a
    word in the cloud, bigger the more people gave it, the most-given in the middle; your own are underlined, and tapping a word adds
    or takes away your vote. Up to 3 per person per song; kept in the song_genres table (in this browser when offline) ---------- */
 function gKey(s){return (s.type||"Song")+"|"+fold(s.title)+"|"+fold(s.artist)}
 function genNorm(t){return fold(t).replace(/[^a-z0-9 &'+./-]+/g," ").replace(/\s+/g," ").trim().replace(/^[^a-z0-9]+|[^a-z0-9]+$/g,"").slice(0,24).replace(/[^a-z0-9]+$/,"")}
 function genHTML(r){var k=gKey(revSong(r));return '<div class="lsgen" data-gk="'+esc(k)+'"><form class="lsgf"><input maxlength="24" placeholder="Type the genre you hear" aria-label="Type the genre you hear" autocomplete="off" enterkeyhint="done"></form><div class="lsgc" aria-live="polite">'+genCloud(k)+'</div></div>'}
-function genCloud(k){var rows=S.gen[k];if(!rows||!rows.length)return '';
-var c={},mine={};rows.forEach(function(x){c[x.g]=(c[x.g]||0)+1;if(x.me)mine[x.g]=1});
-/* size goes with how many people said it: one person is the smallest, and each repeat makes the word bigger */
-var ws=Object.keys(c).sort(function(a,b){return c[b]-c[a]||(a<b?-1:1)}).slice(0,30),top=Math.log(Math.max(3,c[ws[0]]));
-return ws.map(function(w){var n=c[w],t=Math.log(n)/top;
-return '<button type="button" class="lsgw" data-gw="'+esc(w)+'" style="font-size:'+Math.round(13+25*t)+'px;opacity:'+(.62+.38*Math.min(1,t+.15)).toFixed(2)+'" title="'+esc(w)+': '+(n===1?'1 person':n+' people')+(mine[w]?', including you (tap to take yours away)':' (tap to add yours)')+'">'+esc(w)+'</button>'}).join("")}
-/* the biggest word goes in the middle and the rest spiral out round it, each in the first free spot */
+function genCloud(k){var rows=S.gen[k];if(!rows||!rows.length)return '';var me=genMe(),c={},mine={};
+rows.forEach(function(x){c[x.g]=(c[x.g]||0)+1;if(x.u===me)mine[x.g]=1});
+var ws=Object.keys(c).sort(function(a,b){return c[b]-c[a]||(a<b?-1:1)}).slice(0,30),top=c[ws[0]];
+return ws.map(function(w){var n=c[w],t=top>1?Math.pow((n-1)/(top-1),.75):.45;
+return '<button type="button" class="lsgw" data-gw="'+esc(w)+'" style="font-size:'+Math.round(15+25*t)+'px;opacity:'+(.6+.4*t).toFixed(2)+'" title="'+esc(w)+': said by '+(n===1?'1 person':n+' people')+(mine[w]?', including you (tap to take yours away)':' (tap to add yours)')+'">'+esc(w)+'</button>'}).join("")}
 function genLayout(box){if(!box)return;var ws=[].slice.call(box.querySelectorAll(".lsgw"));box.classList.remove("lay");box.style.height="";
 ws.forEach(function(w){w.style.left=w.style.top=w.style.display=""});var W=box.clientWidth;if(!ws.length||!W)return;
+ws.forEach(function(w){var ow=w.offsetWidth;if(ow>W-10)w.style.fontSize=Math.max(11,Math.floor(parseFloat(w.style.fontSize)*(W-10)/ow))+"px"});
 var mh=parseFloat(getComputedStyle(box).maxHeight),H=Math.min(isNaN(mh)?1e4:mh,innerHeight*.56),put=[];
 ws.map(function(w){return {w:w,bw:w.offsetWidth+8,bh:w.offsetHeight}}).forEach(function(o){
 for(var t=0;t<160;t+=.1){var x=Math.cos(t)*t*2.4,y=Math.sin(t)*t*1.1,l=x-o.bw/2,tp=y-o.bh/2;
@@ -2980,16 +2980,18 @@ if(put.some(function(p){return l<p.l+p.bw&&p.l<l+o.bw&&tp<p.t+p.bh&&p.t<tp+o.bh}
 o.l=l;o.t=tp;put.push(o);return}o.w.style.display="none"});
 if(!put.length)return;var y0=Math.min.apply(null,put.map(function(p){return p.t})),y1=Math.max.apply(null,put.map(function(p){return p.t+p.bh}));
 box.classList.add("lay");box.style.height=Math.ceil(y1-y0)+"px";put.forEach(function(p){p.w.style.left=Math.round(W/2+p.l+4)+"px";p.w.style.top=Math.round(p.t-y0)+"px"})}
+function genMe(){return REMOTE?S.uid:S.user}
 function genLoad(k,force){if(S.gen[k]&&!force)return Promise.resolve();
-if(!REMOTE){var all=store.get("ln_genres",{});S.gen[k]=((all&&all[k])||[]).map(function(x){return {g:x.g,me:x.u===S.user}});return Promise.resolve()}
-return Promise.resolve(sb.from("song_genres").select("genre,user_id").eq("song_key",k).limit(3000)).then(function(r){if(r.error)throw r.error;S.gen[k]=(r.data||[]).map(function(x){return {g:x.genre,me:x.user_id===S.uid}})}).catch(function(){S.gen[k]=S.gen[k]||[]})}
+if(!REMOTE){var all=store.get("ln_genres",{});S.gen[k]=((all&&all[k])||[]).map(function(x){return {g:x.g,u:x.u}});return Promise.resolve()}
+return Promise.resolve(sb.from("song_genres").select("genre,user_id").eq("song_key",k).limit(3000)).then(function(r){if(r.error)throw r.error;S.gen[k]=(r.data||[]).map(function(x){return {g:x.genre,u:x.user_id}})}).catch(function(){S.gen[k]=S.gen[k]||[]})}
 function genPaint(k){[].forEach.call(document.querySelectorAll(".lsgen"),function(g){if(g.getAttribute("data-gk")!==k)return;var b=g.querySelector(".lsgc");b.innerHTML=genCloud(k);genLayout(b)})}
-function genToggle(k,g){if(!S.user)return;var rows=S.gen[k]||(S.gen[k]=[]),has=rows.some(function(x){return x.me&&x.g===g});
-if(!has&&rows.filter(function(x){return x.me}).length>=3){toast("You can give a song up to 3 genres. Tap one of yours to take it away first.");return}
-if(has)S.gen[k]=rows.filter(function(x){return !(x.me&&x.g===g)});else rows.push({g:g,me:true});genPaint(k);
+function genToggle(k,g){if(!S.user)return;var me=genMe(),rows=S.gen[k]||(S.gen[k]=[]),has=rows.some(function(x){return x.u===me&&x.g===g});
+if(!has&&rows.filter(function(x){return x.u===me}).length>=3){toast("You can give a song up to 3 genres. Tap one of yours to take it away first.");return}
+if(has)S.gen[k]=rows.filter(function(x){return !(x.u===me&&x.g===g)});else rows.push({g:g,u:me});genPaint(k);
 var p;if(!REMOTE){var all=store.get("ln_genres",{}),l=(all[k]||[]).filter(function(x){return !(x.u===S.user&&x.g===g)});if(!has)l.push({g:g,u:S.user});all[k]=l;store.set("ln_genres",all);p=Promise.resolve({})}
 else p=Promise.resolve(has?sb.from("song_genres").delete().eq("song_key",k).eq("genre",g).eq("user_id",S.uid):sb.from("song_genres").insert({song_key:k,genre:g}));
-p.then(function(r){if(r&&r.error){toast(has?"Couldn't take that away. Try again.":"Couldn't add that. Try again.");genLoad(k,true).then(function(){genPaint(k)})}},function(){toast("Couldn't save that. Check your connection.");genLoad(k,true).then(function(){genPaint(k)})})}
+var sync=function(){genLoad(k,true).then(function(){genPaint(k)})};
+p.then(function(r){if(r&&r.error)toast(has?"Couldn't take that away. Try again.":"Couldn't add that. Try again.");sync()},function(){toast("Couldn't save that. Check your connection.");sync()})}
 function lsReal(){return !!(LS&&LS.au.src&&LS.au.src.indexOf("data:")!==0)}
 function lsState(){if(!LS||!LS.cur)return;var real=lsReal(),p=real&&!LS.au.paused;LS.cur.classList.toggle("playing",p);LS.cur.classList.toggle("paused",real&&!p)}
 function lsToggle(){if(!lsReal())return;var a=LS.au;if(a.paused){var pp=a.play();if(pp&&pp.catch)pp.catch(function(){})}else a.pause()}
