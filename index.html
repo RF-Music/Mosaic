@@ -451,6 +451,8 @@ html.lsopen,html.lsopen body{overflow:hidden}
 .lsib svg{width:18px;height:18px}
 .lscf .covbtn{cursor:inherit;border-radius:10px}
 .lscf .cvbk{border-radius:10px;cursor:inherit}
+.lscf[data-ax="D1"] .cvbk{transform:rotate3d(1,1,0,180deg)}
+.lscf[data-ax="D2"] .cvbk{transform:rotate3d(1,-1,0,180deg)}
 /* the back of the big cover is the home page tile's back, just bigger: icons and values only, everything in proportion */
 .lscf .cvd{padding:4cqw 7cqw}
 .lscf .cvr{gap:3cqw}
@@ -459,7 +461,9 @@ html.lsopen,html.lsopen body{overflow:hidden}
 .lscf .cvt{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .lscf .cnt{display:none}
 .lscf .lsdr{position:relative;flex-grow:2;display:block}
-.lsda{position:absolute;left:0;top:13%;display:flex;align-items:center;gap:3cqw;font-size:6.2cqw;font-weight:600;line-height:1;color:#fff}
+.lsda{position:absolute;left:0;top:11%;display:flex;flex-direction:column;align-items:flex-start;gap:1.4cqw;line-height:1;color:#fff;transition:opacity .12s}
+.lsdv{display:flex;align-items:center;gap:3cqw;font-size:6.2cqw;font-weight:600}
+.lsdn{padding-left:9.4cqw;font-size:3.5cqw;font-weight:500;color:rgba(255,255,255,.72)}
 .lsda svg{flex:none;width:6.4cqw;height:6.4cqw;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;opacity:.85}
 .lsdc{position:absolute;left:0;bottom:6%;width:100%;height:58%;overflow:visible}
 .lsdo{position:absolute;width:2.6cqw;height:2.6cqw;margin:-1.3cqw 0 0 -1.3cqw;border-radius:50%;background:#fff;box-shadow:0 0 0 1.5px rgba(0,0,0,.35);pointer-events:none;transition:left .08s,top .08s}
@@ -2269,7 +2273,7 @@ function distBack(rs,id){var n=rs.length,st='<svg viewBox="0 0 24 24" aria-hidde
 if(!n)return '<span class="cvr lsdr"><span class="lsda">'+st+'<b>—</b></span></span>';
 var av=rs.reduce(function(a,x){return a+rnum(x.rating)},0)/n,d=rdDens(rs),W=100,H=40,line=rdPath(d,W,H),g="lsdg"+String(id).replace(/[^a-z0-9]/gi,""),
 y=rdY(d,Math.round(av*10),H);
-return '<span class="cvr lsdr" role="img" aria-label="Average '+av.toFixed(2)+' from '+(n===1?'1 rating':n+' ratings')+'. Move along the curve to see how many tiles gave each rating"><span class="lsda">'+st+'<b>'+av.toFixed(2)+'</b></span>'+
+return '<span class="cvr lsdr" role="img" aria-label="Average '+av.toFixed(2)+' from '+(n===1?'1 rating':n+' ratings')+'. Move along the curve to see how many tiles gave each rating"><span class="lsda"><span class="lsdv">'+st+'<b>'+av.toFixed(2)+'</b></span><span class="lsdn">from '+pl(n,"review")+'</span></span>'+
 '<svg class="lsdc" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="'+g+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff7fbd" stop-opacity=".5"/><stop offset="1" stop-color="#a58bff" stop-opacity="0"/></linearGradient></defs>'+
 '<path d="'+line+' L'+W+' '+H+' L0 '+H+' Z" fill="url(#'+g+')"/><path d="'+line+'" fill="none" stroke="#ff9fcb" stroke-width="2" stroke-linejoin="round" vector-effect="non-scaling-stroke"/></svg>'+
 '<i class="lsdo" data-l="'+(av/5*100).toFixed(1)+'%" data-t="'+(36+y/H*58).toFixed(1)+'%" style="left:'+(av/5*100).toFixed(1)+'%;top:'+(36+y/H*58).toFixed(1)+'%"></i><span class="lsdt" aria-hidden="true"></span></span>'}
@@ -3040,8 +3044,8 @@ x.style.setProperty("--ct",ct+"px");x.style.setProperty("--cy",Math.round(cy)+"p
 function lsFlip(x,on,force){var f=x.querySelector(".lscf"),cv=f&&f.querySelector(".cvi"),r=LS&&LS.items[+x.getAttribute("data-i")];if(!cv||!r)return false;
 if(f.classList.contains("on")===on)return true;if(!force&&f._ft&&Date.now()-f._ft<560)return false;
 if(on){var s=revSong(r),o=ensureInfo(s),k=infoKey(s);f.querySelector(".cvbk").innerHTML=backInner(r,true);if(o)o.p=loadInfo(s,o);loadLoc(s,S.info[k])}
-var d=FDIR[Math.floor(Math.random()*FDIR.length)],ax=d[0],sg=d[1];cv.style.transition="none";f.dataset.ax=ax;cv.style.transform="rotate"+ax+"("+(on?0:-sg*180)+"deg)";void cv.offsetWidth;cv.style.transition="";
-f.classList.toggle("on",on);cv.style.transform="rotate"+ax+"("+(on?sg*180:0)+"deg)";f._ft=Date.now();x.classList.toggle("lsflip",on);return true}
+var dg=[["1,1,0","D1"],["1,-1,0","D2"]][Math.random()<.5?0:1],sg=Math.random()<.5?1:-1;cv.style.transition="none";f.dataset.ax=dg[1];cv.style.transform="rotate3d("+dg[0]+","+(on?0:-sg*180)+"deg)";void cv.offsetWidth;cv.style.transition="";
+f.classList.toggle("on",on);cv.style.transform="rotate3d("+dg[0]+","+(on?sg*180:0)+"deg)";f._ft=Date.now();x.classList.toggle("lsflip",on);return true}
 /* i: the details on the back of the cover, and the genre cloud thrown out beside it; again (or a tap on the slide) puts both away */
 function lsInfo(x,on,force){if(!x||!lsFlip(x,on,force))return;var b=x.querySelector(".lsib");if(b)b.setAttribute("aria-expanded",on);x.classList.toggle("gopen",on);if(!on)return;
 var gp=x.querySelector(".lsgen"),k=gp.getAttribute("data-gk");genPaint(k);genLayout(gp.querySelector(".lsgc"));genThrow(x);genLoad(k,true).then(function(){if(genPaint(k))genThrow(x)})}
