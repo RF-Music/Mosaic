@@ -241,9 +241,9 @@ dialog::backdrop{background:rgba(10,12,20,.55)}
 /* colour */
 :root{--teal:#1fb5a3;--violet:#8b6cff;--sun:#ffb43a}
 body{background:radial-gradient(900px 520px at 6% -8%,color-mix(in srgb,var(--pop) 15%,transparent),transparent 62%),radial-gradient(800px 520px at 100% 0%,color-mix(in srgb,var(--violet) 15%,transparent),transparent 62%),radial-gradient(800px 520px at 50% 115%,color-mix(in srgb,var(--teal) 13%,transparent),transparent 62%),var(--bg);background-attachment:fixed}
-/* the wordmark: 35 big pixels, every pixel its own colour (see logoSVG) */
+/* the wordmark: "Mosaic" in 74 pixels, fading from pink to violet (see logoSVG) */
 header.top .wm,.brand{background:none;color:var(--ink);line-height:0}
-.wm{display:block}.wmsvg{display:block;width:120px;height:35px;shape-rendering:crispEdges}
+.wm{display:block}.wmsvg{display:block;width:93px;height:27px;shape-rendering:crispEdges}
 nav button[aria-current="true"]{border-image:linear-gradient(90deg,var(--pop),var(--violet)) 1}
 .btn:not(.ghost):not(.pop):not(.fp):not(.ink){background:linear-gradient(135deg,#7a5cf5,#c04fd8);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 2px 0 #4b3aa8}
 .btn:not(.ghost):not(.pop):not(.fp):not(.ink):active{box-shadow:inset 0 1px 2px rgba(0,0,0,.25),0 0 0 transparent}
@@ -2994,15 +2994,13 @@ f.classList.toggle("on",on);fb.setAttribute("aria-expanded",String(on));
 if(on){bk.removeAttribute("tabindex");bk.removeAttribute("aria-hidden");fb.setAttribute("tabindex","-1");try{bk.focus({preventScroll:true})}catch(e){}}
 else{fb.removeAttribute("tabindex");bk.setAttribute("tabindex","-1");bk.setAttribute("aria-hidden","true");try{fb.focus({preventScroll:true})}catch(e){}}}
 fb.onclick=function(){turn(true)};bk.onclick=function(){turn(false)}}
-/* ---------- the wordmark: "mosaic" in as few pixels as it can be read in: 35, on a 24×5 grid (an x-height of 3, with the i's dot
-   the only pixel above it), drawn 5px a pixel. Every pixel gets its own colour: a stepped fade from pink to violet, leaning a little
-   up to the right, with each pixel a shade lighter or darker than its neighbours, like the tiles of a mosaic ---------- */
-function logoSVG(){if(logoSVG.s)return logoSVG.s;var R=["...................#....","........................","##.#...##...##..##.#..##","#.#.#.#..#..#..#.#.#.#..","#.#.#..##..##...##.#..##"],W=24,H=5,g={},P=[255,99,173],V=[139,108,255];
-R.forEach(function(row,y){for(var x=0;x<W;x++){if(row.charAt(x)!=="#")continue;
-var t=Math.round((x+.45*(H-1-y))/((W-1)+.45*(H-1))*28)/28,k=[-.09,-.035,.02,.075][(((x*73856093)^(y*19349663))>>>0)%4],
-c="#"+P.map(function(a,i){var v=Math.max(0,Math.min(255,Math.round((a+(V[i]-a)*t)*(1+k))));return (v<16?"0":"")+v.toString(16)}).join("");(g[c]=g[c]||[]).push("M"+x+" "+y+"h1v1h-1z")}});
-/* two empty rows under it, so the letters (not the i's dot) sit in the middle of the box */
-return logoSVG.s='<svg class="wmsvg" viewBox="0 0 '+W+' '+(H+2)+'" aria-hidden="true" focusable="false">'+Object.keys(g).map(function(c){return '<path fill="'+c+'" d="'+g[c].join("")+'"/>'}).join("")+'</svg>'}
+/* ---------- the wordmark: "Mosaic" in 74 pixels on a 31×7 grid (an x-height of 5; the M and the i's dot reach above it), 3px a pixel.
+   It fades cleanly from pink to violet across the word: each column of pixels is one shade, the two accent colours mixed evenly
+   in OKLab so the middle stays bright instead of going muddy ---------- */
+function logoSVG(){if(logoSVG.s)return logoSVG.s;var R=["#...#...................#......","##.##..........................","#.#.#..###...####..###..#..####","#.#.#.#...#.#.........#.#.#....","#...#.#...#..###...####.#.#....","#...#.#...#.....#.#...#.#.#....","#...#..###..####...####.#..####"],W=31,H=7,C="#ff63ad #fb64b0 #f766b3 #f467b6 #f068b9 #ec69bc #e86abf #e56bc2 #e16bc4 #dd6cc7 #d96dca #d56dcd #d26ed0 #ce6ed2 #ca6fd5 #c66fd8 #c26fda #be6fdd #bb6fe0 #b76fe2 #b36fe5 #af6fe8 #ab6fea #a76fed #a36ff0 #9f6ef2 #9b6ef5 #976ef7 #936dfa #8f6dfc #8b6cff".split(" "),h="";
+for(var x=0;x<W;x++){var d="";for(var y=0;y<H;y++)if(R[y].charAt(x)==="#")d+="M"+x+" "+y+"h1v1h-1z";if(d)h+='<path fill="'+C[x]+'" d="'+d+'"/>'}
+/* two empty rows under it, so the letters (not the M's top or the i's dot) sit in the middle of the box */
+return logoSVG.s='<svg class="wmsvg" viewBox="0 0 '+W+' '+(H+2)+'" aria-hidden="true" focusable="false">'+h+'</svg>'}
 /* ---------- searching one person's tiles (on profiles): only the songs and albums they've tiled, by title and artist.
    Every word you type has to match, accents don't matter ("bjork" finds Björk), and the tiles below filter as you type ---------- */
 var MAGI='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5"/></svg>';
