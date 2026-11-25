@@ -470,8 +470,8 @@ html.lsopen,html.lsopen body{overflow:hidden}
 .dw{border-radius:3px;cursor:help;transition:background .12s,box-shadow .12s}
 .dw:hover,.dw.on{background:color-mix(in srgb,var(--pop) 26%,transparent);box-shadow:0 0 0 2px color-mix(in srgb,var(--pop) 26%,transparent)}
 .dict{position:fixed;z-index:10000;box-sizing:border-box;width:min(300px,calc(100vw - 16px));max-height:min(320px,60vh);overflow:auto;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);box-shadow:0 14px 40px rgba(0,0,0,.35);font-size:13px;line-height:1.45;text-align:left;animation:dictin .14s ease-out;transition:opacity .15s}
-.dict.fade{opacity:0;transition:opacity .7s linear}
-.dw.on.fade{background:transparent;box-shadow:0 0 0 2px transparent;transition:background .7s linear,box-shadow .7s linear}
+.dict.fade{opacity:0;transition:opacity .7s cubic-bezier(.333,0,.667,.333)}
+.dw.on.fade{background:transparent;box-shadow:0 0 0 2px transparent;transition:background .7s cubic-bezier(.333,0,.667,.333),box-shadow .7s cubic-bezier(.333,0,.667,.333)}
 @keyframes dictin{from{opacity:0;transform:translateY(-4px)}}
 .dicth{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .dicth b{font-size:16px}
