@@ -2303,7 +2303,7 @@ function dictWrap(el){if(el._dw)return;el._dw=1;var tw=document.createTreeWalker
 ns.forEach(function(t){var s=t.nodeValue,f=document.createDocumentFragment(),last=0,m;DWORD.lastIndex=0;if(!/\p{L}/u.test(s))return;
 while((m=DWORD.exec(s))){if(m.index>last)f.appendChild(document.createTextNode(s.slice(last,m.index)));var w=document.createElement("span");w.className="dw";w.textContent=m[0];f.appendChild(w);last=m.index+m[0].length}
 if(last<s.length)f.appendChild(document.createTextNode(s.slice(last)));t.parentNode.replaceChild(f,t)})}
-function dictClose(){if(DICT.el){DICT.el.remove();DICT.el=null}if(DICT.w){DICT.w.classList.remove("on");DICT.w=null}}
+function dictClose(){clearTimeout(DICT.t);if(DICT.el){DICT.el.remove();DICT.el=null}if(DICT.w){DICT.w.classList.remove("on");DICT.w.onmouseenter=DICT.w.onmouseleave=null;DICT.w=null}}
 function dictPlace(b,w){var r=w.getBoundingClientRect(),bw=b.offsetWidth,bh=b.offsetHeight,x=Math.max(8,Math.min(r.left+r.width/2-bw/2,innerWidth-bw-8)),y=r.bottom+8;
 if(y+bh>innerHeight-8)y=Math.max(8,r.top-bh-8);b.style.left=Math.round(x)+"px";b.style.top=Math.round(y)+"px"}
 function dictHTML(j,word){var e=j[0],ph=(e.phonetic||((e.phonetics||[]).filter(function(p){return p.text})[0]||{}).text||""),h=ph?'<p class="dictph">'+esc(ph)+'</p>':'',k=0;
@@ -2319,6 +2319,8 @@ function dictOpen(w){var word=w.textContent.toLowerCase().replace(/^[-'’]+|[-'
 var b=document.createElement("div");b.className="dict";b.setAttribute("role","dialog");b.setAttribute("aria-label","What “"+word+"” means");
 b.innerHTML='<div class="dicth"><b>'+esc(word)+'</b><button type="button" class="dictx" aria-label="Close">×</button></div><div class="dictb"><p class="dictd na">Looking it up…</p></div>';
 document.body.appendChild(b);DICT.el=b;DICT.w=w;w.classList.add("on");dictPlace(b,w);b.querySelector(".dictx").onclick=dictClose;
+/* move the pointer off the word and the box and it folds away after a second and a half (coming back in time keeps it open) */
+var stay=function(){clearTimeout(DICT.t)},go=function(){clearTimeout(DICT.t);DICT.t=setTimeout(dictClose,1500)};b.onmouseenter=w.onmouseenter=stay;b.onmouseleave=w.onmouseleave=go;
 dictLook(word).then(function(h){if(DICT.el!==b)return;b.querySelector(".dictb").innerHTML=h;dictPlace(b,w)})}
 document.addEventListener("mouseover",function(e){if(!dictOK())return;var el=e.target.closest&&e.target.closest(DSEL);if(el)dictWrap(el)},true);
 document.addEventListener("click",function(e){var t=e.target;if(DICT.el&&DICT.el.contains(t))return;var w=t.closest&&t.closest(".dw");
