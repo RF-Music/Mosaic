@@ -469,7 +469,9 @@ html.lsopen,html.lsopen body{overflow:hidden}
 /* the dictionary: a word lit up under the pointer, and the small box with its meaning */
 .dw{border-radius:3px;cursor:help;transition:background .12s,box-shadow .12s}
 .dw:hover,.dw.on{background:color-mix(in srgb,var(--pop) 26%,transparent);box-shadow:0 0 0 2px color-mix(in srgb,var(--pop) 26%,transparent)}
-.dict{position:fixed;z-index:10000;box-sizing:border-box;width:min(300px,calc(100vw - 16px));max-height:min(320px,60vh);overflow:auto;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);box-shadow:0 14px 40px rgba(0,0,0,.35);font-size:13px;line-height:1.45;text-align:left;animation:dictin .14s ease-out}
+.dict{position:fixed;z-index:10000;box-sizing:border-box;width:min(300px,calc(100vw - 16px));max-height:min(320px,60vh);overflow:auto;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);box-shadow:0 14px 40px rgba(0,0,0,.35);font-size:13px;line-height:1.45;text-align:left;animation:dictin .14s ease-out;transition:opacity .15s}
+.dict.fade{opacity:0;transition:opacity .7s linear}
+.dw.on.fade{background:transparent;box-shadow:0 0 0 2px transparent;transition:background .7s linear,box-shadow .7s linear}
 @keyframes dictin{from{opacity:0;transform:translateY(-4px)}}
 .dicth{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .dicth b{font-size:16px}
@@ -2321,7 +2323,13 @@ function dictWrap(el){if(el._dw)return;el._dw=1;var tw=document.createTreeWalker
 ns.forEach(function(t){var s=t.nodeValue,f=document.createDocumentFragment(),last=0,m;DWORD.lastIndex=0;if(!/\p{L}/u.test(s))return;
 while((m=DWORD.exec(s))){if(m.index>last)f.appendChild(document.createTextNode(s.slice(last,m.index)));var w=document.createElement("span");w.className="dw";w.textContent=m[0];f.appendChild(w);last=m.index+m[0].length}
 if(last<s.length)f.appendChild(document.createTextNode(s.slice(last)));t.parentNode.replaceChild(f,t)})}
-function dictClose(){clearTimeout(DICT.t);if(DICT.el){DICT.el.remove();DICT.el=null}if(DICT.w){DICT.w.classList.remove("on");DICT.w.onmouseenter=DICT.w.onmouseleave=null;DICT.w=null}}
+function dictClose(){clearTimeout(DICT.t);if(DICT.el){DICT.el.remove();DICT.el=null}if(DICT.w){DICT.w.classList.remove("on","fade");DICT.w=null}}
+/* the moment the pointer leaves the word and its box, the box fades out over 0.7s; coming back before it is gone brings it straight back */
+function dictFade(){var b=DICT.el;if(!b||b.classList.contains("fade"))return;b.classList.add("fade");if(DICT.w)DICT.w.classList.add("fade");DICT.t=setTimeout(dictClose,700)}
+function dictKeep(){var b=DICT.el;if(!b||!b.classList.contains("fade"))return;clearTimeout(DICT.t);b.classList.remove("fade");if(DICT.w)DICT.w.classList.remove("fade")}
+/* inside = on the word, on the box, or in the small gap between them (so crossing from one to the other doesn't count as leaving) */
+function dictOver(x,y){var a=DICT.w.getBoundingClientRect(),c=DICT.el.getBoundingClientRect();
+return (x>=a.left-2&&x<=a.right+2&&y>=a.top-2&&y<=a.bottom+2)||(x>=c.left&&x<=c.right&&y>=c.top&&y<=c.bottom)||(x>=a.left-16&&x<=a.right+16&&y>=Math.min(a.bottom,c.bottom)&&y<=Math.max(a.top,c.top))}
 function dictPlace(b,w){var r=w.getBoundingClientRect(),bw=b.offsetWidth,bh=b.offsetHeight,x=Math.max(8,Math.min(r.left+r.width/2-bw/2,innerWidth-bw-8)),y=r.bottom+8;
 if(y+bh>innerHeight-8)y=Math.max(8,r.top-bh-8);b.style.left=Math.round(x)+"px";b.style.top=Math.round(y)+"px"}
 function dictHTML(j,word){var e=j[0],ph=(e.phonetic||((e.phonetics||[]).filter(function(p){return p.text})[0]||{}).text||""),h=ph?'<p class="dictph">'+esc(ph)+'</p>':'',k=0;
@@ -2337,14 +2345,14 @@ function dictOpen(w){var word=w.textContent.toLowerCase().replace(/^[-'’]+|[-'
 var b=document.createElement("div");b.className="dict";b.setAttribute("role","dialog");b.setAttribute("aria-label","What “"+word+"” means");
 b.innerHTML='<div class="dicth"><b>'+esc(word)+'</b><button type="button" class="dictx" aria-label="Close">×</button></div><div class="dictb"><p class="dictd na">Looking it up…</p></div>';
 document.body.appendChild(b);DICT.el=b;DICT.w=w;w.classList.add("on");dictPlace(b,w);b.querySelector(".dictx").onclick=dictClose;
-/* move the pointer off the word and the box and it folds away after a second and a half (coming back in time keeps it open) */
-var stay=function(){clearTimeout(DICT.t)},go=function(){clearTimeout(DICT.t);DICT.t=setTimeout(dictClose,1500)};b.onmouseenter=w.onmouseenter=stay;b.onmouseleave=w.onmouseleave=go;
 dictLook(word).then(function(h){if(DICT.el!==b)return;b.querySelector(".dictb").innerHTML=h;dictPlace(b,w)})}
 document.addEventListener("mouseover",function(e){if(!dictOK())return;var el=e.target.closest&&e.target.closest(DSEL);if(el)dictWrap(el)},true);
 document.addEventListener("click",function(e){var t=e.target;if(DICT.el&&DICT.el.contains(t))return;var w=t.closest&&t.closest(".dw");
-if(w&&dictOK()){e.preventDefault();e.stopPropagation();dictOpen(w);return}if(DICT.el)dictClose()},true);
+if(w&&dictOK()){e.preventDefault();e.stopPropagation();dictOpen(w);return}if(DICT.el&&!DICT.el.classList.contains("fade"))dictClose()},true);
+document.addEventListener("pointermove",function(e){if(!DICT.el||!DICT.w||e.pointerType==="touch")return;if(dictOver(e.clientX,e.clientY))dictKeep();else dictFade()},{passive:true});
+document.addEventListener("mouseout",function(e){if(DICT.el&&!e.relatedTarget)dictFade()});
 document.addEventListener("keydown",function(e){if(e.key==="Escape"&&DICT.el){e.preventDefault();e.stopImmediatePropagation();dictClose()}},true);
-document.addEventListener("scroll",function(){if(DICT.el)dictClose()},true);window.addEventListener("resize",function(){if(DICT.el)dictClose()});
+document.addEventListener("scroll",function(e){if(DICT.el&&!DICT.el.contains(e.target))dictClose()},true);window.addEventListener("resize",function(){if(DICT.el)dictClose()});
 function fmtRel(o){var m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(o.rel||"");return m?MON[+m[2]-1]+" "+m[1]:(o.year||"")}
 function backRows(r,ls){var s=revSong(r),o=S.info[infoKey(s)]||{},w=!!o.busy,rs=songReviews(s),n=rs.length,av=n?(rs.reduce(function(a,x){return a+rnum(x.rating)},0)/n).toFixed(2):"",ct=n?'<span class="cnt">('+n+')</span>':"";
 function row(ic,k,v,wait,extra){return '<span class="cvr"><span class="cvl"><svg viewBox="0 0 24 24" aria-hidden="true">'+CVI[ic]+'</svg><span class="cvt">'+k+'</span></span><span class="cvv'+(v?'':' na')+'"'+(v&&ic==="alb"?' title="'+esc(v)+'"':'')+'>'+(v?esc(v)+(extra||''):(wait?'…':'—'))+'</span></span>'}
