@@ -451,8 +451,23 @@ html.lsopen,html.lsopen body{overflow:hidden}
 .lsib svg{width:18px;height:18px}
 .lscf .covbtn{cursor:inherit;border-radius:10px}
 .lscf .cvbk{border-radius:10px;cursor:inherit}
-.lscf[data-ax="D1"] .cvbk{transform:rotate3d(1,1,0,180deg)}
-.lscf[data-ax="D2"] .cvbk{transform:rotate3d(1,-1,0,180deg)}
+/* the dictionary: a word lit up under the pointer, and the small box with its meaning */
+.dw{border-radius:3px;cursor:help;transition:background .12s,box-shadow .12s}
+.dw:hover,.dw.on{background:color-mix(in srgb,var(--pop) 26%,transparent);box-shadow:0 0 0 2px color-mix(in srgb,var(--pop) 26%,transparent)}
+.dict{position:fixed;z-index:10000;box-sizing:border-box;width:min(300px,calc(100vw - 16px));max-height:min(320px,60vh);overflow:auto;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);box-shadow:0 14px 40px rgba(0,0,0,.35);font-size:13px;line-height:1.45;text-align:left;animation:dictin .14s ease-out}
+@keyframes dictin{from{opacity:0;transform:translateY(-4px)}}
+.dicth{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.dicth b{font-size:16px}
+.dictx{display:grid;place-items:center;flex:none;width:26px;height:26px;padding:0;border:0;border-radius:50%;background:none;color:var(--mute);font-size:18px;line-height:1;cursor:pointer}
+.dictx:hover{background:color-mix(in srgb,var(--ink) 8%,transparent);color:var(--ink)}
+.dictph{margin:0;color:var(--mute);font-size:12.5px}
+.dictpos{margin:9px 0 1px;color:var(--pop);font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase}
+.dictd{margin:0}
+.dictd.na{color:var(--mute)}
+.dictex{margin:3px 0 0;color:var(--mute);font-style:italic}
+.dictsrc{display:inline-block;margin-top:9px;color:var(--mute);font-size:11.5px}
+.cvf[data-ax="D1"] .cvbk{transform:rotate3d(1,1,0,180deg)}
+.cvf[data-ax="D2"] .cvbk{transform:rotate3d(1,-1,0,180deg)}
 /* the back of the big cover is the home page tile's back, just bigger: icons and values only, everything in proportion */
 .lscf .cvd{padding:4cqw 7cqw}
 .lscf .cvr{gap:3cqw}
@@ -2096,7 +2111,7 @@ if(sd)return sd.map(sdRowHTML).join("");
 var nc=!!sd;
 return l.map(function(r,i){var rb=rateBox(r,!nc),
 hd=(r.via?'<div class="meta via">↻ '+esc(r.via)+' reposted</div>':'')+(nc?rb:'<h3><a class="tlink" href="#" data-info="rv:'+esc(r.id)+'">'+esc(r.title)+'</a></h3><div class="meta rar'+(r.type==="Album"?' ra"><span class="ran">'+esc(r.artist)+'</span><span class="albg"><span class="tag alb">Album</span>'+(r.tracks&&r.tracks.length?tddHTML(r):'')+'</span>':'">'+esc(r.artist))+'</div>'),
-tx=r.text?'<p>'+esc(r.text)+'</p>':'',
+tx=r.text?'<p class="rtx">'+esc(r.text)+'</p>':'',
 ft=(r.user===S.user&&!r.via?'<div class="row"><button class="btn ghost sm" data-edit="'+r.id+'">Edit</button><button class="btn ghost sm" data-del="'+r.id+'">Delete</button></div>':'')+actsHTML(r)+footHTML(r,!nc);
 return '<article class="rev'+(nc?' nocv':'')+'" style="--h:'+hue(r.title+r.artist)+'">'+glowHTML(r)+(nc?'':'<div class="rl">'+covBtn(r)+rb+'</div>')+'<div class="rc">'+(nc?hd+tx+ft:'<span class="tr">'+earHTML(r)+penBtn(r)+'</span><div class="rch">'+hd+'</div>'+tx+'<div class="rcf">'+ft+'<div class="rbt">'+earHTML(r)+penBtn(r)+'<span class="rbtd">'+esc(r.date)+'</span></div></div>')+'</div></article>'}).join("")}
 
@@ -2266,6 +2281,38 @@ function mv(ev){if(ev.pointerId!==id)return;if(!moved&&Math.abs(ev.clientX-x0)<4
 function up(ev){if(ev.pointerId!==id)return;document.removeEventListener("pointermove",mv);document.removeEventListener("pointerup",up);document.removeEventListener("pointercancel",up);if(moved){box._nc=Date.now();onEnd(row)}}
 document.addEventListener("pointermove",mv,{passive:false});document.addEventListener("pointerup",up);document.addEventListener("pointercancel",up)});
 box.addEventListener("click",function(e){if(box._nc&&Date.now()-box._nc<500&&e.target.closest&&e.target.closest(sel)){e.stopPropagation();e.preventDefault();box._nc=0}},true)}
+/* ---------- the dictionary: in a review, the word under the pointer lights up; click it and a small box opens beside it with what it
+   means (from the Free Dictionary API, which uses Wiktionary). The box floats over the page without moving anything, and goes when
+   you click elsewhere, press Escape or scroll. Words are only split out of a review the first time the pointer passes over it.
+   Phones skip this (no hover there): a long press on a word already offers the phone's own Look Up ---------- */
+var DICT={c:{}},DSEL=".rtx,.lsq",DWORD=/[\p{L}\p{M}][\p{L}\p{M}'’-]*/gu;
+function dictOK(){return matchMedia("(hover:hover) and (pointer:fine)").matches}
+function dictWrap(el){if(el._dw)return;el._dw=1;var tw=document.createTreeWalker(el,NodeFilter.SHOW_TEXT),ns=[],n;while((n=tw.nextNode()))ns.push(n);
+ns.forEach(function(t){var s=t.nodeValue,f=document.createDocumentFragment(),last=0,m;DWORD.lastIndex=0;if(!/\p{L}/u.test(s))return;
+while((m=DWORD.exec(s))){if(m.index>last)f.appendChild(document.createTextNode(s.slice(last,m.index)));var w=document.createElement("span");w.className="dw";w.textContent=m[0];f.appendChild(w);last=m.index+m[0].length}
+if(last<s.length)f.appendChild(document.createTextNode(s.slice(last)));t.parentNode.replaceChild(f,t)})}
+function dictClose(){if(DICT.el){DICT.el.remove();DICT.el=null}if(DICT.w){DICT.w.classList.remove("on");DICT.w=null}}
+function dictPlace(b,w){var r=w.getBoundingClientRect(),bw=b.offsetWidth,bh=b.offsetHeight,x=Math.max(8,Math.min(r.left+r.width/2-bw/2,innerWidth-bw-8)),y=r.bottom+8;
+if(y+bh>innerHeight-8)y=Math.max(8,r.top-bh-8);b.style.left=Math.round(x)+"px";b.style.top=Math.round(y)+"px"}
+function dictHTML(j,word){var e=j[0],ph=(e.phonetic||((e.phonetics||[]).filter(function(p){return p.text})[0]||{}).text||""),h=ph?'<p class="dictph">'+esc(ph)+'</p>':'',k=0;
+(e.meanings||[]).slice(0,3).forEach(function(m){var d=(m.definitions||[])[0];if(!d||k>=3)return;k++;h+='<p class="dictpos">'+esc(m.partOfSpeech||"")+'</p><p class="dictd">'+esc(d.definition)+'</p>'+(d.example&&d.example.length<140?'<p class="dictex">“'+esc(d.example)+'”</p>':'')});
+return h+'<a class="dictsrc" href="https://en.wiktionary.org/wiki/'+encodeURIComponent(e.word||word)+'" target="_blank" rel="noopener">More on Wiktionary ↗</a>'}
+function dictLook(word){if(DICT.c[word])return Promise.resolve(DICT.c[word]);
+/* try the word as written, then without a common ending (songs → song, played → play, slowly → slow) */
+var tries=[word],m;if((m=/^(.{3,}?)(?:'s|’s|es|s|ed|d|ing|ly)$/.exec(word)))tries.push(m[1]);if(/ies$/.test(word))tries.push(word.slice(0,-3)+"y");
+var go=function(i){if(i>=tries.length)return Promise.resolve(null);return fetch("https://api.dictionaryapi.dev/api/v2/entries/en/"+encodeURIComponent(tries[i])).then(function(r){if(r.status===404)return go(i+1);if(!r.ok)throw 0;return r.json()})};
+return go(0).then(function(j){var h=j&&j.length?dictHTML(j,word):'<p class="dictd na">No definition found.</p><a class="dictsrc" href="https://en.wiktionary.org/wiki/'+encodeURIComponent(word)+'" target="_blank" rel="noopener">Search Wiktionary ↗</a>';DICT.c[word]=h;return h},
+function(){return '<p class="dictd na">Couldn’t look that up just now.</p>'})}
+function dictOpen(w){var word=w.textContent.toLowerCase().replace(/^[-'’]+|[-'’]+$/g,"");if(!word)return;if(DICT.w===w){dictClose();return}dictClose();
+var b=document.createElement("div");b.className="dict";b.setAttribute("role","dialog");b.setAttribute("aria-label","What “"+word+"” means");
+b.innerHTML='<div class="dicth"><b>'+esc(word)+'</b><button type="button" class="dictx" aria-label="Close">×</button></div><div class="dictb"><p class="dictd na">Looking it up…</p></div>';
+document.body.appendChild(b);DICT.el=b;DICT.w=w;w.classList.add("on");dictPlace(b,w);b.querySelector(".dictx").onclick=dictClose;
+dictLook(word).then(function(h){if(DICT.el!==b)return;b.querySelector(".dictb").innerHTML=h;dictPlace(b,w)})}
+document.addEventListener("mouseover",function(e){if(!dictOK())return;var el=e.target.closest&&e.target.closest(DSEL);if(el)dictWrap(el)},true);
+document.addEventListener("click",function(e){var t=e.target;if(DICT.el&&DICT.el.contains(t))return;var w=t.closest&&t.closest(".dw");
+if(w&&dictOK()){e.preventDefault();e.stopPropagation();dictOpen(w);return}if(DICT.el)dictClose()},true);
+document.addEventListener("keydown",function(e){if(e.key==="Escape"&&DICT.el){e.preventDefault();e.stopImmediatePropagation();dictClose()}},true);
+document.addEventListener("scroll",function(){if(DICT.el)dictClose()},true);window.addEventListener("resize",function(){if(DICT.el)dictClose()});
 function fmtRel(o){var m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(o.rel||"");return m?MON[+m[2]-1]+" "+m[1]:(o.year||"")}
 function backRows(r,ls){var s=revSong(r),o=S.info[infoKey(s)]||{},w=!!o.busy,rs=songReviews(s),n=rs.length,av=n?(rs.reduce(function(a,x){return a+rnum(x.rating)},0)/n).toFixed(2):"",ct=n?'<span class="cnt">('+n+')</span>':"";
 function row(ic,k,v,wait,extra){return '<span class="cvr"><span class="cvl"><svg viewBox="0 0 24 24" aria-hidden="true">'+CVI[ic]+'</svg><span class="cvt">'+k+'</span></span><span class="cvv'+(v?'':' na')+'"'+(v&&ic==="alb"?' title="'+esc(v)+'"':'')+'>'+(v?esc(v)+(extra||''):(wait?'…':'—'))+'</span></span>'}
@@ -2303,12 +2350,18 @@ return '<div class="cvf'+(on?' on':'')+'" data-rid="'+esc(id)+'" data-k="'+esc(i
 '<button type="button" class="covbtn" data-flip="1" aria-expanded="'+on+'" aria-label="Show details for “'+esc(r.title)+'”" title="'+(r.type==="Album"?"Album":"Song")+' details"'+(on?' tabindex="-1" aria-hidden="true"':'')+'>'+cover(r)+'</button>'+
 '<button type="button" class="cvbk" data-unflip="1"'+(on?'':' tabindex="-1" aria-hidden="true"')+'>'+(on?backInner(r):'')+'</button></div></div>'}
 var FDIR=[["Y",1],["Y",-1],["X",1],["X",-1]];
+/* the six ways a cover turns over anywhere on the site: right, left, down, up and the two diagonals (corner to corner). They're dealt
+   from a shuffled bag, so the next one is always a surprise but over time each comes up exactly as often as the others, 1 in 6.
+   The bag is kept between visits so it evens out over time, not just within one visit */
+var FDIR6=[["0,1,0","Y",1],["0,1,0","Y",-1],["1,0,0","X",1],["1,0,0","X",-1],["1,1,0","D1",0],["1,-1,0","D2",0]];
+function flipDir(){var b=store.get("ln_fbag",null);if(!Array.isArray(b)||!b.length||b.some(function(i){return !(i>=0&&i<6)})){b=[0,1,2,3,4,5];for(var i=5;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=b[i];b[i]=b[j];b[j]=t}}
+var d=FDIR6[b.pop()];store.set("ln_fbag",b);return {v:d[0],ax:d[1],sg:d[2]||(Math.random()<.5?1:-1)}}
 function flipCover(f,on){if(!f||(f._ft&&Date.now()-f._ft<560))return;var id=f.dataset.rid,r=revOf(id),fr=f.querySelector(".covbtn"),bk=f.querySelector(".cvbk"),cv=f.querySelector(".cvi");if(!r||!fr||!bk||!cv)return;
 if(on){var s=revSong(r),o=ensureInfo(s);bk.innerHTML=backInner(r);FLIP[id]=1;if(o)o.p=loadInfo(s,o)}else delete FLIP[id];
 /* pick a way to turn, line the tile up on that axis (nothing visibly changes), then turn it half a circle */
-var d=FDIR[Math.floor(Math.random()*FDIR.length)],ax=d[0],sg=d[1];
-cv.style.transition="none";f.dataset.ax=ax;cv.style.transform="rotate"+ax+"("+(on?0:-sg*180)+"deg)";void cv.offsetWidth;cv.style.transition="";
-f.classList.toggle("on",on);cv.style.transform="rotate"+ax+"("+(on?sg*180:0)+"deg)";f._ft=Date.now();
+var d=flipDir(),sg=d.sg;
+cv.style.transition="none";f.dataset.ax=d.ax;cv.style.transform="rotate3d("+d.v+","+(on?0:-sg*180)+"deg)";void cv.offsetWidth;cv.style.transition="";
+f.classList.toggle("on",on);cv.style.transform="rotate3d("+d.v+","+(on?sg*180:0)+"deg)";f._ft=Date.now();
 fr.setAttribute("aria-expanded",String(on));
 [[fr,!on],[bk,on]].forEach(function(x){if(x[1]){x[0].removeAttribute("tabindex");x[0].removeAttribute("aria-hidden")}else{x[0].setAttribute("tabindex","-1");x[0].setAttribute("aria-hidden","true")}});
 try{(on?bk:fr).focus({preventScroll:true})}catch(e){}}
@@ -3052,8 +3105,8 @@ x.style.setProperty("--ct",ct+"px");x.style.setProperty("--cy",Math.round(cy)+"p
 function lsFlip(x,on,force){var f=x.querySelector(".lscf"),cv=f&&f.querySelector(".cvi"),r=LS&&LS.items[+x.getAttribute("data-i")];if(!cv||!r)return false;
 if(f.classList.contains("on")===on)return true;if(!force&&f._ft&&Date.now()-f._ft<560)return false;
 if(on){var s=revSong(r),o=ensureInfo(s),k=infoKey(s);f.querySelector(".cvbk").innerHTML=backInner(r,true);if(o)o.p=loadInfo(s,o);loadLoc(s,S.info[k])}
-var dg=[["0,1,0","Y"],["1,0,0","X"],["1,1,0","D1"],["1,-1,0","D2"]][Math.floor(Math.random()*4)],sg=Math.random()<.5?1:-1;cv.style.transition="none";f.dataset.ax=dg[1];cv.style.transform="rotate3d("+dg[0]+","+(on?0:-sg*180)+"deg)";void cv.offsetWidth;cv.style.transition="";
-f.classList.toggle("on",on);cv.style.transform="rotate3d("+dg[0]+","+(on?sg*180:0)+"deg)";f._ft=Date.now();x.classList.toggle("lsflip",on);return true}
+var dd=flipDir(),sg=dd.sg;cv.style.transition="none";f.dataset.ax=dd.ax;cv.style.transform="rotate3d("+dd.v+","+(on?0:-sg*180)+"deg)";void cv.offsetWidth;cv.style.transition="";
+f.classList.toggle("on",on);cv.style.transform="rotate3d("+dd.v+","+(on?sg*180:0)+"deg)";f._ft=Date.now();x.classList.toggle("lsflip",on);return true}
 /* i: the details on the back of the cover, and the genre cloud thrown out beside it; again (or a tap on the slide) puts both away */
 function lsInfo(x,on,force){if(!x||!lsFlip(x,on,force))return;var b=x.querySelector(".lsib");if(b)b.setAttribute("aria-expanded",on);x.classList.toggle("gopen",on);if(!on)return;
 var gp=x.querySelector(".lsgen"),k=gp.getAttribute("data-gk");genPaint(k);genLayout(gp.querySelector(".lsgc"));genThrow(x);genLoad(k,true).then(function(){if(genPaint(k))genThrow(x)})}
