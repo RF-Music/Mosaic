@@ -245,15 +245,14 @@ body{background:radial-gradient(900px 520px at 6% -8%,color-mix(in srgb,var(--po
 header.top .wm,.brand{background:none;color:var(--ink);line-height:0}
 .wm{display:block}.wmsvg{display:block;width:93px;height:27px;shape-rendering:crispEdges}
 /* the wordmark has two sides: the clean fade on the front (--f) and a rougher, mosaic one on the back (--k); both change only
-   left to right, one shade a column. la ola (logoWave) turns the word over to the other side, column after column from left to right:
-   each column (one piece, so its tiles stay together) makes a steady half-turn about the word's middle line, so the columns beside it
-   never come apart; .bk is the side it ends up on */
-.wmsvg path{fill:var(--f);transform-box:view-box;transform-origin:0 3.5px}
+   left to right, one shade a column. la ola (logoWave) turns every tile over to the other side, column after column from left to right, each with a steady
+   half-turn; .bk is the side it ends up on */
+.wmsvg path{fill:var(--f);transform-box:fill-box;transform-origin:center}
 .wmsvg.bk path{fill:var(--k)}
 .wmsvg.ola path{animation:olf .5s linear both;animation-delay:calc(var(--o) - var(--w,0ms))}
 .wmsvg.ola.bk path{--s:var(--f);--e:var(--k)}
 .wmsvg.ola:not(.bk) path{--s:var(--k);--e:var(--f)}
-@keyframes olf{0%{transform:scaleY(1);fill:var(--s)}12.5%{transform:scaleY(0.924);fill:var(--s)}25%{transform:scaleY(0.707);fill:var(--s)}37.5%{transform:scaleY(0.383);fill:var(--s)}50%{transform:scaleY(0);fill:var(--s)}50.01%{fill:var(--e)}62.5%{transform:scaleY(0.383);fill:var(--e)}75%{transform:scaleY(0.707);fill:var(--e)}87.5%{transform:scaleY(0.924);fill:var(--e)}100%{transform:scaleY(1);fill:var(--e)}}
+@keyframes olf{0%{transform:scaleX(1);fill:var(--s)}12.5%{transform:scaleX(0.924);fill:var(--s)}25%{transform:scaleX(0.707);fill:var(--s)}37.5%{transform:scaleX(0.383);fill:var(--s)}50%{transform:scaleX(0);fill:var(--s)}50.01%{fill:var(--e)}62.5%{transform:scaleX(-0.383);fill:var(--e)}75%{transform:scaleX(-0.707);fill:var(--e)}87.5%{transform:scaleX(-0.924);fill:var(--e)}100%{transform:scaleX(-1);fill:var(--e)}}
 @media (prefers-reduced-motion:reduce){.wmsvg.ola path{animation:none}}
 nav button[aria-current="true"]{border-image:linear-gradient(90deg,var(--pop),var(--violet)) 1}
 .btn:not(.ghost):not(.pop):not(.fp):not(.ink){background:linear-gradient(135deg,#7a5cf5,#c04fd8);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 2px 0 #4b3aa8}
@@ -3008,16 +3007,17 @@ fb.onclick=function(){turn(true)};bk.onclick=function(){turn(false)}}
 /* ---------- the wordmark: "Mosaic" in 74 pixels on a 31×7 grid (an x-height of 5; the M and the i's dot reach above it), 3px a pixel.
    It fades cleanly from pink to violet across the word: each column of pixels is one shade, the two accent colours mixed evenly
    in OKLab so the middle stays bright instead of going muddy ---------- */
-/* la ola: the word turns over to its other side, column after column from left to right, the whole wave taking 2 seconds at
-   a steady pace (each column's half-turn takes LW.f of it). It runs every 15 seconds, and back to back for as long as the pointer rests
+/* la ola: every tile turns over to the word's other side, column after column from left to right, the whole wave taking 2 seconds at
+   a steady pace (each tile's half-turn takes LW.f of it). It runs every 15 seconds, and back to back for as long as the pointer rests
    on the wordmark. LW.bk: the back is showing */
 var LW={t:-1e9,d:2000,f:500,hov:false,bk:false};
 function logoSVG(){if(!logoSVG.h){var R=["#...#...................#......","##.##..........................","#.#.#..###...####..###..#..####","#.#.#.#...#.#.........#.#.#....","#...#.#...#..###...####.#.#....","#...#.#...#.....#.#...#.#.#....","#...#..###..####...####.#..####"],W=31,H=7,C="#ff63ad #fb64b0 #f766b3 #f467b6 #f068b9 #ec69bc #e86abf #e56bc2 #e16bc4 #dd6cc7 #d96dca #d56dcd #d26ed0 #ce6ed2 #ca6fd5 #c66fd8 #c26fda #be6fdd #bb6fe0 #b76fe2 #b36fe5 #af6fe8 #ab6fea #a76fed #a36ff0 #9f6ef2 #9b6ef5 #976ef7 #936dfa #8f6dfc #8b6cff".split(" "),P=[255,99,173],V=[139,108,255],h="";
-for(var x=0;x<W;x++){var d="";for(var y=0;y<H;y++)if(R[y].charAt(x)==="#")d+="M"+x+" "+y+"h1v1h-1z";if(!d)continue;
-/* the back: the same fade, but rougher: every column a shade lighter or darker than the ones beside it, like the tiles of a mosaic */
+R.forEach(function(row,y){for(var x=0;x<W;x++){if(row.charAt(x)!=="#")continue;
+/* the back: the same fade left to right only (so an upright stroke is one colour), but rougher: every column a shade lighter or
+   darker than the ones beside it, like the tiles of a mosaic */
 var t=x/(W-1),k=[-.09,-.035,.02,.075][(Math.imul(x*7+3,2246822519)>>>28)&3],
 b="#"+P.map(function(a,i){var v=Math.max(0,Math.min(255,Math.round((a+(V[i]-a)*t)*(1+k))));return (v<16?"0":"")+v.toString(16)}).join("");
-h+='<path fill="'+C[x]+'" style="--f:'+C[x]+';--k:'+b+';--o:'+Math.round(x*(LW.d-LW.f)/(W-1))+'ms" d="'+d+'"/>'}logoSVG.h=h}
+h+='<path fill="'+C[x]+'" style="--f:'+C[x]+';--k:'+b+';--o:'+Math.round(x*(LW.d-LW.f)/(W-1))+'ms" d="M'+x+' '+y+'h1v1h-1z"/>'}});logoSVG.h=h}
 /* drawn mid-wave (the page redrew while it was passing): pick the wave up where it is. Two empty rows under the letters, so they
    (not the M's top or the i's dot) sit in the middle of the box */
 var e=performance.now()-LW.t,on=e>=0&&e<LW.d;
