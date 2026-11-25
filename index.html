@@ -113,6 +113,8 @@ nav button[aria-current="true"]{color:var(--ink);border-color:var(--pop)}
 .vapgl[hidden]{display:none}
 .vapgl li{break-inside:avoid}
 .vapsug{margin-top:26px}
+.vapl{margin-top:30px;border-top:1px solid var(--line)}
+.vapl>svg:first-child{flex:none;width:17px;height:17px}
 .vapsug label{display:block;margin-bottom:8px;font-size:14px;color:var(--mute)}
 .vaprow{display:flex;gap:8px}
 .vaprow input{flex:1;min-width:0}
@@ -158,14 +160,9 @@ nav button[aria-current="true"]{color:var(--ink);border-color:var(--pop)}
 @media (prefers-reduced-motion:reduce){.tiled i{animation:none}}
 :root[data-theme="light"] .tiled.not i{background:linear-gradient(160deg,#b9b9c0,#9a9aa2)}@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .tiled.not i{background:linear-gradient(160deg,#b9b9c0,#9a9aa2)}}
 .tag.tz{color:#fff;border-color:transparent;background:linear-gradient(135deg,#7a5cf5,#c04fd8)}
-.mcap{grid-column:1/-1;margin:8px 0 0;font-size:12px;line-height:1.3;color:var(--mute);text-align:center}
-@media (min-width:841px){.mos.own:not(.started){grid-template-rows:repeat(5,44px) auto}}
 @media (prefers-reduced-motion:reduce){.tessw,.aglow.abl{animation:none}.tess::after{display:none}}
 @media (max-width:600px){.sbox .sart{width:96px;flex:none}.tessw{margin-top:7px}.tess{height:22px;padding:0 8px;gap:4px;font-size:8.5px;letter-spacing:.07em;clip-path:polygon(0 0,100% 0,calc(100% - 6px) 50%,100% 100%,0 100%,6px 50%)}.tess svg{display:none}.tiled{margin-top:7px;font-size:11.5px}}
 /* the lifetime mosaic */
-.lifeb{display:inline-flex;align-items:center;gap:7px;margin-top:12px;padding:6px 13px 6px 11px;border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink);font:500 13px "Montserrat",sans-serif;cursor:pointer;transition:border-color .12s,transform .08s}
-.lifeb:hover{border-color:color-mix(in srgb,var(--violet) 60%,var(--line))}
-.lifeb:active{transform:scale(.97)}
 .lifeh{margin-bottom:14px}
 .lifeh h2{margin-bottom:4px}
 .lifeh .meta{margin:0}
@@ -691,10 +688,15 @@ button.orb:hover,button.orb:focus-visible{border-color:var(--pop);color:var(--po
 .igs span{color:var(--mute);font-size:14px}.igs b{color:var(--ink);font-weight:600;font-size:16px;margin-right:2px}
 @media (max-width:520px){.prof.ig{gap:14px;padding:16px}.prof.ig .av.big{width:64px;height:64px}.igs{gap:16px}.igt .btn{width:100%}}
 /* favourites mosaic: 5 x 5 tiles beside the profile details, dull grey until filled */
-.mos{--mg:color-mix(in srgb,var(--ink) 8%,var(--surface));--ml:color-mix(in srgb,var(--ink) 30%,var(--surface));--mh:color-mix(in srgb,var(--ink) 15%,var(--surface));--mp:var(--ink);flex:none;display:grid;grid-template-columns:repeat(5,44px);grid-auto-rows:44px;width:max-content;margin-left:auto}
+.mos{--mg:color-mix(in srgb,var(--ink) 8%,var(--surface));--ml:color-mix(in srgb,var(--ink) 30%,var(--surface));--mh:color-mix(in srgb,var(--ink) 15%,var(--surface));--mp:var(--ink);display:grid;grid-template-columns:repeat(5,52px);grid-auto-rows:52px;width:max-content}
+/* the mosaic and its heading: Tessellation, or Tessellate your mosaic on your own until all 25 spots are filled */
+.mosw{flex:none;margin-left:auto;display:flex;flex-direction:column;align-items:center}
+.mosh{margin:0 0 10px;font-size:15px;font-weight:600;letter-spacing:.01em;line-height:1.2;text-align:center}
 .mt{position:relative;min-width:0;aspect-ratio:1/1;border:1px solid transparent;border-radius:4px;padding:0;background:var(--mg);background-clip:padding-box;display:grid;place-items:center}
-button.mt{cursor:pointer;transition:background .12s}
-.mt .ml{font-size:18px;font-weight:700;line-height:1;color:var(--ml)}
+button.mt{cursor:pointer;transition:background .12s,transform .18s cubic-bezier(.3,.7,.4,1.5)}
+button.mt:hover{z-index:1;transform:scale(1.07)}
+.mos.dragging button.mt:hover{transform:none}
+.mt .ml{font-size:21px;font-weight:700;line-height:1;color:var(--ml)}
 /* other people's mosaics: empty tiles sit just below the card, so only the pieces they've added stand out */
 .mos:not(.own){--mg:color-mix(in srgb,var(--bg) 55%,var(--surface))}
 /* your own mosaic: the CREATE YOUR MOSAIC letters go once you've added a piece */
@@ -707,11 +709,11 @@ button.mt:hover .mpl,button.mt:focus-visible .mpl{display:grid}
 .mt.on:hover,.mt.on:focus-within{z-index:2}
 .mto{display:block;width:100%;height:100%;padding:0;border:0;border-radius:3px;overflow:hidden;cursor:pointer;transition:transform .12s,box-shadow .12s}
 .mto img{display:block;width:100%;height:100%;object-fit:cover}
-.mto .mi{display:grid;place-items:center;width:100%;height:100%;color:#fff;font-weight:600;font-size:14px}
+.mto .mi{display:grid;place-items:center;width:100%;height:100%;color:#fff;font-weight:600;font-size:16px}
 .mt.on:hover .mto{transform:scale(1.08);box-shadow:0 4px 12px rgba(0,0,0,.35)}
 .mtx{position:absolute;top:-6px;right:-6px;width:18px;height:18px;border-radius:50%;border:0;padding:0;background:var(--ink);color:var(--surface);font-size:13px;line-height:1;display:none;place-items:center;cursor:pointer;z-index:3}
 .mt.on:hover .mtx,.mt.on:focus-within .mtx{display:grid}
-@media (max-width:840px){.mos{flex:0 0 100%;width:auto;grid-template-columns:repeat(5,minmax(0,52px));grid-auto-rows:auto;justify-content:center;margin:6px 0 0}.mt .ml{font-size:19px}}
+@media (max-width:840px){.mosw{flex:0 0 100%;margin:6px 0 0}.mos{width:100%;grid-template-columns:repeat(5,minmax(0,60px));grid-auto-rows:auto;justify-content:center}.mt .ml{font-size:22px}}
 /* dragging a tile to another spot */
 .mos.own .mt.on{touch-action:none;user-select:none;-webkit-user-select:none}
 .mos.own .mto{cursor:grab}
@@ -1122,8 +1124,8 @@ a.btn{display:inline-flex;align-items:center;text-decoration:none}
 .fddb .car{display:block;width:12px;height:12px;transition:transform .15s;flex:none}
 .fdd.open .car{transform:rotate(180deg)}
 .fls{display:inline-flex;align-items:center;gap:12px}
-.plus1{display:inline-grid;place-items:center;min-width:34px;height:22px;padding:0 9px;background:none;color:var(--ink);border:1px solid var(--line);border-radius:999px;font-size:12px;font-weight:600;line-height:1;cursor:pointer;transition:background .12s,color .12s,border-color .12s,transform .08s}
-.plus1:hover{border-color:var(--pop);color:var(--pop)}
+.plus1{display:inline-grid;place-items:center;min-width:34px;height:22px;padding:0 9px;background:none;color:var(--ink);border:1px solid var(--line);border-radius:999px;font-size:12px;font-weight:600;line-height:1;cursor:pointer;transition:background .12s,color .12s,border-color .12s,transform .18s cubic-bezier(.3,.7,.4,1.5)}
+.plus1:hover{border-color:var(--pop);color:var(--pop);transform:scale(1.07)}
 .plus1:active{transform:scale(.94)}
 .igs .plus1 span{color:inherit;font-size:inherit}
 .plus1 .p1b{display:none}
@@ -1229,6 +1231,10 @@ a.pl.act{padding:5px}
 @media (min-width:721px){header.top{flex-wrap:nowrap}header.top>h2,header.top nav,header.top .right{flex:none}header.top .sw{flex:0 1 auto;min-width:36px}}
 /* the + that adds a review */
 .btn.addb{width:38px;height:38px;padding:0;display:inline-grid;place-items:center;flex:none}
+/* every + on the site grows a touch under the pointer, with the same springy ease as the Tile button on the Tile page */
+.btn.addb{transition:transform .18s cubic-bezier(.3,.7,.4,1.5),box-shadow .08s,filter .12s}
+.btn.addb:hover{transform:scale(1.07)}
+.btn.addb:active{transform:scale(.98)}
 /* Song of the Day */
 .sotd .sdhd{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:14px}
 .sotd .sdhd h2{margin:0}
@@ -1452,13 +1458,13 @@ async function loadMosaic(pre){try{var r=await (pre||sb.from("mosaic_tiles").sel
 (r.data||[]).forEach(function(x){var n=by[x.user_id];if(!n||!(x.pos>=0&&x.pos<MOSN))return;var k="u:"+n;(m[k]=m[k]||[])[x.pos]={title:x.title,artist:x.artist,type:x.type==="Album"?"Album":"Song",art:okArt(x.art)?x.art:"",tid:x.tid}});S.mos=m;return true}catch(e){return false}}
 function mimg(t){return t.art&&okArt(t.art)?'<img src="'+esc(t.art.replace(/\/\d+x\d+bb\./,"/100x100bb."))+'" alt="" loading="lazy" draggable="false">':'<span class="mi">'+esc(String(t.title).charAt(0).toUpperCase())+'</span>'}
 function mosaicHTML(n,own){if(!S.mosOK)return "";var t=mosOf(n);
-var plus='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',h='<div class="mos'+(own?' own':'')+(own&&t.some(function(x){return x})?' started':'')+'" role="group" aria-label="'+(own?'Your mosaic (drag a tile to move it)':esc(n)+'’s mosaic')+'">';
+var plus='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
+full=t.filter(function(x){return x}).length>=MOSN,h='<div class="mosw"><h3 class="mosh">'+(own&&!full?'Tessellate your mosaic':'Tessellation')+'</h3><div class="mos'+(own?' own':'')+(own&&t.some(function(x){return x})?' started':'')+'" role="group" aria-label="'+(own?'Your mosaic (drag a tile to move it)':esc(n)+'’s mosaic')+'">';
 for(var i=0;i<MOSN;i++){var it=t[i];
 if(it){var hu=hue(it.title+it.artist);h+='<div class="mt on" data-mi="'+i+'"><button type="button" class="mto" data-mo="'+i+'" data-mu="'+esc(n)+'" style="background:linear-gradient(135deg,hsl('+hu+',70%,50%),hsl('+((hu+60)%360)+',75%,38%))" title="'+esc(it.title)+' · '+esc(it.artist)+'" aria-label="'+esc(it.title)+' by '+esc(it.artist)+'">'+mimg(it)+'</button>'+(own?'<button type="button" class="mtx" data-mx="'+i+'" aria-label="Remove '+esc(it.title)+' from your mosaic" title="Remove">×</button>':'')+'</div>'}
 else if(own)h+='<button type="button" class="mt" data-mi="'+i+'" data-mp="'+i+'" aria-label="Tessellate a favourite into spot '+(i+1)+'"><span class="ml" aria-hidden="true">'+(MOSL[i]||"")+'</span><span class="mpl" aria-hidden="true">'+plus+'</span></button>';
 else h+='<div class="mt"></div>'}
-if(own&&!t.some(function(x){return x}))h+='<p class="mcap">Tessellate your favourite tiles here</p>';
-return h+'</div>'}
+return h+'</div></div>'}
 function openMosPick(pos){var d=$("#dlg"),tm=null,tk=0,res=null,more=false,MK="ln_mrecent";d.className="mosd";
 d.innerHTML='<form method="dialog" id="mf"><h2 style="font-size:20px">Tessellate a favourite</h2><p class="meta" style="margin:2px 0 12px">Search for a favourite song or album. It goes in the spot you picked.</p><input id="mq" type="search" placeholder="Search songs and albums" autocomplete="off" aria-label="Search songs and albums"><div class="results mres" id="mr"></div><p class="meta" id="ms" style="margin:6px 0 0"></p><p class="err" id="mer" role="alert"></p><div style="display:flex;justify-content:flex-end;margin-top:6px"><button type="button" class="btn ghost" id="mcx">Cancel</button></div></form>';
 var qi=$("#mq",d),out=$("#mr",d),st=$("#ms",d),er=$("#mer",d);
@@ -1484,7 +1490,7 @@ qi.oninput=function(){var q=qi.value.trim();clearTimeout(tm);tk++;if(q.length<2)
 qi.onkeydown=function(e){if(e.key!=="Enter")return;e.preventDefault();var q=qi.value.trim();if(q.length<2)return;clearTimeout(tm);tk++;addRecent(q,MK);run(q)};
 $("#mcx",d).onclick=function(){d.close()};
 drawRecent();d.showModal();qi.focus()}
-function refreshMos(){var g=document.querySelector(".mos.own");if(!g){appView();return}var w=document.createElement("div");w.innerHTML=mosaicHTML(S.user,true);if(w.firstChild)g.replaceWith(w.firstChild);else g.remove();bindMos()}
+function refreshMos(){var g=document.querySelector(".mos.own");if(!g){appView();return}g=g.closest(".mosw")||g;var w=document.createElement("div");w.innerHTML=mosaicHTML(S.user,true);if(w.firstChild)g.replaceWith(w.firstChild);else g.remove();bindMos()}
 function moveTileUI(a,b){var t=mosOf(S.user).slice(),x=t[a];if(!x||a===b)return;t[a]=t[b]||null;t[b]=x;S.mos["u:"+S.user]=t;refreshMos();
 api.moveTile(a,b).then(function(r){if(r&&r.error)toast(r.error);refreshMos()}).catch(function(){toast("Couldn't move it. Try again.")})}
 function bindMos(){
@@ -1584,7 +1590,8 @@ function syncSongLater(){var b=$("#slater");if(!b||!S.song)return;var on=inLater
 function vapidsView(){var gs=GLIST.slice().sort(function(a,b){return (/^\d/.test(a)-/^\d/.test(b))||(a<b?-1:1)});
 return '<section class="page vapp"><h2>Vapids</h2><button type="button" class="vapt" id="vapt" aria-expanded="'+(!!S.vapOpen)+'" aria-controls="vapgl">All genres <span class="meta">'+gs.length+'</span><svg class="vapc" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>'+
 '<ul class="vapgl" id="vapgl"'+(S.vapOpen?'':' hidden')+'>'+gs.map(function(g){return '<li>'+esc(g)+'</li>'}).join("")+'</ul>'+
-'<form class="vapsug" id="vapsug"><label for="vapin">Can’t find a genre? Suggest one and we’ll look at adding it.</label><div class="vaprow"><input id="vapin" maxlength="40" placeholder="Suggest a genre" autocomplete="off" enterkeyhint="send"><button class="btn" type="submit">Suggest</button></div></form></section>'}
+'<form class="vapsug" id="vapsug"><label for="vapin">Can’t find a genre? Suggest one and we’ll look at adding it.</label><div class="vaprow"><input id="vapin" maxlength="40" placeholder="Suggest a genre" autocomplete="off" enterkeyhint="send"><button class="btn" type="submit">Suggest</button></div></form>'+
+(S.user&&acct(S.user)?'<button type="button" class="vapt vapl" data-life="'+esc(S.user)+'">'+GRIDI+'Lifetime mosaic<svg class="vapc" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>':'')+'</section>'}
 function wireVapids(){var t=$("#vapt");if(!t)return;t.onclick=function(){var l=$("#vapgl"),o=l.hidden;l.hidden=!o;S.vapOpen=o;t.setAttribute("aria-expanded",String(o))};
 $("#vapsug").onsubmit=function(e){e.preventDefault();var inp=$("#vapin"),raw=inp.value.trim(),g=fold(raw).replace(/\s+/g," ").trim();if(g.length<2){toast("Type the genre you’d like added");return}
 var x=genFix(g);if(x&&!x.near){toast("“"+x.g+"” is already accepted, you can use it now");return}
@@ -2042,7 +2049,6 @@ function since(a){if(!a||!a.created)return "";var d=new Date(a.created);if(isNaN
 /* ---------- the lifetime mosaic: everything someone has tiled, oldest first, as one wall of covers ---------- */
 S.life={};
 var GRIDI='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7.5" height="7.5" rx="1"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1"/></svg>';
-function lifeBtn(u){return '<button type="button" class="lifeb" data-life="'+esc(u)+'">'+GRIDI+'Lifetime mosaic</button>'}
 function lifeList(u){var l=S.life[u]||S.reviews.filter(function(r){return r.user===u&&!r.via});
 return l.slice().sort(function(a,b){return a.date<b.date?-1:a.date>b.date?1:(+a.id||0)-(+b.id||0)})}
 function lifeMonth(d,o){try{return new Date(String(d).slice(0,10)+"T12:00:00").toLocaleDateString("en-GB",o)}catch(e){return ""}}
@@ -2466,7 +2472,7 @@ function backLabel(){var f=S.stack[S.stack.length-1];if(!f)return "Back";
 if(f.tab==="song"&&f.song)return "Back to “"+f.song.title+"”";
 if(f.tab==="search")return "Back to search";
 if(f.tab==="later")return "Back to Listen later";
-if(f.tab==="sotd")return "Back to Song of the Day";
+if(f.tab==="sotd")return "Back to Song of the Day"; if(f.tab==="vapids")return "Back to Vapids";
 if(f.tab==="life")return f.view===S.user?"Back to your lifetime mosaic":"Back to "+f.view+"’s lifetime mosaic";
 if(f.tab==="msgs")return f.dmw?"Back to your chat with "+f.dmw:"Back to Messages";
 if(f.tab==="profile")return "Back to my profile";
@@ -2521,7 +2527,7 @@ var chat=ic+'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2
 var body;
 if(S.tab==="review"){body='<section class="page">'+(S.bq?'<button type="button" class="linkbtn" id="bks" style="margin-bottom:14px">← Back to search</button><h2 class="vh">Tile</h2>':'<h2>Tile</h2>')+'<div class="card" id="rvhost"></div></section>'}
 else if(S.tab==="user"&&acct(S.view)){var vu=S.view,va=acct(vu),vc=S.reviews.filter(function(r){return r.user===vu}).length;
-body='<button type="button" class="linkbtn" data-tab="feed" style="margin-bottom:8px">Back to Recommended</button><section class="prof ig"><div class="pmain"><h2 class="pnm"><span>'+esc(vu)+'</span></h2>'+pavHTML(va,va.plats||[])+'<div class="igm">'+igStats(vu,va,vu!==S.user?'<span class="pbt">'+plusBtn(vu)+dmBtn(vu)+'</span>':'')+est(va)+lifeBtn(vu)+'</div></div>'+mosaicHTML(vu,false)+'</section>'+psrHTML(vu)+'<div class="list cols'+S.cols+'" id="list">'+listHTML()+'</div>'}
+body='<button type="button" class="linkbtn" data-tab="feed" style="margin-bottom:8px">Back to Recommended</button><section class="prof ig"><div class="pmain"><h2 class="pnm"><span>'+esc(vu)+'</span></h2>'+pavHTML(va,va.plats||[])+'<div class="igm">'+igStats(vu,va,vu!==S.user?'<span class="pbt">'+plusBtn(vu)+dmBtn(vu)+'</span>':'')+est(va)+'</div></div>'+mosaicHTML(vu,false)+'</section>'+psrHTML(vu)+'<div class="list cols'+S.cols+'" id="list">'+listHTML()+'</div>'}
 else if(S.tab==="search"){var stabs=[["songs","Songs"],["albums","Albums"],["profiles","Profiles"],["artists","Artists"]].map(function(t){return '<button type="button" class="stab" role="tab" data-st="'+t[0]+'" aria-selected="'+((S.stab||"songs")===t[0])+'">'+t[1]+'</button>'}).join("");
 body='<section class="page"><h2>Results for “'+esc(S.sq||"")+'”</h2><div class="stabs" role="tablist">'+stabs+'</div><div class="list" id="sres">'+resultsHTML()+'</div></section>'}
 else if(S.tab==="sotd"&&S.sotdOK){body=sotdView()}
@@ -2533,7 +2539,7 @@ else if(S.tab==="vapids"){body=vapidsView()}
 else if(S.tab==="likes"){body='<section class="page"><h2>My likes and comments</h2><div class="empty">Reviews you like or comment on will show up here.</div></section>'}
 else if(S.tab==="editp"&&S.user){body=editHTML()}
 else if(S.tab==="account"){body='<section class="page"><h2>Privacy and account</h2><dl><dt>Username</dt><dd>'+nm+'</dd><dt>Email</dt><dd>'+esc(a&&a.email||"")+'</dd>'+(since(a)?'<dt>Account established</dt><dd>'+since(a)+'</dd>':'')+'<dt>Your data</dt><dd>'+(REMOTE?'Your profile and reviews are saved to your Mosaic account.':'Accounts and reviews are saved in this browser only.')+'</dd></dl></section>'}
-else{body=(prof?'<section class="prof ig"><div class="pmain"><h2 class="pnm"><span>'+nm+'</span></h2>'+pavHTML(a,S.platOK?S.plats:[],1)+'<div class="igm">'+igStats(S.user,a,"")+est(a)+lifeBtn(S.user)+'</div></div>'+mosaicHTML(S.user,true)+'</section>':'')+
+else{body=(prof?'<section class="prof ig"><div class="pmain"><h2 class="pnm"><span>'+nm+'</span></h2>'+pavHTML(a,S.platOK?S.plats:[],1)+'<div class="igm">'+igStats(S.user,a,"")+est(a)+'</div></div>'+mosaicHTML(S.user,true)+'</section>':'')+
 (S.tab==="feed"&&S.q?'<div class="chips"><span class="meta">Showing reviews for</span><button type="button" class="chip" id="clq">'+esc(S.q)+' ×</button></div>':'')+'<div class="tools"><div class="tl"><button class="btn addb" id="add" aria-label="Tile" title="Tile"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>'+(S.tab==="feed"?'<select id="sc" aria-label="Show"><option value="all">Everyone</option><option value="fol">People I follow</option></select>':'')+'<select id="t" aria-label="Type"><option>All</option><option>Album</option><option>Song</option></select><select id="s" aria-label="Sort"><option value="new">Newest</option><option value="top">Highest rated</option><option value="hot">Most interacted</option></select></div>'+(prof?psrHTML(S.user):'')+'</div>'+
 '<div class="list cols'+S.cols+'" id="list">'+listHTML()+'</div>'}
 $("#app").innerHTML='<div class="wrap'+(S.tab==="msgs"?' dmw':'')+'"><header class="top"><h2><button type="button" class="wm" data-tab="feed" aria-label="Mosaic home">'+logoSVG()+'</button></h2><nav><button data-tab="feed" aria-current="'+(S.tab==="feed")+'">Recommended</button>'+(S.sotdOK?'<button data-tab="sotd" aria-current="'+(S.tab==="sotd")+'">Song of the Day</button>':'')+(S.reviews.length?'<button type="button" data-listen="1">Listen</button>':'')+'</nav>'+
