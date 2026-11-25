@@ -243,12 +243,14 @@ dialog::backdrop{background:rgba(10,12,20,.55)}
 body{background:radial-gradient(900px 520px at 6% -8%,color-mix(in srgb,var(--pop) 15%,transparent),transparent 62%),radial-gradient(800px 520px at 100% 0%,color-mix(in srgb,var(--violet) 15%,transparent),transparent 62%),radial-gradient(800px 520px at 50% 115%,color-mix(in srgb,var(--teal) 13%,transparent),transparent 62%),var(--bg);background-attachment:fixed}
 /* the wordmark: Geist Pixel, every pixel its own colour (see logoSVG) */
 header.top .wm,.brand{background:none;color:var(--ink);line-height:0}
-.wm{display:block}.wmsvg{display:block;width:83px;height:19px;shape-rendering:crispEdges}
-/* la ola (logoWave): each column of squares turns over once, a steady half-turn, starting a little after the column to its left */
-.wmsvg .wc{transform-box:fill-box;transform-origin:center}
-.wmsvg.ola .wc{animation:ola .4s linear both;animation-delay:calc(var(--o) - var(--w,0ms))}
-@keyframes ola{0%{transform:scaleX(1)}12.5%{transform:scaleX(.924)}25%{transform:scaleX(.707)}37.5%{transform:scaleX(.383)}50%{transform:scaleX(0)}62.5%{transform:scaleX(-.383)}75%{transform:scaleX(-.707)}87.5%{transform:scaleX(-.924)}100%{transform:scaleX(-1)}}
-@media (prefers-reduced-motion:reduce){.wmsvg.ola .wc{animation:none}}
+.wm{display:block}.wmsvg{display:block;width:83px;height:19px;shape-rendering:crispEdges;overflow:visible}
+/* la ola (logoWave): a copy of each little square lifts off its spot, swells to five times its size while turning over once at a
+   steady pace (paler on the back, with a thin edge so overlapping squares stay apart), then settles back where it was */
+.wmsvg .op{opacity:0;fill:var(--c);--b:color-mix(in srgb,var(--c) 70%,#fff);stroke:var(--bg);stroke-width:.16;paint-order:stroke;transform-box:fill-box;transform-origin:center}
+.wmsvg.ola .op{animation:olf .5s linear both,olt .5s linear both;animation-delay:calc(var(--o) - var(--w,0ms))}
+@keyframes olf{0%{transform:scale(1,1);fill:var(--c)}4.167%{transform:scale(1.47,1.522);fill:var(--c)}8.333%{transform:scale(1.763,2.035);fill:var(--c)}12.5%{transform:scale(1.789,2.531);fill:var(--c)}16.667%{transform:scale(1.5,3);fill:var(--c)}20.833%{transform:scale(0.889,3.435);fill:var(--c)}25%{transform:scale(0,3.828);fill:var(--c)}29.167%{transform:scale(-1.08,4.173);fill:var(--b)}33.333%{transform:scale(-2.232,4.464);fill:var(--b)}37.5%{transform:scale(-3.32,4.696);fill:var(--b)}41.667%{transform:scale(-4.212,4.864);fill:var(--b)}45.833%{transform:scale(-4.797,4.966);fill:var(--b)}50%{transform:scale(-5,5);fill:var(--b)}54.167%{transform:scale(-4.797,4.966);fill:var(--b)}58.333%{transform:scale(-4.212,4.864);fill:var(--b)}62.5%{transform:scale(-3.32,4.696);fill:var(--b)}66.667%{transform:scale(-2.232,4.464);fill:var(--b)}70.833%{transform:scale(-1.08,4.173);fill:var(--b)}75%{transform:scale(0,3.828);fill:var(--b)}79.167%{transform:scale(0.889,3.435);fill:var(--c)}83.333%{transform:scale(1.5,3);fill:var(--c)}87.5%{transform:scale(1.789,2.531);fill:var(--c)}91.667%{transform:scale(1.763,2.035);fill:var(--c)}95.833%{transform:scale(1.47,1.522);fill:var(--c)}100%{transform:scale(1,1);fill:var(--c)}}
+@keyframes olt{0%{opacity:0}.1%{opacity:1}99.9%{opacity:1}100%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.wmsvg.ola .op{animation:none}}
 nav button[aria-current="true"]{border-image:linear-gradient(90deg,var(--pop),var(--violet)) 1}
 .btn:not(.ghost):not(.pop):not(.fp):not(.ink){background:linear-gradient(135deg,#7a5cf5,#c04fd8);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 2px 0 #4b3aa8}
 .btn:not(.ghost):not(.pop):not(.fp):not(.ink):active{box-shadow:inset 0 1px 2px rgba(0,0,0,.25),0 0 0 transparent}
@@ -3002,22 +3004,23 @@ fb.onclick=function(){turn(true)};bk.onclick=function(){turn(false)}}
 /* ---------- the wordmark: "Mosaic" in Geist Pixel Square (Vercel, SIL Open Font License), as its 83×19 pixels (each row a bitmask in hex).
    Every pixel gets its own colour: a stepped fade from pink to violet, leaning a little up to the right, with each pixel a shade
    lighter or darker than its neighbours, like the tiles of a mosaic ---------- */
-var LW={t:-1e9,d:2000,f:400};
+var LW={t:-1e9,d:2000,f:500,j:120};
 function logoSVG(){var e=performance.now()-LW.t;if(!logoSVG.s)logoBuild();
 /* drawn mid-wave (the page redrew while it was passing): pick the wave up where it is */
-return e>=0&&e<LW.d?'<svg class="wmsvg ola" style="--w:'+Math.round(e)+'ms" viewBox="0 0 83 19" aria-hidden="true" focusable="false">'+logoSVG.c+'</svg>':logoSVG.s}
+return e>=0&&e<LW.d?'<svg class="wmsvg ola" style="--w:'+Math.round(e)+'ms" viewBox="0 0 83 19" aria-hidden="true" focusable="false">'+logoSVG.b+logoSVG.c+'</svg>':logoSVG.s}
 function logoBuild(){var R=["c003000000000000c0000", "c003000000000000c0000", "e007000000000000c0000", "e00700000000000000000", "e00700000000000000000", "d81b03f01fc03e07c03f0", "d81b07f83fe0ff87c07f8", "d81b0e1c3031c180c0e1c", "cc330c0c603180c0c0c0e", "cc331806600000c0c1806", "cc331806300001c0c1800", "c66318063f003fc0c1800", "c66318060fe0fec0c1800", "c663180600f1c0c0c1800", "c3c31806003180c0c1806", "c3c30c0c603180c0c0c0e", "c1830e1c703181c0c0e1c", "c18307f83fe0fee7f87f8", "c00303f01fc07c67f83f0"],W=83,H=19,g={},cl=[],P=[255,99,173],V=[139,108,255];
 R.forEach(function(row,y){for(var x=0;x<W;x++){if(!(parseInt(row.charAt(x>>2),16)&(8>>(x&3))))continue;
 var t=Math.round((x+.45*(H-1-y))/((W-1)+.45*(H-1))*28)/28,k=[-.09,-.035,.02,.075][(((x*73856093)^(y*19349663))>>>0)%4],
-c="#"+P.map(function(a,i){var v=Math.max(0,Math.min(255,Math.round((a+(V[i]-a)*t)*(1+k))));return (v<16?"0":"")+v.toString(16)}).join("");(g[c]=g[c]||[]).push("M"+x+" "+y+"h1v1h-1z");(cl[x]=cl[x]||[]).push('<path fill="'+c+'" d="M'+x+' '+y+'h1v1h-1z"/>')}});
-logoSVG.s='<svg class="wmsvg" viewBox="0 0 '+W+' '+H+'" aria-hidden="true" focusable="false">'+Object.keys(g).map(function(c){return '<path fill="'+c+'" d="'+g[c].join("")+'"/>'}).join("")+'</svg>';
-/* the same pixels a column at a time, for the wave: each column starts its flip a steady step after the one to its left */
-logoSVG.c=cl.map(function(a,x){return '<g class="wc" style="--o:'+Math.round(x*(LW.d-LW.f)/(W-1))+'ms">'+a.join("")+'</g>'}).join("")}
-/* la ola: every 10 seconds the wordmark's little squares flip over, column after column from left to right, the whole wave
-   taking 2 seconds at a steady pace (each column's flip takes LW.f of it). The plain drawing is used the rest of the time */
+c="#"+P.map(function(a,i){var v=Math.max(0,Math.min(255,Math.round((a+(V[i]-a)*t)*(1+k))));return (v<16?"0":"")+v.toString(16)}).join("");(g[c]=g[c]||[]).push("M"+x+" "+y+"h1v1h-1z");var o=x*(LW.d-LW.f*1.75-LW.j)/(W-1)+[0,2,3,1][(x&1)+(y&1)*2]*LW.f/4+((Math.imul(x,2654435761)^Math.imul(y,40503))&65535)/65535*LW.j;cl.push([Math.round(o),'<path class="op" style="--o:'+Math.round(o)+'ms;--c:'+c+'" d="M'+x+' '+y+'h1v1h-1z"/>'])}});
+logoSVG.b=Object.keys(g).map(function(c){return '<path fill="'+c+'" d="'+g[c].join("")+'"/>'}).join("");logoSVG.s='<svg class="wmsvg" viewBox="0 0 '+W+' '+H+'" aria-hidden="true" focusable="false">'+logoSVG.b+'</svg>';
+/* the wave's copies, one per square: each starts a steady step after the squares to its left, the four squares of every 2x2 block a
+   quarter-turn apart (so neighbours aren't all big at once), give or take a little; the later ones are drawn on top */
+logoSVG.c='<g>'+cl.sort(function(a,b){return a[0]-b[0]}).map(function(a){return a[1]}).join("")+'</g>'}
+/* la ola: every 10 seconds the wordmark's little squares flip over one after another from left to right, the whole wave taking
+   2 seconds at a steady pace (each square's turn takes LW.f of it). The plain drawing is used the rest of the time */
 function logoWave(){if(document.hidden||matchMedia("(prefers-reduced-motion:reduce)").matches)return;var l=document.querySelectorAll(".wmsvg");if(!l.length)return;
-if(!logoSVG.s)logoBuild();LW.t=performance.now();l.forEach(function(e){e.innerHTML=logoSVG.c;e.style.setProperty("--w","0ms");e.classList.add("ola")});
-clearTimeout(LW.k);LW.k=setTimeout(function(){document.querySelectorAll(".wmsvg.ola").forEach(function(e){e.classList.remove("ola")})},LW.d+100)}
+if(!logoSVG.s)logoBuild();LW.t=performance.now();l.forEach(function(e){e.innerHTML=logoSVG.b+logoSVG.c;e.style.setProperty("--w","0ms");e.classList.add("ola")});
+clearTimeout(LW.k);LW.k=setTimeout(function(){document.querySelectorAll(".wmsvg.ola").forEach(function(e){e.classList.remove("ola");e.innerHTML=logoSVG.b})},LW.d+100)}
 setTimeout(function(){logoWave();setInterval(logoWave,10000)},1500);
 /* ---------- searching one person's tiles (on profiles): only the songs and albums they've tiled, by title and artist.
    Every word you type has to match, accents don't matter ("bjork" finds Björk), and the tiles below filter as you type ---------- */
