@@ -104,6 +104,12 @@ nav button[aria-current="true"]{color:var(--ink);border-color:var(--pop)}
 .menu button{display:block;width:100%;text-align:left;background:none;border:0;border-radius:6px;padding:8px 10px;font-size:14px;font-weight:400;cursor:pointer}
 .menu button:hover,.menu button:focus-visible{background:var(--line)}
 .menu hr{border:0;border-top:1px solid var(--line);margin:5px 4px}
+/* Vapids: every genre the site knows, in a scrolling list at the bottom of the account menu */
+.vapb{display:flex!important;align-items:center;justify-content:space-between}
+.vapc{display:inline-block;color:var(--mute);transition:transform .15s}
+.vapb[aria-expanded="true"] .vapc{transform:rotate(90deg)}
+.vapl{display:grid;grid-template-columns:1fr 1fr;gap:3px 12px;max-height:240px;margin:2px 0 4px;padding:6px 10px;overflow:auto;list-style:none;font-size:12.5px;color:var(--mute);overscroll-behavior:contain}
+.vapl[hidden]{display:none}
 .mew:hover .menu,.mew:focus-within .menu,.mew.open .menu{display:block}
 .mew.shut .menu{display:none}
 .page h2{font-size:22px;font-weight:600;letter-spacing:-.01em;margin-bottom:12px}
@@ -246,6 +252,9 @@ nav button[aria-current="true"]{border-image:linear-gradient(90deg,var(--pop),va
 .prof{position:relative}
 .prof h2{overflow-wrap:anywhere}
 .stab[aria-selected="true"]{border-color:var(--teal)}
+/* the result tabs (Songs, Albums, Profiles, Artists) each take an equal share of the width of the results below */
+.stabs{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:0}
+.stab{padding:8px 6px;text-align:center}
 .chip{border-color:color-mix(in srgb,var(--violet) 45%,var(--line))}
 .empty{border-color:color-mix(in srgb,var(--violet) 40%,var(--line))}
 
@@ -491,7 +500,10 @@ html.lsopen,html.lsopen body{overflow:hidden}
 .lsgc{position:absolute;left:calc((50% - var(--chw)) / 2 - 26px);top:var(--cy,50%);z-index:4;display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:0 12px;width:min(340px,calc(50% - var(--chw) - 100px));max-height:calc(2*var(--chw) - 96px);margin:0;overflow:visible;transform:translate(-50%,-50%);text-align:center;cursor:default}
 .lsgf{position:absolute;right:calc(50% + var(--chw) + 16px);top:calc(var(--ct,30%) + 2*var(--chw) - 32px);z-index:4;width:min(196px,calc(50% - var(--chw) - 32px));margin:0}
 .lsn .lsgf input{height:32px;padding:0 14px;font-size:12.5px}
-input[list="gdl"]::-webkit-calendar-picker-indicator{display:none!important}
+/* the genre suggestions under a genre box */
+.gsug{position:fixed;z-index:10001;box-sizing:border-box;padding:4px;border:1px solid var(--line);border-radius:12px;background:var(--surface);box-shadow:0 12px 34px rgba(0,0,0,.35);animation:dictin .12s ease-out}
+.gsug button{display:block;width:100%;padding:7px 10px;border:0;border-radius:8px;background:none;color:var(--ink);font:inherit;font-size:13px;text-align:left;cursor:pointer}
+.gsug button:hover,.gsug button[aria-selected="true"]{background:color-mix(in srgb,var(--pop) 18%,transparent)}
 .lss:not(.gopen) .lsgc,.lss:not(.gopen) .lsgf{opacity:0;visibility:hidden;pointer-events:none;transition:opacity .2s,visibility 0s .2s}
 .lss.gopen .lsgc,.lss.gopen .lsgf{opacity:1;visibility:visible;transition:opacity .2s}
 .lsgw{position:relative}
@@ -2443,7 +2455,7 @@ var rate=n?'<div class="srh2"><div class="srl"><div class="srate"><span class="s
 :'<div class="srate none"><span class="noyet">No ratings yet</span></div><p class="meta scount">Be the first to tile this '+what+'.</p>';
 return '<button type="button" class="linkbtn" data-back="1" style="margin-bottom:14px">← '+esc(backLabel())+'</button>'+
 '<section class="song sbox card"><div class="pickbig"><div class="sart"><div class="aglw">'+artGlow(s)+(S.user&&S.mosOK&&mosHas(s)?artGlow(s,1):'')+heroCover(s)+'</div><div class="sgrow">'+songBadge(s,rs)+'<button type="button" class="sgb" id="sgb" aria-expanded="'+gOpen+'" aria-label="Genres: what people call this '+what+'" title="Genres">'+GICO+'</button></div></div><div class="sbt"><h1>'+esc(s.title)+'</h1><div class="meta"><button type="button" class="ulink" data-seeq="'+esc(s.artist)+'" title="See Mosaic reviews by this artist">'+esc(s.artist)+'</button></div></div></div><div class="sgc" data-gk="'+esc(gk)+'" aria-live="polite"'+(gOpen?'>'+genCloud(gk):' hidden>')+'</div><div class="sinfo">'+rate+
-'<dl class="facts" id="sfacts">'+factsHTML()+'</dl><div class="sbtns">'+(mine?'<button type="button" class="btn ink" data-edit="'+esc(mine.id)+'">Edit your review</button>':'<button type="button" class="btn ink" id="srev">Tile this '+what+'</button>')+''+(S.laterOK?laterBtn(s):'')+'</div>'+listenRow(s)+'<div id="stracks">'+tracksHTML()+'</div><p class="meta src" id="snote">'+noteHTML()+'</p></div><form class="sgf" data-gk="'+esc(gk)+'"'+(gOpen?'':' hidden')+'><input maxlength="24" placeholder="Add a genre" aria-label="Add the genre you hear" autocomplete="off" enterkeyhint="done" list="gdl"></form></section>'+
+'<dl class="facts" id="sfacts">'+factsHTML()+'</dl><div class="sbtns">'+(mine?'<button type="button" class="btn ink" data-edit="'+esc(mine.id)+'">Edit your review</button>':'<button type="button" class="btn ink" id="srev">Tile this '+what+'</button>')+''+(S.laterOK?laterBtn(s):'')+'</div>'+listenRow(s)+'<div id="stracks">'+tracksHTML()+'</div><p class="meta src" id="snote">'+noteHTML()+'</p></div><form class="sgf" data-gk="'+esc(gk)+'"'+(gOpen?'':' hidden')+'><input maxlength="24" placeholder="Add a genre" aria-label="Add the genre you hear" autocomplete="off" enterkeyhint="done" data-gsug="1"></form></section>'+
 '<section class="srevs"><div class="srh"><h2>Reviews'+(n?' <span class="meta">'+n+'</span>':'')+'</h2>'+(n?layoutSwitch():'')+'</div>'+(n?'<p class="dsf" id="dsf">'+dsfHTML()+'</p>':'')+(n?'<div class="list cols'+S.cols+'" id="list">'+listHTML()+'</div>':'<div class="empty">Nobody has tiled this '+what+' yet.</div>')+'</section>'}
 function openSong(s){if(!s)return;
 if(S.tab==="song"&&S.song&&mosKey(S.song)===mosKey(s)){try{window.scrollTo({top:0,behavior:"smooth"})}catch(e){window.scrollTo(0,0)}return}
@@ -2498,13 +2510,14 @@ else{body=(prof?'<section class="prof ig"><div class="pmain"><h2 class="pnm"><sp
 $("#app").innerHTML='<div class="wrap'+(S.tab==="msgs"?' dmw':'')+'"><header class="top"><h2><button type="button" class="wm" data-tab="feed" aria-label="Mosaic home">'+logoSVG()+'</button></h2><nav><button data-tab="feed" aria-current="'+(S.tab==="feed")+'">Recommended</button>'+(S.sotdOK?'<button data-tab="sotd" aria-current="'+(S.tab==="sotd")+'">Song of the Day</button>':'')+(S.reviews.length?'<button type="button" data-listen="1">Listen</button>':'')+'</nav>'+
 '<div class="sw'+(S.sv?" open":"")+'"><button class="ib" id="sb" aria-label="Search" type="button">'+mag+'</button><input id="q" type="search" placeholder="Search songs to tile" aria-label="Search songs" autocomplete="off" readonly value="'+esc(S.sv||"")+'"><div class="sug" id="sug" hidden></div></div>'+
 '<div class="right"><div class="mew"><button class="me" aria-haspopup="menu" aria-current="'+mcur+'" aria-label="Your account menu">'+avatar(a)+'<span class="nm">'+nm+'</span></button>'+
-'<div class="menu"><div class="box" role="menu"><button role="menuitem" data-tab="profile">My profile</button>'+(S.laterOK?'<button role="menuitem" data-tab="later">Listen later'+(S.later.length?' <span class="meta">'+S.later.length+'</span>':'')+'</button>':'')+'<button role="menuitem" data-tab="likes">My likes and comments</button><button role="menuitem" data-tab="account">Privacy and account</button><hr><button role="menuitem" id="so">Sign out</button></div></div></div>'+
+'<div class="menu"><div class="box" role="menu"><button role="menuitem" data-tab="profile">My profile</button>'+(S.laterOK?'<button role="menuitem" data-tab="later">Listen later'+(S.later.length?' <span class="meta">'+S.later.length+'</span>':'')+'</button>':'')+'<button role="menuitem" data-tab="likes">My likes and comments</button><button role="menuitem" data-tab="account">Privacy and account</button><hr><button role="menuitem" id="so">Sign out</button><hr><button role="menuitem" id="vapb" class="vapb" aria-expanded="false" aria-controls="vapl">Vapids <span class="vapc" aria-hidden="true">›</span></button><ul class="vapl" id="vapl" hidden>'+GLIST.slice().sort(function(a,b){return (/^\d/.test(a)-/^\d/.test(b))||(a<b?-1:1)}).map(function(g){return '<li>'+esc(g)+'</li>'}).join("")+'</ul></div></div></div>'+
 '<div class="ibw"><button class="ib" id="nb" aria-label="Notifications" aria-expanded="false">'+bell+(unread?'<i class="dot"></i>':'')+'</button><div class="pop" id="np" hidden><h3>Notifications</h3>'+notesHTML+'</div></div>'+
 (S.msgOK?'<div class="ibw"><button class="ib" id="mb" type="button" aria-label="Messages'+(munread?', '+munread+' unread':'')+'" aria-current="'+(S.tab==="msgs")+'">'+chat+(munread?'<i class="mbn" aria-hidden="true">'+(munread>9?"9+":munread)+'</i>':'')+'</button></div>':'')+'</div></header>'+body+'</div>';
 var mew=$(".mew");if(S.shut){mew.classList.add("shut");S.shut=false}
 mew.onmouseleave=function(){mew.classList.remove("shut")};
 $(".me").onclick=function(e){e.stopPropagation();if(mew.classList.contains("open")){mew.classList.remove("open");mew.classList.add("shut")}else{mew.classList.remove("shut");mew.classList.add("open")}};
 document.querySelectorAll("[data-tab]").forEach(function(b){b.onclick=function(){S.tab=b.dataset.tab;S.q="";S.stack=[];S.shut=keepShut();appView();if(S.tab==="sotd")sdOpen()}});
+var vb=$("#vapb");if(vb)vb.onclick=function(e){e.stopPropagation();var l=$("#vapl"),o=l.hidden;l.hidden=!o;vb.setAttribute("aria-expanded",String(o))};
 $("#so").onclick=async function(){closePops();var arts=S.reviews.map(function(r){return r.art}),so=api.signOut().catch(function(){});await amzArrive(arts,function(){return so.then(function(){S.tab="feed";S.q="";authView()})})};
 wirePop($("#nb"),$("#np"));
 $("#nb").addEventListener("click",function(){var a2=me();if(a2&&a2.notes&&a2.notes.some(function(n){return !n.read})){a2.notes.forEach(function(n){n.read=true});api.markRead();var dt=this.querySelector(".dot");if(dt)dt.remove()}});
@@ -2918,7 +2931,7 @@ function dsfHTML(){if(S.sdist==null||!S.song)return "";var n=songReviews(S.song)
 function distPaint(){var g=document.querySelector(".rdist");if(g)g.classList.toggle("f",S.sdist!=null);
 var f=$("#dsf");if(f)f.innerHTML=dsfHTML();refreshList()}
 /* the song page's G: opens the genre cloud under the cover (the words thrown out of the G) and the box along the bottom to add yours */
-function wireSongGenre(){var G=$("#sgb"),box=document.querySelector(".sgc"),f=document.querySelector(".sgf");if(!G||!box||!f)return;var k=box.getAttribute("data-gk");genDL();
+function wireSongGenre(){var G=$("#sgb"),box=document.querySelector(".sgc"),f=document.querySelector(".sgf");if(!G||!box||!f)return;var k=box.getAttribute("data-gk");
 G.onclick=function(){var on=box.hidden;box.hidden=!on;f.hidden=!on;G.setAttribute("aria-expanded",String(on));S.sgOpen=on?k:null;if(!on)return;
 genPaint(k);genLayout(box);genThrowFrom(box,G,false);genLoad(k,true).then(function(){if(genPaint(k))genThrowFrom(box,G,false)})};
 box.onclick=function(e){var w=e.target.closest&&e.target.closest("[data-gw]");if(w)genToggle(k,w.getAttribute("data-gw"))};
@@ -3063,7 +3076,7 @@ function openListen(){if(LS)return;clipStop();var items=lsItems();if(!items.leng
 /* starting a (silent) sound inside the tap lets the previews play afterwards, on phones too */
 var au=new Audio();au.preload="auto";try{au.src=SILENT;var pp=au.play();if(pp&&pp.catch)pp.catch(function(){})}catch(e){}
 var el=document.createElement("div");el.className="lsn";el.setAttribute("role","dialog");el.setAttribute("aria-modal","true");el.setAttribute("aria-label","Listen");
-el.innerHTML='<div class="lsl" tabindex="-1"></div><button type="button" class="lsx" aria-label="Close">'+lsIco("x")+'</button><p class="lshint">Swipe or scroll for the next one</p>';genDL();
+el.innerHTML='<div class="lsl" tabindex="-1"></div><button type="button" class="lsx" aria-label="Close">'+lsIco("x")+'</button><p class="lshint">Swipe or scroll for the next one</p>';
 document.body.appendChild(el);document.documentElement.classList.add("lsopen");
 LS={items:items,au:au,el:el,list:el.firstChild,i:-1,n:0,tapT:0};
 LS.io=new IntersectionObserver(function(es){es.forEach(function(e){if(LS&&e.isIntersecting&&e.intersectionRatio>=.6){var i=+e.target.getAttribute("data-i");clearTimeout(LS.st);LS.st=setTimeout(function(){if(LS)lsSet(i)},120)}})},{root:LS.list,threshold:[.6]});
@@ -3152,7 +3165,7 @@ var bad=false,f=g.replace(/[a-z0-9&]+/g,function(t){if(GWD.has(t))return t;var c
 if(bad)return null;f=GAL[f]||f;return genOK(f)&&f.length<=24?{g:f,near:true}:null}
 function gKey(s){return (s.type||"Song")+"|"+fold(s.title)+"|"+fold(s.artist)}
 function genNorm(t){return fold(t).replace(/[^a-z0-9 &'+./-]+/g," ").replace(/\s+/g," ").trim().replace(/^[^a-z0-9]+|[^a-z0-9]+$/g,"").slice(0,24).replace(/[^a-z0-9]+$/,"")}
-function genHTML(r){var k=gKey(revSong(r));return '<div class="lsgen" data-gk="'+esc(k)+'"><form class="lsgf"><input maxlength="24" placeholder="Add a genre" aria-label="Add the genre you hear" autocomplete="off" enterkeyhint="done" list="gdl"></form><div class="lsgc" aria-live="polite">'+genCloud(k)+'</div></div>'}
+function genHTML(r){var k=gKey(revSong(r));return '<div class="lsgen" data-gk="'+esc(k)+'"><form class="lsgf"><input maxlength="24" placeholder="Add a genre" aria-label="Add the genre you hear" autocomplete="off" enterkeyhint="done" data-gsug="1"></form><div class="lsgc" aria-live="polite">'+genCloud(k)+'</div></div>'}
 function genCloud(k){var rows=S.gen[k];if(!rows||!rows.length)return '';var me=genMe(),c={},mine={};
 rows.forEach(function(x){c[x.g]=(c[x.g]||0)+1;if(x.u===me)mine[x.g]=1});
 var ws=Object.keys(c).sort(function(a,b){return c[b]-c[a]||(a<b?-1:1)}).slice(0,30),top=c[ws[0]];
@@ -3182,8 +3195,29 @@ function genThrowFrom(c,G,sheet){if(!c||!G||matchMedia("(prefers-reduced-motion:
 [].filter.call(c.querySelectorAll(".lsgw"),function(w){return w.style.display!=="none"}).forEach(function(w,i){var r=w.getBoundingClientRect(),o=+(w.style.opacity||1),
 from=sheet?{transform:"scale(.3)",opacity:0}:{transform:"translate("+Math.round(gx-r.left-r.width/2)+"px,"+Math.round(gy-r.top-r.height/2)+"px) scale(.25)",opacity:0};
 try{w.animate([from,{transform:"none",opacity:o}],{duration:sheet?380:640,delay:(sheet?150:0)+i*45,easing:"cubic-bezier(.2,1.25,.4,1)",fill:"backwards"})}catch(_){}})}
-/* one list of genre suggestions for every genre box on the site */
-function genDL(){if(document.getElementById("gdl"))return;var dl=document.createElement("datalist");dl.id="gdl";dl.innerHTML=GLIST.map(function(g){return '<option value="'+esc(g)+'">'}).join("");document.body.appendChild(dl)}
+/* genre suggestions for the boxes where you add a genre: once three letters are typed, up to six genres that match (ones that start
+   with what you typed first). Click one, or move with the arrow keys and press Enter, to add it */
+var GS={inp:null,i:-1,ms:[]};
+function gsugClose(){var b=document.querySelector(".gsug");if(b)b.remove();GS.inp=null;GS.i=-1;GS.ms=[]}
+function gsugOpen(inp){var q=genNorm(inp.value);if(q.length<3){gsugClose();return}var st=[],inn=[];
+GLIST.forEach(function(g){var f=fold(g);if(f.indexOf(q)===0)st.push(g);else if(f.indexOf(q)>-1)inn.push(g)});
+var ms=st.concat(inn).slice(0,6);if(!ms.length||(ms.length===1&&fold(ms[0])===q)){gsugClose();return}
+var b=document.querySelector(".gsug");if(!b){b=document.createElement("div");b.className="gsug";b.setAttribute("role","listbox");document.body.appendChild(b)}
+if(GS.inp!==inp||GS.ms.join("|")!==ms.join("|"))GS.i=-1;GS.inp=inp;GS.ms=ms;
+b.innerHTML=ms.map(function(g,i){return '<button type="button" role="option" tabindex="-1" data-gs="'+esc(g)+'" aria-selected="'+(i===GS.i)+'">'+esc(g)+'</button>'}).join("");
+var r=inp.getBoundingClientRect(),bh=b.offsetHeight,y=r.bottom+6;if(y+bh>innerHeight-8)y=Math.max(8,r.top-bh-6);
+b.style.left=Math.round(r.left)+"px";b.style.top=Math.round(y)+"px";b.style.width=Math.round(Math.max(r.width,180))+"px"}
+function gsugPick(g){var inp=GS.inp;if(!inp)return;inp.value=g;gsugClose();var f=inp.form;if(f){if(f.requestSubmit)f.requestSubmit();else f.dispatchEvent(new Event("submit",{cancelable:true,bubbles:true}))}try{inp.focus({preventScroll:true})}catch(e){}}
+document.addEventListener("input",function(e){var t=e.target;if(t&&t.matches&&t.matches("input[data-gsug]"))gsugOpen(t)},true);
+document.addEventListener("keydown",function(e){var t=e.target;if(!GS.inp||t!==GS.inp||!document.querySelector(".gsug"))return;var n=GS.ms.length;
+if(e.key==="ArrowDown"||e.key==="ArrowUp"){e.preventDefault();e.stopImmediatePropagation();GS.i=e.key==="ArrowDown"?(GS.i+1)%n:(GS.i<=0?n-1:GS.i-1);
+[].forEach.call(document.querySelectorAll(".gsug [data-gs]"),function(o,k){o.setAttribute("aria-selected",String(k===GS.i))})}
+else if(e.key==="Enter"&&GS.i>-1){e.preventDefault();e.stopImmediatePropagation();gsugPick(GS.ms[GS.i])}
+else if(e.key==="Escape"){e.preventDefault();e.stopImmediatePropagation();gsugClose()}},true);
+document.addEventListener("mousedown",function(e){var b=e.target.closest&&e.target.closest("[data-gs]");if(b){e.preventDefault();gsugPick(b.getAttribute("data-gs"));return}if(GS.inp&&e.target!==GS.inp)gsugClose()},true);
+document.addEventListener("focusout",function(e){if(GS.inp&&e.target===GS.inp)setTimeout(function(){if(GS.inp&&document.activeElement!==GS.inp)gsugClose()},150)},true);
+document.addEventListener("scroll",function(){if(GS.inp)gsugClose()},true);
+document.addEventListener("submit",function(){if(GS.inp)gsugClose()},true);
 function genToggle(k,g){if(!S.user)return;var me=genMe(),rows=S.gen[k]||(S.gen[k]=[]),has=rows.some(function(x){return x.u===me&&x.g===g});
 if(!has&&rows.filter(function(x){return x.u===me}).length>=10){toast("You can give a song up to 10 genres. Tap one of yours to take it away first.");return}
 if(has)S.gen[k]=rows.filter(function(x){return !(x.u===me&&x.g===g)});else rows.push({g:g,u:me});genPaint(k);
