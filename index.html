@@ -7,10 +7,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#f5f3f0;--surface:#fffefc;--ink:#2b2930;--mute:#6e6a72;--line:#e3dfda;--accent:#34323a;--accent-ink:#fff;--pop:#ff4f9f;--pop-ink:#2a0a1c;--star:#f08a1d;--bad:#c9524d;
+:root{--bg:#f5f3f0;--surface:#fffefc;--sunk:#ece8e3;--ink:#2b2930;--mute:#6e6a72;--line:#e3dfda;--accent:#34323a;--accent-ink:#fff;--pop:#ff4f9f;--pop-ink:#2a0a1c;--star:#f08a1d;--bad:#c9524d;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1b1a1f;--surface:#25242a;--ink:#f4f1ee;--mute:#aaa5ad;--line:#37353d;--accent:#ebe6e0;--accent-ink:#1b1a1f;--pop:#ff63ad;--pop-ink:#2a0a1c;--bad:#e8837d;color-scheme:dark}}
-:root[data-theme="dark"]{--bg:#1b1a1f;--surface:#25242a;--ink:#f4f1ee;--mute:#aaa5ad;--line:#37353d;--accent:#ebe6e0;--accent-ink:#1b1a1f;--pop:#ff63ad;--pop-ink:#2a0a1c;--bad:#e8837d;color-scheme:dark}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1b1a1f;--surface:#25242a;--sunk:#141318;--ink:#f4f1ee;--mute:#aaa5ad;--line:#37353d;--accent:#ebe6e0;--accent-ink:#1b1a1f;--pop:#ff63ad;--pop-ink:#2a0a1c;--bad:#e8837d;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#1b1a1f;--surface:#25242a;--sunk:#141318;--ink:#f4f1ee;--mute:#aaa5ad;--line:#37353d;--accent:#ebe6e0;--accent-ink:#1b1a1f;--pop:#ff63ad;--pop-ink:#2a0a1c;--bad:#e8837d;color-scheme:dark}
 *{box-sizing:border-box}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--bg);color:var(--ink);font:300 14px/1.5 "Montserrat",system-ui,sans-serif}
@@ -224,6 +224,17 @@ transform:rotateY(calc(var(--k)*28deg)) translateZ(var(--R));transition:color .2
 /* reviews that mention the word */
 .rsn{display:block;margin-top:3px;font-size:13.5px;line-height:1.4;color:var(--ink);overflow-wrap:anywhere}
 .rsn mark{background:color-mix(in srgb,var(--pop) 30%,transparent);color:inherit;border-radius:3px;padding:0 1px}
+/* search results: two to a row like the home page, but much simpler (the cover, the title, who it's by) on a darker card. On a phone
+   the songs, albums and reviews stand up (cover on top); people and artists take the whole row */
+#sres{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+#sres>p,#sres>.empty,#sres>.demo{grid-column:1/-1;margin:0}
+#sres .ri{position:relative;gap:12px;padding:10px;background:var(--sunk);border-color:color-mix(in srgb,var(--line) 60%,transparent)}
+#sres .ri .rart{width:84px;height:84px;border-radius:8px}
+#sres .ri .rt b{font-weight:600}
+#sres .ri>.tag{position:absolute;top:8px;right:8px;margin:0}
+#sres .rsn{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+@media (max-width:560px){#sres .ri.click{flex-direction:column;align-items:stretch;gap:8px;padding:8px}#sres .ri.click .artbtn{width:100%}
+#sres .ri.click .rart{width:100%;height:auto;aspect-ratio:1}#sres .ri.click .rsn{-webkit-line-clamp:3}#sres .ri:not(.click){grid-column:1/-1}}
 .ri{display:flex;gap:10px;align-items:center;padding:8px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
 .ri .rt{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start}
 .ri .rt b{display:block;font-weight:500;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -2094,7 +2105,7 @@ w.onwheel=function(e){if(Math.abs(e.deltaX)<=Math.abs(e.deltaY))return;e.prevent
 w.onkeydown=function(e){var k=e.key,i=w._sel;if(k==="ArrowRight")i++;else if(k==="ArrowLeft")i--;else if(k==="Home")i=0;else if(k==="End")i=SWK.length-1;else return;e.preventDefault();swPick(i)}}
 function reEsc(t){return String(t).replace(/[.*+?^${}()|[\]\\]/g,"\\$&")}
 /* a review that mentions the word: a short piece of it around the first mention, with the word lit up */
-function rsnHTML(t,re){var m=re.exec(t);if(!m)return esc(t.slice(0,140));var a=m.index+m[1].length,b=a+m[2].length,st=Math.max(0,a-60),en=Math.min(t.length,b+80);
+function rsnHTML(t,re){var m=re.exec(t);if(!m)return esc(t.slice(0,140));var a=m.index+m[1].length,b=a+m[2].length,st=Math.max(0,a-32),en=Math.min(t.length,b+90);
 st=st>0?t.lastIndexOf(" ",st)+1||st:0;var e2=t.indexOf(" ",en);en=e2>-1&&en<t.length?e2:t.length;
 return (st>0?"…":"")+esc(t.slice(st,a))+'<mark>'+esc(t.slice(a,b))+'</mark>'+esc(t.slice(b,en))+(en<t.length?"…":"")}
 function resultsHTML(){var k=S.stab||"songs",q=esc(S.sq||"");
@@ -2110,7 +2121,7 @@ var items=S.res[k];
 if(items===null)return '<div class="empty">Search isn\'t available right now. Profiles still work.</div>';
 if(!items.length)return '<div class="empty">No '+k+' found for “'+q+'”.</div>';
 if(k==="artists")return dbn+items.map(function(a,i){return '<div class="ri"><span class="av big" style="width:48px;height:48px;font-weight:600;color:var(--mute)">'+esc(a.name.charAt(0).toUpperCase())+'</span><div class="rt"><b>'+esc(a.name)+'</b><span class="meta">'+esc(a.genre)+'</span></div><button type="button" class="btn ghost sm" data-seeq="'+esc(a.name)+'">See reviews</button></div>'}).join("");
-return dbn+items.map(function(it,i){var c=revCount(it),id=k+':'+i;return '<div class="ri click" data-row="'+id+'"><button type="button" class="artbtn" data-info="'+id+'" aria-label="About “'+esc(it.title)+'”" title="'+(it.type==="Album"?"Album":"Song")+' details">'+rimg(it)+'</button><button type="button" class="rt" data-rv="'+id+'"><b>'+esc(it.title)+'</b><span class="meta">'+esc(it.artist)+(it.album?' · '+esc(it.album):'')+(c?' · '+pl(c,"review")+' on Mosaic':'')+'</span></button>'+(mosHas(it)?'<span class="tag rvd tz">Tessellated</span>':dupSong(it)?'<span class="tag rvd">Tiled</span>':'')+'</div>'}).join("")}
+return dbn+items.map(function(it,i){var id=k+':'+i;return '<div class="ri click" data-row="'+id+'"><button type="button" class="artbtn" data-info="'+id+'" aria-label="About “'+esc(it.title)+'”" title="'+(it.type==="Album"?"Album":"Song")+' details">'+rimg(it)+'</button><button type="button" class="rt" data-rv="'+id+'"><b>'+esc(it.title)+'</b><span class="meta">'+esc(it.artist)+'</span></button>'+(mosHas(it)?'<span class="tag rvd tz">Tessellated</span>':dupSong(it)?'<span class="tag rvd">Tiled</span>':'')+'</div>'}).join("")}
 function doSearch(q){if(q.length<2)return;S.rmore=false;armSv();addRecent(q);S.sq=q;S.q="";S.sopen=true;S.stack=[];S.tab="search";S.stab="songs";S.res=null;S.shut=keepShut();S.tk=(S.tk||0)+1;var tk=S.tk;appView();
 searchItunes(q).then(function(r){if(S.tk!==tk||S.tab!=="search")return;S.demo=false;if(!REMOTE&&r.every(function(x){return x===null})){S.res=demoNorm(q);S.demo=true}else S.res=normRes(r);var el=$("#sres");if(el){el.innerHTML=resultsHTML();bind()}})}
 
