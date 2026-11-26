@@ -498,7 +498,7 @@ html.lsopen,html.lsopen body{overflow:hidden}
 .lsb svg{width:22px;height:22px;padding:11px}
 .lsb[data-like].on svg{fill:#ff5c8a;stroke:#ff5c8a}
 .lsb[data-rp].on svg{color:#5fd3c5;background:rgba(95,211,197,.18)}
-.lsb[data-later].on svg{fill:currentColor}
+.lsb[data-later].on{color:#ff8cc4}
 .lsb.lscb.on svg{background:rgba(255,255,255,.26)}
 .lsb:disabled{opacity:.45;cursor:default}
 .lsb:disabled:hover svg{transform:none;background:rgba(255,255,255,.13)}
@@ -1205,7 +1205,24 @@ canvas.soft.now{transition:none}
 @media (prefers-reduced-motion:reduce){#tflip{display:none}}
 /* listen later */
 .act.later{margin-left:auto}
-.act[data-later].on svg,.later-btn.on svg{fill:currentColor}
+/* listen later's chain: the links sit apart, swing together (with a little bounce) once a song is chained, and part when it's taken off */
+.chn{overflow:visible}
+.chn .cla,.chn .clb{transition:transform .3s cubic-bezier(.3,1.6,.5,1)}
+.chn .cla{transform:translateX(-2px)}.chn .clb{transform:translateX(2px)}
+.chn.on .cla,.chn.on .clb{transform:none}
+.chn.chj .cla{animation:chja .55s cubic-bezier(.3,1.7,.5,1)}.chn.chj .clb{animation:chjb .55s cubic-bezier(.3,1.7,.5,1)}
+.chn.chs .cla{animation:chsa .35s ease-out}.chn.chs .clb{animation:chsb .35s ease-out}
+@keyframes chja{from{transform:translateX(-5px)}}@keyframes chjb{from{transform:translateX(5px)}}
+@keyframes chsa{from{transform:none}}@keyframes chsb{from{transform:none}}
+.act[data-later].on,.later-btn.on{color:var(--pop)}
+/* in the menu: the chain and how many songs are on it */
+.mch{display:inline-flex;align-items:center;gap:4px;margin-left:9px;color:var(--mute);font-size:13px;font-weight:500;vertical-align:-2px}
+.mch .chn{color:var(--pop)}
+/* the Listen later page: the cards hang one under another on a chain */
+.list.lt{gap:0}
+.ltc{position:relative;height:24px;z-index:1;pointer-events:none}
+.ltc svg{position:absolute;left:41px;top:-6px;width:14px;height:36px;color:color-mix(in srgb,var(--ink) 50%,transparent)}
+@media (max-width:520px){.ltc svg{left:35px}}
 .sbtns{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 .later-btn{display:inline-flex;align-items:center;gap:7px;padding:9px 16px}
 .later-btn.on{color:var(--pop)}
@@ -1672,12 +1689,18 @@ function laterStore(){var o=store.get("ln_later",{});return o&&typeof o==="objec
 function syncLater(){if(REMOTE)return;var l=laterStore()["u:"+S.user];S.later=Array.isArray(l)?l.filter(function(x){return x&&typeof x.title==="string"&&typeof x.artist==="string"&&x.title&&x.artist}).slice(0,500).map(laterItem):[]}
 function saveLater(){var o=laterStore();o["u:"+S.user]=S.later.slice(0,500);store.set("ln_later",o)}
 async function loadLater(){try{var r=await sb.from("listen_later").select("title,artist,type,art,tid").order("created_at",{ascending:false});if(r.error)return false;S.later=(r.data||[]).map(laterItem);return true}catch(e){return false}}
-function toggleLater(t,done){var add=!inLater(t),prev=S.later.slice(),it=laterItem(t),k=lkey(it);
+function toggleLater(t,done){var add=!inLater(t),prev=S.later.slice(),it=laterItem(t),k=lkey(it);CHA={k:k,on:add,t:Date.now()};
 S.later=add?[it].concat(S.later):S.later.filter(function(x){return lkey(x)!==k});
 var fin=function(){done();syncLaterCount()};fin();
 api.setLater(it,add,prev).then(function(res){if(res&&res.error){S.later=prev;toast("Couldn't update your listen later list. Try again.")}fin()})}
-function syncLaterCount(){var b=document.querySelector('.menu [data-tab="later"]');if(b)b.innerHTML="Listen later"+(S.later.length?' <span class="meta">'+S.later.length+'</span>':"")}
-function laterInner(on){return ico("bm")+'<span>'+(on?"On your list":"Listen later")+'</span>'}
+function syncLaterCount(){var b=document.querySelector('.menu [data-tab="later"]');if(b)b.innerHTML=laterMenu()}
+/* listen later is a chain: the icon's two links sit apart until a song is chained, then swing together (and apart again when it's
+   taken off). CHA remembers the song just changed, so its icon plays that once when it's drawn again */
+var CHA=null;
+function chainIco(on,k,sz){var a=CHA&&k&&CHA.k===k&&Date.now()-CHA.t<700?(CHA.on?" chj":" chs"):"";sz=sz||17;
+return '<svg class="chn'+(on?' on':'')+a+'" width="'+sz+'" height="'+sz+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g transform="rotate(-45 12 12)"><rect class="cla" x="2.5" y="9" width="11" height="6" rx="3"/><rect class="clb" x="10.5" y="9" width="11" height="6" rx="3"/></g></svg>'}
+function laterMenu(){return 'Listen later<span class="mch">'+chainIco(true,"",14)+S.later.length+'</span>'}
+function laterInner(on){return chainIco(on,S.song?lkey(S.song):"")+'<span>'+(on?"Chained":"Listen later")+'</span>'}
 function laterBtn(s){var on=inLater(s);return '<button type="button" class="btn ghost later-btn'+(on?' on':'')+'" id="slater" aria-pressed="'+on+'">'+laterInner(on)+'</button>'}
 function syncSongLater(){var b=$("#slater");if(!b||!S.song)return;var on=inLater(S.song);b.setAttribute("aria-pressed",String(on));b.classList.toggle("on",on);b.innerHTML=laterInner(on)}
 /* Good to know (once called Vapids): every genre the site accepts, behind "All genres", and a box to suggest one that's missing (kept in genre_suggestions for a look) */
@@ -1720,9 +1743,11 @@ if(!REMOTE){var l=store.get("ln_gsug",[])||[];if(l.indexOf(g)<0)l.push(g);store.
 Promise.resolve(sb.from("genre_suggestions").insert({genre:g.slice(0,40)})).then(function(r){if(r.error){toast(r.error.code==="23505"?"You’ve already suggested “"+g+"”":/plenty/.test(r.error.message||"")?"That’s plenty of suggestions for today":"Couldn’t send that. Try again.");if(r.error.code!=="23505")inp.value=raw;return}
 toast("Thanks, “"+g+"” is on the list to look at")},function(){inp.value=raw;toast("Couldn’t send that. Check your connection.")})}}
 function laterView(){var l=S.later,h='<section class="page"><h2>Listen later</h2>'+(S.platOK&&l.length&&!S.plats.length?'<p class="meta" style="margin:-4px 0 12px"><button type="button" class="linkbtn" data-setplat="1">Choose where you listen</button> to open these in your app.</p>':'');
-if(!l.length)return h+'<div class="empty">Nothing saved yet. Tap the bookmark on a review, or “Listen later” on a song page, to keep it here.</div></section>';
+if(!l.length)return h+'<div class="empty">Nothing chained yet. Tap the chain on a review, or “Listen later” on a song page, to add it here.</div></section>';
+/* between each song and the next, links of chain hanging down from one card to the next */
+var CV='<div class="ltc" aria-hidden="true"><svg viewBox="0 0 14 36" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="0" width="10" height="14" rx="5"/><rect x="5.5" y="10" width="3" height="16" rx="1.5"/><rect x="2" y="22" width="10" height="14" rx="5"/></svg></div>';
 return h+'<div class="list lt">'+l.map(function(t,i){
-return '<div class="ri"><button type="button" class="artbtn" data-info="lt:'+i+'" aria-label="About “'+esc(t.title)+'”">'+rimg({title:t.title,artist:t.artist,thumb:okArt(t.art)?t.art:""})+'</button><div class="rt"><b>'+esc(t.title)+'</b><span class="meta">'+esc(t.artist)+' · '+t.type+'</span></div>'+(S.plats.length?'<span class="lis2">'+plLinks(t,22,"lg")+'</span>':'')+'<button type="button" class="btn ghost sm" data-lrm="'+i+'" aria-label="Remove “'+esc(t.title)+'” from listen later">Remove</button></div>'}).join("")+'</div></section>'}
+return '<div class="ri"><button type="button" class="artbtn" data-info="lt:'+i+'" aria-label="About “'+esc(t.title)+'”">'+rimg({title:t.title,artist:t.artist,thumb:okArt(t.art)?t.art:""})+'</button><div class="rt"><b>'+esc(t.title)+'</b><span class="meta">'+esc(t.artist)+' · '+t.type+'</span></div>'+(S.plats.length?'<span class="lis2">'+plLinks(t,22,"lg")+'</span>':'')+'<button type="button" class="btn ghost sm" data-lrm="'+i+'" aria-label="Remove “'+esc(t.title)+'” from listen later">Remove</button></div>'}).join(CV)+'</div></section>'}
 function save(){store.set("ln_reviews",S.reviews)}
 function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
 /* five words. Words joined into a chain (best-album-of-the-decade, best_album_ever, best.album.ever, BestAlbumEver) count one by one.
@@ -2330,7 +2355,7 @@ h+='<button type="button" class="act'+(liked?' on':'')+'" data-like="'+id+'" ari
 h+='<button type="button" class="act'+(S.cm[id]?' on':'')+'" data-cmt="'+id+'" aria-expanded="'+!!S.cm[id]+'" aria-label="Comments">'+ico("cmt")+(cmN(id)?cntS(cmN(id)):'')+'</button>';
 h+='<button type="button" class="act'+(reposted?' on':'')+'" data-rp="'+id+'" aria-pressed="'+reposted+'" aria-label="Repost"'+(own?' disabled title="You can\'t repost your own review"':'')+'>'+ico("rp")+(rpN(id)?cntS(rpN(id)):'')+'</button>'}
 h+='<span class="sendw" data-sw="'+id+'"><button type="button" class="act" data-send="'+id+'" aria-label="Share" aria-haspopup="true">'+ico("send")+(shN(id)?cntS(shN(id)):'')+'</button><span class="tray" role="group" aria-label="Share">'+trayHTML(id)+'</span></span>';
-if(S.laterOK){var lt=inLater(r);h+='<button type="button" class="act later'+(lt?' on':'')+'" data-later="'+id+'" aria-pressed="'+lt+'" aria-label="'+(lt?'Remove from listen later':'Listen later')+'" title="'+(lt?'On your listen later list':'Listen later')+'">'+ico("bm")+'</button>'}
+if(S.laterOK){var lt=inLater(r);h+='<button type="button" class="act later'+(lt?' on':'')+'" data-later="'+id+'" aria-pressed="'+lt+'" aria-label="'+(lt?'Remove from listen later':'Listen later')+'" title="'+(lt?'On your listen later chain':'Listen later')+'">'+chainIco(lt,lkey(r))+'</button>'}
 h+='</div>';
 if(S.social&&S.cm[id])h+=cmtsHTML(id);
 return h}
@@ -2746,7 +2771,7 @@ else{body=(prof?'<section class="prof ig"><div class="pmain"><h2 class="pnm"><sp
 $("#app").innerHTML='<div class="wrap'+(S.tab==="msgs"?' dmw':'')+'"><header class="top"><h2><button type="button" class="wm" data-tab="feed" aria-label="Mosaic home">'+logoSVG()+'</button></h2><nav><button data-tab="feed" aria-current="'+(S.tab==="feed")+'">Recommended</button>'+(S.sotdOK?'<button data-tab="sotd" aria-current="'+(S.tab==="sotd")+'">Song of the Day</button>':'')+(S.reviews.length?'<button type="button" data-listen="1">Listen</button>':'')+'</nav>'+
 '<div class="sw'+(S.sv?" open":"")+'"><button class="ib" id="sb" aria-label="Search" type="button">'+mag+'</button><input id="q" type="search" placeholder="Search songs to tile" aria-label="Search songs" autocomplete="off" readonly value="'+esc(S.sv||"")+'"><div class="sug" id="sug" hidden></div></div>'+
 '<div class="right"><div class="mew"><button class="me" aria-haspopup="menu" aria-current="'+mcur+'" aria-label="Your account menu">'+avatar(a)+'<span class="nm">'+nm+'</span></button>'+
-'<div class="menu"><div class="box" role="menu"><button role="menuitem" data-tab="profile">My profile</button>'+(S.laterOK?'<button role="menuitem" data-tab="later">Listen later'+(S.later.length?' <span class="meta">'+S.later.length+'</span>':'')+'</button>':'')+'<button role="menuitem" data-tab="likes">My likes and comments</button><button role="menuitem" data-tab="account">Privacy and account</button><hr><button role="menuitem" id="so">Sign out</button><hr><button role="menuitem" data-tab="vapids">Good to know</button></div></div></div>'+
+'<div class="menu"><div class="box" role="menu"><button role="menuitem" data-tab="profile">My profile</button>'+(S.laterOK?'<button role="menuitem" data-tab="later">'+laterMenu()+'</button>':'')+'<button role="menuitem" data-tab="likes">My likes and comments</button><button role="menuitem" data-tab="account">Privacy and account</button><hr><button role="menuitem" id="so">Sign out</button><hr><button role="menuitem" data-tab="vapids">Good to know</button></div></div></div>'+
 '<div class="ibw"><button class="ib" id="nb" aria-label="Notifications" aria-expanded="false">'+bell+(unread?'<i class="dot"></i>':'')+'</button><div class="pop" id="np" hidden><h3>Notifications</h3>'+notesHTML+'</div></div>'+
 (S.msgOK?'<div class="ibw"><button class="ib" id="mb" type="button" aria-label="Messages'+(munread?', '+munread+' unread':'')+'" aria-current="'+(S.tab==="msgs")+'">'+chat+(munread?'<i class="mbn" aria-hidden="true">'+(munread>9?"9+":munread)+'</i>':'')+'</button></div>':'')+'</div></header>'+body+'</div>';
 var mew=$(".mew");if(S.shut){mew.classList.add("shut");S.shut=false}
@@ -2997,7 +3022,7 @@ if(!(rating>0)){err(o.type==="Album"?"Choose a star rating for the whole album."
 o.rating=rating;o.text=$("#tx",d).value.trim();if(wordsOf(o.text)>5){err(chained(o.text)?"Reviews are limited to 5 words, and joined-up words like best-album-ever count separately. Shorten it to save.":"Reviews are limited to 5 words. Shorten it to save.");toTop(fromEnd);return}
 o.tracks=o.type==="Album"&&chosen?trkOut():null;o.clip=o.type==="Song"&&chosen&&clip!=null?clip:null;
 var bs=[$("#sv",d),$("#sv2",d)].filter(Boolean);bs.forEach(function(x){x.disabled=true});
-api.saveReview(o,r).then(function(res){if(res&&res.error){bs.forEach(function(x){x.disabled=false});err(res.error);return}if(!r)toast("Tiled.");if(host){S.tab="profile";appView()}else{d.close();appView()}}).catch(function(){bs.forEach(function(x){x.disabled=false});err("Couldn't save. Check your connection and try again.")})}
+var wasL=S.laterOK&&inLater(o);api.saveReview(o,r).then(function(res){if(res&&res.error){bs.forEach(function(x){x.disabled=false});err(res.error);return}if(wasL)toggleLater(o,function(){});if(!r)toast(wasL?"Tiled, and taken off your listen later chain.":"Tiled.");if(host){S.tab="profile";appView()}else{d.close();appView()}}).catch(function(){bs.forEach(function(x){x.disabled=false});err("Couldn't save. Check your connection and try again.")})}
 $("#sv",d).onclick=doSave;
 if(!host){d.addEventListener("close",clipStop,{once:true});d.showModal()}}
 
@@ -3353,7 +3378,7 @@ if(S.social)it.push('<button type="button" class="lsb'+(lk?' on':'')+'" data-lik
 '<button type="button" class="lsb lscb'+(LS&&LS.cm===String(id)?' on':'')+'" data-lscm="'+id+'" aria-label="Comments">'+ico("cmt")+c(cmN(id))+'</button>',
 '<button type="button" class="lsb'+(rp?' on':'')+'" data-rp="'+id+'" aria-pressed="'+rp+'" aria-label="Repost"'+(own?' disabled title="You can’t repost your own review"':'')+'>'+ico("rp")+c(rpN(id))+'</button>');
 it.push('<span class="sendw lssw" data-sw="'+id+'"><button type="button" class="lsb" data-send="'+id+'" aria-label="Share" aria-haspopup="true">'+ico("send")+c(shN(id))+'</button><span class="tray" role="group" aria-label="Share">'+trayHTML(id)+'</span></span>');
-if(S.laterOK){var lt=inLater(r);it.push('<button type="button" class="lsb'+(lt?' on':'')+'" data-later="'+id+'" aria-pressed="'+lt+'" aria-label="'+(lt?'Remove from listen later':'Listen later')+'">'+ico("bm")+c(0)+'</button>')}
+if(S.laterOK){var lt=inLater(r);it.push('<button type="button" class="lsb'+(lt?' on':'')+'" data-later="'+id+'" aria-pressed="'+lt+'" aria-label="'+(lt?'Remove from listen later':'Listen later')+'">'+chainIco(lt,lkey(r))+c(0)+'</button>')}
 return it.join("")}
 function openListen(){if(LS)return;clipStop();pvStop();var items=lsItems();if(!items.length){toast("Nothing to listen to yet");return}
 /* starting a (silent) sound inside the tap lets the previews play afterwards, on phones too */
