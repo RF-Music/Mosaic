@@ -771,7 +771,7 @@ button.orb:hover,button.orb:focus-visible{border-color:var(--pop);color:var(--po
 .igs span{color:var(--mute);font-size:14px}.igs b{color:var(--ink);font-weight:600;font-size:16px;margin-right:2px}
 @media (max-width:520px){.prof.ig{gap:14px;padding:16px}.prof.ig .av.big{width:64px;height:64px}.igs{gap:16px}.igt .btn{width:100%}}
 /* favourites mosaic: 5 x 5 tiles beside the profile details, dull grey until filled */
-.mos{--mg:color-mix(in srgb,var(--ink) 8%,var(--surface));--ml:color-mix(in srgb,var(--ink) 30%,var(--surface));--mh:color-mix(in srgb,var(--ink) 15%,var(--surface));--mp:var(--ink);display:grid;grid-template-columns:repeat(5,70px);grid-auto-rows:70px;width:max-content}
+.mos{--mg:color-mix(in srgb,var(--ink) 8%,var(--surface));--ml:color-mix(in srgb,var(--ink) 30%,var(--surface));--mh:color-mix(in srgb,var(--ink) 15%,var(--surface));--mp:var(--ink);display:grid;grid-template-columns:repeat(5,56px);grid-auto-rows:56px;width:max-content}
 /* the mosaic and its heading: Tessellation, or Tessellate your mosaic on your own until all 25 spots are filled */
 .mosw{flex:none;margin-left:auto;display:flex;flex-direction:column;align-items:center}
 .mosh{margin:0 0 10px;font-size:15px;font-weight:600;letter-spacing:.01em;line-height:1.2;text-align:center}
@@ -779,7 +779,7 @@ button.orb:hover,button.orb:focus-visible{border-color:var(--pop);color:var(--po
 button.mt{cursor:pointer;transition:background .12s,transform .18s cubic-bezier(.3,.7,.4,1.5)}
 button.mt:hover{z-index:1;transform:scale(1.07)}
 .mos.dragging button.mt:hover{transform:none}
-.mt .ml{font-size:28px;font-weight:700;line-height:1;color:var(--ml)}
+.mt .ml{font-size:23px;font-weight:700;line-height:1;color:var(--ml)}
 /* other people's mosaics: empty tiles sit just below the card, so only the pieces they've added stand out */
 .mos:not(.own){--mg:color-mix(in srgb,var(--bg) 55%,var(--surface))}
 /* your own mosaic: the CREATE YOUR MOSAIC letters go once you've added a piece */
@@ -792,7 +792,7 @@ button.mt:hover .mpl,button.mt:focus-visible .mpl{display:grid}
 .mt.on:hover,.mt.on:focus-within{z-index:2}
 .mto{display:block;width:100%;height:100%;padding:0;border:0;border-radius:3px;overflow:hidden;cursor:pointer;transition:transform .12s,box-shadow .12s}
 .mto img{display:block;width:100%;height:100%;object-fit:cover}
-.mto .mi{display:grid;place-items:center;width:100%;height:100%;color:#fff;font-weight:600;font-size:20px}
+.mto .mi{display:grid;place-items:center;width:100%;height:100%;color:#fff;font-weight:600;font-size:17px}
 .mt.on:hover .mto{transform:scale(1.08);box-shadow:0 4px 12px rgba(0,0,0,.35)}
 .mtx{position:absolute;top:-6px;right:-6px;width:18px;height:18px;border-radius:50%;border:0;padding:0;background:var(--ink);color:var(--surface);font-size:13px;line-height:1;display:none;place-items:center;cursor:pointer;z-index:3}
 .mt.on:hover .mtx,.mt.on:focus-within .mtx{display:grid}
