@@ -2989,6 +2989,8 @@ function dayName(day,today){return day===today?"Today":day===dayAdd(today,1)?"To
 function nth(n){var x=["th","st","nd","rd"],v=n%100;return n+(x[(v-20)%10]||x[v]||x[0])}
 function sdItem(it){return {title:String(it.title||"").slice(0,80),artist:String(it.artist||"").slice(0,80),album:String(it.album||"").slice(0,200),art:okArt(it.art)?upArt(it.art):"",tid:okId(it.tid)?Number(it.tid):null,type:"Song"}}
 function sdSame(r,s){return !!(r&&s)&&r.type==="Song"&&String(r.title).toLowerCase()===String(s.title).toLowerCase()&&String(r.artist).toLowerCase()===String(s.artist).toLowerCase()}
+/* the Song of the Day as something its ear can preview, like a tile (see pvPlay): its own key, so the preview keeps track of it */
+function sdPv(s,day){var o=sdSong(s);o.id="sotd:"+day;return o}
 function sdSong(s){return {title:s.title,artist:s.artist,type:"Song",art:s.art||"",tid:s.tid||null,album:""}}
 /* likes given to a review on a given day, not counting the reviewer's own (a like with no known day counts only in this-browser previews) */
 function dayLikes(r,day){var at=S.likeAt[r.id]||{};return (S.likes[r.id]||[]).filter(function(u){return u!==r.user&&(at[u]||(REMOTE?"":day))===day}).length}
@@ -3025,7 +3027,7 @@ else{var hu=hue(s.title+s.artist),cta=ent?'<button type="button" class="btn ink"
 /* the glow fills the whole screen behind everything (fixed, so scrolling doesn't redraw it) */
 h+='<div class="sdbg" aria-hidden="true"><i style="background:linear-gradient(160deg,hsl('+hu+',70%,34%),hsl('+((hu+60)%360)+',74%,24%))"></i>'+(s.art?'<canvas class="soft" width="96" height="96" data-soft="'+esc(bigArt(s.art))+'" data-blur="3.4"></canvas>':'')+'</div>'+
 '<div class="sdhero"><p class="sdk">Song of the Day · '+esc(dayLong(today))+'</p>'+
-'<div class="sdaw'+(S.sdIntroOn?' sdpre':'')+'"><button type="button" class="sdart'+(S.sdIntroOn?' sdhide':'')+'" data-sdsong="1" aria-label="About “'+esc(s.title)+'”">'+heroCover(s)+'</button>'+earHTML(s,sdPlats())+'</div>'+
+'<div class="sdaw'+(S.sdIntroOn?' sdpre':'')+'"><button type="button" class="sdart'+(S.sdIntroOn?' sdhide':'')+'" data-sdsong="1" aria-label="About “'+esc(s.title)+'”">'+heroCover(s)+'</button>'+earHTML(sdPv(s,today),sdPlats(),1)+'</div>'+
 '<h2 class="sdt"><a class="tlink" href="#" data-sdsong="1">'+esc(s.title)+'</a></h2><p class="sdby">'+esc(s.artist)+'</p>'+
 '<div class="sbtns">'+cta+'</div>'+
 '<p class="meta sdst"><span id="sdstat">'+esc(sdStat(today,s,st))+'</span> Review it in five words or fewer; the most-liked review by midnight wins. Closes in <span id="sdleft">'+leftText()+'</span>.</p>'+
