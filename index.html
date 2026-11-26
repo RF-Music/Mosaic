@@ -735,6 +735,7 @@ button.orb:hover,button.orb:focus-visible{border-color:var(--pop);color:var(--po
 .igs.igv{flex-direction:column;align-items:flex-start;flex-wrap:nowrap;gap:9px;margin:0;padding:0;list-style:none}
 .igv li{display:flex;align-items:center;white-space:nowrap}
 .igv .fdd{position:relative}
+.igs.igv .fls,.igs.igv .fgs{gap:0}
 .igv .fddb .car{transform:rotate(-90deg)}
 .igv .fdd.open .fddb .car{transform:rotate(90deg)}
 .igv .fddw{left:calc(100% + 12px);top:-8px}
@@ -2103,7 +2104,21 @@ if(!list||!list.length)return t;
 return '<span class="fdd '+k+'" data-k="'+k+'"><button type="button" class="fddb" aria-haspopup="true" aria-expanded="false">'+(cf?CAR+'<span>'+t+'</span>':'<span>'+t+'</span>'+CAR)+'</button><span class="fddw" hidden><span class="fddm" role="menu">'+ddRows(list)+'</span><span class="fcard" hidden></span></span></span>'}
 /* a profile's numbers, one under another: tiled, likes, followers, following (the last two open their lists out to the right) */
 function igStats(n,a){var rs=S.reviews.filter(function(r){return r.user===n}),rv=rs.length,lk=rs.reduce(function(x,r){var v=likeN(r.id);return v===Infinity?x:x+v},0),fgl=((a&&a.following)||[]).filter(acct),fll=followersOf(n);
-return '<ul class="igs igv"><li><span><b>'+rv+'</b> tiled</span></li><li><span><b>'+numS(lk)+'</b> '+(lk===1?"like":"likes")+'</span></li><li class="fls">'+ddHTML("fl",fll.length,fll)+'</li><li class="fgs">'+ddHTML("fg",fgl.length,fgl)+'</li></ul>'}
+return '<ul class="igs igv"><li><span><b>'+rv+'</b> tiled</span></li><li><span><b>'+numS(lk)+'</b> '+(lk===1?"like":"likes")+'</span></li><li class="fls">'+ddHTML("fl",fll.length,fll)+'</li><li class="fgs">'+ddHTML("fg",fgl.length,fgl)+'</li>'+gnLi(n)+'</ul>'}
+/* genres nominated: how many times someone has given a song a genre (counted when their profile is shown) */
+S.gn={};S.gnp={};
+function gnTxt(c){return '<b>'+(c==null?"–":numS(c))+'</b> '+(c===1?"genre":"genres")+' nominated'}
+function gnLi(n){return '<li class="ign" data-gn="'+esc(n)+'"><span>'+gnTxt(S.gn[n])+'</span></li>'}
+function gnCount(n){if(S.gnp[n])return S.gnp[n];var a=acct(n);
+return S.gnp[n]=(!REMOTE?Promise.resolve((function(){var all=store.get("ln_genres",{})||{},c=0;Object.keys(all).forEach(function(k){(all[k]||[]).forEach(function(x){if(x&&x.u===n)c++})});return c})()):
+a&&a.id?Promise.resolve(sb.from("song_genres").select("song_key",{count:"exact",head:true}).eq("user_id",a.id)).then(function(r){return r&&!r.error&&r.count!=null?r.count:null},function(){return null}):Promise.resolve(null)).then(function(c){delete S.gnp[n];return c})}
+function gnFill(){[].forEach.call(document.querySelectorAll("[data-gn]"),function(li){var n=li.getAttribute("data-gn");if(S.gn[n]!=null)return;
+gnCount(n).then(function(c){if(c==null)return;S.gn[n]=c;[].forEach.call(document.querySelectorAll("[data-gn]"),function(x){if(x.getAttribute("data-gn")===n)x.firstChild.innerHTML=gnTxt(c)});profArc()})})}
+/* the numbers follow the curve of the picture: each line starts on a wide circle round it, well clear of the apps */
+function profArc(){[].forEach.call(document.querySelectorAll(".prof.ig .pmain"),function(p){var av=p.querySelector(".pav"),its=[].slice.call(p.querySelectorAll(".igv>li,.ige"));if(!av||!its.length)return;
+its.forEach(function(x){x.style.transform=""});var a=av.getBoundingClientRect();if(!a.width)return;var cx=a.left+a.width/2,cy=a.top+a.height/2,o=av.querySelector(".orb"),ir=o?o.getBoundingClientRect().width+5:0,R=a.width/2+ir+56;
+its.forEach(function(x){var r=x.getBoundingClientRect(),dy=r.top+r.height/2-cy,dx=Math.max(a.width/2+ir+14,Math.sqrt(Math.max(0,R*R-dy*dy)));x.style.transform="translateX("+Math.round(cx+dx-r.left)+"px)"})})}
+window.addEventListener("resize",function(){clearTimeout(S.paT);S.paT=setTimeout(profArc,120)});if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){profArc()});
 function limits(){var a=$("#app").getBoundingClientRect();return {l:Math.max(0,a.left),r:Math.min(window.innerWidth,a.right)}}
 function closeFdd(){[].forEach.call(document.querySelectorAll(".fdd.open"),function(d){d.classList.remove("open");var w=d.querySelector(".fddw"),b=d.querySelector(".fddb"),c=d.querySelector(".fcard");if(w)w.hidden=true;if(b)b.setAttribute("aria-expanded","false");if(c)c.hidden=true})}
 function wireFollowing(){[].forEach.call(document.querySelectorAll(".fdd"),wireDd)}
@@ -2676,7 +2691,7 @@ var rate=n?'<div class="srh2"><div class="srl"><div class="srate"><span class="s
 :'<div class="srate none"><span class="noyet">No ratings yet</span></div><p class="meta scount">Be the first to tile this '+what+'.</p>';
 return '<button type="button" class="linkbtn" data-back="1" style="margin-bottom:14px">← '+esc(backLabel())+'</button>'+
 '<section class="song sbox card"><div class="pickbig"><div class="sart"><div class="aglw">'+artGlow(s)+(S.user&&S.mosOK&&mosHas(s)?artGlow(s,1):'')+heroCover(s)+'</div><div class="sgrow">'+songBadge(s,rs)+'<button type="button" class="sgb" id="sgb" aria-expanded="'+gOpen+'" aria-label="Genres: what people call this '+what+'" title="Genres">'+GICO+'</button></div></div><div class="sbt"><h1>'+esc(s.title)+'</h1><div class="meta"><button type="button" class="ulink" data-seeq="'+esc(s.artist)+'" title="See Mosaic reviews by this artist">'+esc(s.artist)+'</button></div></div></div><div class="sgc" data-gk="'+esc(gk)+'" aria-live="polite"'+(gOpen?'>'+genCloud(gk):' hidden>')+'</div><div class="sinfo">'+rate+
-'<dl class="facts" id="sfacts">'+factsHTML()+'</dl><div class="sbtns">'+(mine?'<button type="button" class="btn ink" data-edit="'+esc(mine.id)+'">Edit your review</button>':'<button type="button" class="btn ink" id="srev">Tile this '+what+'</button>')+''+(S.laterOK?laterBtn(s):'')+'</div>'+listenRow(s)+'<div id="stracks">'+tracksHTML()+'</div><p class="meta src" id="snote">'+noteHTML()+'</p></div><form class="sgf" data-gk="'+esc(gk)+'"'+(gOpen?'':' hidden')+'><input maxlength="24" placeholder="Add a genre" aria-label="Add the genre you hear" autocomplete="off" enterkeyhint="done" data-gsug="1"></form></section>'+
+'<dl class="facts" id="sfacts">'+factsHTML()+'</dl><div class="sbtns">'+(mine?'<button type="button" class="btn ink" data-edit="'+esc(mine.id)+'">Edit your review</button>':'<button type="button" class="btn ink" id="srev">Tile this '+what+'</button>')+''+(S.laterOK?laterBtn(s):'')+'</div>'+listenRow(s)+'<div id="stracks">'+tracksHTML()+'</div><p class="meta src" id="snote">'+noteHTML()+'</p></div><form class="sgf" data-gk="'+esc(gk)+'"'+(gOpen?'':' hidden')+'><input maxlength="24" placeholder="Nominate a genre" aria-label="Nominate a genre for this song" autocomplete="off" enterkeyhint="done" data-gsug="1"></form></section>'+
 '<section class="srevs"><div class="srh"><h2>Reviews'+(n?' <span class="meta">'+n+'</span>':'')+'</h2>'+(n?layoutSwitch():'')+'</div>'+(n?'<p class="dsf" id="dsf">'+dsfHTML()+'</p>':'')+(n?'<div class="list cols'+S.cols+'" id="list">'+listHTML()+'</div>':'<div class="empty">Nobody has tiled this '+what+' yet.</div>')+'</section>'}
 function openSong(s){if(!s)return;
 if(S.tab==="song"&&S.song&&mosKey(S.song)===mosKey(s)){try{window.scrollTo({top:0,behavior:"smooth"})}catch(e){window.scrollTo(0,0)}return}
@@ -2839,7 +2854,7 @@ var srv=$("#srev");if(srv)srv.onclick=function(){var s=S.song;S.pre={title:s.tit
 var slb=$("#slater");if(slb)slb.onclick=function(){toggleLater(S.song,function(){syncSongLater();refreshList()})};
 document.querySelectorAll("[data-seeq]").forEach(function(b){b.onclick=function(){S.q=b.dataset.seeq;S.tab="feed";S.stack=[];S.sopen=true;appView()}});
 document.querySelectorAll("[data-fol]").forEach(function(b){b.onclick=function(){api.toggleFol(b.dataset.fol).then(function(){appView()})}});
-document.querySelectorAll(".earb").forEach(function(b){var w=b.parentNode;if(w.hasAttribute("data-pv")&&!w.querySelector(".beads")){b.onclick=function(e){e.stopPropagation();if(S.user)openPlatDlg()};return}b.onclick=function(e){e.stopPropagation();var was=w.classList.contains("open");closePops();if(was)return;w.classList.add("open");b.setAttribute("aria-expanded","true");w.querySelector(".beads").hidden=false}});pvSync();
+document.querySelectorAll(".earb").forEach(function(b){var w=b.parentNode;if(w.hasAttribute("data-pv")&&!w.querySelector(".beads")){b.onclick=function(e){e.stopPropagation();if(S.user)openPlatDlg()};return}b.onclick=function(e){if(LPT==="mouse"&&w.closest(".lsear")){e.stopPropagation();lsEarOpen(w);return}e.stopPropagation();var was=w.classList.contains("open");closePops();if(was)return;w.classList.add("open");b.setAttribute("aria-expanded","true");w.querySelector(".beads").hidden=false}});pvSync();gnFill();profArc();
 document.querySelectorAll(".beads").forEach(function(p){p.onclick=function(e){e.stopPropagation()}});
 document.querySelectorAll(".tddb").forEach(function(b){b.onclick=function(e){e.stopPropagation();var w=b.parentNode,was=w.classList.contains("open");closePops();if(was)return;
 var p=w.querySelector(".tddp");w.classList.add("open");b.setAttribute("aria-expanded","true");p.hidden=false;w.classList.remove("r");if(p.getBoundingClientRect().right>window.innerWidth-8)w.classList.add("r")}});
@@ -3394,6 +3409,24 @@ var gp=x.querySelector(".lsgen"),k=gp.getAttribute("data-gk");genPaint(k);genLay
 /* leaving a slide puts its details away without the turn */
 function lsInfoReset(x){var f=x.querySelector(".lscf"),cv=f&&f.querySelector(".cvi");x.classList.remove("gopen","lsflip");var b=x.querySelector(".lsib");if(b)b.setAttribute("aria-expanded","false");
 if(f&&f.classList.contains("on")){cv.style.transition="none";cv.style.transform="";f.classList.remove("on");void cv.offsetWidth;cv.style.transition=""}}
+/* Listen's ear: resting the pointer on it bursts your apps out round it, no click needed. They stay out while the pointer is anywhere
+   in the cloud round the ear and its apps (a little beyond their edges, and the fan between them) and fold away the moment it moves
+   out into open space. A tap still opens them on a phone */
+var LPT="";document.addEventListener("pointerdown",function(e){LPT=e.pointerType||""},true);
+function lsEarOpen(w){if(w.classList.contains("open"))return;var b=w.querySelector(".earb"),p=w.querySelector(".beads");if(!p)return;closePops();w.classList.add("open");b.setAttribute("aria-expanded","true");p.hidden=false}
+function lsEarShut(w){w.classList.remove("open");var b=w.querySelector(".earb"),p=w.querySelector(".beads");if(b)b.setAttribute("aria-expanded","false");if(p)p.hidden=true}
+function lsEarCloud(w,x,y){var e=w.querySelector(".earb").getBoundingClientRect(),cx=e.left+e.width/2,cy=e.top+e.height/2,M=12,d=Math.hypot(x-cx,y-cy);if(d<=e.width/2+M)return true;
+var bs=[].map.call(w.querySelectorAll(".bead"),function(b){var r=b.getBoundingClientRect();return {x:r.left+r.width/2,y:r.top+r.height/2,r:r.width/2}});if(!bs.length)return false;
+if(bs.some(function(q){return Math.hypot(x-q.x,y-q.y)<=q.r+M}))return true;
+var mx=0,my=0;bs.forEach(function(q){var l=Math.hypot(q.x-cx,q.y-cy)||1;mx+=(q.x-cx)/l;my+=(q.y-cy)/l});var mid=Math.atan2(my,mx),rel=function(a){a-=mid;while(a>Math.PI)a-=2*Math.PI;while(a<-Math.PI)a+=2*Math.PI;return a};
+var lo=0,hi=0,R=0;bs.forEach(function(q){var l=Math.hypot(q.x-cx,q.y-cy),a=rel(Math.atan2(q.y-cy,q.x-cx)),pad=(q.r+M)/Math.max(l,1);lo=Math.min(lo,a-pad);hi=Math.max(hi,a+pad);R=Math.max(R,l+q.r+M)});
+var a=rel(Math.atan2(y-cy,x-cx));return d<=R&&a>=lo&&a<=hi}
+document.addEventListener("pointerover",function(e){if(e.pointerType!=="mouse")return;var b=e.target.closest&&e.target.closest(".lsear .earb");if(b)lsEarOpen(b.parentNode)});
+document.addEventListener("pointermove",function(e){if(e.pointerType!=="mouse")return;var w=document.querySelector(".lsear .ear.open");if(w&&!lsEarCloud(w,e.clientX,e.clientY))lsEarShut(w)},{passive:true});
+/* Listen's i: resting the pointer on it opens the details and the genre cloud straight away, with the cursor already in the box to
+   nominate a genre (a click just after doesn't shut them again) */
+document.addEventListener("pointerover",function(e){if(e.pointerType!=="mouse"||!LS)return;var b=e.target.closest&&e.target.closest(".lsib");if(!b)return;var x=b.closest(".lss");if(!x||x.classList.contains("lsflip"))return;
+lsInfo(x,true,true);if(!x.classList.contains("lsflip"))return;x._hov=Date.now();var inp=x.querySelector(".lsgf input");if(inp)setTimeout(function(){if(x.classList.contains("gopen"))try{inp.focus({preventScroll:true})}catch(_){}},90)});
 /* the ear's apps, placed round it in a fan centred on its right: wider apart and further out the more apps there are */
 function lsEar(r){var ids=sdPlats(),n=ids.length,sp=n>1?Math.min(150,(n-1)*40):0,st=n>1?sp/(n-1):0,R=Math.round(Math.min(92,Math.max(58,st?40/(st*Math.PI/180):58)));
 return earHTML(r,ids).replace(/--i:(\d+)"/g,function(m,i){var a=(-sp/2+(+i)*st)*Math.PI/180,x=Math.round(Math.cos(a)*R),y=Math.round(Math.sin(a)*R);return '--i:'+i+';--bx:'+x+'px;--by:'+y+'px;--bxl:'+(-x)+'px"'})}
@@ -3405,16 +3438,16 @@ LS.cmFocus=false;if(f){var inp=c.querySelector("input");if(inp)inp.focus()}})}
 function lsClick(e){if(!LS)return;var t=e.target,b;
 if(b=t.closest("[data-lscm]")){var id=b.getAttribute("data-lscm");LS.cm=LS.cm===id?null:id;LS.cmFocus=!!LS.cm;lsRepaint();return}
 if(t.closest("[data-lscx]")){LS.cm=null;lsRepaint();return}
-if(b=t.closest(".lsib")){var xs=b.closest(".lss");if(xs)lsInfo(xs,!xs.classList.contains("lsflip"));return}
+if(b=t.closest(".lsib")){var xs=b.closest(".lss");if(xs&&!(xs.classList.contains("lsflip")&&Date.now()-(xs._hov||0)<900))lsInfo(xs,!xs.classList.contains("lsflip"));return}
 if(b=t.closest(".lstk")){var r=LS.items[+b.closest(".lss").getAttribute("data-i")];if(!r)return;var s=revSong(r);closeListen();if(dupSong(s)){openSong(s);return}
 S.pre={title:r.title,artist:r.artist,art:r.art,tid:r.tid,type:r.type};S.bq=null;S.tab="review";S.stack=[];S.shut=keepShut();appView();try{window.scrollTo(0,0)}catch(_){}return}
 if(b=t.closest("[data-gw]")){var g=b.closest(".lsgen");if(g)genToggle(g.getAttribute("data-gk"),b.getAttribute("data-gw"))}}
 function lsSubmit(e){var f=e.target.closest&&e.target.closest(".lsgf");if(!f)return;e.preventDefault();genSubmit(f.querySelector("input"),f.closest(".lsgen").getAttribute("data-gk"))}
 function genSubmit(inp,k){if(genNorm(inp.value).length<2)return;var x=genFix(inp.value);
 if(!x){toast("That doesn’t look like a genre. Try something like house, jazz or drill.");try{inp.select()}catch(_){}return}
-if(x.near){inp.value=x.g;toast("Did you mean “"+x.g+"”? Press Enter to add it.");return}
+if(x.near){inp.value=x.g;toast("Did you mean “"+x.g+"”? Press Enter to nominate it.");return}
 var g=x.g,me=genMe();inp.value="";
-if((S.gen[k]||[]).some(function(r){return r.u===me&&r.g===g})){toast("You’ve already said “"+g+"” for this one");return}genToggle(k,g)}
+if((S.gen[k]||[]).some(function(r){return r.u===me&&r.g===g})){toast("You’ve already nominated “"+g+"” for this one");return}genToggle(k,g)}
 /* ---------- the genre cloud: i on Listen, G on a song's page, throws out the words people have given this song, biggest
    (most votes) in the middle; tap a word to add your vote or take yours away, up to 10 per person per song, kept in song_genres.
    Only genres go in: a genre is kept if every word in it is a music word and it names a genre, either a genre word (house, jazz, drill...)
@@ -3433,7 +3466,7 @@ var bad=false,f=g.replace(/[a-z0-9&]+/g,function(t){if(GWD.has(t))return t;var c
 if(bad)return null;f=GAL[f]||f;return genOK(f)&&f.length<=24?{g:f,near:true}:null}
 function gKey(s){return (s.type||"Song")+"|"+fold(s.title)+"|"+fold(s.artist)}
 function genNorm(t){return fold(t).replace(/[^a-z0-9 &'+./-]+/g," ").replace(/\s+/g," ").trim().replace(/^[^a-z0-9]+|[^a-z0-9]+$/g,"").slice(0,24).replace(/[^a-z0-9]+$/,"")}
-function genHTML(r){var k=gKey(revSong(r));return '<div class="lsgen" data-gk="'+esc(k)+'"><form class="lsgf"><input maxlength="24" placeholder="Add a genre" aria-label="Add the genre you hear" autocomplete="off" enterkeyhint="done" data-gsug="1"></form><div class="lsgc" aria-live="polite">'+genCloud(k)+'</div></div>'}
+function genHTML(r){var k=gKey(revSong(r));return '<div class="lsgen" data-gk="'+esc(k)+'"><form class="lsgf"><input maxlength="24" placeholder="Nominate a genre" aria-label="Nominate a genre for this song" autocomplete="off" enterkeyhint="done" data-gsug="1"></form><div class="lsgc" aria-live="polite">'+genCloud(k)+'</div></div>'}
 function genCloud(k){var rows=S.gen[k];if(!rows||!rows.length)return '';var me=genMe(),c={},mine={};
 rows.forEach(function(x){c[x.g]=(c[x.g]||0)+1;if(x.u===me)mine[x.g]=1});
 var ws=Object.keys(c).sort(function(a,b){return c[b]-c[a]||(a<b?-1:1)}).slice(0,30),top=c[ws[0]];
@@ -3487,12 +3520,12 @@ document.addEventListener("focusout",function(e){if(GS.inp&&e.target===GS.inp)se
 document.addEventListener("scroll",function(){if(GS.inp)gsugClose()},true);
 document.addEventListener("submit",function(){if(GS.inp)gsugClose()},true);
 function genToggle(k,g){if(!S.user)return;var me=genMe(),rows=S.gen[k]||(S.gen[k]=[]),has=rows.some(function(x){return x.u===me&&x.g===g});
-if(!has&&rows.filter(function(x){return x.u===me}).length>=10){toast("You can give a song up to 10 genres. Tap one of yours to take it away first.");return}
-if(has)S.gen[k]=rows.filter(function(x){return !(x.u===me&&x.g===g)});else rows.push({g:g,u:me});genPaint(k);
+if(!has&&rows.filter(function(x){return x.u===me}).length>=10){toast("You can nominate up to 10 genres for a song. Tap one of yours to take it away first.");return}
+if(has)S.gen[k]=rows.filter(function(x){return !(x.u===me&&x.g===g)});else rows.push({g:g,u:me});genPaint(k);if(S.gn&&S.gn[S.user]!=null)S.gn[S.user]=Math.max(0,S.gn[S.user]+(has?-1:1));
 var p;if(!REMOTE){var all=store.get("ln_genres",{}),l=(all[k]||[]).filter(function(x){return !(x.u===S.user&&x.g===g)});if(!has)l.push({g:g,u:S.user});all[k]=l;store.set("ln_genres",all);p=Promise.resolve({})}
 else p=Promise.resolve(has?sb.from("song_genres").delete().eq("song_key",k).eq("genre",g).eq("user_id",S.uid):sb.from("song_genres").insert({song_key:k,genre:g}));
 var sync=function(){genLoad(k,true).then(function(){genPaint(k)})};
-p.then(function(r){if(r&&r.error)toast(has?"Couldn't take that away. Try again.":/genre/.test(r.error.message||"")?"That doesn’t look like a genre.":"Couldn't add that. Try again.");sync()},function(){toast("Couldn't save that. Check your connection.");sync()})}
+p.then(function(r){if(r&&r.error)toast(has?"Couldn't take that away. Try again.":/genre/.test(r.error.message||"")?"That doesn’t look like a genre.":"Couldn't nominate that. Try again.");sync()},function(){toast("Couldn't save that. Check your connection.");sync()})}
 function lsReal(){return !!(LS&&LS.au.src&&LS.au.src.indexOf("data:")!==0)}
 function lsState(){if(!LS||!LS.cur)return;var real=lsReal(),p=real&&!LS.au.paused;LS.cur.classList.toggle("playing",p);LS.cur.classList.toggle("paused",real&&!p)}
 function lsToggle(){if(!lsReal())return;var a=LS.au;if(a.paused){var pp=a.play();if(pp&&pp.catch)pp.catch(function(){})}else a.pause()}
