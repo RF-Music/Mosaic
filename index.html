@@ -104,7 +104,7 @@ nav button[aria-current="true"]{color:var(--ink);border-color:var(--pop)}
 .menu button{display:block;width:100%;text-align:left;background:none;border:0;border-radius:6px;padding:8px 10px;font-size:14px;font-weight:400;cursor:pointer}
 .menu button:hover,.menu button:focus-visible{background:var(--line)}
 .menu hr{border:0;border-top:1px solid var(--line);margin:5px 4px}
-/* the Vapids page: "All genres" opens every genre in columns; under it, the box to suggest a missing one */
+/* the Good to know page (once called Vapids): "All genres" opens every genre in columns; under it, the box to suggest a missing one */
 .vapt{display:flex;align-items:center;gap:8px;width:100%;padding:12px 2px;border:0;border-bottom:1px solid var(--line);background:none;color:var(--ink);font:inherit;font-size:16px;font-weight:600;text-align:left;cursor:pointer}
 .vapt .meta{font-size:13px;font-weight:500}
 .vapc{width:18px;height:18px;margin-left:auto;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .2s}
@@ -1639,9 +1639,9 @@ function syncLaterCount(){var b=document.querySelector('.menu [data-tab="later"]
 function laterInner(on){return ico("bm")+'<span>'+(on?"On your list":"Listen later")+'</span>'}
 function laterBtn(s){var on=inLater(s);return '<button type="button" class="btn ghost later-btn'+(on?' on':'')+'" id="slater" aria-pressed="'+on+'">'+laterInner(on)+'</button>'}
 function syncSongLater(){var b=$("#slater");if(!b||!S.song)return;var on=inLater(S.song);b.setAttribute("aria-pressed",String(on));b.classList.toggle("on",on);b.innerHTML=laterInner(on)}
-/* Vapids: every genre the site accepts, behind "All genres", and a box to suggest one that's missing (kept in genre_suggestions for a look) */
+/* Good to know (once called Vapids): every genre the site accepts, behind "All genres", and a box to suggest one that's missing (kept in genre_suggestions for a look) */
 function vapidsView(){var gs=GLIST.slice().sort(function(a,b){return (/^\d/.test(a)-/^\d/.test(b))||(a<b?-1:1)});
-return '<section class="page vapp"><h2>Vapids</h2><button type="button" class="vapt" id="vapt" aria-expanded="'+(!!S.vapOpen)+'" aria-controls="vapgl">All genres <span class="meta">'+gs.length+'</span><svg class="vapc" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>'+
+return '<section class="page vapp"><h2>Good to know</h2><button type="button" class="vapt" id="vapt" aria-expanded="'+(!!S.vapOpen)+'" aria-controls="vapgl">All genres <span class="meta">'+gs.length+'</span><svg class="vapc" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>'+
 '<ul class="vapgl" id="vapgl"'+(S.vapOpen?'':' hidden')+'>'+gs.map(function(g){return '<li>'+esc(g)+'</li>'}).join("")+'</ul>'+
 '<form class="vapsug" id="vapsug"><label for="vapin">Can’t find a genre? Suggest one and we’ll look at adding it.</label><div class="vaprow"><input id="vapin" maxlength="40" placeholder="Suggest a genre" autocomplete="off" enterkeyhint="send"><button class="btn" type="submit">Suggest</button></div></form>'+
 (S.user&&acct(S.user)?'<button type="button" class="vapt vapl" data-life="'+esc(S.user)+'">'+GRIDI+'Lifetime mosaic<svg class="vapc" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>':'')+'</section>'}
@@ -2573,7 +2573,7 @@ function backLabel(){var f=S.stack[S.stack.length-1];if(!f)return "Back";
 if(f.tab==="song"&&f.song)return "Back to “"+f.song.title+"”";
 if(f.tab==="search")return "Back to search";
 if(f.tab==="later")return "Back to Listen later";
-if(f.tab==="sotd")return "Back to Song of the Day"; if(f.tab==="vapids")return "Back to Vapids";
+if(f.tab==="sotd")return "Back to Song of the Day"; if(f.tab==="vapids")return "Back to Good to know";
 if(f.tab==="life")return f.view===S.user?"Back to your lifetime mosaic":"Back to "+f.view+"’s lifetime mosaic";
 if(f.tab==="msgs")return f.dmw?"Back to your chat with "+f.dmw:"Back to Messages";
 if(f.tab==="profile")return "Back to my profile";
@@ -2645,7 +2645,7 @@ else{body=(prof?'<section class="prof ig"><div class="pmain"><h2 class="pnm"><sp
 $("#app").innerHTML='<div class="wrap'+(S.tab==="msgs"?' dmw':'')+'"><header class="top"><h2><button type="button" class="wm" data-tab="feed" aria-label="Mosaic home">'+logoSVG()+'</button></h2><nav><button data-tab="feed" aria-current="'+(S.tab==="feed")+'">Recommended</button>'+(S.sotdOK?'<button data-tab="sotd" aria-current="'+(S.tab==="sotd")+'">Song of the Day</button>':'')+(S.reviews.length?'<button type="button" data-listen="1">Listen</button>':'')+'</nav>'+
 '<div class="sw'+(S.sv?" open":"")+'"><button class="ib" id="sb" aria-label="Search" type="button">'+mag+'</button><input id="q" type="search" placeholder="Search songs to tile" aria-label="Search songs" autocomplete="off" readonly value="'+esc(S.sv||"")+'"><div class="sug" id="sug" hidden></div></div>'+
 '<div class="right"><div class="mew"><button class="me" aria-haspopup="menu" aria-current="'+mcur+'" aria-label="Your account menu">'+avatar(a)+'<span class="nm">'+nm+'</span></button>'+
-'<div class="menu"><div class="box" role="menu"><button role="menuitem" data-tab="profile">My profile</button>'+(S.laterOK?'<button role="menuitem" data-tab="later">Listen later'+(S.later.length?' <span class="meta">'+S.later.length+'</span>':'')+'</button>':'')+'<button role="menuitem" data-tab="likes">My likes and comments</button><button role="menuitem" data-tab="account">Privacy and account</button><hr><button role="menuitem" id="so">Sign out</button><hr><button role="menuitem" data-tab="vapids">Vapids</button></div></div></div>'+
+'<div class="menu"><div class="box" role="menu"><button role="menuitem" data-tab="profile">My profile</button>'+(S.laterOK?'<button role="menuitem" data-tab="later">Listen later'+(S.later.length?' <span class="meta">'+S.later.length+'</span>':'')+'</button>':'')+'<button role="menuitem" data-tab="likes">My likes and comments</button><button role="menuitem" data-tab="account">Privacy and account</button><hr><button role="menuitem" id="so">Sign out</button><hr><button role="menuitem" data-tab="vapids">Good to know</button></div></div></div>'+
 '<div class="ibw"><button class="ib" id="nb" aria-label="Notifications" aria-expanded="false">'+bell+(unread?'<i class="dot"></i>':'')+'</button><div class="pop" id="np" hidden><h3>Notifications</h3>'+notesHTML+'</div></div>'+
 (S.msgOK?'<div class="ibw"><button class="ib" id="mb" type="button" aria-label="Messages'+(munread?', '+munread+' unread':'')+'" aria-current="'+(S.tab==="msgs")+'">'+chat+(munread?'<i class="mbn" aria-hidden="true">'+(munread>9?"9+":munread)+'</i>':'')+'</button></div>':'')+'</div></header>'+body+'</div>';
 var mew=$(".mew");if(S.shut){mew.classList.add("shut");S.shut=false}
