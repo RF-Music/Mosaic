@@ -113,7 +113,25 @@ nav button[aria-current="true"]{color:var(--ink);border-color:var(--pop)}
 .vapgl[hidden]{display:none}
 .vapgl li{break-inside:avoid}
 .vapsug{margin-top:26px}
-.vapl{margin-top:30px;border-top:1px solid var(--line)}
+.vapw{margin-top:30px;border-top:1px solid var(--line)}
+.vapl{margin-top:0}
+/* the word bank */
+.vapwb{padding:12px 2px 18px;border-bottom:1px solid var(--line)}
+.vapwb[hidden]{display:none}
+.vapwb>.meta{margin:0;font-size:14px}
+.ewh{display:block;width:min(100%,600px);height:auto;margin:14px auto 22px;font-family:inherit;overflow:visible}
+.ewh path{fill:color-mix(in srgb,var(--h) 24%,var(--surface));stroke:var(--bg);stroke-width:2.5;transition:fill .15s}
+.ewh .e2 path{fill:color-mix(in srgb,var(--h) 46%,var(--surface))}
+.ewh .e1 path{fill:color-mix(in srgb,var(--h) 78%,var(--surface))}
+.ewh .ew:hover path,.ewh .ew.on path{fill:color-mix(in srgb,var(--h) 92%,var(--surface))}
+.ewh text{fill:var(--ink);text-anchor:middle;dominant-baseline:central;font-weight:500;pointer-events:none}
+.ewh .e1 text,.ewh .ew:hover text,.ewh .ew.on text{fill:#18171c}
+.ewh .e1 text{font-weight:700}
+.ebl{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px 28px}
+.ebg h4{display:flex;align-items:center;gap:8px;margin:0 0 6px;font-size:15px}
+.ebg h4::before{content:"";width:10px;height:10px;border-radius:3px;background:var(--h)}
+.ebg ul{margin:0;padding:0;list-style:none;font-size:14px;line-height:1.8;color:var(--mute)}
+.ebg li b{color:var(--ink);font-weight:600}
 .vapl>svg:first-child{flex:none;width:17px;height:17px}
 .vapsug label{display:block;margin-bottom:8px;font-size:14px;color:var(--mute)}
 .vaprow{display:flex;gap:8px}
@@ -523,6 +541,11 @@ html.lsopen,html.lsopen body{overflow:hidden}
 .dictroot{margin-top:11px;padding-top:9px;border-top:1px solid var(--line)}
 .dictrh{margin:0;color:var(--mute);font-size:12.5px}.dictrh b{color:var(--ink);font-weight:600}
 .dictroot .dictpos{margin-top:5px}
+/* any word in a definition: click it for a one-line meaning under its line */
+.dw2{border-radius:3px;cursor:help;transition:background .12s}
+.dw2:hover,.dw2.on{background:color-mix(in srgb,var(--pop) 22%,transparent)}
+.dict2{margin:4px 0 2px;padding:2px 0 2px 8px;border-left:2px solid color-mix(in srgb,var(--pop) 70%,transparent);font-size:12px;line-height:1.4;color:var(--mute)}
+.dict2.na{font-style:italic}
 .cvf[data-ax="D1"] .cvbk{transform:rotate3d(1,1,0,180deg)}
 .cvf[data-ax="D2"] .cvbk{transform:rotate3d(1,-1,0,180deg)}
 /* the back of the big cover is the home page tile's back, just bigger: icons and values only, everything in proportion */
@@ -1640,12 +1663,37 @@ function laterInner(on){return ico("bm")+'<span>'+(on?"On your list":"Listen lat
 function laterBtn(s){var on=inLater(s);return '<button type="button" class="btn ghost later-btn'+(on?' on':'')+'" id="slater" aria-pressed="'+on+'">'+laterInner(on)+'</button>'}
 function syncSongLater(){var b=$("#slater");if(!b||!S.song)return;var on=inLater(S.song);b.setAttribute("aria-pressed",String(on));b.classList.toggle("on",on);b.innerHTML=laterInner(on)}
 /* Good to know (once called Vapids): every genre the site accepts, behind "All genres", and a box to suggest one that's missing (kept in genre_suggestions for a look) */
+/* ---------- the word bank: feelings to reach for when you write a review. Six core feelings, each with its shades and finer shades
+   (the classic layout of feeling wheels, after Parrott's grouping of emotions), drawn as a wheel and listed in full below it. Click
+   any word, on the wheel or in the list, for what it means ---------- */
+var EMO=[["Joy","#f2c14e",[["Content","Pleased","Satisfied"],["Happy","Amused","Delighted"],["Cheerful","Jovial","Blissful"],["Proud","Triumphant","Illustrious"],["Optimistic","Eager","Hopeful"],["Enthusiastic","Excited","Zeal"],["Elation","Euphoric","Jubilation"],["Enthralled","Enchanted","Rapture"]]],
+["Love","#ff7eb6",[["Affectionate","Romantic","Fondness"],["Longing","Sentimental","Attracted"],["Desire","Passion","Infatuation"],["Tenderness","Caring","Compassionate"],["Peaceful","Relieved","Satisfied"]]],
+["Surprise","#36c5bd",[["Stunned","Shocked","Dismayed"],["Confused","Disillusioned","Perplexed"],["Amazed","Astonished","Awe-struck"],["Overcome","Speechless","Astounded"],["Moved","Stimulated","Touched"]]],
+["Sadness","#5f8dff",[["Suffering","Agony","Hurt"],["Sadness","Depressed","Sorrow"],["Disappointed","Dismayed","Displeased"],["Shameful","Regretful","Guilty"],["Neglected","Isolated","Lonely"],["Despair","Grief","Powerless"]]],
+["Fear","#9b7bff",[["Scared","Frightened","Helpless"],["Terror","Panic","Hysterical"],["Insecure","Inferior","Inadequate"],["Nervous","Worried","Anxious"],["Horror","Mortified","Dread"]]],
+["Anger","#ff7059",[["Rage","Hate","Hostile"],["Exasperated","Agitated","Frustrated"],["Irritable","Annoyed","Aggravated"],["Envy","Resentful","Jealous"],["Disgust","Contempt","Revolted"]]]];
+function emoCount(){var o={};EMO.forEach(function(c){o[c[0].toLowerCase()]=1;c[2].forEach(function(s){s.forEach(function(w){o[w.toLowerCase()]=1})})});return Object.keys(o).length}
+/* the wheel: the core feelings in the middle ring, their shades next, the finer shades round the edge; every finer shade gets the
+   same slice, so a feeling with more shades takes more of the wheel. Words run along the radius, turned so none is upside down */
+function emoWheel(){if(emoWheel.s)return emoWheel.s;var n=0,a=0,C=500,R=[58,185,345,496],h=[];EMO.forEach(function(c){n+=c[2].length*2});var step=360/n;
+function pt(r,d){var t=d*Math.PI/180;return [C+r*Math.sin(t),C-r*Math.cos(t)]}
+function f(p){return p[0].toFixed(1)+" "+p[1].toFixed(1)}
+function seg(r0,r1,a0,a1){var L=a1-a0>180?1:0;return "M"+f(pt(r1,a0))+"A"+r1+" "+r1+" 0 "+L+" 1 "+f(pt(r1,a1))+"L"+f(pt(r0,a1))+"A"+r0+" "+r0+" 0 "+L+" 0 "+f(pt(r0,a0))+"Z"}
+function word(w,cls,col,r0,r1,a0,a1,fs){var m=(a0+a1)/2,p=pt((r0+r1)/2,m),rot=m<180?m-90:m+90;
+return '<g class="dw ew '+cls+'" style="--h:'+col+'"><path d="'+seg(r0,r1,a0,a1)+'"/><text x="'+p[0].toFixed(1)+'" y="'+p[1].toFixed(1)+'" font-size="'+fs+'" transform="rotate('+rot.toFixed(2)+' '+f(p)+')">'+esc(w)+'</text></g>'}
+EMO.forEach(function(c){var a0=a;c[2].forEach(function(s){var b0=a;s.slice(1).forEach(function(t){h.push(word(t,"e3",c[1],R[2],R[3],a,a+step,18));a+=step});h.push(word(s[0],"e2",c[1],R[1],R[2],b0,a,20))});h.push(word(c[0],"e1",c[1],R[0],R[1],a0,a,25))});
+return emoWheel.s='<svg class="ewh" viewBox="0 0 1000 1000" role="img" aria-label="Wheel of feelings: '+EMO.map(function(c){return c[0]}).join(", ")+'">'+h.join("")+'</svg>'}
+function emoList(){return '<div class="ebl">'+EMO.map(function(c){return '<div class="ebg" style="--h:'+c[1]+'"><h4><span class="dw">'+esc(c[0])+'</span></h4><ul>'+
+c[2].map(function(s){return '<li><b class="dw">'+esc(s[0])+'</b> '+s.slice(1).map(function(t){return '<span class="dw">'+esc(t.toLowerCase())+'</span>'}).join(" · ")+'</li>'}).join("")+'</ul></div>'}).join("")+'</div>'}
 function vapidsView(){var gs=GLIST.slice().sort(function(a,b){return (/^\d/.test(a)-/^\d/.test(b))||(a<b?-1:1)});
 return '<section class="page vapp"><h2>Good to know</h2><button type="button" class="vapt" id="vapt" aria-expanded="'+(!!S.vapOpen)+'" aria-controls="vapgl">All genres <span class="meta">'+gs.length+'</span><svg class="vapc" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>'+
 '<ul class="vapgl" id="vapgl"'+(S.vapOpen?'':' hidden')+'>'+gs.map(function(g){return '<li>'+esc(g)+'</li>'}).join("")+'</ul>'+
 '<form class="vapsug" id="vapsug"><label for="vapin">Can’t find a genre? Suggest one and we’ll look at adding it.</label><div class="vaprow"><input id="vapin" maxlength="40" placeholder="Suggest a genre" autocomplete="off" enterkeyhint="send"><button class="btn" type="submit">Suggest</button></div></form>'+
+'<button type="button" class="vapt vapw" id="vapw" aria-expanded="'+(!!S.ebOpen)+'" aria-controls="vapwb">Word bank <span class="meta">'+emoCount()+' feelings</span><svg class="vapc" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>'+
+'<div class="vapwb" id="vapwb"'+(S.ebOpen?'':' hidden')+'><p class="meta">Words for how a song makes you feel. Click one for what it means.</p>'+emoWheel()+emoList()+'</div>'+
 (S.user&&acct(S.user)?'<button type="button" class="vapt vapl" data-life="'+esc(S.user)+'">'+GRIDI+'Lifetime mosaic<svg class="vapc" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>':'')+'</section>'}
 function wireVapids(){var t=$("#vapt");if(!t)return;t.onclick=function(){var l=$("#vapgl"),o=l.hidden;l.hidden=!o;S.vapOpen=o;t.setAttribute("aria-expanded",String(o))};
+var wb=$("#vapw");if(wb)wb.onclick=function(){var l=$("#vapwb"),o=l.hidden;l.hidden=!o;S.ebOpen=o;wb.setAttribute("aria-expanded",String(o))};
 $("#vapsug").onsubmit=function(e){e.preventDefault();var inp=$("#vapin"),raw=inp.value.trim(),g=fold(raw).replace(/\s+/g," ").trim();if(g.length<2){toast("Type the genre you’d like added");return}
 var x=genFix(g);if(x&&!x.near){toast("“"+x.g+"” is already accepted, you can use it now");return}
 if(!S.user){toast("Sign in to suggest a genre");return}inp.value="";
@@ -2421,8 +2469,27 @@ function dictOver(x,y){var a=DICT.w.getBoundingClientRect(),c=DICT.el.getBoundin
 return (x>=a.left-2&&x<=a.right+2&&y>=a.top-2&&y<=a.bottom+2)||(x>=c.left&&x<=c.right&&y>=c.top&&y<=c.bottom)||(x>=a.left-16&&x<=a.right+16&&y>=Math.min(a.bottom,c.bottom)&&y<=Math.max(a.top,c.top))}
 function dictPlace(b,w){var r=w.getBoundingClientRect(),bw=b.offsetWidth,bh=b.offsetHeight,x=Math.max(8,Math.min(r.left+r.width/2-bw/2,innerWidth-bw-8)),y=r.bottom+8;
 if(y+bh>innerHeight-8)y=Math.max(8,r.top-bh-8);b.style.left=Math.round(x)+"px";b.style.top=Math.round(y)+"px"}
+/* a definition, tidied: the dictionary sometimes cuts one off mid-clause ("of or relating to nomads, whether") */
+function dictClean(d){d=String(d||"").replace(/\s+/g," ").trim().replace(/[,;:]?\s*\b(?:whether|or|and|but|such as|especially|including|for example|as)\s*$/i,"");return d&&!/[.!?)”"…]$/.test(d)?d+".":d}
+/* the words of a definition, each one clickable for a short meaning of its own (dict2) */
+function dw2(t){var o="",last=0,m;t=String(t||"");DWORD.lastIndex=0;while((m=DWORD.exec(t))){o+=esc(t.slice(last,m.index))+'<span class="dw2">'+esc(m[0])+'</span>';last=m.index+m[0].length}return o+esc(t.slice(last))}
+function dictTries(word){var tries=[word],m;if((m=/^(.{3,}?)(?:'s|’s|es|s|ed|d|ing|ly)$/.exec(word)))tries.push(m[1]);if(/ies$/.test(word))tries.push(word.slice(0,-3)+"y");return tries}
+/* names the dictionary doesn't have (places, people, bands): Wikipedia's one-line description, e.g. Detroit → "City in Michigan, United States" */
+function wikiShort(t){t=String(t||"").trim().replace(/^[-'’]+|[-'’]+$/g,"");if(t.length<2)return Promise.resolve(null);t=t.charAt(0).toUpperCase()+t.slice(1);DICT.wk=DICT.wk||{};
+return DICT.wk[t]||(DICT.wk[t]=fetch("https://en.wikipedia.org/api/rest_v1/page/summary/"+encodeURIComponent(t)).then(function(r){return r.ok?r.json():null}).then(function(j){
+if(!j||j.type==="disambiguation")return null;var d=String(j.description||"").trim()||String(j.extract||"").split(/\.\s/)[0];if(!d)return null;d=d.charAt(0).toUpperCase()+d.slice(1);
+return {d:/[.!?]$/.test(d)?d:d+".",u:j.content_urls&&j.content_urls.desktop&&j.content_urls.desktop.page||""}},function(){return null}))}
+/* the short meaning of a word inside a definition: just its first sense, cut to its first clause */
+function dictBrief(d){d=String(d||"").replace(/\([^)]*\)/g,"").split(";")[0].replace(/\s+/g," ").trim();if(d.length>90){d=d.slice(0,90);d=d.slice(0,d.lastIndexOf(" ")).replace(/[,:]$/,"")+"…"}return dictClean(d)}
+function dictShort(word,orig){DICT.s=DICT.s||{};if(DICT.s[word]!=null)return Promise.resolve(DICT.s[word]);var tries=dictTries(word),go=function(i){if(i>=tries.length)return Promise.resolve(null);return dictFetch(tries[i]).then(function(j){return j||go(i+1)})};
+return go(0).then(function(j){var m=j&&(j[0].meanings||[]).filter(function(m){return (m.definitions||[]).length})[0];return m?dictBrief(m.definitions[0].definition):wikiShort(orig).then(function(w){return w?w.d:""})}).then(function(t){DICT.s[word]=t||"";return t||""},function(){return ""})}
+/* clicking a word inside the box: a one-line meaning tucked under its line (click it again, or another word, to swap it out) */
+function dict2(b,w,x){var word=x.textContent.toLowerCase().replace(/^[-'’]+|[-'’]+$/g,""),p=x.closest("p")||b.querySelector(".dictsrc"),old=b.querySelector(".dict2"),was=x.classList.contains("on");
+if(old)old.remove();[].forEach.call(b.querySelectorAll(".dw2.on"),function(y){y.classList.remove("on")});if(was||!word||!p){dictPlace(b,w);return}
+var d=document.createElement("p");d.className="dict2";d.textContent="…";p.parentNode.insertBefore(d,p.nextSibling);x.classList.add("on");dictPlace(b,w);
+dictShort(word,x.textContent).then(function(t){if(!d.isConnected)return;d.textContent=t||"No short meaning found.";d.classList.toggle("na",!t);dictPlace(b,w)})}
 function dictHTML(j,word){var e=j[0],ph=(e.phonetic||((e.phonetics||[]).filter(function(p){return p.text})[0]||{}).text||""),h=ph?'<p class="dictph">'+esc(ph)+'</p>':'',k=0;
-(e.meanings||[]).slice(0,3).forEach(function(m){var d=(m.definitions||[])[0];if(!d||k>=3)return;k++;h+='<p class="dictpos">'+esc(m.partOfSpeech||"")+'</p><p class="dictd">'+esc(d.definition)+'</p>'+(d.example&&d.example.length<140?'<p class="dictex">“'+esc(d.example)+'”</p>':'')});
+(e.meanings||[]).slice(0,3).forEach(function(m){var d=(m.definitions||[])[0];if(!d||k>=3)return;k++;h+='<p class="dictpos">'+esc(m.partOfSpeech||"")+'</p><p class="dictd">'+dw2(dictClean(d.definition))+'</p>'+(d.example&&d.example.length<140?'<p class="dictex">“'+dw2(d.example)+'”</p>':'')});
 return h+'<a class="dictsrc" href="https://en.wiktionary.org/wiki/'+encodeURIComponent(e.word||word)+'" target="_blank" rel="noopener">More on Wiktionary ↗</a>'}
 /* one word, exactly as given: its entries, or null if the dictionary doesn't have it (asked once per word) */
 function dictFetch(w){DICT.j=DICT.j||{};return DICT.j[w]||(DICT.j[w]=fetch("https://api.dictionaryapi.dev/api/v2/entries/en/"+encodeURIComponent(w)).then(function(r){if(r.status===404)return null;if(!r.ok)throw 0;return r.json()}).then(function(j){return Array.isArray(j)&&j.length?j:null},function(e){delete DICT.j[w];throw e}))}
@@ -2437,12 +2504,12 @@ if(!t)return;if(/ies$/.test(t))add(t.slice(0,-3)+"y",1);else if(/[^s]s$/.test(t)
 ["ically:","ical:","ically:ic","iness:y","ness:","ment:","ity:","ity:e","istic:","ism:","ist:","ic:","ally:al","al:","iful:y","ful:","less:","ous:","ive:","ive:e","able:","able:e","ible:","ise:","ize:","isation:","ization:","ation:","ation:e","ation:ate","er:","ily:y","ly:","ish:","y:","y:e"].forEach(function(x){
 var a=x.split(":");if(word.length>a[0].length+3&&word.slice(-a[0].length)===a[0])add(word.slice(0,-a[0].length)+a[1],0)});return out.slice(0,3)}
 function dictRootHTML(j,w){var e=j[0],m=(e.meanings||[]).filter(function(m){return (m.definitions||[]).length})[0];if(!m)return "";
-return '<p class="dictrh">From <b>'+esc(e.word||w)+'</b></p><p class="dictpos">'+esc(m.partOfSpeech||"")+'</p><p class="dictd">'+esc(m.definitions[0].definition)+'</p>'}
-function dictLook(word){if(DICT.c[word])return Promise.resolve(DICT.c[word]);DICT.rp=DICT.rp||{};
+return '<p class="dictrh">From <b>'+esc(e.word||w)+'</b></p><p class="dictpos">'+esc(m.partOfSpeech||"")+'</p><p class="dictd">'+dw2(dictClean(m.definitions[0].definition))+'</p>'}
+function dictLook(word,orig){if(DICT.c[word])return Promise.resolve(DICT.c[word]);DICT.rp=DICT.rp||{};
 /* try the word as written, then without a common ending (songs → song, played → play, slowly → slow) */
-var tries=[word],m;if((m=/^(.{3,}?)(?:'s|’s|es|s|ed|d|ing|ly)$/.exec(word)))tries.push(m[1]);if(/ies$/.test(word))tries.push(word.slice(0,-3)+"y");
-var go=function(i){if(i>=tries.length)return Promise.resolve(null);return dictFetch(tries[i]).then(function(j){return j||go(i+1)})};
-return go(0).then(function(j){var h=j&&j.length?dictHTML(j,word):'<p class="dictd na">No definition found.</p><a class="dictsrc" href="https://en.wiktionary.org/wiki/'+encodeURIComponent(word)+'" target="_blank" rel="noopener">Search Wiktionary ↗</a>';DICT.c[word]=h;
+var tries=dictTries(word),go=function(i){if(i>=tries.length)return Promise.resolve(null);return dictFetch(tries[i]).then(function(j){return j||go(i+1)})};
+return go(0).then(function(j){if(j&&j.length)return {j:j};return wikiShort(orig||word).then(function(wk){return {wk:wk}})}).then(function(o){var j=o.j,wk=o.wk;
+var h=j?dictHTML(j,word):wk?'<p class="dictd">'+dw2(wk.d)+'</p>'+(wk.u?'<a class="dictsrc" href="'+esc(wk.u)+'" target="_blank" rel="noopener">More on Wikipedia ↗</a>':''):'<p class="dictd na">No definition found.</p><a class="dictsrc" href="https://en.wiktionary.org/wiki/'+encodeURIComponent(word)+'" target="_blank" rel="noopener">Search Wiktionary ↗</a>';DICT.c[word]=h;
 /* ...and, if it's built on another word, what that one means, shown under it once found */
 if(j&&j.length){var rs=dictRoots(String(j[0].word||word).toLowerCase(),j),tr=function(i){if(i>=rs.length)return Promise.resolve("");return dictFetch(rs[i]).then(function(rj){return rj?dictRootHTML(rj,rs[i]):tr(i+1)},function(){return ""})};DICT.rp[word]=tr(0)}
 return h},
@@ -2451,7 +2518,8 @@ function dictOpen(w){var word=w.textContent.toLowerCase().replace(/^[-'’]+|[-'
 var b=document.createElement("div");b.className="dict";b.setAttribute("role","dialog");b.setAttribute("aria-label","What “"+word+"” means");
 b.innerHTML='<button type="button" class="dictx" aria-label="Close">×</button><div class="dictb"><p class="dictd na">Looking it up…</p></div>';
 document.body.appendChild(b);DICT.el=b;DICT.w=w;w.classList.add("on");dictPlace(b,w);b.querySelector(".dictx").onclick=dictClose;
-dictLook(word).then(function(h){if(DICT.el!==b)return;var bd=b.querySelector(".dictb");bd.innerHTML=h;dictPlace(b,w);
+b.addEventListener("click",function(e){var x=e.target.closest&&e.target.closest(".dw2");if(x)dict2(b,w,x)});
+dictLook(word,w.textContent).then(function(h){if(DICT.el!==b)return;var bd=b.querySelector(".dictb");bd.innerHTML=h;dictPlace(b,w);
 var rp=DICT.rp&&DICT.rp[word];if(rp)rp.then(function(rh){if(DICT.el!==b||!rh)return;var d=document.createElement("div"),src=bd.querySelector(".dictsrc");d.className="dictroot";d.innerHTML=rh;bd.insertBefore(d,src);dictPlace(b,w)})})}
 document.addEventListener("mouseover",function(e){if(!dictOK())return;var el=e.target.closest&&e.target.closest(DSEL);if(el)dictWrap(el)},true);
 document.addEventListener("click",function(e){var t=e.target;if(DICT.el&&DICT.el.contains(t))return;var w=t.closest&&t.closest(".dw");
