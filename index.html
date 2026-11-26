@@ -2085,7 +2085,7 @@ albums:r[1]&&r[1].filter(function(t){return t.collectionName&&t.artistName&&okAr
 artists:r[2]&&r[2].filter(function(t){return t.artistName}).map(function(t){return {name:t.artistName,genre:t.primaryGenreName||""}})}}
 function revCount(it){var t=it.title.toLowerCase(),a=it.artist.toLowerCase();return S.reviews.filter(function(r){return r.type===it.type&&r.title.toLowerCase()===t&&r.artist.toLowerCase()===a}).length}
 /* the search wheel: Songs sits in the middle, the music either side of it and the people at the ends */
-var SWK=["reviews","albums","songs","artists","profiles"],SWN={reviews:"Reviews",albums:"Albums",songs:"Songs",artists:"Artists",profiles:"Profiles"},SW={};
+var SWK=["reviews","albums","songs","artists","profiles"],SWN={reviews:"Reviews",albums:"Albums",songs:"Songs",artists:"Artists",profiles:"Profiles"},SWX={};
 function swOp(d){d=Math.abs(d);return d>=3.5?0:Math.max(0,1-d*.27-(d>2?.2:0)).toFixed(2)}
 function swHTML(){var i=Math.max(0,SWK.indexOf(S.stab||"songs"));return '<div class="swh" id="swh" role="tablist" aria-label="Search for" tabindex="0" style="--sel:'+i+'"><div class="swhr">'+
 SWK.map(function(k,j){return '<button type="button" class="stab" role="tab" tabindex="-1" data-st="'+k+'" style="--k:'+j+';opacity:'+swOp(j-i)+'" aria-selected="'+(j===i)+'">'+SWN[k]+'</button>'}).join("")+'</div></div>'}
@@ -2099,9 +2099,9 @@ var R=Math.round(Math.max(140,Math.min(220,w.clientWidth*.36)));w.style.setPrope
 w.onpointerdown=function(e){if(e.button>0)return;d={x:e.clientX,s:w._sel,id:e.pointerId,on:false}};
 w.onpointermove=function(e){if(!d||e.pointerId!==d.id)return;var dx=e.clientX-d.x;if(!d.on){if(Math.abs(dx)<6)return;d.on=true;w.classList.add("drag");try{w.setPointerCapture(e.pointerId)}catch(_){}}
 swSet(w,Math.max(-.4,Math.min(SWK.length-.6,d.s-dx/per)))};
-w.onpointerup=w.onpointercancel=function(e){if(!d)return;var was=d.on;d=null;if(was){SW.up=Date.now();swPick(w._sel)}};
+w.onpointerup=w.onpointercancel=function(e){if(!d)return;var was=d.on;d=null;if(was){SWX.up=Date.now();swPick(w._sel)}};
 /* a sideways swipe on a trackpad turns it too, one step at a time */
-w.onwheel=function(e){if(Math.abs(e.deltaX)<=Math.abs(e.deltaY))return;e.preventDefault();SW.acc=(SW.acc||0)+e.deltaX;if(Date.now()-(SW.t||0)<260||Math.abs(SW.acc)<30)return;SW.t=Date.now();swPick(w._sel+(SW.acc>0?1:-1));SW.acc=0};
+w.onwheel=function(e){if(Math.abs(e.deltaX)<=Math.abs(e.deltaY))return;e.preventDefault();SWX.acc=(SWX.acc||0)+e.deltaX;if(Date.now()-(SWX.t||0)<260||Math.abs(SWX.acc)<30)return;SWX.t=Date.now();swPick(w._sel+(SWX.acc>0?1:-1));SWX.acc=0};
 w.onkeydown=function(e){var k=e.key,i=w._sel;if(k==="ArrowRight")i++;else if(k==="ArrowLeft")i--;else if(k==="Home")i=0;else if(k==="End")i=SWK.length-1;else return;e.preventDefault();swPick(i)}}
 function reEsc(t){return String(t).replace(/[.*+?^${}()|[\]\\]/g,"\\$&")}
 /* a review that mentions the word: a short piece of it around the first mention, with the word lit up */
@@ -2737,7 +2737,7 @@ if(!confirm("Delete this review?"))return;api.delReview(b.dataset.del).then(func
 document.querySelectorAll("[data-edit]").forEach(function(b){b.onclick=function(){
 openForm(S.reviews.filter(function(r){return r.id==b.dataset.edit})[0])}});
 document.querySelectorAll("[data-u]").forEach(function(b){b.onclick=function(){var u=b.dataset.u;S.view=u;S.tab=u===S.user?"profile":"user";S.stack=[];S.shut=keepShut();appView()}});
-document.querySelectorAll("[data-st]").forEach(function(b){b.onclick=function(){if(Date.now()-(SW.up||0)<350)return;swPick(SWK.indexOf(b.dataset.st))}});wireWheel();
+document.querySelectorAll("[data-st]").forEach(function(b){b.onclick=function(){if(Date.now()-(SWX.up||0)<350)return;swPick(SWK.indexOf(b.dataset.st))}});wireWheel();
 document.querySelectorAll("[data-rsong]").forEach(function(b){b.onclick=function(e){if(e.target.closest("[data-u]"))return;var r=revOf(b.dataset.rsong);if(r)openSong(revSong(r))}});
 function reviewFrom(src){var x=String(src).split(":"),it=S.res&&S.res[x[0]]&&S.res[x[0]][+x[1]];if(!it)return;if(dupSong(it)){openSong(songFromHit(it));return}S.bq=S.sq;S.pre=it;S.tab="review";S.stack=[{tab:"search",view:S.view,stab:S.stab,q:S.q,y:window.scrollY||0}];appView()}
 document.querySelectorAll("[data-rv]").forEach(function(b){b.onclick=function(){reviewFrom(b.dataset.rv)}});
