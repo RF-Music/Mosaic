@@ -116,6 +116,18 @@ nav button[aria-current="true"]{color:var(--ink);border-color:var(--pop)}
 .vapsug{margin:0 0 18px}
 .vapw{margin-top:0}
 .vapl{margin-top:0}
+/* future features: a pink dot by each one; Fred gets × to take one off, and the ideas others sent under the list */
+.vapfl{margin:0;padding:0;list-style:none}
+.vapfl li{display:flex;align-items:center;gap:8px;min-height:34px;padding:5px 2px;border-top:1px solid color-mix(in srgb,var(--line) 70%,transparent);font-size:14.5px}
+.vapfl li:first-child{border-top:0}
+.vapfl li>span{flex:1;min-width:0;overflow-wrap:anywhere}
+.vapfl:not(.vapfs) li>span::before{content:"";display:inline-block;width:7px;height:7px;margin-right:11px;border-radius:50%;background:var(--pop);vertical-align:1px}
+.vapfl li i{font-style:normal;color:var(--mute);font-size:13px}
+.vapf0{margin:0;font-size:14px}
+.vapx{flex:none;width:28px;height:28px;padding:0;border:0;border-radius:50%;background:none;color:var(--mute);font:inherit;font-size:19px;line-height:1;cursor:pointer}
+.vapx:hover,.vapx:focus-visible{background:var(--line);color:var(--ink)}
+.vapfh{margin:20px 0 4px;font-size:13px;font-weight:600;color:var(--mute)}
+.vapfh span{margin-left:4px;font-weight:500}
 /* the word bank */
 .vapwb{padding:12px 2px 18px;border-bottom:1px solid var(--line)}
 .vapwb[hidden]{display:none}
@@ -227,25 +239,33 @@ dialog::backdrop{background:rgba(10,12,20,.55)}
 .dot{position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;background:var(--pop);box-shadow:0 0 0 2px var(--surface)}
 .note{padding:6px 0;font-size:13px;border-top:1px solid var(--line)}
 .note:first-of-type{border-top:0}
-/* what a search looks for (Reviews, Albums, Songs, Artists, Profiles) is a wheel turned on its side: the choice faces you over the
-   mark in the middle, the others turn away to either side. Click one, drag or swipe it round, or use the arrow keys (see swPick) */
-.swh{position:relative;height:46px;margin:0 0 14px;perspective:700px;overflow:hidden;border-bottom:1px solid var(--line);touch-action:pan-y;user-select:none;-webkit-user-select:none;cursor:grab;
--webkit-mask-image:linear-gradient(90deg,transparent,#000 16%,#000 84%,transparent);mask-image:linear-gradient(90deg,transparent,#000 16%,#000 84%,transparent);--R:220px}
-.swh.drag{cursor:grabbing}
-.swh::after{content:"";position:absolute;left:50%;bottom:0;width:48px;height:2px;margin-left:-24px;border-radius:2px;background:var(--pop)}
-.swh:focus-visible{outline:2px solid var(--pop);outline-offset:2px}
-.swhr{position:absolute;left:50%;top:0;width:0;height:100%;transform-style:preserve-3d;transform:translateZ(calc(var(--R)*-1)) rotateY(calc(var(--sel)*-28deg));transition:transform .45s cubic-bezier(.2,.8,.2,1)}
-.swh.drag .swhr{transition:none}
-.swh .stab{position:absolute;left:-60px;top:6px;width:120px;height:34px;padding:0;border:0;background:none;color:var(--mute);font-size:15px;font-weight:500;text-align:center;cursor:pointer;backface-visibility:hidden;-webkit-backface-visibility:hidden;
-transform:rotateY(calc(var(--k)*28deg)) translateZ(var(--R));transition:color .2s,opacity .3s}
-.swh.drag .stab{transition:none}
-.swh .stab[aria-selected="true"]{color:var(--ink);font-weight:600}
+/* what a search looks for (Reviews, Albums, Songs, Artists, Profiles) is a circle just to the right of what you searched. The five ride
+   round a wheel, upright like the cars on a big wheel, and it turns to bring your choice round to the pink needle on its left, next to
+   your search. Click one, drag it round, or use the arrow keys (see swPick). wireWheel sizes it so the five never bump into each other */
+.swrow{display:flex;align-items:center;gap:12px;margin:-6px 0 6px}
+.swrow h2{flex:0 1 auto;min-width:0;margin:0;overflow-wrap:anywhere}
+.swdial{--R:60px;--W:74px;--H:22px;position:relative;flex:none;width:calc(var(--R)*2 + var(--W));height:calc(var(--R)*2 + var(--H) + 4px);
+touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab;border-radius:14px}
+.swdial.drag{cursor:grabbing}
+.swdial:focus-visible{outline:2px solid var(--pop);outline-offset:2px}
+.swdial svg{position:absolute;left:50%;top:50%;width:calc(var(--R)*2);height:calc(var(--R)*2);margin:calc(var(--R)*-1) 0 0 calc(var(--R)*-1);overflow:visible;pointer-events:none}
+.swdial svg *{vector-effect:non-scaling-stroke}
+.swdial .swo{fill:none;stroke:var(--line);stroke-width:1.5}
+.swdial .sws{stroke:var(--line);stroke-width:1}
+.swdial .swn{stroke:var(--pop);stroke-width:2.5;stroke-linecap:round}
+.swdial .swb{fill:var(--pop)}
+.swdial .stab{position:absolute;left:50%;top:50%;padding:3px 9px;border:0;border-radius:999px;background:var(--surface);box-shadow:inset 0 0 0 1px var(--line);
+color:var(--mute);font-size:12.5px;font-weight:500;line-height:16px;white-space:nowrap;cursor:pointer;
+transform:translate(calc(var(--R)*var(--x)),calc(var(--R)*var(--y))) translate(-50%,-50%);transition:color .2s,background-color .2s,box-shadow .2s}
+.swdial .stab:hover{color:var(--ink)}
+.swdial .stab[aria-selected="true"]{background:color-mix(in srgb,var(--pop) 22%,var(--surface));box-shadow:inset 0 0 0 1px var(--pop);color:var(--ink);font-weight:600}
+@media (max-width:520px){.swrow{gap:8px}.swdial .stab{font-size:12px;padding:3px 7px}}
 /* reviews that mention the word */
 .rsn{display:block;margin-top:3px;font-size:13.5px;line-height:1.4;color:var(--ink);overflow-wrap:anywhere}
 .rsn mark{background:color-mix(in srgb,var(--pop) 30%,transparent);color:inherit;border-radius:3px;padding:0 1px}
 /* search results: two to a row like the home page, but much simpler (the cover, the title, who it's by) on a darker card. On a phone
    the songs, albums and reviews stand up (cover on top); people and artists take the whole row */
-#sres{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+#sres{grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
 #sres>p,#sres>.empty,#sres>.demo{grid-column:1/-1;margin:0}
 #sres .ri{position:relative;gap:12px;padding:10px;background:var(--sunk);border-color:color-mix(in srgb,var(--line) 60%,transparent)}
 #sres .ri .rart{width:84px;height:84px;border-radius:8px}
@@ -1208,18 +1228,18 @@ canvas.soft.now{transition:none}
 /* listen later's chain: the links sit apart, swing together (with a little bounce) once a song is chained, and part when it's taken off */
 .chn{overflow:visible}
 .chn .cla,.chn .clb{transition:transform .3s cubic-bezier(.3,1.6,.5,1)}
-.chn .cla{transform:translateX(-2px)}.chn .clb{transform:translateX(2px)}
+.chn .cla{transform:translateX(-4px)}.chn .clb{transform:translateX(4px)}
 .chn.on .cla,.chn.on .clb{transform:none}
 .chn.chj .cla{animation:chja .55s cubic-bezier(.3,1.7,.5,1)}.chn.chj .clb{animation:chjb .55s cubic-bezier(.3,1.7,.5,1)}
 .chn.chs .cla{animation:chsa .35s ease-out}.chn.chs .clb{animation:chsb .35s ease-out}
-@keyframes chja{from{transform:translateX(-5px)}}@keyframes chjb{from{transform:translateX(5px)}}
+@keyframes chja{from{transform:translateX(-4px)}}@keyframes chjb{from{transform:translateX(4px)}}
 @keyframes chsa{from{transform:none}}@keyframes chsb{from{transform:none}}
 .act[data-later].on,.later-btn.on{color:var(--pop)}
 /* in the menu: the chain and how many songs are on it */
 .mch{display:inline-flex;align-items:center;gap:4px;margin-left:9px;color:var(--mute);font-size:13px;font-weight:500;vertical-align:-2px}
 .mch .chn{color:var(--pop)}
 /* the Listen later page: the cards hang one under another on a chain */
-.list.lt{gap:0}
+.list.chl{gap:0}
 .ltc{position:relative;height:24px;z-index:1;pointer-events:none}
 .ltc svg{position:absolute;left:50%;margin-left:-7px;top:-6px;width:14px;height:36px;color:color-mix(in srgb,var(--ink) 50%,transparent)}
 .sbtns{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
@@ -1732,20 +1752,62 @@ return '<section class="page vapp"><h2>Good to know</h2><button type="button" cl
 '<ul class="vapgl" id="vapgl">'+gs.map(function(g){return '<li>'+esc(g)+'</li>'}).join("")+'</ul></div>'+
 '<button type="button" class="vapt vapw" id="vapw" aria-expanded="'+(!!S.ebOpen)+'" aria-controls="vapwb">Word bank <span class="meta">'+emoCount()+' feelings</span><svg class="vapc" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>'+
 '<div class="vapwb" id="vapwb"'+(S.ebOpen?'':' hidden')+'><p class="meta">Words for how a song makes you feel. Click one for what it means.</p>'+emoWheel()+emoList()+'</div>'+
+'<button type="button" class="vapt vapw" id="vapf" aria-expanded="'+(!!S.ffOpen)+'" aria-controls="vapfb">Future features <span class="meta">'+featCount()+'</span><svg class="vapc" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>'+
+'<div class="vapgb" id="vapfb"'+(S.ffOpen?'':' hidden')+'>'+featBody()+'</div>'+
 (S.user&&acct(S.user)?'<button type="button" class="vapt vapl" data-life="'+esc(S.user)+'">'+GRIDI+'Lifetime mosaic<svg class="vapc" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>':'')+'</section>'}
 function wireVapids(){var t=$("#vapt");if(!t)return;t.onclick=function(){var l=$("#vapgb"),o=l.hidden;l.hidden=!o;S.vapOpen=o;t.setAttribute("aria-expanded",String(o))};
 var wb=$("#vapw");if(wb)wb.onclick=function(){var l=$("#vapwb"),o=l.hidden;l.hidden=!o;S.ebOpen=o;wb.setAttribute("aria-expanded",String(o))};
+var fb=$("#vapf");if(fb)fb.onclick=function(){var l=$("#vapfb"),o=l.hidden;l.hidden=!o;S.ffOpen=o;fb.setAttribute("aria-expanded",String(o))};wireFeat();
+if(!S.featOK||S.featFor!==(S.uid||S.user||""))featLoad();
 $("#vapsug").onsubmit=function(e){e.preventDefault();var inp=$("#vapin"),raw=inp.value.trim(),g=fold(raw).replace(/\s+/g," ").trim();if(g.length<2){toast("Type the genre you’d like added");return}
 var x=genFix(g);if(x&&!x.near){toast("“"+x.g+"” is already accepted, you can use it now");return}
 if(!S.user){toast("Sign in to suggest a genre");return}inp.value="";
 if(!REMOTE){var l=store.get("ln_gsug",[])||[];if(l.indexOf(g)<0)l.push(g);store.set("ln_gsug",l);toast("Thanks, “"+g+"” is on the list to look at");return}
 Promise.resolve(sb.from("genre_suggestions").insert({genre:g.slice(0,40)})).then(function(r){if(r.error){toast(r.error.code==="23505"?"You’ve already suggested “"+g+"”":/plenty/.test(r.error.message||"")?"That’s plenty of suggestions for today":"Couldn’t send that. Try again.");if(r.error.code!=="23505")inp.value=raw;return}
 toast("Thanks, “"+g+"” is on the list to look at")},function(){inp.value=raw;toast("Couldn’t send that. Check your connection.")})}}
+/* ---------- future features: what's on its way to Mosaic. Only Fred (the site's admin, see is_admin) can put one forward, and the
+   database holds to that too; everyone else gets a box to suggest one, like the genres box, and Fred sees those ideas under the list
+   to add or clear ---------- */
+function featCount(){return S.featOK?String((S.feats||[]).length):""}
+function featBody(){var ad=!!S.fadmin,h='<form class="vapsug" id="vapff"><label for="vapfi">'+(ad?'Put forward a feature you’re planning. Only you can add to this list.':'Got an idea for Mosaic? Suggest a feature and we’ll take a look.')+
+'</label><div class="vaprow"><input id="vapfi" maxlength="'+(ad?120:140)+'" placeholder="'+(ad?'A feature on its way':'Suggest a feature')+'" autocomplete="off" enterkeyhint="send"><button class="btn" type="submit">'+(ad?'Add':'Suggest')+'</button></div></form>';
+if(!S.featOK)return h+'<p class="meta">Loading…</p>';
+h+=S.feats.length?'<ul class="vapfl">'+S.feats.map(function(f){return '<li><span>'+esc(f.title)+'</span>'+(ad?'<button type="button" class="vapx" data-fdel="'+esc(String(f.id))+'" aria-label="Take “'+esc(f.title)+'” off the list" title="Take off the list">×</button>':'')+'</li>'}).join("")+'</ul>':'<p class="meta vapf0">Nothing announced yet. Check back soon.</p>';
+if(ad&&S.fsug.length)h+='<h4 class="vapfh">Suggested by others <span>'+S.fsug.length+'</span></h4><ul class="vapfl vapfs">'+S.fsug.map(function(x){return '<li><span>'+esc(x.idea)+(x.by?'<i> · '+esc(x.by)+'</i>':'')+'</span>'+
+'<button type="button" class="btn ghost sm" data-fadd="'+esc(String(x.id))+'">Add</button><button type="button" class="vapx" data-fsx="'+esc(String(x.id))+'" aria-label="Clear this idea" title="Clear">×</button></li>'}).join("")+'</ul>';
+return h}
+function featPaint(){var b=$("#vapfb"),c=document.querySelector("#vapf .meta");if(c)c.textContent=featCount();if(b){b.innerHTML=featBody();wireFeat()}}
+function featLoad(){if(S.featBusy)return;S.featBusy=true;var who=S.uid||S.user||"";function done(){S.featBusy=false;S.featOK=true;S.featFor=who;featPaint()}
+if(!REMOTE){S.feats=store.get("ln_feats",[])||[];S.fadmin=/^(f|fred)$/i.test(S.user||"");S.fsug=S.fadmin?(store.get("ln_fsug",[])||[]):[];done();return}
+Promise.all([sb.from("future_features").select("id,title,created_at").order("created_at",{ascending:true}),S.uid?sb.rpc("is_admin"):Promise.resolve({data:false})]).then(function(r){
+S.feats=r[0].error?[]:(r[0].data||[]);S.fadmin=!!S.uid&&!r[1].error&&r[1].data===true;S.fsug=[];if(!S.fadmin){done();return}
+return sb.from("feature_suggestions").select("id,idea,user_id,created_at").order("created_at",{ascending:true}).then(function(x){var by={};accts.forEach(function(a){by[a.id]=a.name});
+S.fsug=x.error?[]:(x.data||[]).map(function(y){return {id:y.id,idea:y.idea,by:by[y.user_id]||""}});done()})}).catch(function(){S.featBusy=false})}
+function wireFeat(){var f=$("#vapff");if(!f)return;f.onsubmit=function(e){e.preventDefault();var inp=$("#vapfi"),raw=inp.value.trim().replace(/\s+/g," ");
+if(raw.length<3){toast(S.fadmin?"Type the feature you’re planning":"Type your idea for a feature");return}if(!S.user){toast("Sign in to suggest a feature");return}
+inp.value="";var back=function(ok){if(!ok)inp.value=raw};if(S.fadmin)featAdd(raw,null,back);else featSuggest(raw,back)};
+document.querySelectorAll("#vapfb [data-fdel]").forEach(function(b){b.onclick=function(){featDel(b.dataset.fdel)}});
+document.querySelectorAll("#vapfb [data-fadd]").forEach(function(b){b.onclick=function(){var x=S.fsug.filter(function(y){return String(y.id)===b.dataset.fadd})[0];if(x)featAdd(x.idea.slice(0,120),x.id)}});
+document.querySelectorAll("#vapfb [data-fsx]").forEach(function(b){b.onclick=function(){featSugDel(b.dataset.fsx)}})}
+function featAdd(t,sid,cb){t=t.slice(0,120);cb=cb||function(){};
+if(!REMOTE){var l=store.get("ln_feats",[])||[];l.push({id:Date.now(),title:t,created_at:new Date().toISOString()});store.set("ln_feats",l);S.feats=l;if(sid!=null)featSugDel(sid,true);featPaint();toast("Added to future features");cb(true);return}
+Promise.resolve(sb.from("future_features").insert({title:t}).select("id,title,created_at").single()).then(function(r){if(r.error){toast("Couldn’t add that. Try again.");cb(false);return}
+S.feats.push(r.data);if(sid!=null)featSugDel(sid,true);featPaint();toast("Added to future features");cb(true)},function(){toast("Couldn’t add that. Check your connection.");cb(false)})}
+function featDel(id){var keep=(S.feats||[]).filter(function(f){return String(f.id)!==String(id)});
+if(!REMOTE){store.set("ln_feats",keep);S.feats=keep;featPaint();return}
+Promise.resolve(sb.from("future_features").delete().eq("id",id)).then(function(r){if(r.error){toast("Couldn’t take that off. Try again.");return}S.feats=keep;featPaint()},function(){toast("Couldn’t take that off. Check your connection.")})}
+function featSuggest(t,cb){t=t.slice(0,140);
+if(!REMOTE){var l=store.get("ln_fsug",[])||[];l.push({id:Date.now(),idea:t,by:S.user});store.set("ln_fsug",l);toast("Thanks, your idea is in");cb(true);return}
+Promise.resolve(sb.from("feature_suggestions").insert({idea:t})).then(function(r){if(r.error){toast(/plenty/.test(r.error.message||"")?"That’s plenty of ideas for today":"Couldn’t send that. Try again.");cb(false);return}
+toast("Thanks, your idea is in");cb(true)},function(){toast("Couldn’t send that. Check your connection.");cb(false)})}
+function featSugDel(id,quiet){var keep=(S.fsug||[]).filter(function(x){return String(x.id)!==String(id)});
+if(!REMOTE){store.set("ln_fsug",(store.get("ln_fsug",[])||[]).filter(function(x){return String(x.id)!==String(id)}));S.fsug=keep;featPaint();return}
+Promise.resolve(sb.from("feature_suggestions").delete().eq("id",id)).then(function(r){if(r.error){if(!quiet)toast("Couldn’t clear that. Try again.");return}S.fsug=keep;featPaint()},function(){})}
 function laterView(){var l=S.later,h='<section class="page"><h2>Listen later</h2>'+(S.platOK&&l.length&&!S.plats.length?'<p class="meta" style="margin:-4px 0 12px"><button type="button" class="linkbtn" data-setplat="1">Choose where you listen</button> to open these in your app.</p>':'');
 if(!l.length)return h+'<div class="empty">Nothing chained yet. Tap the chain on a review, or “Listen later” on a song page, to add it here.</div></section>';
 /* between each song and the next, links of chain hanging down from one card to the next */
 var CV='<div class="ltc" aria-hidden="true"><svg viewBox="0 0 14 36" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="0" width="10" height="14" rx="5"/><rect x="5.5" y="10" width="3" height="16" rx="1.5"/><rect x="2" y="22" width="10" height="14" rx="5"/></svg></div>';
-return h+'<div class="list lt">'+l.map(function(t,i){
+return h+'<div class="list chl">'+l.map(function(t,i){
 return '<div class="ri"><button type="button" class="artbtn" data-info="lt:'+i+'" aria-label="About “'+esc(t.title)+'”">'+rimg({title:t.title,artist:t.artist,thumb:okArt(t.art)?t.art:""})+'</button><div class="rt"><b>'+esc(t.title)+'</b><span class="meta">'+esc(t.artist)+' · '+t.type+'</span></div>'+(S.plats.length?'<span class="lis2">'+plLinks(t,22,"lg")+'</span>':'')+'<button type="button" class="btn ghost sm" data-lrm="'+i+'" aria-label="Remove “'+esc(t.title)+'” from listen later">Remove</button></div>'}).join(CV)+'</div></section>'}
 function save(){store.set("ln_reviews",S.reviews)}
 function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
@@ -2189,25 +2251,44 @@ songs:r[0]&&r[0].filter(function(t){return t.trackName&&t.artistName&&okArt(t.ar
 albums:r[1]&&r[1].filter(function(t){return t.collectionName&&t.artistName&&okArt(t.artworkUrl100)}).map(function(t){return {title:t.collectionName,artist:t.artistName,album:(t.releaseDate||"").slice(0,4),art:upArt(t.artworkUrl100),thumb:th(t),tid:t.collectionId,type:"Album"}}),
 artists:r[2]&&r[2].filter(function(t){return t.artistName}).map(function(t){return {name:t.artistName,genre:t.primaryGenreName||""}})}}
 function revCount(it){var t=it.title.toLowerCase(),a=it.artist.toLowerCase();return S.reviews.filter(function(r){return r.type===it.type&&r.title.toLowerCase()===t&&r.artist.toLowerCase()===a}).length}
-/* the search wheel: Songs sits in the middle, the music either side of it and the people at the ends */
+/* the search circle: Songs starts at the needle, the music either side of it and the people round the back */
 var SWK=["reviews","albums","songs","artists","profiles"],SWN={reviews:"Reviews",albums:"Albums",songs:"Songs",artists:"Artists",profiles:"Profiles"},SWX={};
-function swOp(d){d=Math.abs(d);return d>=3.5?0:Math.max(0,1-d*.27-(d>2?.2:0)).toFixed(2)}
-function swHTML(){var i=Math.max(0,SWK.indexOf(S.stab||"songs"));return '<div class="swh" id="swh" role="tablist" aria-label="Search for" tabindex="0" style="--sel:'+i+'"><div class="swhr">'+
-SWK.map(function(k,j){return '<button type="button" class="stab" role="tab" tabindex="-1" data-st="'+k+'" style="--k:'+j+';opacity:'+swOp(j-i)+'" aria-selected="'+(j===i)+'">'+SWN[k]+'</button>'}).join("")+'</div></div>'}
-/* turn the wheel to position i (fractional while it's being dragged) */
-function swSet(w,i){w._sel=i;w.style.setProperty("--sel",i);[].forEach.call(w.querySelectorAll(".stab"),function(b,j){b.style.opacity=swOp(j-i)})}
-function swPick(i){var w=$("#swh");if(!w||i<0)return;i=Math.max(0,Math.min(SWK.length-1,Math.round(i)));w.classList.remove("drag");swSet(w,i);
+/* where a kind sits when it's d steps on from the needle (on the left; further on is further round clockwise from below) */
+function swXY(d){var a=Math.PI-d*2*Math.PI/SWK.length;return "--x:"+Math.cos(a).toFixed(4)+";--y:"+Math.sin(a).toFixed(4)}
+function swHTML(){var i=Math.max(0,SWK.indexOf(S.stab||"songs")),n=SWK.length;return '<div class="swdial" id="swh" role="tablist" aria-label="Search for" tabindex="0">'+
+'<svg viewBox="-50 -50 100 100" aria-hidden="true"><g class="swg" transform="rotate('+(i*360/n)+')"><circle class="swo" r="50"/>'+
+SWK.map(function(_,j){var a=Math.PI-j*2*Math.PI/n;return '<line class="sws" x2="'+(50*Math.cos(a)).toFixed(2)+'" y2="'+(50*Math.sin(a)).toFixed(2)+'"/>'}).join("")+
+'</g><line class="swn" x1="-5" x2="-16"/><circle class="swb" r="4.5"/></svg>'+
+SWK.map(function(k,j){return '<button type="button" class="stab" role="tab" tabindex="-1" data-st="'+k+'" style="'+swXY(j-i)+'" aria-selected="'+(j===i)+'">'+SWN[k]+'</button>'}).join("")+'</div>'}
+/* turn the wheel to position p (any number: it goes round and round; fractional while it's being dragged or turning) */
+function swSet(w,p){w._sel=p;var n=SWK.length,g=w.querySelector(".swg");if(g)g.setAttribute("transform","rotate("+(p*360/n).toFixed(2)+")");
+[].forEach.call(w.querySelectorAll(".stab"),function(b,j){b.setAttribute("style",swXY(j-p))})}
+function swTo(w,p){cancelAnimationFrame(w._raf);var s=w._sel,t0=0,D=Math.min(720,320+Math.abs(p-s)*130);
+if(s===p||matchMedia("(prefers-reduced-motion:reduce)").matches){swSet(w,p);return}
+w._raf=requestAnimationFrame(function f(t){if(!t0)t0=t;var k=Math.min(1,(t-t0)/D),e=1-Math.pow(1-k,3);swSet(w,s+(p-s)*e);if(k<1)w._raf=requestAnimationFrame(f)})}
+function swPick(p){var w=$("#swh");if(!w)return;var n=SWK.length;p=Math.round(p);w.classList.remove("drag");swTo(w,p);var i=(p%n+n)%n;
 [].forEach.call(w.querySelectorAll(".stab"),function(b,j){b.setAttribute("aria-selected",String(j===i))});var k=SWK[i];if(S.stab===k)return;S.stab=k;var el=$("#sres");if(el){el.innerHTML=resultsHTML();bind()}}
-function wireWheel(){var w=$("#swh");if(!w)return;if(w._sel==null)w._sel=+w.style.getPropertyValue("--sel")||0;
-var R=Math.round(Math.max(140,Math.min(220,w.clientWidth*.36)));w.style.setProperty("--R",R+"px");var per=R*28*Math.PI/180,d=null;
-/* drag or swipe it round; it settles on the nearest choice when you let go */
-w.onpointerdown=function(e){if(e.button>0)return;d={x:e.clientX,s:w._sel,id:e.pointerId,on:false}};
-w.onpointermove=function(e){if(!d||e.pointerId!==d.id)return;var dx=e.clientX-d.x;if(!d.on){if(Math.abs(dx)<6)return;d.on=true;w.classList.add("drag");try{w.setPointerCapture(e.pointerId)}catch(_){}}
-swSet(w,Math.max(-.4,Math.min(SWK.length-.6,d.s-dx/per)))};
+/* clicking a kind turns the wheel the short way round to it */
+function swTap(k){var w=$("#swh");if(!w)return;var n=SWK.length,c=w._sel,d=SWK.indexOf(k)-c;swPick(c+((d%n)+n+n/2)%n-n/2)}
+/* size it from the words themselves, so neighbours never touch however far round it's turned */
+function swFit(w){var b=[].slice.call(w.querySelectorAll(".stab")),n=b.length;if(!n||!b[0].offsetWidth)return;var m=0,mx=0,h=0;
+b.forEach(function(x,j){var y=b[(j+1)%n];m=Math.max(m,(x.offsetWidth+y.offsetWidth)/2);mx=Math.max(mx,x.offsetWidth);h=Math.max(h,x.offsetHeight)});m+=6;mx+=6;
+var R=Math.ceil(Math.sqrt(m*m+h*h)/(2*Math.sin(Math.PI/n)));w.style.setProperty("--R",R+"px");w.style.setProperty("--W",mx+"px");w.style.setProperty("--H",h+"px");
+var nd=w.querySelector(".swn");if(nd)nd.setAttribute("x2",(-Math.max(9,(R-mx/2-4)/R*50)).toFixed(1))}
+function wireWheel(){var w=$("#swh");if(!w)return;if(w._sel==null)w._sel=Math.max(0,SWK.indexOf(S.stab||"songs"));swFit(w);
+if(!w._ff&&document.fonts){w._ff=1;document.fonts.ready.then(function(){swFit(w)})}var d=null,n=SWK.length,step=2*Math.PI/n;
+/* drag it round like a dial; it settles on the nearest kind when you let go */
+w.onpointerdown=function(e){if(e.button>0)return;var r=w.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
+d={cx:cx,cy:cy,a:Math.atan2(e.clientY-cy,e.clientX-cx),x:e.clientX,y:e.clientY,s:w._sel,t:0,id:e.pointerId,on:false}};
+w.onpointermove=function(e){if(!d||e.pointerId!==d.id)return;if(!d.on){if(Math.hypot(e.clientX-d.x,e.clientY-d.y)<6)return;d.on=true;cancelAnimationFrame(w._raf);d.s=w._sel;
+w.classList.add("drag");try{w.setPointerCapture(e.pointerId)}catch(_){}}
+var a=Math.atan2(e.clientY-d.cy,e.clientX-d.cx),da=a-d.a;if(da>Math.PI)da-=2*Math.PI;else if(da<-Math.PI)da+=2*Math.PI;d.a=a;d.t+=da;swSet(w,d.s+d.t/step)};
 w.onpointerup=w.onpointercancel=function(e){if(!d)return;var was=d.on;d=null;if(was){SWX.up=Date.now();swPick(w._sel)}};
 /* a sideways swipe on a trackpad turns it too, one step at a time */
-w.onwheel=function(e){if(Math.abs(e.deltaX)<=Math.abs(e.deltaY))return;e.preventDefault();SWX.acc=(SWX.acc||0)+e.deltaX;if(Date.now()-(SWX.t||0)<260||Math.abs(SWX.acc)<30)return;SWX.t=Date.now();swPick(w._sel+(SWX.acc>0?1:-1));SWX.acc=0};
-w.onkeydown=function(e){var k=e.key,i=w._sel;if(k==="ArrowRight")i++;else if(k==="ArrowLeft")i--;else if(k==="Home")i=0;else if(k==="End")i=SWK.length-1;else return;e.preventDefault();swPick(i)}}
+w.onwheel=function(e){if(Math.abs(e.deltaX)<=Math.abs(e.deltaY))return;e.preventDefault();SWX.acc=(SWX.acc||0)+e.deltaX;if(Date.now()-(SWX.t||0)<260||Math.abs(SWX.acc)<30)return;
+SWX.t=Date.now();swPick(Math.round(w._sel)+(SWX.acc>0?1:-1));SWX.acc=0};
+w.onkeydown=function(e){var k=e.key,i=Math.round(w._sel);if(k==="ArrowDown"||k==="ArrowRight")i++;else if(k==="ArrowUp"||k==="ArrowLeft")i--;
+else if(k==="Home"||k==="End"){e.preventDefault();swTap(SWK[k==="Home"?0:n-1]);return}else return;e.preventDefault();swPick(i)}}
 function reEsc(t){return String(t).replace(/[.*+?^${}()|[\]\\]/g,"\\$&")}
 /* a review that mentions the word: a short piece of it around the first mention, with the word lit up */
 function rsnHTML(t,re){var m=re.exec(t);if(!m)return esc(t.slice(0,140));var a=m.index+m[1].length,b=a+m[2].length,st=Math.max(0,a-32),en=Math.min(t.length,b+90);
@@ -2754,7 +2835,7 @@ var body;
 if(S.tab==="review"){body='<section class="page">'+(S.bq?'<button type="button" class="linkbtn" id="bks" style="margin-bottom:14px">← Back to search</button><h2 class="vh">Tile</h2>':'<h2>Tile</h2>')+'<div class="card" id="rvhost"></div></section>'}
 else if(S.tab==="user"&&acct(S.view)){var vu=S.view,va=acct(vu),vc=S.reviews.filter(function(r){return r.user===vu}).length;
 body='<button type="button" class="linkbtn" data-tab="feed" style="margin-bottom:8px">Back to Recommended</button><section class="prof ig"><div class="pmain"><h2 class="pnm"><span>'+esc(vu)+'</span></h2>'+pavHTML(va,va.plats||[])+(vu!==S.user?'<span class="pbt">'+plusBtn(vu)+dmBtn(vu)+'</span>':'')+'<div class="igm">'+igStats(vu,va)+est(va)+'</div></div>'+mosaicHTML(vu,false)+'</section>'+psrHTML(vu)+'<div class="list cols'+S.cols+'" id="list">'+listHTML()+'</div>'}
-else if(S.tab==="search"){body='<section class="page"><h2>Results for “'+esc(S.sq||"")+'”</h2>'+swHTML()+'<div class="list" id="sres">'+resultsHTML()+'</div></section>'}
+else if(S.tab==="search"){body='<section class="page"><div class="swrow"><h2>Results for “'+esc(S.sq||"")+'”</h2>'+swHTML()+'</div><div class="list" id="sres">'+resultsHTML()+'</div></section>'}
 else if(S.tab==="sotd"&&S.sotdOK){body=sotdView()}
 else if(S.tab==="msgs"){body=dmView()}
 else if(S.tab==="song"&&S.song){body=songView()}
@@ -2862,7 +2943,7 @@ if(!confirm("Delete this review?"))return;api.delReview(b.dataset.del).then(func
 document.querySelectorAll("[data-edit]").forEach(function(b){b.onclick=function(){
 openForm(S.reviews.filter(function(r){return r.id==b.dataset.edit})[0])}});
 document.querySelectorAll("[data-u]").forEach(function(b){b.onclick=function(){var u=b.dataset.u;S.view=u;S.tab=u===S.user?"profile":"user";S.stack=[];S.shut=keepShut();appView()}});
-document.querySelectorAll("[data-st]").forEach(function(b){b.onclick=function(){if(Date.now()-(SWX.up||0)<350)return;swPick(SWK.indexOf(b.dataset.st))}});wireWheel();
+document.querySelectorAll("[data-st]").forEach(function(b){b.onclick=function(){if(Date.now()-(SWX.up||0)<350)return;swTap(b.dataset.st)}});wireWheel();
 document.querySelectorAll("[data-rsong]").forEach(function(b){b.onclick=function(e){if(e.target.closest("[data-u]"))return;var r=revOf(b.dataset.rsong);if(r)openSong(revSong(r))}});
 function reviewFrom(src){var x=String(src).split(":"),it=S.res&&S.res[x[0]]&&S.res[x[0]][+x[1]];if(!it)return;if(dupSong(it)){openSong(songFromHit(it));return}S.bq=S.sq;S.pre=it;S.tab="review";S.stack=[{tab:"search",view:S.view,stab:S.stab,q:S.q,y:window.scrollY||0}];appView()}
 document.querySelectorAll("[data-rv]").forEach(function(b){b.onclick=function(){reviewFrom(b.dataset.rv)}});
