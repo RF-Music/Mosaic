@@ -3424,7 +3424,12 @@ var a=rel(Math.atan2(y-cy,x-cx));return d<=R&&a>=lo&&a<=hi}
 document.addEventListener("pointerover",function(e){if(e.pointerType!=="mouse")return;var b=e.target.closest&&e.target.closest(".lsear .earb");if(b)lsEarOpen(b.parentNode)});
 document.addEventListener("pointermove",function(e){if(e.pointerType!=="mouse")return;var w=document.querySelector(".lsear .ear.open");if(w&&!lsEarCloud(w,e.clientX,e.clientY))lsEarShut(w)},{passive:true});
 /* Listen's i: resting the pointer on it opens the details and the genre cloud straight away, with the cursor already in the box to
-   nominate a genre (a click just after doesn't shut them again) */
+   nominate a genre (a click just after doesn't shut them again). Moving off it puts them away again, unless the pointer goes onto
+   what it opened (the turned cover, the genre words or the box), so those can still be used; leaving all of that puts them away */
+function lsInfoZone(x,px,py){var M=12,els=[x.querySelector(".lsib"),x.querySelector(".lscf"),x.querySelector(".lsgf")].concat([].slice.call(x.querySelectorAll(".lsgw")));
+return els.some(function(el){if(!el)return false;var r=el.getBoundingClientRect();return r.width&&px>=r.left-M&&px<=r.right+M&&py>=r.top-M&&py<=r.bottom+M})}
+document.addEventListener("pointermove",function(e){if(e.pointerType!=="mouse"||!LS)return;var x=LS.list.querySelector(".lss.lsflip");if(!x||!x._hov||Date.now()-x._hov<250)return;
+if(!lsInfoZone(x,e.clientX,e.clientY)){x._hov=0;var a=document.activeElement;if(a&&x.contains(a))a.blur();lsInfo(x,false,true)}},{passive:true});
 document.addEventListener("pointerover",function(e){if(e.pointerType!=="mouse"||!LS)return;var b=e.target.closest&&e.target.closest(".lsib");if(!b)return;var x=b.closest(".lss");if(!x||x.classList.contains("lsflip"))return;
 lsInfo(x,true,true);if(!x.classList.contains("lsflip"))return;x._hov=Date.now();var inp=x.querySelector(".lsgf input");if(inp)setTimeout(function(){if(x.classList.contains("gopen"))try{inp.focus({preventScroll:true})}catch(_){}},90)});
 /* the ear's apps, placed round it in a fan centred on its right: wider apart and further out the more apps there are */
