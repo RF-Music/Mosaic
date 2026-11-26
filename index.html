@@ -499,6 +499,10 @@ html.lsopen,html.lsopen body{overflow:hidden}
 .dictd.na{color:var(--mute)}
 .dictex{margin:3px 0 0;color:var(--mute);font-style:italic}
 .dictsrc{display:inline-block;margin-top:9px;color:var(--mute);font-size:11.5px}
+/* the word it comes from (nomadic → nomad) */
+.dictroot{margin-top:11px;padding-top:9px;border-top:1px solid var(--line)}
+.dictrh{margin:0;color:var(--mute);font-size:12.5px}.dictrh b{color:var(--ink);font-weight:600}
+.dictroot .dictpos{margin-top:5px}
 .cvf[data-ax="D1"] .cvbk{transform:rotate3d(1,1,0,180deg)}
 .cvf[data-ax="D2"] .cvbk{transform:rotate3d(1,-1,0,180deg)}
 /* the back of the big cover is the home page tile's back, just bigger: icons and values only, everything in proportion */
@@ -918,11 +922,11 @@ canvas.soft.now{transition:none}
 .rcf>.acts{margin:0 0 0 -6px;padding-top:8px}
 .earb{display:flex;flex-direction:column;align-items:center;padding:3px 4px 1px;border:0;border-radius:8px;background:none;color:var(--mute);cursor:pointer;transition:color .12s,background .12s}
 .earb:hover,.ear.open .earb{color:var(--ink);background:var(--line)}
-/* a tile's ear: on hover (or while its preview plays) the ear slides over and sound waves roll into it */
+/* a tile's ear: on hover (while its preview plays) the ear shrinks back and sound waves roll into it; pink once the sound is playing */
 .ear[data-pv] .eari{transform-box:fill-box;transform-origin:right center;transition:transform .18s ease}
 .ear[data-pv] .earw path{opacity:0}
-.ear[data-pv]:hover .eari,.ear[data-pv] .earb:focus-visible .eari,.ear.pvon .eari,.ear.pvld .eari{transform:scale(.8)}
-.ear[data-pv]:hover .earw path,.ear[data-pv] .earb:focus-visible .earw path,.ear.pvon .earw path,.ear.pvld .earw path{animation:earw 1.1s linear infinite}
+.ear[data-pv]:not(.pvno):hover .eari,.ear.pvon .eari,.ear.pvld .eari{transform:scale(.8)}
+.ear[data-pv]:not(.pvno):hover .earw path,.ear.pvon .earw path,.ear.pvld .earw path{animation:earw 1.1s linear infinite}
 .ear[data-pv] .earw path:last-child{animation-delay:-.55s!important}
 @keyframes earw{0%{opacity:0;transform:translateX(-1.5px)}35%{opacity:1}100%{opacity:0;transform:translateX(2px)}}
 .ear.pvon .earb,.ear.pvld .earb{color:var(--pop)}
@@ -2159,11 +2163,11 @@ if(now)c.classList.add("now");c.classList.add("on")}catch(e){}}
 function byLine(r,k,na){var u=na?'':'<button type="button" class="avbtn" data-u="'+esc(r.user)+'" aria-label="'+esc(r.user)+'\'s profile" data-name="'+esc(r.user)+'">'+avatar(acct(r.user),"xs")+'</button>';
 return k==="l"?'<div class="meta rby rbl'+(na?' na':'')+'">'+u+'<span class="rbd">'+esc(r.date)+'</span></div>':'<div class="meta rby rbf">'+u+'<span class="rbd">'+esc(r.date)+'</span></div>'}
 function penBtn(r){return r.user===S.user&&!r.via?'<button type="button" class="ob" data-edit="'+r.id+'" aria-label="Edit your review" title="Edit review"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button>':''}
-/* pv: a tile's ear. Clicking it plays a preview of the song (see pvToggle) and hovering it shows your apps; it's there even if you
-   haven't picked any apps. Its icon has sound waves that roll into the ear while you're on it or the preview is playing */
+/* pv: a tile's ear. Resting the pointer on it plays a preview of the song (see pvPlay) and clicking it shows your apps; it's there
+   even if you haven't picked any apps. Its icon has sound waves that roll into the ear while you're on it or the preview is playing */
 function earHTML(r,ids,pv){ids=ids||(S.platOK&&S.plats.length?S.plats:null);if((!ids||!ids.length)&&!pv)return "";var q=encodeURIComponent((String(r.title)+" "+String(r.artist)).slice(0,160));
 if(pv)PVR[r.id]=r;var on=pv&&String(PV.id)===String(r.id);
-return '<span class="ear'+(on?(PV.load?' pvld':' pvon'):'')+'"'+(pv?' data-pv="'+esc(String(r.id))+'"':'')+'><button type="button" class="earb"'+(ids&&ids.length?' aria-expanded="false"':'')+(pv?' aria-pressed="'+on+'" aria-label="'+(on?'Stop the preview':'Play a preview')+'" title="Play a preview"':' aria-label="Listen on your apps" title="Listen on…"')+'><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="eari"><path d="M6 8.5a6.5 6.5 0 1 1 13 0c0 6-6 6-6 10a3.5 3.5 0 1 1-7 0"/><path d="M15 8.5a2.5 2.5 0 0 0-5 0v1a2 2 0 1 1 0 4"/></g>'+(pv?'<g class="earw"><path d="M5.2 8.8a3.2 3.2 0 0 1 0 4.4"/><path d="M2.4 6.8a6 6 0 0 1 0 8.4"/></g>':'')+'</svg>'+(ids&&ids.length?'<svg class="earc" width="9" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m1 1 4 4 4-4"/></svg>':'')+'</button>'+(ids&&ids.length?'<span class="beads" hidden>'+
+return '<span class="ear'+(on?(PV.load?' pvld':' pvon'):'')+'"'+(pv?' data-pv="'+esc(String(r.id))+'"':'')+'><button type="button" class="earb"'+(ids&&ids.length?' aria-expanded="false"':'')+(pv?' aria-label="'+(ids&&ids.length?'Listen on your apps':'Choose where you listen')+'"':' aria-label="Listen on your apps" title="Listen on…"')+'><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="eari"><path d="M6 8.5a6.5 6.5 0 1 1 13 0c0 6-6 6-6 10a3.5 3.5 0 1 1-7 0"/><path d="M15 8.5a2.5 2.5 0 0 0-5 0v1a2 2 0 1 1 0 4"/></g>'+(pv?'<g class="earw"><path d="M5.2 8.8a3.2 3.2 0 0 1 0 4.4"/><path d="M2.4 6.8a6 6 0 0 1 0 8.4"/></g>':'')+'</svg>'+(ids&&ids.length?'<svg class="earc" width="9" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m1 1 4 4 4-4"/></svg>':'')+'</button>'+(ids&&ids.length?'<span class="beads" hidden>'+
 ids.map(function(id,i){var p=PLATIDX[id];return '<a class="bead'+(p.k?" "+p.k:"")+'" style="--pc:'+p.c+';--i:'+i+'" href="'+esc(p.u(q))+'" target="_blank" rel="noopener noreferrer" title="Listen on '+p.n+'" aria-label="Listen on '+p.n+' (opens in a new tab)">'+plLogo(id,15)+'</a>'}).join("")+'</span>':'')+'</span>'}
 function plgHTML(r,n,cls){n=n||2;if(!(S.platOK&&S.plats.length))return "";var ids=S.plats,h='<span class="plg'+(cls?' '+cls:'')+'">'+plLinks(r,19,"act",n);
 if(ids.length>n){var q=encodeURIComponent((String(r.title)+" "+String(r.artist)).slice(0,160)),k=ids.length-n;
@@ -2373,17 +2377,35 @@ if(y+bh>innerHeight-8)y=Math.max(8,r.top-bh-8);b.style.left=Math.round(x)+"px";b
 function dictHTML(j,word){var e=j[0],ph=(e.phonetic||((e.phonetics||[]).filter(function(p){return p.text})[0]||{}).text||""),h=ph?'<p class="dictph">'+esc(ph)+'</p>':'',k=0;
 (e.meanings||[]).slice(0,3).forEach(function(m){var d=(m.definitions||[])[0];if(!d||k>=3)return;k++;h+='<p class="dictpos">'+esc(m.partOfSpeech||"")+'</p><p class="dictd">'+esc(d.definition)+'</p>'+(d.example&&d.example.length<140?'<p class="dictex">“'+esc(d.example)+'”</p>':'')});
 return h+'<a class="dictsrc" href="https://en.wiktionary.org/wiki/'+encodeURIComponent(e.word||word)+'" target="_blank" rel="noopener">More on Wiktionary ↗</a>'}
-function dictLook(word){if(DICT.c[word])return Promise.resolve(DICT.c[word]);
+/* one word, exactly as given: its entries, or null if the dictionary doesn't have it (asked once per word) */
+function dictFetch(w){DICT.j=DICT.j||{};return DICT.j[w]||(DICT.j[w]=fetch("https://api.dictionaryapi.dev/api/v2/entries/en/"+encodeURIComponent(w)).then(function(r){if(r.status===404)return null;if(!r.ok)throw 0;return r.json()}).then(function(j){return Array.isArray(j)&&j.length?j:null},function(e){delete DICT.j[w];throw e}))}
+/* the word it's built on (nomadic → nomad, glamorous → glamour, happiness → happy, movement → move): first a word in its definition
+   that starts the same way (definitions often say "of or relating to nomads"), then the word with a common ending taken off. Only
+   ones the dictionary has count, and at most three are tried */
+function dictRoots(word,j){var out=[],seen={};seen[word]=1;
+var add=function(w,def){w=String(w||"");if(seen[w]||w.length<4||w.length>(def?word.length:word.length-1))return;var p=0;while(p<w.length&&w[p]===word[p])p++;
+if(def?p>=4&&p>=w.length*.6:p>=w.length-1){seen[w]=1;out.push(w)}};
+j.slice(0,2).forEach(function(e){(e.meanings||[]).forEach(function(m){(m.definitions||[]).slice(0,2).forEach(function(d){String(d.definition||"").toLowerCase().split(/[^a-z]+/).forEach(function(t){
+if(!t)return;if(/ies$/.test(t))add(t.slice(0,-3)+"y",1);else if(/[^s]s$/.test(t))add(t.slice(0,-1),1);add(t,1)})})})});
+["ically:","ical:","ically:ic","iness:y","ness:","ment:","ity:","ity:e","istic:","ism:","ist:","ic:","ally:al","al:","iful:y","ful:","less:","ous:","ive:","ive:e","able:","able:e","ible:","ise:","ize:","isation:","ization:","ation:","ation:e","ation:ate","er:","ily:y","ly:","ish:","y:","y:e"].forEach(function(x){
+var a=x.split(":");if(word.length>a[0].length+3&&word.slice(-a[0].length)===a[0])add(word.slice(0,-a[0].length)+a[1],0)});return out.slice(0,3)}
+function dictRootHTML(j,w){var e=j[0],m=(e.meanings||[]).filter(function(m){return (m.definitions||[]).length})[0];if(!m)return "";
+return '<p class="dictrh">From <b>'+esc(e.word||w)+'</b></p><p class="dictpos">'+esc(m.partOfSpeech||"")+'</p><p class="dictd">'+esc(m.definitions[0].definition)+'</p>'}
+function dictLook(word){if(DICT.c[word])return Promise.resolve(DICT.c[word]);DICT.rp=DICT.rp||{};
 /* try the word as written, then without a common ending (songs → song, played → play, slowly → slow) */
 var tries=[word],m;if((m=/^(.{3,}?)(?:'s|’s|es|s|ed|d|ing|ly)$/.exec(word)))tries.push(m[1]);if(/ies$/.test(word))tries.push(word.slice(0,-3)+"y");
-var go=function(i){if(i>=tries.length)return Promise.resolve(null);return fetch("https://api.dictionaryapi.dev/api/v2/entries/en/"+encodeURIComponent(tries[i])).then(function(r){if(r.status===404)return go(i+1);if(!r.ok)throw 0;return r.json()})};
-return go(0).then(function(j){var h=j&&j.length?dictHTML(j,word):'<p class="dictd na">No definition found.</p><a class="dictsrc" href="https://en.wiktionary.org/wiki/'+encodeURIComponent(word)+'" target="_blank" rel="noopener">Search Wiktionary ↗</a>';DICT.c[word]=h;return h},
+var go=function(i){if(i>=tries.length)return Promise.resolve(null);return dictFetch(tries[i]).then(function(j){return j||go(i+1)})};
+return go(0).then(function(j){var h=j&&j.length?dictHTML(j,word):'<p class="dictd na">No definition found.</p><a class="dictsrc" href="https://en.wiktionary.org/wiki/'+encodeURIComponent(word)+'" target="_blank" rel="noopener">Search Wiktionary ↗</a>';DICT.c[word]=h;
+/* ...and, if it's built on another word, what that one means, shown under it once found */
+if(j&&j.length){var rs=dictRoots(String(j[0].word||word).toLowerCase(),j),tr=function(i){if(i>=rs.length)return Promise.resolve("");return dictFetch(rs[i]).then(function(rj){return rj?dictRootHTML(rj,rs[i]):tr(i+1)},function(){return ""})};DICT.rp[word]=tr(0)}
+return h},
 function(){return '<p class="dictd na">Couldn’t look that up just now.</p>'})}
 function dictOpen(w){var word=w.textContent.toLowerCase().replace(/^[-'’]+|[-'’]+$/g,"");if(!word)return;if(DICT.w===w){dictClose();return}dictClose();
 var b=document.createElement("div");b.className="dict";b.setAttribute("role","dialog");b.setAttribute("aria-label","What “"+word+"” means");
 b.innerHTML='<div class="dicth"><b>'+esc(word)+'</b><button type="button" class="dictx" aria-label="Close">×</button></div><div class="dictb"><p class="dictd na">Looking it up…</p></div>';
 document.body.appendChild(b);DICT.el=b;DICT.w=w;w.classList.add("on");dictPlace(b,w);b.querySelector(".dictx").onclick=dictClose;
-dictLook(word).then(function(h){if(DICT.el!==b)return;b.querySelector(".dictb").innerHTML=h;dictPlace(b,w)})}
+dictLook(word).then(function(h){if(DICT.el!==b)return;var bd=b.querySelector(".dictb");bd.innerHTML=h;dictPlace(b,w);
+var rp=DICT.rp&&DICT.rp[word];if(rp)rp.then(function(rh){if(DICT.el!==b||!rh)return;var d=document.createElement("div"),src=bd.querySelector(".dictsrc");d.className="dictroot";d.innerHTML=rh;bd.insertBefore(d,src);dictPlace(b,w)})})}
 document.addEventListener("mouseover",function(e){if(!dictOK())return;var el=e.target.closest&&e.target.closest(DSEL);if(el)dictWrap(el)},true);
 document.addEventListener("click",function(e){var t=e.target;if(DICT.el&&DICT.el.contains(t))return;var w=t.closest&&t.closest(".dw");
 if(w&&dictOK()){e.preventDefault();e.stopPropagation();dictOpen(w);return}if(DICT.el&&!DICT.el.classList.contains("fade"))dictClose()},true);
@@ -2684,7 +2706,7 @@ var srv=$("#srev");if(srv)srv.onclick=function(){var s=S.song;S.pre={title:s.tit
 var slb=$("#slater");if(slb)slb.onclick=function(){toggleLater(S.song,function(){syncSongLater();refreshList()})};
 document.querySelectorAll("[data-seeq]").forEach(function(b){b.onclick=function(){S.q=b.dataset.seeq;S.tab="feed";S.stack=[];S.sopen=true;appView()}});
 document.querySelectorAll("[data-fol]").forEach(function(b){b.onclick=function(){api.toggleFol(b.dataset.fol).then(function(){appView()})}});
-document.querySelectorAll(".earb").forEach(function(b){var w=b.parentNode;if(w.hasAttribute("data-pv")){b.onclick=function(e){e.stopPropagation();pvToggle(w)};return}b.onclick=function(e){e.stopPropagation();var was=w.classList.contains("open");closePops();if(was)return;w.classList.add("open");b.setAttribute("aria-expanded","true");w.querySelector(".beads").hidden=false}});pvSync();
+document.querySelectorAll(".earb").forEach(function(b){var w=b.parentNode;if(w.hasAttribute("data-pv")&&!w.querySelector(".beads")){b.onclick=function(e){e.stopPropagation();if(S.user)openPlatDlg()};return}b.onclick=function(e){e.stopPropagation();var was=w.classList.contains("open");closePops();if(was)return;w.classList.add("open");b.setAttribute("aria-expanded","true");w.querySelector(".beads").hidden=false}});pvSync();
 document.querySelectorAll(".beads").forEach(function(p){p.onclick=function(e){e.stopPropagation()}});
 document.querySelectorAll(".tddb").forEach(function(b){b.onclick=function(e){e.stopPropagation();var w=b.parentNode,was=w.classList.contains("open");closePops();if(was)return;
 var p=w.querySelector(".tddp");w.classList.add("open");b.setAttribute("aria-expanded","true");p.hidden=false;w.classList.remove("r");if(p.getBoundingClientRect().right>window.innerWidth-8)w.classList.add("r")}});
@@ -3094,35 +3116,32 @@ sl.onpointerup=sl.onpointercancel=function(){if(!drag)return;drag=null;go(true)}
 sl.onkeydown=function(e){var k=e.key;if(k==="ArrowRight"||k==="ArrowUp")st+=1;else if(k==="ArrowLeft"||k==="ArrowDown")st-=1;else if(k==="Home")st=0;else if(k==="End")st=dur;else return;e.preventDefault();lay();go(true)};
 au.oncanplay=function(){au.oncanplay=null;if(a.isConnected)go(false)};
 au.preload="auto";au.src=url;lay()}
-/* ---------- previews on the tiles: click a tile's ear and the song plays (Apple's 30-second preview, or the 15 seconds its reviewer
-   picked for Listen), once through; click again to stop. Only one plays at a time, and it stops when its tile goes off the page,
-   when Listen or the Tile page's player starts, or when you leave the tab. Hovering the ear (or tapping it, on a phone) shows your
-   apps ---------- */
-var PV={id:null,load:false,st:0,end:0,au:null,pt:""},PVR={};
+/* ---------- previews on the tiles: rest the pointer on a tile's ear and the song plays (Apple's 30-second preview, or the 15 seconds
+   its reviewer picked for Listen), once through, until the pointer leaves the ear and its apps; then it fades out. Clicking the ear
+   drops down your apps (or, if you haven't picked any, asks where you listen). Only one plays at a time, and it stops when Listen or
+   the Tile page's player starts, or when you leave the tab. Browsers only let a page play sound after you've clicked something on it,
+   so the first click anywhere also readies the player ---------- */
+var PV={id:null,load:false,st:0,end:0,au:null,ok:false},PVR={};
 function pvAudio(){if(PV.au)return PV.au;var au=PV.au=new Audio();au.preload="auto";
 au.addEventListener("timeupdate",function(){if(PV.end&&!PV.load&&au.currentTime>=PV.end)pvStop()});
 au.addEventListener("ended",function(){if(!PV.load&&au.src.indexOf("data:")!==0)pvStop()});return au}
-function pvMark(){[].forEach.call(document.querySelectorAll(".ear[data-pv]"),function(w){var on=PV.id!=null&&w.getAttribute("data-pv")===String(PV.id),b=w.querySelector(".earb");
-w.classList.toggle("pvld",on&&PV.load);w.classList.toggle("pvon",on&&!PV.load);if(b){b.setAttribute("aria-pressed",String(on));b.setAttribute("aria-label",on?"Stop the preview":"Play a preview")}})}
-function pvStop(){if(PV.au)try{PV.au.pause()}catch(e){}PV.id=null;PV.load=false;pvMark()}
+function pvMark(){[].forEach.call(document.querySelectorAll(".ear[data-pv]"),function(w){var on=PV.id!=null&&w.getAttribute("data-pv")===String(PV.id);w.classList.toggle("pvld",on&&PV.load);w.classList.toggle("pvon",on&&!PV.load)})}
+function pvStop(){var au=PV.au;PV.id=null;PV.load=false;pvMark();clearInterval(PV.fi);if(!au||au.paused)return;
+/* a quick fade rather than a cut */
+var v=au.volume;PV.fi=setInterval(function(){v-=.25;if(v>0&&PV.id==null){au.volume=v;return}clearInterval(PV.fi);if(PV.id==null)try{au.pause()}catch(e){}au.volume=1},35)}
 function pvSync(){if(PV.id!=null&&!document.querySelector('.ear[data-pv="'+String(PV.id).replace(/"/g,"")+'"]'))pvStop();else pvMark()}
-function earOpen(w){var b=w.querySelector(".earb"),p=w.querySelector(".beads");if(!p||w.classList.contains("open"))return;closeEar();w.classList.add("open");b.setAttribute("aria-expanded","true");p.hidden=false}
-function pvToggle(w){var id=w.getAttribute("data-pv"),r=PVR[id]||revOf(id);if(PV.pt&&PV.pt!=="mouse"){if(String(PV.id)===id)closeEar();else earOpen(w)}
-if(String(PV.id)===id){pvStop();return}if(!r)return;var au=pvAudio();clipStop();PV.id=id;PV.load=true;PV.end=0;pvMark();
-/* a silent sound started inside the click lets the preview play once it's been found, on phones too */
-try{au.src=SILENT;var p0=au.play();if(p0&&p0.catch)p0.catch(function(){})}catch(e){}
-prevFor(revSong(r),r).then(function(p){if(String(PV.id)!==id)return;if(!p.u){pvStop();toast(p.bad?"Couldn't load a preview. Try again.":"There's no preview of this one");return}
+function pvPlay(w){var id=w.getAttribute("data-pv"),r=PVR[id]||revOf(id);if(!r||String(PV.id)===id)return;var au=pvAudio();clipStop();clearInterval(PV.fi);au.volume=1;PV.id=id;PV.load=true;PV.end=0;pvMark();
+prevFor(revSong(r),r).then(function(p){if(String(PV.id)!==id)return;if(!p.u){pvStop();if(!p.bad)w.classList.add("pvno");return}
 var c=r.type==="Song"&&r.clip!=null?+r.clip:null;PV.st=c||0;PV.end=c!=null?c+CLIPW:0;PV.load=false;
 au.src=p.u+(c?"#t="+c:"");if(c)au.addEventListener("loadedmetadata",function(){if(String(PV.id)===id&&Math.abs(au.currentTime-c)>.5)try{au.currentTime=c}catch(e){}},{once:true});
-pvMark();var pp=au.play();if(pp&&pp.catch)pp.catch(function(){if(String(PV.id)===id)pvStop()})})}
-/* hovering a tile's ear opens your apps under it (and starts finding the preview, so a click plays straight away); it folds away
-   a moment after the pointer leaves the ear and its apps. Keyboard focus opens it too */
-document.addEventListener("pointerdown",function(e){PV.pt=e.pointerType||""},true);
-document.addEventListener("pointerover",function(e){if(e.pointerType!=="mouse")return;var w=e.target.closest&&e.target.closest(".ear[data-pv]");if(!w)return;clearTimeout(PV.ht);
-if(!w.classList.contains("open")){earOpen(w);var r=PVR[w.getAttribute("data-pv")];if(r)prevFor(revSong(r),r)}});
+pvMark();var pp=au.play();if(pp&&pp.catch)pp.catch(function(){if(String(PV.id)!==id)return;pvStop();if(!PV.told){PV.told=1;toast("Click anywhere on the page once, then rest on an ear to hear a preview")}})})}
+document.addEventListener("pointerdown",function(){if(PV.ok||PV.id!=null)return;PV.ok=true;var au=pvAudio();try{au.src=SILENT;var pp=au.play();if(pp&&pp.catch)pp.catch(function(){})}catch(e){}},true);
+/* it starts once the pointer has rested on the ear for a moment (so sweeping across the page doesn't set songs off); the preview is
+   looked up as soon as the pointer arrives, so it's ready by then */
+document.addEventListener("pointerover",function(e){if(e.pointerType!=="mouse")return;var w=e.target.closest&&e.target.closest(".ear[data-pv]");if(!w)return;var id=w.getAttribute("data-pv");
+if(String(PV.id)===id||w.classList.contains("pvno"))return;clearTimeout(PV.ht);var r=PVR[id];if(r)prevFor(revSong(r),r);PV.ht=setTimeout(function(){if(w.isConnected&&w.matches(":hover"))pvPlay(w)},200)});
 document.addEventListener("pointerout",function(e){if(e.pointerType!=="mouse")return;var w=e.target.closest&&e.target.closest(".ear[data-pv]");if(!w||(e.relatedTarget&&w.contains(e.relatedTarget)))return;
-clearTimeout(PV.ht);PV.ht=setTimeout(function(){if(!w.matches(":hover"))w.classList.contains("open")&&(w.classList.remove("open"),w.querySelector(".earb").setAttribute("aria-expanded","false"),w.querySelector(".beads").hidden=true)},250)});
-document.addEventListener("focusin",function(e){var w=e.target.closest&&e.target.closest(".ear[data-pv]");if(w&&e.target.matches(":focus-visible"))earOpen(w)});
+clearTimeout(PV.ht);if(String(PV.id)===w.getAttribute("data-pv"))pvStop()});
 document.addEventListener("visibilitychange",function(){if(document.hidden&&PV.id!=null)pvStop()});window.addEventListener("pagehide",function(){if(PV.id!=null)pvStop()});
 /* ---------- Listen: swipe up through tiles. Each cover fills the screen and glows while Apple's 30-second preview plays; one tap pauses, a double tap likes.
    The previews come from Apple, and every slide links back to the song on Apple Music. ---------- */
