@@ -509,9 +509,9 @@ html.lsopen,html.lsopen body{overflow:hidden}
 .dict.fade{opacity:0;transition:opacity .7s cubic-bezier(.333,0,.667,.333)}
 .dw.on.fade{background:transparent;box-shadow:0 0 0 2px transparent;transition:background .7s cubic-bezier(.333,0,.667,.333),box-shadow .7s cubic-bezier(.333,0,.667,.333)}
 @keyframes dictin{from{opacity:0;transform:translateY(-4px)}}
-.dicth{display:flex;align-items:center;justify-content:space-between;gap:10px}
-.dicth b{font-size:16px}
-.dictx{display:grid;place-items:center;flex:none;width:26px;height:26px;padding:0;border:0;border-radius:50%;background:none;color:var(--mute);font-size:18px;line-height:1;cursor:pointer}
+/* no heading with the word again (you've just clicked it): the box starts with how it's said, and the × sits in the corner */
+.dictb>:first-child{margin-top:0;padding-right:24px}
+.dictx{position:absolute;top:7px;right:7px;display:grid;place-items:center;flex:none;width:26px;height:26px;padding:0;border:0;border-radius:50%;background:none;color:var(--mute);font-size:18px;line-height:1;cursor:pointer}
 .dictx:hover{background:color-mix(in srgb,var(--ink) 8%,transparent);color:var(--ink)}
 .dictph{margin:0;color:var(--mute);font-size:12.5px}
 .dictpos{margin:9px 0 1px;color:var(--pop);font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase}
@@ -2449,7 +2449,7 @@ return h},
 function(){return '<p class="dictd na">Couldn’t look that up just now.</p>'})}
 function dictOpen(w){var word=w.textContent.toLowerCase().replace(/^[-'’]+|[-'’]+$/g,"");if(!word)return;if(DICT.w===w){dictClose();return}dictClose();
 var b=document.createElement("div");b.className="dict";b.setAttribute("role","dialog");b.setAttribute("aria-label","What “"+word+"” means");
-b.innerHTML='<div class="dicth"><b>'+esc(word)+'</b><button type="button" class="dictx" aria-label="Close">×</button></div><div class="dictb"><p class="dictd na">Looking it up…</p></div>';
+b.innerHTML='<button type="button" class="dictx" aria-label="Close">×</button><div class="dictb"><p class="dictd na">Looking it up…</p></div>';
 document.body.appendChild(b);DICT.el=b;DICT.w=w;w.classList.add("on");dictPlace(b,w);b.querySelector(".dictx").onclick=dictClose;
 dictLook(word).then(function(h){if(DICT.el!==b)return;var bd=b.querySelector(".dictb");bd.innerHTML=h;dictPlace(b,w);
 var rp=DICT.rp&&DICT.rp[word];if(rp)rp.then(function(rh){if(DICT.el!==b||!rh)return;var d=document.createElement("div"),src=bd.querySelector(".dictsrc");d.className="dictroot";d.innerHTML=rh;bd.insertBefore(d,src);dictPlace(b,w)})})}
