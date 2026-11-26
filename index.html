@@ -109,11 +109,12 @@ nav button[aria-current="true"]{color:var(--ink);border-color:var(--pop)}
 .vapt .meta{font-size:13px;font-weight:500}
 .vapc{width:18px;height:18px;margin-left:auto;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;transition:transform .2s}
 .vapt[aria-expanded="true"] .vapc{transform:rotate(180deg)}
-.vapgl{columns:4 150px;column-gap:24px;margin:12px 0 4px;padding:0 2px;list-style:none;font-size:14px;line-height:1.9;color:var(--mute)}
-.vapgl[hidden]{display:none}
+.vapgb{padding:16px 2px 18px;border-bottom:1px solid var(--line)}
+.vapgb[hidden]{display:none}
+.vapgl{columns:4 150px;column-gap:24px;margin:0;padding:0;list-style:none;font-size:14px;line-height:1.9;color:var(--mute)}
 .vapgl li{break-inside:avoid}
-.vapsug{margin-top:26px}
-.vapw{margin-top:30px;border-top:1px solid var(--line)}
+.vapsug{margin:0 0 18px}
+.vapw{margin-top:0}
 .vapl{margin-top:0}
 /* the word bank */
 .vapwb{padding:12px 2px 18px;border-bottom:1px solid var(--line)}
@@ -1686,13 +1687,14 @@ return emoWheel.s='<svg class="ewh" viewBox="0 0 1000 1000" role="img" aria-labe
 function emoList(){return '<div class="ebl">'+EMO.map(function(c){return '<div class="ebg" style="--h:'+c[1]+'"><h4><span class="dw">'+esc(c[0])+'</span></h4><ul>'+
 c[2].map(function(s){return '<li><b class="dw">'+esc(s[0])+'</b> '+s.slice(1).map(function(t){return '<span class="dw">'+esc(t.toLowerCase())+'</span>'}).join(" · ")+'</li>'}).join("")+'</ul></div>'}).join("")+'</div>'}
 function vapidsView(){var gs=GLIST.slice().sort(function(a,b){return (/^\d/.test(a)-/^\d/.test(b))||(a<b?-1:1)});
-return '<section class="page vapp"><h2>Good to know</h2><button type="button" class="vapt" id="vapt" aria-expanded="'+(!!S.vapOpen)+'" aria-controls="vapgl">All genres <span class="meta">'+gs.length+'</span><svg class="vapc" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>'+
-'<ul class="vapgl" id="vapgl"'+(S.vapOpen?'':' hidden')+'>'+gs.map(function(g){return '<li>'+esc(g)+'</li>'}).join("")+'</ul>'+
-'<form class="vapsug" id="vapsug"><label for="vapin">Can’t find a genre? Suggest one and we’ll look at adding it.</label><div class="vaprow"><input id="vapin" maxlength="40" placeholder="Suggest a genre" autocomplete="off" enterkeyhint="send"><button class="btn" type="submit">Suggest</button></div></form>'+
+return '<section class="page vapp"><h2>Good to know</h2><button type="button" class="vapt" id="vapt" aria-expanded="'+(!!S.vapOpen)+'" aria-controls="vapgb">All genres <span class="meta">'+gs.length+'</span><svg class="vapc" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>'+
+/* opening All genres shows the box to suggest one first, then every genre */
+'<div class="vapgb" id="vapgb"'+(S.vapOpen?'':' hidden')+'><form class="vapsug" id="vapsug"><label for="vapin">Can’t find a genre? Suggest one and we’ll look at adding it.</label><div class="vaprow"><input id="vapin" maxlength="40" placeholder="Suggest a genre" autocomplete="off" enterkeyhint="send"><button class="btn" type="submit">Suggest</button></div></form>'+
+'<ul class="vapgl" id="vapgl">'+gs.map(function(g){return '<li>'+esc(g)+'</li>'}).join("")+'</ul></div>'+
 '<button type="button" class="vapt vapw" id="vapw" aria-expanded="'+(!!S.ebOpen)+'" aria-controls="vapwb">Word bank <span class="meta">'+emoCount()+' feelings</span><svg class="vapc" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>'+
 '<div class="vapwb" id="vapwb"'+(S.ebOpen?'':' hidden')+'><p class="meta">Words for how a song makes you feel. Click one for what it means.</p>'+emoWheel()+emoList()+'</div>'+
 (S.user&&acct(S.user)?'<button type="button" class="vapt vapl" data-life="'+esc(S.user)+'">'+GRIDI+'Lifetime mosaic<svg class="vapc" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>':'')+'</section>'}
-function wireVapids(){var t=$("#vapt");if(!t)return;t.onclick=function(){var l=$("#vapgl"),o=l.hidden;l.hidden=!o;S.vapOpen=o;t.setAttribute("aria-expanded",String(o))};
+function wireVapids(){var t=$("#vapt");if(!t)return;t.onclick=function(){var l=$("#vapgb"),o=l.hidden;l.hidden=!o;S.vapOpen=o;t.setAttribute("aria-expanded",String(o))};
 var wb=$("#vapw");if(wb)wb.onclick=function(){var l=$("#vapwb"),o=l.hidden;l.hidden=!o;S.ebOpen=o;wb.setAttribute("aria-expanded",String(o))};
 $("#vapsug").onsubmit=function(e){e.preventDefault();var inp=$("#vapin"),raw=inp.value.trim(),g=fold(raw).replace(/\s+/g," ").trim();if(g.length<2){toast("Type the genre you’d like added");return}
 var x=genFix(g);if(x&&!x.near){toast("“"+x.g+"” is already accepted, you can use it now");return}
