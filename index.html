@@ -740,6 +740,12 @@ button.orb:hover,button.orb:focus-visible{border-color:var(--pop);color:var(--po
 .igv .fddw{left:calc(100% + 12px);top:-8px}
 .igv .fddw.r{left:0;right:auto;top:calc(100% + 8px)}
 .ige{margin:12px 0 0}
+/* on a computer the name, picture and numbers grow to sit better beside the bigger mosaic */
+@media (min-width:841px){.prof.ig .pav{--avs:112px;--is:30px}.prof.ig .orb svg{width:16px;height:16px}
+.pmain:has(.pav.has){column-gap:54px}.pmain .pnm{font-size:29px;margin-bottom:10px}.pmain .pnm span{max-width:180px}
+.igs.igv{gap:14px}.igv>li,.igv>li>span,.igv .fdd,.igv .fddb>span{font-size:17px}.igs.igv b{font-size:23px;margin-right:6px}
+.igv .fddb .car{width:14px;height:14px}.ige{margin-top:16px;font-size:15px}
+.pmain .pbt{margin-top:8px;gap:8px}.pmain .pbt .plus1{height:26px;min-width:42px;font-size:13px}}
 @media (max-width:520px){.pmain{column-gap:12px}.pmain:has(.pav.has){column-gap:39px}.pmain .pnm span{max-width:96px}}
 /* edit profile page */
 .dash .dsec{margin-bottom:12px}
