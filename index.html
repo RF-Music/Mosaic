@@ -289,22 +289,22 @@ header.top .wm,.brand{background:none;color:var(--ink);line-height:0}
 .wm{display:block}.wmsvg{display:block;width:93px;height:27px;shape-rendering:crispEdges}
 /* the wordmark has two sides: the clean fade on the front (.ff, --f) and a rougher, mosaic one on the back (.fb, --k); both change
    only left to right, one shade a column. la ola (logoWave) turns every tile over to the other side, column after column from left to
-   right. Each tile turns like a little prism: the side it's leaving rolls away to the right and darkens while the other side rolls
-   in from the left and brightens, the edge between them sweeping across at a steady turn, so a tile is always filled and never
+   right (the back's fade runs the other way). Each tile turns like a little prism: the side it's leaving rolls away to the right and
+   darkens right down while the other side rolls in from the left, catches the light and settles, the edge between them sweeping across at a steady turn, so a tile is always filled and never
    comes apart from the ones beside it. The front lies underneath at full size; the back sits on top and is all a tile shows when
    .bk (the side it ends up on) is set */
 .wmsvg .ff{fill:var(--f)}
 .wmsvg .fb{fill:var(--k);transform-box:fill-box;transform:scaleX(0)}
 .wmsvg.bk .fb{transform:none}
-.wmsvg.ola path{animation-duration:.5s;animation-timing-function:linear;animation-fill-mode:both;animation-delay:calc(var(--o) - var(--w,0ms))}
+.wmsvg.ola path{animation-duration:.6s;animation-timing-function:linear;animation-fill-mode:both;animation-delay:calc(var(--o) - var(--w,0ms))}
 .wmsvg.ola.bk .ff{animation-name:ffo}
 .wmsvg.ola.bk .fb{animation-name:fbi;transform-origin:left}
 .wmsvg.ola:not(.bk) .ff{animation-name:ffi}
 .wmsvg.ola:not(.bk) .fb{animation-name:fbo;transform-origin:right}
-@keyframes ffo{0%{fill:color-mix(in srgb,var(--f) 100%,#000)}12.5%{fill:color-mix(in srgb,var(--f) 99%,#000)}25%{fill:color-mix(in srgb,var(--f) 97%,#000)}37.5%{fill:color-mix(in srgb,var(--f) 92%,#000)}50%{fill:color-mix(in srgb,var(--f) 87%,#000)}62.5%{fill:color-mix(in srgb,var(--f) 80%,#000)}75%{fill:color-mix(in srgb,var(--f) 72%,#000)}87.5%{fill:color-mix(in srgb,var(--f) 64%,#000)}100%{fill:color-mix(in srgb,var(--f) 55%,#000)}}
-@keyframes ffi{0%{fill:color-mix(in srgb,var(--f) 55%,#000)}12.5%{fill:color-mix(in srgb,var(--f) 64%,#000)}25%{fill:color-mix(in srgb,var(--f) 72%,#000)}37.5%{fill:color-mix(in srgb,var(--f) 80%,#000)}50%{fill:color-mix(in srgb,var(--f) 87%,#000)}62.5%{fill:color-mix(in srgb,var(--f) 92%,#000)}75%{fill:color-mix(in srgb,var(--f) 97%,#000)}87.5%{fill:color-mix(in srgb,var(--f) 99%,#000)}100%{fill:color-mix(in srgb,var(--f) 100%,#000)}}
-@keyframes fbi{0%{transform:scaleX(0);fill:color-mix(in srgb,var(--k) 55%,#000)}12.5%{transform:scaleX(0.166);fill:color-mix(in srgb,var(--k) 64%,#000)}25%{transform:scaleX(0.293);fill:color-mix(in srgb,var(--k) 72%,#000)}37.5%{transform:scaleX(0.401);fill:color-mix(in srgb,var(--k) 80%,#000)}50%{transform:scaleX(0.5);fill:color-mix(in srgb,var(--k) 87%,#000)}62.5%{transform:scaleX(0.599);fill:color-mix(in srgb,var(--k) 92%,#000)}75%{transform:scaleX(0.707);fill:color-mix(in srgb,var(--k) 97%,#000)}87.5%{transform:scaleX(0.834);fill:color-mix(in srgb,var(--k) 99%,#000)}100%{transform:scaleX(1);fill:color-mix(in srgb,var(--k) 100%,#000)}}
-@keyframes fbo{0%{transform:scaleX(1);fill:color-mix(in srgb,var(--k) 100%,#000)}12.5%{transform:scaleX(0.834);fill:color-mix(in srgb,var(--k) 99%,#000)}25%{transform:scaleX(0.707);fill:color-mix(in srgb,var(--k) 97%,#000)}37.5%{transform:scaleX(0.599);fill:color-mix(in srgb,var(--k) 92%,#000)}50%{transform:scaleX(0.5);fill:color-mix(in srgb,var(--k) 87%,#000)}62.5%{transform:scaleX(0.401);fill:color-mix(in srgb,var(--k) 80%,#000)}75%{transform:scaleX(0.293);fill:color-mix(in srgb,var(--k) 72%,#000)}87.5%{transform:scaleX(0.166);fill:color-mix(in srgb,var(--k) 64%,#000)}100%{transform:scaleX(0);fill:color-mix(in srgb,var(--k) 55%,#000)}}
+@keyframes ffo{0%{fill:color-mix(in srgb,var(--f) 100%,#000)}8.33%{fill:color-mix(in srgb,var(--f) 99%,#000)}16.67%{fill:color-mix(in srgb,var(--f) 98%,#000)}25%{fill:color-mix(in srgb,var(--f) 95%,#000)}33.33%{fill:color-mix(in srgb,var(--f) 91%,#000)}41.67%{fill:color-mix(in srgb,var(--f) 87%,#000)}50%{fill:color-mix(in srgb,var(--f) 81%,#000)}58.33%{fill:color-mix(in srgb,var(--f) 75%,#000)}66.67%{fill:color-mix(in srgb,var(--f) 68%,#000)}75%{fill:color-mix(in srgb,var(--f) 60%,#000)}83.33%{fill:color-mix(in srgb,var(--f) 52%,#000)}91.67%{fill:color-mix(in srgb,var(--f) 43%,#000)}100%{fill:color-mix(in srgb,var(--f) 35%,#000)}}
+@keyframes ffi{0%{fill:color-mix(in srgb,var(--f) 35%,#000)}8.33%{fill:color-mix(in srgb,var(--f) 44%,#000)}16.67%{fill:color-mix(in srgb,var(--f) 52%,#000)}25%{fill:color-mix(in srgb,var(--f) 61%,#000)}33.33%{fill:color-mix(in srgb,var(--f) 70%,#000)}41.67%{fill:color-mix(in srgb,var(--f) 79%,#000)}50%{fill:color-mix(in srgb,var(--f) 87%,#000)}58.33%{fill:color-mix(in srgb,var(--f) 96%,#000)}66.67%{fill:color-mix(in srgb,var(--f) 89%,#fff)}75%{fill:color-mix(in srgb,var(--f) 67%,#fff)}83.33%{fill:color-mix(in srgb,var(--f) 70%,#fff)}91.67%{fill:color-mix(in srgb,var(--f) 85%,#fff)}100%{fill:color-mix(in srgb,var(--f) 100%,#fff)}}
+@keyframes fbi{0%{transform:scaleX(0);fill:color-mix(in srgb,var(--k) 35%,#000)}8.33%{transform:scaleX(0.116);fill:color-mix(in srgb,var(--k) 44%,#000)}16.67%{transform:scaleX(0.211);fill:color-mix(in srgb,var(--k) 52%,#000)}25%{transform:scaleX(0.293);fill:color-mix(in srgb,var(--k) 61%,#000)}33.33%{transform:scaleX(0.366);fill:color-mix(in srgb,var(--k) 70%,#000)}41.67%{transform:scaleX(0.434);fill:color-mix(in srgb,var(--k) 79%,#000)}50%{transform:scaleX(0.5);fill:color-mix(in srgb,var(--k) 87%,#000)}58.33%{transform:scaleX(0.566);fill:color-mix(in srgb,var(--k) 96%,#000)}66.67%{transform:scaleX(0.634);fill:color-mix(in srgb,var(--k) 89%,#fff)}75%{transform:scaleX(0.707);fill:color-mix(in srgb,var(--k) 67%,#fff)}83.33%{transform:scaleX(0.789);fill:color-mix(in srgb,var(--k) 70%,#fff)}91.67%{transform:scaleX(0.884);fill:color-mix(in srgb,var(--k) 85%,#fff)}100%{transform:scaleX(1);fill:color-mix(in srgb,var(--k) 100%,#fff)}}
+@keyframes fbo{0%{transform:scaleX(1);fill:color-mix(in srgb,var(--k) 100%,#000)}8.33%{transform:scaleX(0.884);fill:color-mix(in srgb,var(--k) 99%,#000)}16.67%{transform:scaleX(0.789);fill:color-mix(in srgb,var(--k) 98%,#000)}25%{transform:scaleX(0.707);fill:color-mix(in srgb,var(--k) 95%,#000)}33.33%{transform:scaleX(0.634);fill:color-mix(in srgb,var(--k) 91%,#000)}41.67%{transform:scaleX(0.566);fill:color-mix(in srgb,var(--k) 87%,#000)}50%{transform:scaleX(0.5);fill:color-mix(in srgb,var(--k) 81%,#000)}58.33%{transform:scaleX(0.434);fill:color-mix(in srgb,var(--k) 75%,#000)}66.67%{transform:scaleX(0.366);fill:color-mix(in srgb,var(--k) 68%,#000)}75%{transform:scaleX(0.293);fill:color-mix(in srgb,var(--k) 60%,#000)}83.33%{transform:scaleX(0.211);fill:color-mix(in srgb,var(--k) 52%,#000)}91.67%{transform:scaleX(0.116);fill:color-mix(in srgb,var(--k) 43%,#000)}100%{transform:scaleX(0);fill:color-mix(in srgb,var(--k) 35%,#000)}}
 @media (prefers-reduced-motion:reduce){.wmsvg.ola path{animation:none}}
 nav button[aria-current="true"]{border-image:linear-gradient(90deg,var(--pop),var(--violet)) 1}
 .btn:not(.ghost):not(.pop):not(.fp):not(.ink){background:linear-gradient(135deg,#7a5cf5,#c04fd8);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 2px 0 #4b3aa8}
@@ -722,7 +722,8 @@ html.lsopen,html.lsopen body{overflow:hidden}
 button.orb{padding:0;font:inherit;color:var(--ink);cursor:pointer;transition:border-color .12s,color .12s}
 button.orb:hover,button.orb:focus-visible{border-color:var(--pop);color:var(--pop)}
 /* name over the picture; stats to its right; the mosaic stays on the far right */
-.pmain{flex:1;min-width:0;align-self:stretch;display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-rows:1fr auto 1fr;grid-template-areas:"nm st" "pv st" ". st";column-gap:18px;row-gap:10px;align-items:center}
+.pmain{flex:1;min-width:0;align-self:stretch;display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-rows:1fr auto 1fr;grid-template-areas:"nm st" "pv st" "bt st";column-gap:18px;row-gap:10px;align-items:center}
+.pmain .pbt{grid-area:bt;align-self:start;justify-self:center;margin-top:4px}
 .pmain:has(.pav.has){column-gap:49px}
 .pmain .pav.has{margin-right:0}
 .pmain .pnm{grid-area:nm;align-self:end;justify-self:center;width:0;display:flex;justify-content:center;margin:0 0 6px;font-size:22px;font-weight:600;letter-spacing:-.01em}
@@ -730,6 +731,15 @@ button.orb:hover,button.orb:focus-visible{border-color:var(--pop);color:var(--po
 .pmain .pav{grid-area:pv}
 .pmain .igm{grid-area:st;align-self:center}
 .pmain .igs{margin-bottom:6px}
+/* the numbers, one under another, with Est. at the bottom; followers and following open out to the right, carets on the right */
+.igs.igv{flex-direction:column;align-items:flex-start;flex-wrap:nowrap;gap:9px;margin:0;padding:0;list-style:none}
+.igv li{display:flex;align-items:center;white-space:nowrap}
+.igv .fdd{position:relative}
+.igv .fddb .car{transform:rotate(-90deg)}
+.igv .fdd.open .fddb .car{transform:rotate(90deg)}
+.igv .fddw{left:calc(100% + 12px);top:-8px}
+.igv .fddw.r{left:0;right:auto;top:calc(100% + 8px)}
+.ige{margin:12px 0 0}
 @media (max-width:520px){.pmain{column-gap:12px}.pmain:has(.pav.has){column-gap:39px}.pmain .pnm span{max-width:96px}}
 /* edit profile page */
 .dash .dsec{margin-bottom:12px}
@@ -755,7 +765,7 @@ button.orb:hover,button.orb:focus-visible{border-color:var(--pop);color:var(--po
 .igs span{color:var(--mute);font-size:14px}.igs b{color:var(--ink);font-weight:600;font-size:16px;margin-right:2px}
 @media (max-width:520px){.prof.ig{gap:14px;padding:16px}.prof.ig .av.big{width:64px;height:64px}.igs{gap:16px}.igt .btn{width:100%}}
 /* favourites mosaic: 5 x 5 tiles beside the profile details, dull grey until filled */
-.mos{--mg:color-mix(in srgb,var(--ink) 8%,var(--surface));--ml:color-mix(in srgb,var(--ink) 30%,var(--surface));--mh:color-mix(in srgb,var(--ink) 15%,var(--surface));--mp:var(--ink);display:grid;grid-template-columns:repeat(5,52px);grid-auto-rows:52px;width:max-content}
+.mos{--mg:color-mix(in srgb,var(--ink) 8%,var(--surface));--ml:color-mix(in srgb,var(--ink) 30%,var(--surface));--mh:color-mix(in srgb,var(--ink) 15%,var(--surface));--mp:var(--ink);display:grid;grid-template-columns:repeat(5,70px);grid-auto-rows:70px;width:max-content}
 /* the mosaic and its heading: Tessellation, or Tessellate your mosaic on your own until all 25 spots are filled */
 .mosw{flex:none;margin-left:auto;display:flex;flex-direction:column;align-items:center}
 .mosh{margin:0 0 10px;font-size:15px;font-weight:600;letter-spacing:.01em;line-height:1.2;text-align:center}
@@ -763,7 +773,7 @@ button.orb:hover,button.orb:focus-visible{border-color:var(--pop);color:var(--po
 button.mt{cursor:pointer;transition:background .12s,transform .18s cubic-bezier(.3,.7,.4,1.5)}
 button.mt:hover{z-index:1;transform:scale(1.07)}
 .mos.dragging button.mt:hover{transform:none}
-.mt .ml{font-size:21px;font-weight:700;line-height:1;color:var(--ml)}
+.mt .ml{font-size:28px;font-weight:700;line-height:1;color:var(--ml)}
 /* other people's mosaics: empty tiles sit just below the card, so only the pieces they've added stand out */
 .mos:not(.own){--mg:color-mix(in srgb,var(--bg) 55%,var(--surface))}
 /* your own mosaic: the CREATE YOUR MOSAIC letters go once you've added a piece */
@@ -776,11 +786,11 @@ button.mt:hover .mpl,button.mt:focus-visible .mpl{display:grid}
 .mt.on:hover,.mt.on:focus-within{z-index:2}
 .mto{display:block;width:100%;height:100%;padding:0;border:0;border-radius:3px;overflow:hidden;cursor:pointer;transition:transform .12s,box-shadow .12s}
 .mto img{display:block;width:100%;height:100%;object-fit:cover}
-.mto .mi{display:grid;place-items:center;width:100%;height:100%;color:#fff;font-weight:600;font-size:16px}
+.mto .mi{display:grid;place-items:center;width:100%;height:100%;color:#fff;font-weight:600;font-size:20px}
 .mt.on:hover .mto{transform:scale(1.08);box-shadow:0 4px 12px rgba(0,0,0,.35)}
 .mtx{position:absolute;top:-6px;right:-6px;width:18px;height:18px;border-radius:50%;border:0;padding:0;background:var(--ink);color:var(--surface);font-size:13px;line-height:1;display:none;place-items:center;cursor:pointer;z-index:3}
 .mt.on:hover .mtx,.mt.on:focus-within .mtx{display:grid}
-@media (max-width:840px){.mosw{flex:0 0 100%;margin:6px 0 0}.mos{width:100%;grid-template-columns:repeat(5,minmax(0,60px));grid-auto-rows:auto;justify-content:center}.mt .ml{font-size:22px}}
+@media (max-width:840px){.mosw{flex:0 0 100%;margin:6px 0 0}.mos{width:100%;grid-template-columns:repeat(5,minmax(0,64px));grid-auto-rows:auto;justify-content:center}.mt .ml{font-size:24px}}
 /* dragging a tile to another spot */
 .mos.own .mt.on{touch-action:none;user-select:none;-webkit-user-select:none}
 .mos.own .mto{cursor:grab}
@@ -2085,9 +2095,9 @@ function ddRows(list){return list.map(function(n){return '<button type="button" 
 function ddHTML(k,n,list,cf){var w=k==="fg"?"following":(n===1?"follower":"followers"),t='<b>'+n+'</b> '+w;
 if(!list||!list.length)return t;
 return '<span class="fdd '+k+'" data-k="'+k+'"><button type="button" class="fddb" aria-haspopup="true" aria-expanded="false">'+(cf?CAR+'<span>'+t+'</span>':'<span>'+t+'</span>'+CAR)+'</button><span class="fddw" hidden><span class="fddm" role="menu">'+ddRows(list)+'</span><span class="fcard" hidden></span></span></span>'}
-function igStats(n,a,plus){var rs=S.reviews.filter(function(r){return r.user===n}),rv=rs.length,lk=rs.reduce(function(x,r){var v=likeN(r.id);return v===Infinity?x:x+v},0),fgl=((a&&a.following)||[]).filter(acct),fll=followersOf(n);
-return '<div class="igs"><span><b>'+rv+'</b> tiled</span><span><b>'+numS(lk)+'</b> '+(lk===1?"like":"likes")+'</span>'+'</div>'+
-'<div class="igs"><span class="ff'+(fgl.length&&fll.length?' pair':'')+'"><span class="fls">'+ddHTML("fl",fll.length,fll)+'</span><span class="fgs">'+ddHTML("fg",fgl.length,fgl,1)+'</span></span>'+(plus||"")+'</div>'}
+/* a profile's numbers, one under another: tiled, likes, followers, following (the last two open their lists out to the right) */
+function igStats(n,a){var rs=S.reviews.filter(function(r){return r.user===n}),rv=rs.length,lk=rs.reduce(function(x,r){var v=likeN(r.id);return v===Infinity?x:x+v},0),fgl=((a&&a.following)||[]).filter(acct),fll=followersOf(n);
+return '<ul class="igs igv"><li><span><b>'+rv+'</b> tiled</span></li><li><span><b>'+numS(lk)+'</b> '+(lk===1?"like":"likes")+'</span></li><li class="fls">'+ddHTML("fl",fll.length,fll)+'</li><li class="fgs">'+ddHTML("fg",fgl.length,fgl)+'</li></ul>'}
 function limits(){var a=$("#app").getBoundingClientRect();return {l:Math.max(0,a.left),r:Math.min(window.innerWidth,a.right)}}
 function closeFdd(){[].forEach.call(document.querySelectorAll(".fdd.open"),function(d){d.classList.remove("open");var w=d.querySelector(".fddw"),b=d.querySelector(".fddb"),c=d.querySelector(".fcard");if(w)w.hidden=true;if(b)b.setAttribute("aria-expanded","false");if(c)c.hidden=true})}
 function wireFollowing(){[].forEach.call(document.querySelectorAll(".fdd"),wireDd)}
@@ -2198,7 +2208,7 @@ function lifeLoad(u){if(!REMOTE)return;var a=acct(u);if(!a||!a.id)return;var all
 (function page(from){var q=sb.from("reviews").select("*").eq("user_id",a.id).order("created_at",{ascending:true});if(typeof q.range==="function")q=q.range(from,from+999);
 Promise.resolve(q).then(function(r){if(r.error)return;var d=r.data||[];all=all.concat(d);if(d.length===1000&&from<20000){page(from+1000);return}
 var had=lifeList(u).length;S.life[u]=all.map(function(x){return revRow(x,u)});if(S.life[u].length!==had&&S.tab==="life"&&S.view===u)appView()},function(){})})(0)}
-function est(a){var t=since(a);return t?'<p class="meta" style="margin:4px 0 0">Est. '+t+'</p>':''}
+function est(a){var t=since(a);return t?'<p class="meta ige">Est. '+t+'</p>':''}
 /* a search result as a song page to open (used when you've already reviewed it) */
 function songFromHit(it){return {title:it.title,artist:it.artist,type:it.type||"Song",art:it.art||"",tid:it.tid||null,album:it.album||""}}
 function dupSong(it,skip){if(!it||(it.type||"Song")!=="Song"||!S.user)return null;var t=String(it.title).toLowerCase(),a=String(it.artist).toLowerCase();return S.reviews.filter(function(r){return r.user===S.user&&r.type==="Song"&&String(r.id)!==String(skip)&&r.title.toLowerCase()===t&&r.artist.toLowerCase()===a})[0]||null}
@@ -2698,7 +2708,7 @@ var chat=ic+'<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2
 var body;
 if(S.tab==="review"){body='<section class="page">'+(S.bq?'<button type="button" class="linkbtn" id="bks" style="margin-bottom:14px">← Back to search</button><h2 class="vh">Tile</h2>':'<h2>Tile</h2>')+'<div class="card" id="rvhost"></div></section>'}
 else if(S.tab==="user"&&acct(S.view)){var vu=S.view,va=acct(vu),vc=S.reviews.filter(function(r){return r.user===vu}).length;
-body='<button type="button" class="linkbtn" data-tab="feed" style="margin-bottom:8px">Back to Recommended</button><section class="prof ig"><div class="pmain"><h2 class="pnm"><span>'+esc(vu)+'</span></h2>'+pavHTML(va,va.plats||[])+'<div class="igm">'+igStats(vu,va,vu!==S.user?'<span class="pbt">'+plusBtn(vu)+dmBtn(vu)+'</span>':'')+est(va)+'</div></div>'+mosaicHTML(vu,false)+'</section>'+psrHTML(vu)+'<div class="list cols'+S.cols+'" id="list">'+listHTML()+'</div>'}
+body='<button type="button" class="linkbtn" data-tab="feed" style="margin-bottom:8px">Back to Recommended</button><section class="prof ig"><div class="pmain"><h2 class="pnm"><span>'+esc(vu)+'</span></h2>'+pavHTML(va,va.plats||[])+(vu!==S.user?'<span class="pbt">'+plusBtn(vu)+dmBtn(vu)+'</span>':'')+'<div class="igm">'+igStats(vu,va)+est(va)+'</div></div>'+mosaicHTML(vu,false)+'</section>'+psrHTML(vu)+'<div class="list cols'+S.cols+'" id="list">'+listHTML()+'</div>'}
 else if(S.tab==="search"){body='<section class="page"><h2>Results for “'+esc(S.sq||"")+'”</h2>'+swHTML()+'<div class="list" id="sres">'+resultsHTML()+'</div></section>'}
 else if(S.tab==="sotd"&&S.sotdOK){body=sotdView()}
 else if(S.tab==="msgs"){body=dmView()}
@@ -2709,7 +2719,7 @@ else if(S.tab==="vapids"){body=vapidsView()}
 else if(S.tab==="likes"){body='<section class="page"><h2>My likes and comments</h2><div class="empty">Reviews you like or comment on will show up here.</div></section>'}
 else if(S.tab==="editp"&&S.user){body=editHTML()}
 else if(S.tab==="account"){body='<section class="page"><h2>Privacy and account</h2><dl><dt>Username</dt><dd>'+nm+'</dd><dt>Email</dt><dd>'+esc(a&&a.email||"")+'</dd>'+(since(a)?'<dt>Account established</dt><dd>'+since(a)+'</dd>':'')+'<dt>Your data</dt><dd>'+(REMOTE?'Your profile and reviews are saved to your Mosaic account.':'Accounts and reviews are saved in this browser only.')+'</dd></dl></section>'}
-else{body=(prof?'<section class="prof ig"><div class="pmain"><h2 class="pnm"><span>'+nm+'</span></h2>'+pavHTML(a,S.platOK?S.plats:[],1)+'<div class="igm">'+igStats(S.user,a,"")+est(a)+'</div></div>'+mosaicHTML(S.user,true)+'</section>':'')+
+else{body=(prof?'<section class="prof ig"><div class="pmain"><h2 class="pnm"><span>'+nm+'</span></h2>'+pavHTML(a,S.platOK?S.plats:[],1)+'<div class="igm">'+igStats(S.user,a)+est(a)+'</div></div>'+mosaicHTML(S.user,true)+'</section>':'')+
 (S.tab==="feed"&&S.q?'<div class="chips"><span class="meta">Showing reviews for</span><button type="button" class="chip" id="clq">'+esc(S.q)+' ×</button></div>':'')+'<div class="tools"><div class="tl"><button class="btn addb" id="add" aria-label="Tile" title="Tile"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>'+(S.tab==="feed"?'<select id="sc" aria-label="Show"><option value="all">Everyone</option><option value="fol">People I follow</option></select>':'')+'<select id="t" aria-label="Type"><option>All</option><option>Album</option><option>Song</option></select><select id="s" aria-label="Sort"><option value="new">Newest</option><option value="top">Highest rated</option><option value="hot">Most interacted</option></select></div>'+(prof?psrHTML(S.user):'')+'</div>'+
 '<div class="list cols'+S.cols+'" id="list">'+listHTML()+'</div>'}
 $("#app").innerHTML='<div class="wrap'+(S.tab==="msgs"?' dmw':'')+'"><header class="top"><h2><button type="button" class="wm" data-tab="feed" aria-label="Mosaic home">'+logoSVG()+'</button></h2><nav><button data-tab="feed" aria-current="'+(S.tab==="feed")+'">Recommended</button>'+(S.sotdOK?'<button data-tab="sotd" aria-current="'+(S.tab==="sotd")+'">Song of the Day</button>':'')+(S.reviews.length?'<button type="button" data-listen="1">Listen</button>':'')+'</nav>'+
@@ -3173,16 +3183,15 @@ fb.onclick=function(){turn(true)};bk.onclick=function(){turn(false)}}
 /* la ola: every tile turns over to the word's other side, column after column from left to right, the whole wave taking 2 seconds at
    a steady pace (each tile's turn takes LW.f of it). It runs every 15 seconds, and back to back for as long as the pointer rests
    on the wordmark. LW.bk: the back is showing */
-var LW={t:-1e9,d:2000,f:500,hov:false,bk:false};
-function logoSVG(){if(!logoSVG.h){var R=["#...#...................#......","##.##..........................","#.#.#..###...####..###..#..####","#.#.#.#...#.#.........#.#.#....","#...#.#...#..###...####.#.#....","#...#.#...#.....#.#...#.#.#....","#...#..###..####...####.#..####"],W=31,H=7,C="#ff63ad #fb64b0 #f766b3 #f467b6 #f068b9 #ec69bc #e86abf #e56bc2 #e16bc4 #dd6cc7 #d96dca #d56dcd #d26ed0 #ce6ed2 #ca6fd5 #c66fd8 #c26fda #be6fdd #bb6fe0 #b76fe2 #b36fe5 #af6fe8 #ab6fea #a76fed #a36ff0 #9f6ef2 #9b6ef5 #976ef7 #936dfa #8f6dfc #8b6cff".split(" "),P=[255,99,173],V=[139,108,255],F=[],B=[],h="";
+var LW={t:-1e9,d:2000,f:600,r:28,hov:false,bk:false};
+function logoSVG(){if(!logoSVG.h){var R=["#...#...................#......","##.##..........................","#.#.#..###...####..###..#..####","#.#.#.#...#.#.........#.#.#....","#...#.#...#..###...####.#.#....","#...#.#...#.....#.#...#.#.#....","#...#..###..####...####.#..####"],W=31,H=7,C="#ff63ad #fb64b0 #f766b3 #f467b6 #f068b9 #ec69bc #e86abf #e56bc2 #e16bc4 #dd6cc7 #d96dca #d56dcd #d26ed0 #ce6ed2 #ca6fd5 #c66fd8 #c26fda #be6fdd #bb6fe0 #b76fe2 #b36fe5 #af6fe8 #ab6fea #a76fed #a36ff0 #9f6ef2 #9b6ef5 #976ef7 #936dfa #8f6dfc #8b6cff".split(" "),P=[255,99,173],V=[139,108,255],h="";
 R.forEach(function(row,y){for(var x=0;x<W;x++){if(row.charAt(x)!=="#")continue;
-/* the back: the same fade left to right only (so an upright stroke is one colour), but rougher: every column a shade lighter or
-   darker than the ones beside it, like the tiles of a mosaic */
-var t=x/(W-1),k=[-.09,-.035,.02,.075][(Math.imul(x*7+3,2246822519)>>>28)&3],
+/* the back: the same fade the other way round (violet on the left, pink on the right), still left to right only (so an upright
+   stroke is one colour), but rougher: every column a shade lighter or darker than the ones beside it, like the tiles of a mosaic */
+var t=1-x/(W-1),k=[-.09,-.035,.02,.075][(Math.imul(x*7+3,2246822519)>>>28)&3],
 b="#"+P.map(function(a,i){var v=Math.max(0,Math.min(255,Math.round((a+(V[i]-a)*t)*(1+k))));return (v<16?"0":"")+v.toString(16)}).join("");
-(F[x]=F[x]||[]).push("M"+x+" "+y+"h1v1h-1z");B[x]=b}});
-/* one front and one back per column (a column's tiles share both shades), the back drawn on top */
-F.forEach(function(d,x){var st=' style="--f:'+C[x]+';--k:'+B[x]+';--o:'+Math.round(x*(LW.d-LW.f)/(W-1))+'ms" d="'+d.join("")+'"/>';h+='<path class="ff" fill="'+C[x]+'"'+st+'<path class="fb" fill="'+B[x]+'"'+st});logoSVG.h=h}
+/* every tile turns on its own: a steady step after the column to its left, and a moment after the tile above it */
+var st=' style="--f:'+C[x]+';--k:'+b+';--o:'+Math.round(x*(LW.d-LW.f-6*LW.r)/(W-1)+y*LW.r)+'ms" d="M'+x+' '+y+'h1v1h-1z"/>';h+='<path class="ff" fill="'+C[x]+'"'+st+'<path class="fb" fill="'+b+'"'+st}});logoSVG.h=h}
 /* drawn mid-wave (the page redrew while it was passing): pick the wave up where it is. Two empty rows under the letters, so they
    (not the M's top or the i's dot) sit in the middle of the box */
 var e=performance.now()-LW.t,on=e>=0&&e<LW.d;
