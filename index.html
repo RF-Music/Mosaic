@@ -116,7 +116,18 @@ nav button[aria-current="true"]{color:var(--ink);border-color:var(--pop)}
 .vapsug{margin:0 0 18px}
 .vapw{margin-top:0}
 .vapl{margin-top:0}
-/* future features: a pink dot by each one; Fred gets × to take one off, and the ideas others sent under the list */
+/* future features: a pink dot by each one, its votes on the right (pink when you've pushed it up, blue when down); Fred gets × to
+   take one off, and the ideas others sent under the list */
+.fvt{flex:none;display:inline-flex;align-items:center;gap:1px;padding:2px;border-radius:999px;background:color-mix(in srgb,var(--line) 45%,transparent)}
+.fvb{display:grid;place-items:center;width:28px;height:28px;padding:0;border:0;border-radius:50%;background:none;color:var(--mute);cursor:pointer;transition:color .15s,background-color .15s}
+.fvb svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linejoin:round}
+.fvb:hover,.fvb:focus-visible{background:var(--line);color:var(--ink)}
+.fvb.fvup.on{color:var(--pop)}.fvb.fvdn.on{color:#6f95ff}
+.fvb.on svg{fill:currentColor}
+.fvb.fvj svg{animation:fvj .34s cubic-bezier(.3,1.7,.5,1)}
+@keyframes fvj{from{transform:scale(.55)}}
+.fvn{min-width:22px;text-align:center;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--mute)}
+.fvn.pos{color:var(--ink)}
 .vapfl{margin:0;padding:0;list-style:none}
 .vapfl li{display:flex;align-items:center;gap:8px;min-height:34px;padding:5px 2px;border-top:1px solid color-mix(in srgb,var(--line) 70%,transparent);font-size:14.5px}
 .vapfl li:first-child{border-top:0}
@@ -1767,32 +1778,57 @@ Promise.resolve(sb.from("genre_suggestions").insert({genre:g.slice(0,40)})).then
 toast("Thanks, “"+g+"” is on the list to look at")},function(){inp.value=raw;toast("Couldn’t send that. Check your connection.")})}}
 /* ---------- future features: what's on its way to Mosaic. Only Fred (the site's admin, see is_admin) can put one forward, and the
    database holds to that too; everyone else gets a box to suggest one, like the genres box, and Fred sees those ideas under the list
-   to add or clear ---------- */
+   to add or clear. Anyone signed in can push a feature up or down the list with a vote (one each, click again to take it back); the
+   list keeps the most wanted at the top, and the counts live on the feature so who voted which way stays private ---------- */
+var FVA={1:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4.5l7.5 8H15v7H9v-7H4.5z"/></svg>',"-1":'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19.5l7.5-8H15v-7H9v7H4.5z"/></svg>'},FVQ={};
+function featSort(){(S.feats||[]).sort(function(a,b){var d=((b.ups||0)-(b.downs||0))-((a.ups||0)-(a.downs||0));return d||(String(a.created_at)<String(b.created_at)?-1:String(a.created_at)>String(b.created_at)?1:0)})}
+function featVoteHTML(f){var v=(S.fvote||{})[f.id]||0,n=(f.ups||0)-(f.downs||0),id=esc(String(f.id));
+function btn(d,lab,tip){return '<button type="button" class="fvb '+(d>0?'fvup':'fvdn')+(v===d?' on':'')+'" data-fv="'+id+'" data-d="'+d+'" aria-pressed="'+(v===d)+'" aria-label="'+lab+'" title="'+tip+'">'+FVA[d]+'</button>'}
+return '<div class="fvt" role="group" aria-label="Votes">'+btn(1,"Upvote","Push this up")+'<b class="fvn'+(n>0?' pos':'')+'" aria-label="Score '+n+'">'+String(n).replace("-","−")+'</b>'+btn(-1,"Downvote","Push this down")+'</div>'}
 function featCount(){return S.featOK?String((S.feats||[]).length):""}
 function featBody(){var ad=!!S.fadmin,h='<form class="vapsug" id="vapff"><label for="vapfi">'+(ad?'Put forward a feature you’re planning. Only you can add to this list.':'Got an idea for Mosaic? Suggest a feature and we’ll take a look.')+
 '</label><div class="vaprow"><input id="vapfi" maxlength="'+(ad?120:140)+'" placeholder="'+(ad?'A feature on its way':'Suggest a feature')+'" autocomplete="off" enterkeyhint="send"><button class="btn" type="submit">'+(ad?'Add':'Suggest')+'</button></div></form>';
 if(!S.featOK)return h+'<p class="meta">Loading…</p>';
-h+=S.feats.length?'<ul class="vapfl">'+S.feats.map(function(f){return '<li><span>'+esc(f.title)+'</span>'+(ad?'<button type="button" class="vapx" data-fdel="'+esc(String(f.id))+'" aria-label="Take “'+esc(f.title)+'” off the list" title="Take off the list">×</button>':'')+'</li>'}).join("")+'</ul>':'<p class="meta vapf0">Nothing announced yet. Check back soon.</p>';
+h+=S.feats.length?'<ul class="vapfl">'+S.feats.map(function(f){return '<li data-fid="'+esc(String(f.id))+'"><span>'+esc(f.title)+'</span>'+featVoteHTML(f)+(ad?'<button type="button" class="vapx" data-fdel="'+esc(String(f.id))+'" aria-label="Take “'+esc(f.title)+'” off the list" title="Take off the list">×</button>':'')+'</li>'}).join("")+'</ul>':'<p class="meta vapf0">Nothing announced yet. Check back soon.</p>';
 if(ad&&S.fsug.length)h+='<h4 class="vapfh">Suggested by others <span>'+S.fsug.length+'</span></h4><ul class="vapfl vapfs">'+S.fsug.map(function(x){return '<li><span>'+esc(x.idea)+(x.by?'<i> · '+esc(x.by)+'</i>':'')+'</span>'+
 '<button type="button" class="btn ghost sm" data-fadd="'+esc(String(x.id))+'">Add</button><button type="button" class="vapx" data-fsx="'+esc(String(x.id))+'" aria-label="Clear this idea" title="Clear">×</button></li>'}).join("")+'</ul>';
 return h}
-function featPaint(){var b=$("#vapfb"),c=document.querySelector("#vapf .meta");if(c)c.textContent=featCount();if(b){b.innerHTML=featBody();wireFeat()}}
+function featPaint(mv){var b=$("#vapfb"),c=document.querySelector("#vapf .meta");if(c)c.textContent=featCount();featSort();if(!b)return;
+var inp=$("#vapfi"),typed=inp?inp.value:"",fa=document.activeElement,fk=fa&&fa.dataset&&fa.dataset.fv?fa.dataset.fv+"|"+fa.dataset.d:null,top={};
+if(mv!=null)[].forEach.call(b.querySelectorAll("li[data-fid]"),function(li){top[li.dataset.fid]=li.getBoundingClientRect().top});
+b.innerHTML=featBody();wireFeat();if(typed&&$("#vapfi"))$("#vapfi").value=typed;
+if(fk){var nb=b.querySelector('[data-fv="'+fk.split("|")[0]+'"][data-d="'+fk.split("|")[1]+'"]');if(nb)try{nb.focus({preventScroll:true})}catch(e){}}
+if(mv==null)return;var on=b.querySelector('li[data-fid="'+mv+'"] .fvb.on');if(on)on.classList.add("fvj");
+if(matchMedia("(prefers-reduced-motion:reduce)").matches)return;
+[].forEach.call(b.querySelectorAll("li[data-fid]"),function(li){var t=top[li.dataset.fid];if(t==null)return;var dy=t-li.getBoundingClientRect().top;
+if(Math.abs(dy)>1&&li.animate)li.animate([{transform:"translateY("+dy+"px)"},{transform:"none"}],{duration:420,easing:"cubic-bezier(.2,.8,.2,1)"})})}
 function featLoad(){if(S.featBusy)return;S.featBusy=true;var who=S.uid||S.user||"";function done(){S.featBusy=false;S.featOK=true;S.featFor=who;featPaint()}
-if(!REMOTE){S.feats=store.get("ln_feats",[])||[];S.fadmin=/^(f|fred)$/i.test(S.user||"");S.fsug=S.fadmin?(store.get("ln_fsug",[])||[]):[];done();return}
-Promise.all([sb.from("future_features").select("id,title,created_at").order("created_at",{ascending:true}),S.uid?sb.rpc("is_admin"):Promise.resolve({data:false})]).then(function(r){
-S.feats=r[0].error?[]:(r[0].data||[]);S.fadmin=!!S.uid&&!r[1].error&&r[1].data===true;S.fsug=[];if(!S.fadmin){done();return}
+if(!REMOTE){S.feats=store.get("ln_feats",[])||[];var fv=store.get("ln_fvotes",{})||{};S.fvote=fv[S.user||""]||{};
+S.feats.forEach(function(f){f.ups=0;f.downs=0;Object.keys(fv).forEach(function(u){var x=(fv[u]||{})[f.id];if(x===1)f.ups++;else if(x===-1)f.downs++})});S.fadmin=/^(f|fred)$/i.test(S.user||"");S.fsug=S.fadmin?(store.get("ln_fsug",[])||[]):[];done();return}
+Promise.all([sb.from("future_features").select("id,title,created_at,ups,downs").order("created_at",{ascending:true}),S.uid?sb.rpc("is_admin"):Promise.resolve({data:false}),
+S.uid?sb.from("feature_votes").select("feature_id,vote"):Promise.resolve({data:[]})]).then(function(r){
+S.feats=r[0].error?[]:(r[0].data||[]);S.fvote={};(r[2].error?[]:(r[2].data||[])).forEach(function(x){S.fvote[x.feature_id]=x.vote});S.fadmin=!!S.uid&&!r[1].error&&r[1].data===true;S.fsug=[];if(!S.fadmin){done();return}
 return sb.from("feature_suggestions").select("id,idea,user_id,created_at").order("created_at",{ascending:true}).then(function(x){var by={};accts.forEach(function(a){by[a.id]=a.name});
 S.fsug=x.error?[]:(x.data||[]).map(function(y){return {id:y.id,idea:y.idea,by:by[y.user_id]||""}});done()})}).catch(function(){S.featBusy=false})}
 function wireFeat(){var f=$("#vapff");if(!f)return;f.onsubmit=function(e){e.preventDefault();var inp=$("#vapfi"),raw=inp.value.trim().replace(/\s+/g," ");
 if(raw.length<3){toast(S.fadmin?"Type the feature you’re planning":"Type your idea for a feature");return}if(!S.user){toast("Sign in to suggest a feature");return}
 inp.value="";var back=function(ok){if(!ok)inp.value=raw};if(S.fadmin)featAdd(raw,null,back);else featSuggest(raw,back)};
 document.querySelectorAll("#vapfb [data-fdel]").forEach(function(b){b.onclick=function(){featDel(b.dataset.fdel)}});
+document.querySelectorAll("#vapfb [data-fv]").forEach(function(b){b.onclick=function(){featVote(b.dataset.fv,+b.dataset.d)}});
 document.querySelectorAll("#vapfb [data-fadd]").forEach(function(b){b.onclick=function(){var x=S.fsug.filter(function(y){return String(y.id)===b.dataset.fadd})[0];if(x)featAdd(x.idea.slice(0,120),x.id)}});
 document.querySelectorAll("#vapfb [data-fsx]").forEach(function(b){b.onclick=function(){featSugDel(b.dataset.fsx)}})}
 function featAdd(t,sid,cb){t=t.slice(0,120);cb=cb||function(){};
-if(!REMOTE){var l=store.get("ln_feats",[])||[];l.push({id:Date.now(),title:t,created_at:new Date().toISOString()});store.set("ln_feats",l);S.feats=l;if(sid!=null)featSugDel(sid,true);featPaint();toast("Added to future features");cb(true);return}
-Promise.resolve(sb.from("future_features").insert({title:t}).select("id,title,created_at").single()).then(function(r){if(r.error){toast("Couldn’t add that. Try again.");cb(false);return}
+if(!REMOTE){var l=store.get("ln_feats",[])||[];l.push({id:Date.now(),title:t,created_at:new Date().toISOString(),ups:0,downs:0});store.set("ln_feats",l);S.feats=l;if(sid!=null)featSugDel(sid,true);featPaint();toast("Added to future features");cb(true);return}
+Promise.resolve(sb.from("future_features").insert({title:t}).select("id,title,created_at,ups,downs").single()).then(function(r){if(r.error){toast("Couldn’t add that. Try again.");cb(false);return}
 S.feats.push(r.data);if(sid!=null)featSugDel(sid,true);featPaint();toast("Added to future features");cb(true)},function(){toast("Couldn’t add that. Check your connection.");cb(false)})}
+/* a vote shows straight away; if it doesn't go through it's put back. Votes on one feature go in order, so quick clicks land right */
+function featTally(f,a,b){f.ups=(f.ups||0)-(a===1)+(b===1);f.downs=(f.downs||0)-(a===-1)+(b===-1)}
+function featVote(id,d){if(!S.user){toast("Sign in to vote");return}var f=(S.feats||[]).filter(function(x){return String(x.id)===String(id)})[0];if(!f)return;
+S.fvote=S.fvote||{};var was=S.fvote[f.id]||0,now=was===d?0:d;featTally(f,was,now);S.fvote[f.id]=now;featPaint(f.id);
+if(!REMOTE){var all=store.get("ln_fvotes",{})||{},me=all[S.user]||{};if(now)me[f.id]=now;else delete me[f.id];all[S.user]=me;store.set("ln_fvotes",all);return}
+function undo(){featTally(f,now,was);S.fvote[f.id]=was;featPaint(f.id);toast("Couldn’t count that vote. Try again.")}
+FVQ[f.id]=(FVQ[f.id]||Promise.resolve()).then(function(){return now?sb.from("feature_votes").upsert({feature_id:f.id,user_id:S.uid,vote:now},{onConflict:"feature_id,user_id"}):
+sb.from("feature_votes").delete().eq("feature_id",f.id).eq("user_id",S.uid)}).then(function(r){if(r&&r.error)undo()},undo)}
 function featDel(id){var keep=(S.feats||[]).filter(function(f){return String(f.id)!==String(id)});
 if(!REMOTE){store.set("ln_feats",keep);S.feats=keep;featPaint();return}
 Promise.resolve(sb.from("future_features").delete().eq("id",id)).then(function(r){if(r.error){toast("Couldn’t take that off. Try again.");return}S.feats=keep;featPaint()},function(){toast("Couldn’t take that off. Check your connection.")})}
