@@ -793,7 +793,7 @@ button.orb:hover,button.orb:focus-visible{border-color:var(--pop);color:var(--po
 @media (max-width:520px){.prof.ig{gap:14px;padding:16px}.prof.ig .av.big{width:64px;height:64px}.igs{gap:16px}.igt .btn{width:100%}}
 /* favourites mosaic: 5 x 5 tiles beside the profile details, dull grey until filled */
 .mos{--mg:color-mix(in srgb,var(--ink) 8%,var(--surface));--ml:color-mix(in srgb,var(--ink) 30%,var(--surface));--mh:color-mix(in srgb,var(--ink) 15%,var(--surface));--mp:var(--ink);display:grid;grid-template-columns:repeat(5,56px);grid-auto-rows:56px;width:max-content}
-/* the mosaic and its heading: Tessellation, or Tessellate your mosaic on your own until all 25 spots are filled */
+/* the mosaic and its heading: Tessellation, or Tessellate a mosaic on your own until all 25 spots are filled */
 .mosw{flex:none;margin-left:auto;display:flex;flex-direction:column;align-items:center}
 .mosh{margin:0 0 10px;font-size:15px;font-weight:600;letter-spacing:.01em;line-height:1.2;text-align:center}
 .mt{position:relative;min-width:0;aspect-ratio:1/1;border:1px solid transparent;border-radius:4px;padding:0;background:var(--mg);background-clip:padding-box;display:grid;place-items:center}
@@ -1589,7 +1589,7 @@ async function loadMosaic(pre){try{var r=await (pre||sb.from("mosaic_tiles").sel
 function mimg(t){return t.art&&okArt(t.art)?'<img src="'+esc(t.art.replace(/\/\d+x\d+bb\./,"/100x100bb."))+'" alt="" loading="lazy" draggable="false">':'<span class="mi">'+esc(String(t.title).charAt(0).toUpperCase())+'</span>'}
 function mosaicHTML(n,own){if(!S.mosOK)return "";var t=mosOf(n);
 var plus='<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
-full=t.filter(function(x){return x}).length>=MOSN,h='<div class="mosw"><h3 class="mosh">'+(own&&!full?'Tessellate your mosaic':'Tessellation')+'</h3><div class="mos'+(own?' own':'')+(own&&t.some(function(x){return x})?' started':'')+'" role="group" aria-label="'+(own?'Your mosaic (drag a tile to move it)':esc(n)+'’s mosaic')+'">';
+full=t.filter(function(x){return x}).length>=MOSN,h='<div class="mosw"><h3 class="mosh">'+(own&&!full?'Tessellate a mosaic':'Tessellation')+'</h3><div class="mos'+(own?' own':'')+(own&&t.some(function(x){return x})?' started':'')+'" role="group" aria-label="'+(own?'Your mosaic (drag a tile to move it)':esc(n)+'’s mosaic')+'">';
 for(var i=0;i<MOSN;i++){var it=t[i];
 if(it){var hu=hue(it.title+it.artist);h+='<div class="mt on" data-mi="'+i+'"><button type="button" class="mto" data-mo="'+i+'" data-mu="'+esc(n)+'" style="background:linear-gradient(135deg,hsl('+hu+',70%,50%),hsl('+((hu+60)%360)+',75%,38%))" title="'+esc(it.title)+' · '+esc(it.artist)+'" aria-label="'+esc(it.title)+' by '+esc(it.artist)+'">'+mimg(it)+'</button>'+(own?'<button type="button" class="mtx" data-mx="'+i+'" aria-label="Remove '+esc(it.title)+' from your mosaic" title="Remove">×</button>':'')+'</div>'}
 else if(own)h+='<button type="button" class="mt" data-mi="'+i+'" data-mp="'+i+'" aria-label="Tessellate a favourite into spot '+(i+1)+'"><span class="ml" aria-hidden="true">'+(MOSL[i]||"")+'</span><span class="mpl" aria-hidden="true">'+plus+'</span></button>';
