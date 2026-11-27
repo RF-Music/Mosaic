@@ -500,6 +500,18 @@ html.lsopen,html.lsopen body{overflow:hidden}
 .lscv .aglow{inset:-26%;--ab:40px;--ao:.95}
 .lss.playing .lscv .aglow{animation:lsbreathe 5s ease-in-out infinite}
 @keyframes lsbreathe{50%{transform:scale(1.08)}}
+/* the higher the stars, the more a slide glows (lsGlow): the cover's own glow grows brighter and wider, the background lifts, the
+   stars shine gold, and every so often a glare of light sweeps across the cover, faint at 4 stars and unmistakable at 5 */
+.lss{--gl:0;--gs:0}
+.lss .lsbg{opacity:calc(.62 + .2*var(--gl))}
+.lss .lscv .aglow{inset:calc(-26% - 12%*var(--gl));filter:blur(calc(var(--ab,22px)*(1 + .35*var(--gl)))) brightness(calc(1 + .4*var(--gl))) saturate(calc(1 + .35*var(--gl)))}
+.lss .lsrate .stars{filter:drop-shadow(0 0 calc(7px*var(--gl)) rgba(255,196,77,calc(.8*var(--gl))))}
+.lscf .covbtn{position:relative}
+.lsgl{position:absolute;inset:0;z-index:1;border-radius:10px;overflow:hidden;pointer-events:none;opacity:var(--gs)}
+.lsgl::before{content:"";position:absolute;top:-25%;bottom:-25%;left:-55%;width:42%;transform:skewX(-20deg);
+background:linear-gradient(90deg,transparent,rgba(255,255,255,.1) 28%,rgba(255,255,255,.62) 50%,rgba(255,255,255,.1) 72%,transparent)}
+.lss.cur .lsgl::before{animation:lsglare 6.5s cubic-bezier(.5,0,.3,1) .6s infinite}
+@keyframes lsglare{0%{transform:skewX(-20deg) translateX(0)}28%,100%{transform:skewX(-20deg) translateX(400%)}}
 .lsst{position:absolute;inset:0;z-index:1;display:grid;place-items:center;opacity:0;transition:opacity .2s;pointer-events:none}
 .lsst svg{width:26px;height:26px;padding:20px;border-radius:50%;background:rgba(0,0,0,.5);fill:#fff;box-sizing:content-box}
 .lss.paused .lsst{opacity:1}
@@ -687,7 +699,7 @@ html.lsopen,html.lsopen body{overflow:hidden}
 .lsheart{position:absolute;z-index:5;width:96px;height:96px;margin:-48px 0 0 -48px;pointer-events:none;animation:lsheart .85s ease-out forwards}
 .lsheart svg{width:100%;height:100%;fill:#ff5c8a;stroke:#ff5c8a;filter:drop-shadow(0 6px 16px rgba(0,0,0,.4))}
 @keyframes lsheart{0%{transform:scale(.3);opacity:0}15%{transform:scale(1.15);opacity:1}30%{transform:scale(1)}100%{transform:translateY(-46px) scale(1);opacity:0}}
-@media (prefers-reduced-motion:reduce){.lss.playing .lscv .aglow,.lsheart,.rdo.pop{animation:none}#rf #sv{transition:none}}
+@media (prefers-reduced-motion:reduce){.lss.playing .lscv .aglow,.lsheart,.rdo.pop,.lss.cur .lsgl::before{animation:none}#rf #sv{transition:none}}
 .cmts{margin-top:8px;border-top:1px solid var(--line);padding-top:8px;display:grid;gap:6px}
 .cm{display:flex;justify-content:space-between;gap:8px;font-size:13px}
 .cm .cx{background:none;border:0;color:var(--mute);cursor:pointer;font-size:16px;line-height:1;padding:0 4px}
@@ -3478,12 +3490,15 @@ src.forEach(function(r){if(!r.art||!okArt(r.art))return;var k=infoKey(revSong(r)
 var pool=Object.keys(best).map(function(k){return {r:best[k].r,k:k,w:Math.pow(Math.random(),1/Math.max(1e-6,best[k].sc))}}).sort(function(a,b){return b.w-a.w});
 if(S.tab==="song"&&S.song){var k0=infoKey(S.song),i0=-1;pool.forEach(function(x,i){if(i0<0&&x.k===k0)i0=i});if(i0>0)pool.unshift(pool.splice(i0,1)[0])}
 return pool.slice(0,100).map(function(x){return x.r})}
+/* how much a slide glows from its stars: nothing at 3 or under, a little at 3.5, a soft glow at 4, the full glare at 5.
+   --gl lifts the ambient glow, --gs (which comes in later) the glare that sweeps across the cover */
+function lsGlow(v){var g=Math.pow(Math.max(0,Math.min(1,(v-3)/2)),1.3);return g?' style="--gl:'+g.toFixed(3)+';--gs:'+Math.pow(g,1.6).toFixed(3)+'"':''}
 function lsSlide(r,i){var s=revSong(r),done=!!dupSong(s),v=rnum(r.rating),what=r.type==="Album"?"album":"song";
-return '<section class="lss" data-i="'+i+'" aria-label="'+esc(r.title)+' by '+esc(r.artist)+'">'+
+return '<section class="lss" data-i="'+i+'"'+lsGlow(v)+' aria-label=""'+esc(r.title)+' by '+esc(r.artist)+'">'+
 '<div class="lsbg" aria-hidden="true"><canvas class="soft" width="48" height="48" data-soft="'+esc(r.art)+'" data-blur="2.4"></canvas></div>'+
 '<div class="lsin"><div class="lstop"><p class="lsby">'+avatar(acct(r.user),"xs")+'<b>'+esc(r.user)+'</b></p>'+(r.text?'<p class="lsq">“'+esc(r.text)+'”</p>':'')+
 '<div class="lsrate" role="img" aria-label="Rated '+v.toFixed(1)+' out of 5"><span class="stars" style="--p:'+starPct(v)+'%"></span><b>'+v.toFixed(1)+'</b></div></div>'+
-'<div class="lscv"><div class="aglw">'+artGlow(s)+'<div class="cvf lscf" data-rid="'+esc(String(r.id))+'" data-k="'+esc(infoKey(s))+'"><div class="cvi"><div class="covbtn">'+heroCover(s)+'</div><div class="cvbk" aria-hidden="true"></div></div></div><span class="lsst" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span></div><div class="lspb" aria-hidden="true"><i></i></div>'+
+'<div class="lscv"><div class="aglw">'+artGlow(s)+'<div class="cvf lscf" data-rid="'+esc(String(r.id))+'" data-k="'+esc(infoKey(s))+'"><div class="cvi"><div class="covbtn">'+heroCover(s)+(v>3?'<i class="lsgl" aria-hidden="true"></i>':'')+'</div><div class="cvbk" aria-hidden="true"></div></div></div><span class="lsst" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 5.5v13l11-6.5z"/></svg></span></div><div class="lspb" aria-hidden="true"><i></i></div>'+
 '<button type="button" class="tiled lstk'+(done?'" title="You’ve tiled this. Open the '+what+'"':' not" title="You haven’t tiled this yet. Tile it"')+'><i aria-hidden="true"></i>'+(done?'Tiled':'Not tiled')+'</button></div>'+
 '<div class="lsmeta"><h3><button type="button" class="lsti" title="Open the '+what+'">'+esc(r.title)+'</button></h3><p class="lsar">'+esc(r.artist)+(r.type==="Album"?' · Album':'')+'</p><p class="lstn" hidden></p>'+
 '<p class="lsno" hidden>No preview for this one</p><a class="lsap" href="#" target="_blank" rel="noopener" hidden>Listen on Apple Music ↗</a></div></div>'+
