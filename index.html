@@ -7,10 +7,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#e8e8eb;--surface:#fffefc;--sunk:#dcdce0;--ink:#2b2930;--mute:#625f68;--line:#d6d6db;--accent:#34323a;--accent-ink:#fff;--pop:#ff4f9f;--pop-ink:#2a0a1c;--star:#f08a1d;--bad:#c9524d;
+:root{--bg:#e8e8eb;--surface:#fffefc;--sunk:#dcdce0;--ink:#000;--mute:#000;--line:#d6d6db;--accent:#34323a;--accent-ink:#fff;--pop:#ff4f9f;--pop-ink:#2a0a1c;--star:#f08a1d;--bad:#c9524d;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1b1a1f;--surface:#25242a;--sunk:#141318;--ink:#f4f1ee;--mute:#aaa5ad;--line:#37353d;--accent:#ebe6e0;--accent-ink:#1b1a1f;--pop:#ff63ad;--pop-ink:#2a0a1c;--bad:#e8837d;color-scheme:dark}}
-:root[data-theme="dark"]{--bg:#1b1a1f;--surface:#25242a;--sunk:#141318;--ink:#f4f1ee;--mute:#aaa5ad;--line:#37353d;--accent:#ebe6e0;--accent-ink:#1b1a1f;--pop:#ff63ad;--pop-ink:#2a0a1c;--bad:#e8837d;color-scheme:dark}
+@media (prefers-color-scheme:dark){:root:not([data-theme]){--bg:#1b1a1f;--surface:#25242a;--sunk:#141318;--ink:#fff;--mute:#fff;--line:#37353d;--accent:#ebe6e0;--accent-ink:#1b1a1f;--pop:#ff63ad;--pop-ink:#2a0a1c;--bad:#e8837d;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#1b1a1f;--surface:#25242a;--sunk:#141318;--ink:#fff;--mute:#fff;--line:#37353d;--accent:#ebe6e0;--accent-ink:#1b1a1f;--pop:#ff63ad;--pop-ink:#2a0a1c;--bad:#e8837d;color-scheme:dark}
+/* Nice: a soft blue-grey ground with black words */
+:root[data-theme="nice"]{--bg:#a1a2b3;--surface:#b5b6c4;--sunk:#9293a5;--ink:#000;--mute:#000;--line:#8a8b9d;--accent:#1f1e24;--accent-ink:#fff;--pop:#ff4f9f;--pop-ink:#2a0a1c;--star:#f08a1d;--bad:#b8433e;color-scheme:light}
 *{box-sizing:border-box}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--bg);color:var(--ink);font:300 14px/1.5 "Montserrat",system-ui,sans-serif}
@@ -116,6 +118,27 @@ nav button[aria-current="true"]{color:var(--ink);border-color:var(--pop)}
 .vapsug{margin:0 0 18px}
 .vapw{margin-top:0}
 .vapl{margin-top:0}
+/* Word of the Day intro (wdIntro): a row of slot-machine reels over the page's backdrop, which fades away as the word flies home */
+#wdi{position:fixed;inset:0;z-index:600;overflow:hidden;cursor:default;opacity:0;transition:opacity .25s ease}
+#wdi.in{opacity:1}
+#wdi.gone{opacity:0;transition:opacity .25s ease}
+#wdi .wdib{position:absolute;inset:0;background:radial-gradient(60% 50% at 50% 45%,hsl(var(--wh) 80% 62% / .24),transparent 70%),var(--bg);transition:opacity .8s ease .05s}
+#wdi.out .wdib{opacity:0}
+#wdi .wdic{position:absolute;left:50%;top:45%;display:flex;flex-direction:column;align-items:center;gap:22px;transform:translate(-50%,-50%)}
+#wdi .wdik{margin:0;color:var(--mute);font-size:12px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;transition:opacity .35s}
+#wdi.out .wdik,#wdi.close .wdik{opacity:0}
+#wdi .wdir{display:flex;align-items:center;font-weight:700;line-height:1.2;white-space:nowrap;transition:transform .85s cubic-bezier(.45,0,.2,1)}
+#wdi .wdr{position:relative;display:block;flex:none;height:1.2em;margin:0 .045em;overflow:hidden;border-radius:.12em;background:var(--surface);
+box-shadow:inset 0 .05em .14em rgba(0,0,0,.2),0 0 0 1px var(--line);transition:width .28s cubic-bezier(.2,.8,.2,1),margin .3s,opacity .28s,background-color .35s,box-shadow .35s}
+#wdi .wds{display:flex;flex-direction:column;will-change:transform}
+#wdi .wds i{display:block;height:1.2em;font-style:normal;line-height:1.2em;text-align:center;color:var(--ink)}
+#wdi .wdr.fast .wds{filter:blur(.7px)}
+#wdi .wdr.fast i{text-shadow:0 -.24em 0 color-mix(in srgb,var(--ink) 22%,transparent),0 .24em 0 color-mix(in srgb,var(--ink) 22%,transparent)}
+#wdi .wdr.lk i{color:var(--lc);transition:color .25s}
+#wdi .wdr.lk{animation:wdlk .6s ease-out}
+@keyframes wdlk{from{box-shadow:0 0 0 2px var(--pop),0 0 28px color-mix(in srgb,var(--pop) 70%,transparent)}}
+#wdi.close .wdr{margin:0;background:transparent;box-shadow:none;animation:none}
+.wotd .wdw.wdhide{visibility:hidden}
 /* Word of the Day: the word big and in its own colours on a card, what it means under it, then the reviews that use it */
 .wotd .sdhd{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:14px}
 .wotd .sdhd h2{margin:0}
@@ -219,7 +242,7 @@ background:linear-gradient(90deg,hsl(var(--wh) 78% 44%),hsl(calc(var(--wh) + 50)
 .tiled i{animation:tflip 6s cubic-bezier(.35,1.35,.5,1) infinite}
 @keyframes tflip{0%,100%{transform:perspective(36px) rotateX(0) rotateY(0)}7%,25%{transform:perspective(36px) rotateX(0) rotateY(180deg)}32%,50%{transform:perspective(36px) rotateX(180deg) rotateY(180deg)}57%,75%{transform:perspective(36px) rotateX(180deg) rotateY(0)}82%{transform:perspective(36px) rotateX(0) rotateY(0)}}
 @media (prefers-reduced-motion:reduce){.tiled i{animation:none}}
-:root[data-theme="light"] .tiled.not i{background:linear-gradient(160deg,#b9b9c0,#9a9aa2)}@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .tiled.not i{background:linear-gradient(160deg,#b9b9c0,#9a9aa2)}}
+:root[data-theme="light"] .tiled.not i,:root[data-theme="nice"] .tiled.not i{background:linear-gradient(160deg,#b9b9c0,#9a9aa2)}@media (prefers-color-scheme:light){:root:not([data-theme]) .tiled.not i{background:linear-gradient(160deg,#b9b9c0,#9a9aa2)}}
 .tag.tz{color:#fff;border-color:transparent;background:linear-gradient(135deg,#7a5cf5,#c04fd8)}
 @media (prefers-reduced-motion:reduce){.tessw,.aglow.abl{animation:none}.tess::after{display:none}}
 @media (max-width:600px){.sbox .sart{width:96px;flex:none}.tessw{margin-top:7px}.tess{height:22px;padding:0 8px;gap:4px;font-size:8.5px;letter-spacing:.07em;clip-path:polygon(0 0,100% 0,calc(100% - 6px) 50%,100% 100%,0 100%,6px 50%)}.tess svg{display:none}.tiled{margin-top:7px;font-size:11.5px}}
@@ -373,8 +396,8 @@ header.top .wm,.brand{background:none;color:var(--ink);line-height:0}
 @keyframes fbo{0%{transform:scaleX(1);fill:color-mix(in srgb,var(--k) 100%,#000)}8.33%{transform:scaleX(0.884);fill:color-mix(in srgb,var(--k) 99%,#000)}16.67%{transform:scaleX(0.789);fill:color-mix(in srgb,var(--k) 98%,#000)}25%{transform:scaleX(0.707);fill:color-mix(in srgb,var(--k) 95%,#000)}33.33%{transform:scaleX(0.634);fill:color-mix(in srgb,var(--k) 91%,#000)}41.67%{transform:scaleX(0.566);fill:color-mix(in srgb,var(--k) 87%,#000)}50%{transform:scaleX(0.5);fill:color-mix(in srgb,var(--k) 81%,#000)}58.33%{transform:scaleX(0.434);fill:color-mix(in srgb,var(--k) 75%,#000)}66.67%{transform:scaleX(0.366);fill:color-mix(in srgb,var(--k) 68%,#000)}75%{transform:scaleX(0.293);fill:color-mix(in srgb,var(--k) 60%,#000)}83.33%{transform:scaleX(0.211);fill:color-mix(in srgb,var(--k) 52%,#000)}91.67%{transform:scaleX(0.116);fill:color-mix(in srgb,var(--k) 43%,#000)}100%{transform:scaleX(0);fill:color-mix(in srgb,var(--k) 35%,#000)}}
 @media (prefers-reduced-motion:reduce){.wmsvg.ola path{animation:none}}
 nav button[aria-current="true"]{border-image:linear-gradient(90deg,var(--pop),var(--violet)) 1}
-/* on the light look the words across the top are black */
-:root[data-theme="light"] nav button{color:#000}
+/* on the light look (and Nice) the words across the top are black */
+:root[data-theme="light"] nav button,:root[data-theme="nice"] nav button{color:#000}
 .btn:not(.ghost):not(.pop):not(.fp):not(.ink){background:linear-gradient(135deg,#7a5cf5,#c04fd8);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 2px 0 #4b3aa8}
 .btn:not(.ghost):not(.pop):not(.fp):not(.ink):active{box-shadow:inset 0 1px 2px rgba(0,0,0,.25),0 0 0 transparent}
 .btn.ink{background:var(--ink);color:var(--bg);padding:9px 18px;box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 2px 0 color-mix(in srgb,var(--ink) 50%,#000)}
@@ -1010,8 +1033,8 @@ html.mdragging,html.mdragging *{cursor:grabbing!important}
 .aglow.abl{inset:-18%;opacity:0;filter:blur(calc(var(--ab,22px)*1.25)) brightness(1.45) saturate(1.25);animation:abloom 6.2s cubic-bezier(.37,0,.63,1) .3s both}
 @keyframes abloom{0%,100%{opacity:0}39%,52%{opacity:var(--ao,.9)}}
 .aglow canvas{display:block;width:100%;height:100%;border-radius:inherit}
-:root[data-theme="light"] .aglow{--ao:.6}
-@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .aglow{--ao:.6}}
+:root[data-theme="light"] .aglow,:root[data-theme="nice"] .aglow{--ao:.6}
+@media (prefers-color-scheme:light){:root:not([data-theme]) .aglow{--ao:.6}}
 @media (max-width:600px){.song.sbox{display:block}.sbox .pickbig{flex-wrap:nowrap;margin-bottom:14px}.pickbig .aglw{width:96px;flex:none}.sbox .pickbig .cover.hero{width:96px;font-size:11px;padding:6px}.sbox .sbt h1{margin-top:0}.aglow{--ab:14px}}
 @media (max-width:700px){.song{grid-template-columns:1fr;gap:26px}.song .sleeve{max-width:340px}}
 /* review card: cover and rating on the left, the words on the right, who and when at the foot */
@@ -1027,19 +1050,19 @@ html.mdragging,html.mdragging *{cursor:grabbing!important}
 .glow{--ow:1;position:absolute;inset:0;border-radius:9px;overflow:hidden;pointer-events:none}
 .glow .gw{position:absolute;inset:0;display:block;opacity:var(--ow)}
 .glow .soft{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
-/* ...so on the light look a tile's words go light, as they are on the dark look */
-:root[data-theme="light"] .rev{--ink:#f4f1ee;--mute:#d6d1d8;--line:rgba(255,255,255,.2);--surface:#25242a;--sunk:#141318;--accent:#ebe6e0;--accent-ink:#1b1a1f;color:var(--ink)}
-:root[data-theme="light"] .rev .rrate{color:#fff;--sf:#fff;--se:rgba(255,255,255,.22)}
-:root[data-theme="light"] .rev .pl.dk svg,:root[data-theme="light"] .rev .pt.dk svg,:root[data-theme="light"] .rev .plr.dk svg{fill:var(--ink)}
+/* ...so on the light look (and Nice) a tile's words go white, as they are on the dark look */
+:root[data-theme="light"] .rev,:root[data-theme="nice"] .rev{--ink:#fff;--mute:#fff;--line:rgba(255,255,255,.2);--surface:#25242a;--sunk:#141318;--accent:#ebe6e0;--accent-ink:#1b1a1f;color:var(--ink)}
+:root[data-theme="light"] .rev .rrate,:root[data-theme="nice"] .rev .rrate{color:#fff;--sf:#fff;--se:rgba(255,255,255,.22)}
+:root[data-theme="light"] .rev .pl.dk svg,:root[data-theme="light"] .rev .pt.dk svg,:root[data-theme="light"] .rev .plr.dk svg,:root[data-theme="nice"] .rev .pl.dk svg,:root[data-theme="nice"] .rev .pt.dk svg,:root[data-theme="nice"] .rev .plr.dk svg{fill:var(--ink)}
 canvas.soft{opacity:0;transition:opacity .4s ease}
 canvas.soft.on{opacity:1}
 canvas.soft.now{transition:none}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .glow{--ow:.52}}
+@media (prefers-color-scheme:dark){:root:not([data-theme]) .glow{--ow:.52}}
 :root[data-theme="dark"] .glow{--ow:.52}
 /* the rating: five small, sharp stars as wide as the artwork (white, or dark ink in light mode), the number beside them */
 :root{--sm:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 15.56'%3E%3Cpath d='M10.00 1.68L11.70 6.23L16.56 6.45L12.76 9.47L14.06 14.16L10.00 11.48L5.94 14.16L7.24 9.47L3.44 6.45L8.30 6.23ZM30.00 1.68L31.70 6.23L36.56 6.45L32.76 9.47L34.06 14.16L30.00 11.48L25.94 14.16L27.24 9.47L23.44 6.45L28.30 6.23ZM50.00 1.68L51.70 6.23L56.56 6.45L52.76 9.47L54.06 14.16L50.00 11.48L45.94 14.16L47.24 9.47L43.44 6.45L48.30 6.23ZM70.00 1.68L71.70 6.23L76.56 6.45L72.76 9.47L74.06 14.16L70.00 11.48L65.94 14.16L67.24 9.47L63.44 6.45L68.30 6.23ZM90.00 1.68L91.70 6.23L96.56 6.45L92.76 9.47L94.06 14.16L90.00 11.48L85.94 14.16L87.24 9.47L83.44 6.45L88.30 6.23Z' fill='%23000'/%3E%3C/svg%3E")}
 .rrate{--sf:var(--ink);--se:rgba(0,0,0,.26);display:flex;align-items:center;justify-content:center;gap:7px;color:var(--ink);line-height:1;white-space:nowrap}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .rrate{color:#fff;--sf:#fff;--se:rgba(255,255,255,.2)}}
+@media (prefers-color-scheme:dark){:root:not([data-theme]) .rrate{color:#fff;--sf:#fff;--se:rgba(255,255,255,.2)}}
 :root[data-theme="dark"] .rrate{color:#fff;--sf:#fff;--se:rgba(255,255,255,.2)}
 .rrate .stars{display:block;position:relative;flex:1 1 0;min-width:0;max-width:132px;aspect-ratio:100/15.56;font-size:0;letter-spacing:0;background:none;color:transparent;-webkit-text-fill-color:transparent}
 .rrate .stars::before{content:"";position:absolute;inset:0}
@@ -1336,7 +1359,7 @@ a.btn{display:inline-flex;align-items:center;text-decoration:none}
 .pl{display:inline-flex;align-items:center;justify-content:center;line-height:0;border-radius:8px;text-decoration:none}
 .pl svg{display:block;fill:var(--pc)}
 :root[data-theme="dark"] .pl.dk svg,:root[data-theme="dark"] .pt.dk svg{fill:var(--ink)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .pl.dk svg,:root:not([data-theme="light"]) .pt.dk svg{fill:var(--ink)}}
+@media (prefers-color-scheme:dark){:root:not([data-theme]) .pl.dk svg,:root:not([data-theme]) .pt.dk svg{fill:var(--ink)}}
 a.pl{-webkit-tap-highlight-color:transparent;transition:background .12s,transform .08s}
 a.pl:hover{background:var(--line)}
 a.pl:active{transform:scale(.9)}
@@ -1374,7 +1397,7 @@ a.pl.act{padding:5px}
 .plr:hover,.plr:focus-visible{background:var(--line)}
 .plr svg{flex:none;display:block;fill:var(--pc)}
 :root[data-theme="dark"] .plr.dk svg{fill:var(--ink)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .plr.dk svg{fill:var(--ink)}}
+@media (prefers-color-scheme:dark){:root:not([data-theme]) .plr.dk svg{fill:var(--ink)}}
 .lis2{display:inline-flex;align-items:center;flex:none;margin:0 -4px}
 .lt .ri .rt b{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;white-space:normal;overflow:hidden;overflow-wrap:anywhere}
 .listen{display:flex;align-items:center;flex-wrap:wrap;gap:0;margin:14px 0 0 -7px}
@@ -1421,7 +1444,7 @@ a.pl.act{padding:5px}
 .sdbg{--sdo:.62;position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
 .sdbg i,.sdbg canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;opacity:var(--sdo)}
 .sdbg::after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,color-mix(in srgb,var(--bg) 55%,transparent) 0,transparent 130px),radial-gradient(120% 85% at 50% 34%,transparent 0,transparent 35%,color-mix(in srgb,var(--bg) 55%,transparent) 100%),linear-gradient(to bottom,transparent 55%,color-mix(in srgb,var(--bg) 45%,transparent))}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .sdbg{--sdo:.85}}
+@media (prefers-color-scheme:dark){:root:not([data-theme]) .sdbg{--sdo:.85}}
 :root[data-theme="dark"] .sdbg{--sdo:.85}
 .sdhero{min-height:calc(100svh - 120px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:4px 0 8px}
 .sdk{margin:0 0 14px;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);opacity:.8}
@@ -1595,7 +1618,7 @@ a.pl.act{padding:5px}
 }
 /* Listen is always dark, even on the light site: while it's open the whole page takes the dark colours, so anything that pops
    up over it (a definition, a dialog) matches. The rules after the colours undo the light look's own tweaks inside it */
-:root.lsopen{--bg:#1b1a1f;--surface:#25242a;--sunk:#141318;--ink:#f4f1ee;--mute:#aaa5ad;--line:#37353d;--accent:#ebe6e0;--accent-ink:#1b1a1f;--pop:#ff63ad;--pop-ink:#2a0a1c;--bad:#e8837d;color-scheme:dark}
+:root.lsopen{--bg:#1b1a1f;--surface:#25242a;--sunk:#141318;--ink:#fff;--mute:#fff;--line:#37353d;--accent:#ebe6e0;--accent-ink:#1b1a1f;--pop:#ff63ad;--pop-ink:#2a0a1c;--bad:#e8837d;color-scheme:dark}
 :root.lsopen .lscv .aglow{--ao:.95}
 :root.lsopen .glow{--ow:.52}
 :root.lsopen .rrate{color:#fff;--sf:#fff;--se:rgba(255,255,255,.2)}
@@ -1605,12 +1628,13 @@ a.pl.act{padding:5px}
 .thsw{display:inline-flex;gap:2px;padding:3px;border-radius:999px;background:var(--sunk)}
 .thsw button{display:inline-flex;align-items:center;gap:7px;padding:7px 16px;border:0;border-radius:999px;background:none;color:var(--mute);font:inherit;font-size:14px;font-weight:500;cursor:pointer;transition:background-color .2s,color .2s,box-shadow .2s}
 .thsw button svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.thsw .thn{font-size:15px;line-height:1}
 .thsw button[aria-checked="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.14)}
 .btn.danger:not(.ghost):not(.pop):not(.fp):not(.ink){background:var(--bad);border-color:var(--bad);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 2px 0 color-mix(in srgb,var(--bad) 60%,#000)}
 .btn.danger:disabled{opacity:.45;cursor:not-allowed}
 .acdel{max-width:520px;margin:0 0 12px}
 </style>
-<script>try{if(JSON.parse(localStorage.getItem("ln_theme"))==="dark")document.documentElement.setAttribute("data-theme","dark")}catch(e){}</script>
+<script>try{var t=JSON.parse(localStorage.getItem("ln_theme"));if(t==="dark"||t==="nice")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
 </head>
 <body>
 <!-- glows: every colour a little richer (saturate 1.25 leaves white, greys and black alone), then whites muted: each pixel's lowest colour channel says how close to white it is (colours have a low one, whites a high one);
@@ -3234,9 +3258,9 @@ if(rs[0].error||rs[1].error)return false;var by={},days={},en={};accts.forEach(f
 S.sotd={days:days,entries:en,admin:!rs[2].error&&rs[2].data===true};return true}catch(e){return false}}
 /* ---------- Privacy and account: Light or Dark, and deleting your account ---------- */
 var THI={light:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></svg>',
-dark:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>'};
-function acctExtras(){return '<h3 class="sdh">Appearance</h3><div class="thsw" role="radiogroup" aria-label="Appearance">'+["light","dark"].map(function(k){
-return '<button type="button" role="radio" aria-checked="'+((document.documentElement.getAttribute("data-theme")==="dark"?"dark":"light")===k)+'" data-thm="'+k+'">'+THI[k]+(k==="light"?"Light":"Dark")+'</button>'}).join("")+'</div>'+
+dark:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>',nice:'<span class="thn" aria-hidden="true">😊</span>'};
+function acctExtras(){return '<h3 class="sdh">Appearance</h3><div class="thsw" role="radiogroup" aria-label="Appearance">'+["light","dark","nice"].map(function(k){
+return '<button type="button" role="radio" aria-checked="'+((document.documentElement.getAttribute("data-theme")||"light")===k)+'" data-thm="'+k+'">'+THI[k]+(k==="light"?"Light":k==="dark"?"Dark":"Nice")+'</button>'}).join("")+'</div>'+
 (S.user?'<h3 class="sdh">Delete account</h3><p class="meta acdel">This deletes your account and everything on it: your reviews, mosaic, likes, comments, messages and follows. It can’t be undone.</p><button type="button" class="btn danger" id="delacct">Delete account</button>':'')}
 function setTheme(t){document.documentElement.setAttribute("data-theme",t);store.set("ln_theme",t);document.querySelectorAll("[data-thm]").forEach(function(b){b.setAttribute("aria-checked",String(b.dataset.thm===t))})}
 function wireAcct(){document.querySelectorAll("[data-thm]").forEach(function(b){b.onclick=function(){setTheme(b.dataset.thm)}});var da=$("#delacct");if(da)da.onclick=openDelAcct}
@@ -3265,7 +3289,7 @@ return '<h3 class="sdh">In reviews'+(l.length?' <span class="meta">'+l.length+'<
 return '<div class="ri click" data-rsong="'+esc(String(r.id))+'">'+rimg({title:r.title,artist:r.artist,thumb:r.art||""})+'<div class="rt"><b>'+esc(r.title)+'</b><span class="meta">'+esc(r.artist)+' · <button type="button" class="ulink" data-u="'+esc(r.user)+'">'+esc(r.user)+'</button> · '+rnum(r.rating).toFixed(1)+'★</span><span class="rsn">'+rsnHTML(String(r.text),re)+'</span></div></div>'}).join("")+'</div>':'<div class="empty">Nobody’s used it in a review yet. Be the first.</div>')}
 function wotdView(){var today=ukDay(),w=S.wotd.days[today],h='<section class="page wotd">';
 if(!w)h+='<div class="sdhd"><h2>Word of the Day</h2><span class="meta">'+esc(dayLong(today))+'</span></div><div class="empty">'+(S.wotd.admin?"You haven’t picked today’s word yet. Pick one below.":"Today’s word isn’t up yet. Check back soon.")+'</div>';
-else h+='<div class="wdhero" style="--wh:'+hue(w)+'"><p class="sdk">Word of the Day · '+esc(dayLong(today))+'</p><h2 class="wdw">'+esc(w)+'</h2><div class="wdd" id="wdd" data-w="'+esc(w)+'"><p class="dictd na">Looking it up…</p></div></div>'+wdRevHTML(w);
+else h+='<div class="wdhero" style="--wh:'+hue(w)+'"><p class="sdk">Word of the Day · '+esc(dayLong(today))+'</p><h2 class="wdw'+(S.wdIntroOn?' wdhide':'')+'">'+esc(w)+'</h2><div class="wdd" id="wdd" data-w="'+esc(w)+'"><p class="dictd na">Looking it up…</p></div></div>'+wdRevHTML(w);
 var yw=S.wotd.days[dayAdd(today,-1)];if(yw)h+='<h3 class="sdh">Yesterday</h3><p class="wdy"><b>'+esc(yw)+'</b><span class="meta" id="wdym" data-w="'+esc(yw)+'"></span></p>';
 if(S.wotd.admin)h+=wdAdminHTML(today);return h+'</section>'}
 function wdAdminHTML(today){var n=S.wdSpan,h='<h3 class="sdh">Pick the words <span class="meta">Only you can see this</span></h3><ol class="sdpick">';
@@ -3287,7 +3311,74 @@ document.querySelectorAll("[data-wdclr]").forEach(function(x){x.onclick=function
 api.clearWord(day).then(function(r){if(r&&r.error)toast(r.error);appView()})}});
 var mo=$("#wdmore");if(mo)mo.onclick=function(){S.wdSpan=Math.min(S.wdSpan+14,84);var y=window.scrollY;appView();try{window.scrollTo(0,y)}catch(e){}}}
 /* opening the tab on a page loaded on an earlier day: get today's word first */
-function wdOpen(){if(REMOTE&&S.loadedAt&&ukDay(S.loadedAt)!==ukDay())api.refresh().then(function(){if(S.tab==="wotd")appView()}).catch(function(){})}
+function wdOpen(){if(REMOTE&&S.loadedAt&&ukDay(S.loadedAt)!==ukDay()){api.refresh().then(function(){if(S.tab==="wotd"){appView();maybeWdIntro()}}).catch(function(){});return}maybeWdIntro()}
+/* ---------- Word of the Day intro ----------
+   Like Song of the Day's, it plays when you open the tab and there's a word: always for a new day's word, otherwise not again within
+   15 minutes of the last time it played for you on this device. A row of slot-machine reels spins letters for about four seconds
+   while the word keeps changing length (reels slide in and out at both ends); it settles on the right number of letters, the reels
+   slow and stop one by one from the left, each landing on its letter with a little bounce and a flash, the word closes up, and it
+   flies to its place on the page. It plays through (clicks and keys wait), and it's skipped for reduced motion. */
+var WDGAP=15*60*1000;
+function wdSeen(){var o=store.get("ln_wdi",null),v=o&&o["u:"+S.user];if(!v||typeof v!=="object")return false;var d=Date.now()-(+v.t||0);return v.d===ukDay()&&d>=0&&d<WDGAP}
+function maybeWdIntro(){var w=S.wotd&&S.wotd.days[ukDay()];if(!w||!S.user||S.tab!=="wotd"||wdSeen()||amzCalm()||document.getElementById("wdi")||!$(".wotd .wdw"))return;
+var o=store.get("ln_wdi",{})||{};o["u:"+S.user]={t:Date.now(),d:ukDay()};store.set("ln_wdi",o);wdIntro(w)}
+function wdIntro(word){try{window.scrollTo(0,0)}catch(e){}
+var pw=$(".wotd .wdw");if(!pw)return;S.wdIntroOn=true;pw.classList.add("wdhide");
+var W=innerWidth,H=innerHeight,T=Array.from(word),n=T.length,cs=getComputedStyle(pw),fam=cs.fontFamily,pf=parseFloat(cs.fontSize)||60,lsE=(parseFloat(cs.letterSpacing)||0)/pf,
+F=Math.max(26,Math.min(128,W*.88/((n+3)*.64),H*.18)),CH=F*1.2,SPW=F*.64,wh=hue(word),AZ="abcdefghijklmnopqrstuvwxyz",
+el=document.createElement("div"),timers=[],done=false,raf=0,reels=[],t0=performance.now(),locked=0,
+cv=document.createElement("canvas").getContext("2d");cv.font="700 "+F+"px "+fam;
+function rl(){return AZ[Math.random()*26|0]}
+function adv(c){return Math.max(F*.18,cv.measureText(c).width+lsE*F)}
+function later(fn,ms){timers.push(setTimeout(fn,ms))}
+/* easing for a reel coming to rest: it runs a touch past its letter and settles back. BK is how fast it starts, so it carries on
+   at the speed it was spinning */
+function back(t){var c1=1.2,c3=c1+1;return 1+c3*Math.pow(t-1,3)+c1*Math.pow(t-1,2)}var BK=4.2;
+el.id="wdi";el.setAttribute("aria-hidden","true");el.style.setProperty("--wh",wh);
+el.innerHTML='<div class="wdib"></div><div class="wdic"><p class="wdik">Word of the Day</p><div class="wdir"></div></div>';document.body.appendChild(el);
+var row=el.querySelector(".wdir");row.style.fontSize=F.toFixed(1)+"px";row.style.fontFamily=fam;
+/* a reel: two letters stacked in a window, sliding down; when one has passed, the next comes in from above */
+function mk(front,quiet){var r={el:document.createElement("span"),o:Math.random()*3,v:13+Math.random()*7,stop:null,lk:false};r.w=Math.floor(r.o);
+r.el.className="wdr fast";r.el.innerHTML='<span class="wds"><i>'+rl()+'</i><i>'+rl()+'</i></span>';r.ws=r.el.firstChild;r.b=r.ws.children[0];r.a=r.ws.children[1];
+if(front){row.insertBefore(r.el,row.firstChild);reels.unshift(r)}else{row.appendChild(r.el);reels.push(r)}
+if(quiet)r.el.style.width=SPW+"px";else{r.el.style.width="0px";r.el.style.opacity="0";r.el.style.margin="0";void r.el.offsetWidth;r.el.style.width=SPW+"px";r.el.style.opacity="";r.el.style.margin=""}return r}
+function rm(front){if(reels.length<2)return;var r=front?reels.shift():reels.pop();r.el.style.width="0px";r.el.style.opacity="0";r.el.style.margin="0";later(function(){if(r.el.parentNode)r.el.parentNode.removeChild(r.el)},300)}
+var lo=Math.max(1,n-3),hi=n+3,c0=Math.max(lo,Math.min(hi,n+(Math.random()*7|0)-3));for(var i=0;i<c0;i++)mk(false,true);
+function frame(now){if(done)return;var dt=Math.min(.05,(now-(frame.t||now))/1000);frame.t=now;
+reels.forEach(function(r){if(r.lk)return;var k=0;
+if(r.stop){var s=r.stop;k=Math.min(1,(now-s.t)/s.D);r.o=s.o0+(s.O-s.o0)*back(k)}else r.o+=r.v*dt;
+var w=Math.floor(r.o);while(r.w<w){r.w++;r.a.textContent=r.b.textContent;r.b.textContent=r.stop&&r.w+1===r.stop.O?r.stop.T:rl()}
+r.ws.style.transform="translateY("+((r.o-Math.floor(r.o)-1)*CH).toFixed(2)+"px)";r.el.classList.toggle("fast",!r.stop||k<.4);
+if(r.stop&&k>=1){r.lk=true;r.ws.style.transform="translateY("+(-CH).toFixed(2)+"px)";r.el.classList.add("lk");if(++locked===n)later(closeUp,320)}});
+raf=requestAnimationFrame(frame)}
+raf=requestAnimationFrame(frame);requestAnimationFrame(function(){el.classList.add("in")});
+/* the word keeps changing length: a reel slides in or out at the front or the end every quarter-second or so, then from 3.4s it
+   heads for the real length */
+function wiggle(){if(done||reels.some(function(r){return r.stop}))return;var t=performance.now()-t0,c=reels.length,fr=Math.random()<.5;
+if(t>3400){if(c<n)mk(fr);else if(c>n)rm(fr);if(reels.length!==n)later(wiggle,150);return}
+if(c<=lo?true:c>=hi?false:Math.random()<.5)mk(fr);else rm(fr);later(wiggle,220+Math.random()*260)}
+later(wiggle,450);
+/* at 4.1s they stop one by one from the left, each on its letter, narrowing or widening to fit it */
+function stopAll(){if(done)return;while(reels.length<n)mk(Math.random()<.5);while(reels.length>n)rm(Math.random()<.5);var st=Math.min(115,820/n);
+reels.forEach(function(r,i){r.el.style.setProperty("--lc","hsl("+(wh+50*i/Math.max(1,n-1)).toFixed(1)+" 78% "+(44-4*i/Math.max(1,n-1)).toFixed(1)+"%)");
+later(function(){if(done)return;var c=T[i],t=performance.now(),k=Math.max(3,Math.round(r.v*.75/BK)),O=Math.floor(r.o)+k;
+r.stop={t:t,o0:r.o,O:O,T:c===" "?" ":c,D:BK*(O-r.o)/r.v*1000};r.el.style.width=adv(c).toFixed(1)+"px"},i*st)})}
+later(stopAll,4100);
+/* the letters close up into the word, which flies to where it sits on the page as the backdrop fades */
+function closeUp(){if(done)return;el.classList.add("close");later(fly,420)}
+function fly(){if(done)return;var tg=$(".wotd .wdw");if(!tg){finish();return}var rg=document.createRange();rg.selectNodeContents(tg);var tr=rg.getBoundingClientRect(),rb=row.getBoundingClientRect();
+if(!tr.width){finish();return}var sc=(parseFloat(getComputedStyle(tg).fontSize)||pf)/F;
+row.style.transform="translate("+((tr.left+tr.width/2)-(rb.left+rb.width/2)).toFixed(1)+"px,"+((tr.top+tr.height/2)-(rb.top+rb.height/2)).toFixed(1)+"px) scale("+sc.toFixed(4)+")";
+el.classList.add("out");later(finish,900)}
+function finish(){if(done)return;done=true;cancelAnimationFrame(raf);timers.forEach(clearTimeout);S.wdIntroOn=false;var w=$(".wotd .wdw");if(w)w.classList.remove("wdhide");
+el.classList.add("gone");setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el)},260);document.removeEventListener("keydown",onKey,true)}
+setTimeout(function(){if(!done)finish()},10000);
+function onKey(e){var k=e.key;if(k==="Escape"||k==="Enter"||k===" "||k==="Tab"||/^(Arrow|Page|Home|End)/.test(k)){e.preventDefault();e.stopPropagation()}}
+el.addEventListener("click",function(e){e.preventDefault();e.stopPropagation()});
+el.addEventListener("wheel",function(e){e.preventDefault()},{passive:false});
+el.addEventListener("touchmove",function(e){e.preventDefault()},{passive:false});
+document.addEventListener("keydown",onKey,true)}
+
 /* picking a day's word: type it and see what it means before saving */
 function openWordPick(day){var d=$("#dlg"),today=ukDay(),tm=null,tk=0,cur=S.wotd.days[day]||"";d.className="mosd";
 var when=day===today?"today":day===dayAdd(today,1)?"tomorrow":dayLong(day);
