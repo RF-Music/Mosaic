@@ -3439,6 +3439,11 @@ var o=store.get("ln_sdi",{})||{};o["u:"+S.user]={t:Date.now(),d:ukDay()};store.s
 function sdOpen(){if(REMOTE&&S.loadedAt&&ukDay(S.loadedAt)!==ukDay()){api.refresh().then(function(){if(S.tab==="sotd"){appView();maybeSdIntro()}}).catch(function(){});return}maybeSdIntro()}
 function sdIntro(s){try{window.scrollTo(0,0)}catch(e){}
 S.sdIntroOn=true;var hc=$(".sotd .sdart");if(hc)hc.classList.add("sdhide");var hw=$(".sotd .sdaw");if(hw)hw.classList.add("sdpre");
+/* the song's preview starts straight away, so you hear it before you see what it is: it fades in under the flipping covers and
+   carries on once the cover is revealed (it's the page's own ear playing, so resting on the ear and leaving stops it as usual) */
+var sdId="sotd:"+ukDay(),ew=document.querySelector('.sotd .ear[data-pv="'+sdId+'"]');
+if(ew){pvPlay(ew);var pa=PV.au;if(pa&&String(PV.id)===sdId){pa.volume=0;var vf=setInterval(function(){if(String(PV.id)!==sdId){clearInterval(vf);return}if(PV.load)return;
+pa.volume=Math.min(1,pa.volume+.05);if(pa.volume>=1)clearInterval(vf)},60)}}
 var W=window.innerWidth,H=window.innerHeight,G=mGrid(W,H),key=amzArt(s.art),
 pool=amzShuffle(amzUniq((AMZ.pool||[]).concat(S.reviews.map(function(r){return r.art}))).filter(function(u){return amzArt(u)!==key})),
 el=document.createElement("div"),h='<div class="sdib"></div>',timers=[],done=false,flipping=true,iv=0,bim=new Image();
