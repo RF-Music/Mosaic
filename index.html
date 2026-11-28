@@ -122,12 +122,12 @@ nav button[aria-current="true"]{color:var(--ink);border-color:var(--pop)}
 #wdi{position:fixed;inset:0;z-index:600;overflow:hidden;cursor:default;opacity:0;transition:opacity .25s ease}
 #wdi.in{opacity:1}
 #wdi.gone{opacity:0;transition:opacity .25s ease}
-#wdi .wdib{position:absolute;inset:0;background:radial-gradient(60% 50% at 50% 45%,hsl(var(--wh) 80% 62% / .24),transparent 70%),var(--bg);transition:opacity .8s ease .05s}
+#wdi .wdib{position:absolute;inset:0;background:radial-gradient(60% 50% at 50% 45%,hsl(var(--wh) 80% 62% / .24),transparent 70%),var(--bg);transition:opacity .65s ease .05s}
 #wdi.out .wdib{opacity:0}
 #wdi .wdic{position:absolute;left:50%;top:45%;display:flex;flex-direction:column;align-items:center;gap:22px;transform:translate(-50%,-50%)}
 #wdi .wdik{margin:0;color:var(--mute);font-size:12px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;transition:opacity .35s}
 #wdi.out .wdik,#wdi.close .wdik{opacity:0}
-#wdi .wdir{display:flex;align-items:center;font-weight:700;line-height:1.2;white-space:nowrap;transition:transform .85s cubic-bezier(.45,0,.2,1)}
+#wdi .wdir{display:flex;align-items:center;font-weight:700;line-height:1.2;white-space:nowrap;transition:transform .7s cubic-bezier(.45,0,.2,1)}
 #wdi .wdr{position:relative;display:block;flex:none;height:1.2em;margin:0 .045em;overflow:hidden;border-radius:.12em;background:var(--surface);
 box-shadow:inset 0 .05em .14em rgba(0,0,0,.2),0 0 0 1px var(--line);transition:width .28s cubic-bezier(.2,.8,.2,1),margin .3s,opacity .28s,background-color .35s,box-shadow .35s}
 #wdi .wds{display:flex;flex-direction:column;will-change:transform}
@@ -135,7 +135,7 @@ box-shadow:inset 0 .05em .14em rgba(0,0,0,.2),0 0 0 1px var(--line);transition:w
 #wdi .wdr.fast .wds{filter:blur(.7px)}
 #wdi .wdr.fast i{text-shadow:0 -.24em 0 color-mix(in srgb,var(--ink) 22%,transparent),0 .24em 0 color-mix(in srgb,var(--ink) 22%,transparent)}
 #wdi .wdr.lk i{color:var(--lc);transition:color .25s}
-#wdi .wdr.lk{animation:wdlk .6s ease-out}
+#wdi .wdr.lk{animation:wdlk .45s ease-out}
 @keyframes wdlk{from{box-shadow:0 0 0 2px var(--pop),0 0 28px color-mix(in srgb,var(--pop) 70%,transparent)}}
 #wdi.close .wdr{margin:0;background:transparent;box-shadow:none;animation:none}
 .wotd .wdw.wdhide{visibility:hidden}
@@ -3314,10 +3314,11 @@ var mo=$("#wdmore");if(mo)mo.onclick=function(){S.wdSpan=Math.min(S.wdSpan+14,84
 function wdOpen(){if(REMOTE&&S.loadedAt&&ukDay(S.loadedAt)!==ukDay()){api.refresh().then(function(){if(S.tab==="wotd"){appView();maybeWdIntro()}}).catch(function(){});return}maybeWdIntro()}
 /* ---------- Word of the Day intro ----------
    Like Song of the Day's, it plays when you open the tab and there's a word: always for a new day's word, otherwise not again within
-   15 minutes of the last time it played for you on this device. A row of slot-machine reels spins letters for about four seconds
-   while the word keeps changing length (reels slide in and out at both ends); it settles on the right number of letters, the reels
-   slow and stop one by one from the left, each landing on its letter with a little bounce and a flash, the word closes up, and it
-   flies to its place on the page. It plays through (clicks and keys wait), and it's skipped for reduced motion. */
+   15 minutes of the last time it played for you on this device. A row of slot-machine reels spins letters for under two seconds
+   while the word keeps changing length (reels slide in and out at both ends); it settles on the right number of letters, then the
+   letters are revealed one at a time from the left, each reel landing on its letter with a little bounce and a flash; the word
+   closes up and flies to its place on the page. About four and a half seconds in all. It plays through (clicks and keys wait), and
+   it's skipped for reduced motion. */
 var WDGAP=15*60*1000;
 function wdSeen(){var o=store.get("ln_wdi",null),v=o&&o["u:"+S.user];if(!v||typeof v!=="object")return false;var d=Date.now()-(+v.t||0);return v.d===ukDay()&&d>=0&&d<WDGAP}
 function maybeWdIntro(){var w=S.wotd&&S.wotd.days[ukDay()];if(!w||!S.user||S.tab!=="wotd"||wdSeen()||amzCalm()||document.getElementById("wdi")||!$(".wotd .wdw"))return;
@@ -3349,27 +3350,28 @@ reels.forEach(function(r){if(r.lk)return;var k=0;
 if(r.stop){var s=r.stop;k=Math.min(1,(now-s.t)/s.D);r.o=s.o0+(s.O-s.o0)*back(k)}else r.o+=r.v*dt;
 var w=Math.floor(r.o);while(r.w<w){r.w++;r.a.textContent=r.b.textContent;r.b.textContent=r.stop&&r.w+1===r.stop.O?r.stop.T:rl()}
 r.ws.style.transform="translateY("+((r.o-Math.floor(r.o)-1)*CH).toFixed(2)+"px)";r.el.classList.toggle("fast",!r.stop||k<.4);
-if(r.stop&&k>=1){r.lk=true;r.ws.style.transform="translateY("+(-CH).toFixed(2)+"px)";r.el.classList.add("lk");if(++locked===n)later(closeUp,320)}});
+if(r.stop&&k>=1){r.lk=true;r.ws.style.transform="translateY("+(-CH).toFixed(2)+"px)";r.el.classList.add("lk");if(++locked===n)later(closeUp,240)}});
 raf=requestAnimationFrame(frame)}
 raf=requestAnimationFrame(frame);requestAnimationFrame(function(){el.classList.add("in")});
-/* the word keeps changing length: a reel slides in or out at the front or the end every quarter-second or so, then from 3.4s it
-   heads for the real length */
+/* the word keeps changing length: a reel slides in or out at the front or the end every fifth of a second or so, then from 1.25s
+   it heads for the real length */
 function wiggle(){if(done||reels.some(function(r){return r.stop}))return;var t=performance.now()-t0,c=reels.length,fr=Math.random()<.5;
-if(t>3400){if(c<n)mk(fr);else if(c>n)rm(fr);if(reels.length!==n)later(wiggle,150);return}
-if(c<=lo?true:c>=hi?false:Math.random()<.5)mk(fr);else rm(fr);later(wiggle,220+Math.random()*260)}
-later(wiggle,450);
-/* at 4.1s they stop one by one from the left, each on its letter, narrowing or widening to fit it */
-function stopAll(){if(done)return;while(reels.length<n)mk(Math.random()<.5);while(reels.length>n)rm(Math.random()<.5);var st=Math.min(115,820/n);
+if(t>1250){if(c<n)mk(fr);else if(c>n)rm(fr);if(reels.length!==n)later(wiggle,110);return}
+if(c<=lo?true:c>=hi?false:Math.random()<.5)mk(fr);else rm(fr);later(wiggle,160+Math.random()*140)}
+later(wiggle,330);
+/* at 1.7s the letters are revealed one at a time from the left: each reel stops quickly on its letter (narrowing or widening to
+   fit it) before the next one does */
+function stopAll(){if(done)return;while(reels.length<n)mk(Math.random()<.5);while(reels.length>n)rm(Math.random()<.5);var st=Math.min(180,1600/n);
 reels.forEach(function(r,i){r.el.style.setProperty("--lc","hsl("+(wh+50*i/Math.max(1,n-1)).toFixed(1)+" 78% "+(44-4*i/Math.max(1,n-1)).toFixed(1)+"%)");
-later(function(){if(done)return;var c=T[i],t=performance.now(),k=Math.max(3,Math.round(r.v*.75/BK)),O=Math.floor(r.o)+k;
+later(function(){if(done)return;var c=T[i],t=performance.now(),k=Math.max(2,Math.round(r.v*.3/BK)),O=Math.floor(r.o)+k;
 r.stop={t:t,o0:r.o,O:O,T:c===" "?" ":c,D:BK*(O-r.o)/r.v*1000};r.el.style.width=adv(c).toFixed(1)+"px"},i*st)})}
-later(stopAll,4100);
+later(stopAll,1700);
 /* the letters close up into the word, which flies to where it sits on the page as the backdrop fades */
-function closeUp(){if(done)return;el.classList.add("close");later(fly,420)}
+function closeUp(){if(done)return;el.classList.add("close");later(fly,300)}
 function fly(){if(done)return;var tg=$(".wotd .wdw");if(!tg){finish();return}var rg=document.createRange();rg.selectNodeContents(tg);var tr=rg.getBoundingClientRect(),rb=row.getBoundingClientRect();
 if(!tr.width){finish();return}var sc=(parseFloat(getComputedStyle(tg).fontSize)||pf)/F;
 row.style.transform="translate("+((tr.left+tr.width/2)-(rb.left+rb.width/2)).toFixed(1)+"px,"+((tr.top+tr.height/2)-(rb.top+rb.height/2)).toFixed(1)+"px) scale("+sc.toFixed(4)+")";
-el.classList.add("out");later(finish,900)}
+el.classList.add("out");later(finish,720)}
 function finish(){if(done)return;done=true;cancelAnimationFrame(raf);timers.forEach(clearTimeout);S.wdIntroOn=false;var w=$(".wotd .wdw");if(w)w.classList.remove("wdhide");
 el.classList.add("gone");setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el)},260);document.removeEventListener("keydown",onKey,true)}
 setTimeout(function(){if(!done)finish()},10000);
