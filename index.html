@@ -155,6 +155,11 @@ background:linear-gradient(90deg,hsl(var(--wh) 78% 44%),hsl(calc(var(--wh) + 50)
 .wdd .dictsrc{margin-top:14px;font-size:12.5px}
 .wdd .dict2{font-size:13.5px}
 .wdd .dictroot{margin-top:16px;padding-top:12px}
+.wdd .wdl{margin:2px 0 0;padding-left:1.3em}
+.wdd .wdl li{margin:7px 0 0;padding-left:2px}
+.wdd .wdl li::marker{color:var(--mute);font-size:.9em;font-weight:600}
+.wdd .wdl.one{padding-left:0;list-style:none}
+.wdd .wdsy{margin:8px 0 0;font-size:14px;color:var(--mute)}
 .wdy{margin:0}
 .wdy .meta{margin-left:8px}
 .wdrl{display:grid}
@@ -3284,9 +3289,10 @@ async function loadWotd(pre){try{var rs=await (pre||wotdQ());if(rs[0].error)retu
 S.wotd={days:days,admin:!rs[1].error&&rs[1].data===true};return true}catch(e){return false}}
 /* a word and the ways it's commonly written in a review (play → plays, played, playing) */
 function wdRe(w){return new RegExp("(^|[^\\p{L}\\p{N}])("+reEsc(w)+"(?:s|es|ed|d|ing|ly|'s|’s)?)(?![\\p{L}\\p{N}])","iu")}
-function wdRevHTML(w){var re=wdRe(w),l=S.reviews.filter(function(r){return !r.via&&r.text&&re.test(String(r.text))}).sort(function(a,b){return a.date<b.date?1:a.date>b.date?-1:(+b.id||0)-(+a.id||0)});
-return '<h3 class="sdh">In reviews'+(l.length?' <span class="meta">'+l.length+'</span>':'')+'</h3>'+(l.length?'<div class="list wdrl">'+l.slice(0,40).map(function(r){
-return '<div class="ri click" data-rsong="'+esc(String(r.id))+'">'+rimg({title:r.title,artist:r.artist,thumb:r.art||""})+'<div class="rt"><b>'+esc(r.title)+'</b><span class="meta">'+esc(r.artist)+' · <button type="button" class="ulink" data-u="'+esc(r.user)+'">'+esc(r.user)+'</button> · '+rnum(r.rating).toFixed(1)+'★</span><span class="rsn">'+rsnHTML(String(r.text),re)+'</span></div></div>'}).join("")+'</div>':'<div class="empty">Nobody’s used it in a review yet. Be the first.</div>')}
+/* under the meaning: the reviews made today (UK time) that use the word, newest first */
+function wdRevHTML(w){var today=ukDay(),re=wdRe(w),l=S.reviews.filter(function(r){return !r.via&&r.text&&(r.at?ukDay(r.at):r.date)===today&&re.test(String(r.text))}).sort(function(a,b){var x=String(a.at||a.date),y=String(b.at||b.date);return x<y?1:x>y?-1:(+b.id||0)-(+a.id||0)});
+return '<h3 class="sdh">Used in reviews today'+(l.length?' <span class="meta">'+l.length+'</span>':'')+'</h3>'+(l.length?'<div class="list wdrl">'+l.slice(0,60).map(function(r){
+return '<div class="ri click" data-rsong="'+esc(String(r.id))+'">'+rimg({title:r.title,artist:r.artist,thumb:r.art||""})+'<div class="rt"><b>'+esc(r.title)+'</b><span class="meta">'+esc(r.artist)+' · <button type="button" class="ulink" data-u="'+esc(r.user)+'">'+esc(r.user)+'</button> · '+rnum(r.rating).toFixed(1)+'★</span><span class="rsn">'+rsnHTML(String(r.text),re)+'</span></div></div>'}).join("")+'</div>':'<div class="empty">Nobody’s used “'+esc(w)+'” in a review today. Be the first.</div>')}
 function wotdView(){var today=ukDay(),w=S.wotd.days[today],h='<section class="page wotd">';
 if(!w)h+='<div class="sdhd"><h2>Word of the Day</h2><span class="meta">'+esc(dayLong(today))+'</span></div><div class="empty">'+(S.wotd.admin?"You haven’t picked today’s word yet. Pick one below.":"Today’s word isn’t up yet. Check back soon.")+'</div>';
 else h+='<div class="wdhero" style="--wh:'+hue(w)+'"><p class="sdk">Word of the Day · '+esc(dayLong(today))+'</p><h2 class="wdw'+(S.wdIntroOn?' wdhide':'')+'">'+esc(w)+'</h2><div class="wdd" id="wdd" data-w="'+esc(w)+'"><p class="dictd na">Looking it up…</p></div></div>'+wdRevHTML(w);
@@ -3296,13 +3302,32 @@ function wdAdminHTML(today){var n=S.wdSpan,h='<h3 class="sdh">Pick the words <sp
 for(var i=0;i<n;i++){var day=dayAdd(today,i),w=S.wotd.days[day],nm=dayName(day,today);
 h+='<li><span class="sdd">'+esc(nm)+'</span>'+(w?'<span class="sds"><b>'+esc(w)+'</b></span><button type="button" class="btn ghost sm" data-wdpick="'+day+'">Change</button><button type="button" class="sdx" data-wdclr="'+day+'" aria-label="Remove the word for '+esc(nm)+'" title="Remove">×</button>':'<span class="sds meta">No word yet</span><button type="button" class="btn ghost sm" data-wdpick="'+day+'">Pick</button>')+'</li>'}
 return h+'</ol>'+(n<84?'<button type="button" class="sg more sdmore" id="wdmore" aria-label="Show more days">'+CAR+'</button>':'')}
+/* the word of the day's meaning, fuller than the pop-up's: up to three senses for its main part of speech and two for the others,
+   each with an example where there is one, then similar words. Names the dictionary doesn't have get the first two sentences of
+   their Wikipedia summary. Then (wireWotd) what the word it's built on means */
+function wdDictHTML(j,word){var e=j[0],ph=e.phonetic||((e.phonetics||[]).filter(function(p){return p.text})[0]||{}).text||"",h=ph?'<p class="dictph">'+esc(ph)+'</p>':'',seen={},ms=[];
+j.forEach(function(x){(x.meanings||[]).forEach(function(m){if((m.definitions||[]).length&&ms.length<3&&!seen[m.partOfSpeech]){seen[m.partOfSpeech]=1;ms.push(m)}})});
+ms.forEach(function(m,mi){var ds=m.definitions.slice(0,mi?2:3),sy={};(m.synonyms||[]).concat.apply(m.synonyms||[],ds.map(function(d){return d.synonyms||[]})).forEach(function(x){if(x&&x.toLowerCase()!==String(e.word||word).toLowerCase())sy[x]=1});sy=Object.keys(sy).slice(0,6);
+h+='<p class="dictpos">'+esc(m.partOfSpeech||"")+'</p><ol class="wdl'+(ds.length<2?' one':'')+'">'+ds.map(function(d){return '<li><p class="dictd">'+dw2(dictClean(d.definition))+'</p>'+(d.example&&d.example.length<180?'<p class="dictex">“'+dw2(d.example)+'”</p>':'')+'</li>'}).join("")+'</ol>'+
+(sy.length?'<p class="wdsy">Similar: '+dw2(sy.join(", "))+'</p>':'')});
+return h+'<a class="dictsrc" href="https://en.wiktionary.org/wiki/'+encodeURIComponent(e.word||word)+'" target="_blank" rel="noopener">More on Wiktionary ↗</a>'}
+function wdWiki(t){t=String(t||"").trim();if(t.length<2)return Promise.resolve(null);t=t.charAt(0).toUpperCase()+t.slice(1);
+return fetch("https://en.wikipedia.org/api/rest_v1/page/summary/"+encodeURIComponent(t)).then(function(r){return r.ok?r.json():null}).then(function(j){if(!j||j.type==="disambiguation")return null;
+var d=String(j.extract||"").trim().split(/(?<=[.!?])\s+/).slice(0,2).join(" ")||String(j.description||"");if(!d)return null;if(d.length>340)d=d.slice(0,340).replace(/\s+\S*$/,"")+"…";
+return {d:d,u:j.content_urls&&j.content_urls.desktop&&j.content_urls.desktop.page||""}},function(){return null})}
+var WDC={};
+function wdLook(word,orig){if(WDC[word])return WDC[word];var tries=dictTries(word),go=function(i){if(i>=tries.length)return Promise.resolve(null);return dictFetch(tries[i]).then(function(j){return j||go(i+1)})};
+return WDC[word]=go(0).then(function(j){if(j){var rs=dictRoots(String(j[0].word||word).toLowerCase(),j),tr=function(i){if(i>=rs.length)return Promise.resolve("");return dictFetch(rs[i]).then(function(rj){return rj?dictRootHTML(rj,rs[i]):tr(i+1)},function(){return ""})};
+return {h:wdDictHTML(j,word),root:tr(0)}}
+return wdWiki(orig||word).then(function(w){return {h:w?'<p class="dictd">'+dw2(w.d)+'</p>'+(w.u?'<a class="dictsrc" href="'+esc(w.u)+'" target="_blank" rel="noopener">More on Wikipedia ↗</a>':''):'<p class="dictd na">No definition found.</p><a class="dictsrc" href="https://en.wiktionary.org/wiki/'+encodeURIComponent(word)+'" target="_blank" rel="noopener">Search Wiktionary ↗</a>'}})},
+function(){delete WDC[word];return {h:'<p class="dictd na">Couldn’t look that up just now.</p>'}})}
 /* a word in the meaning, clicked: its own short meaning tucked under that line (click it again, or another, to swap it out) */
 function wdDict2(b,x){var word=x.textContent.toLowerCase().replace(/^[-'’]+|[-'’]+$/g,""),p=x.closest("p"),old=b.querySelector(".dict2"),was=x.classList.contains("on");
 if(old)old.remove();[].forEach.call(b.querySelectorAll(".dw2.on"),function(y){y.classList.remove("on")});if(was||!word||!p)return;
 var d=document.createElement("p");d.className="dict2";d.textContent="…";p.parentNode.insertBefore(d,p.nextSibling);x.classList.add("on");
 dictShort(word,x.textContent).then(function(t){if(!d.isConnected)return;d.textContent=t||"No short meaning found.";d.classList.toggle("na",!t)})}
 function wireWotd(){if(S.tab!=="wotd"||!$(".wotd"))return;var today=ukDay(),b=$("#wdd");
-if(b){var w=b.dataset.w,k=w.toLowerCase().trim();dictLook(k,w).then(function(h){if(!b.isConnected)return;b.innerHTML=h;var rp=DICT.rp&&DICT.rp[k];
+if(b){var w=b.dataset.w,k=w.toLowerCase().trim();wdLook(k,w).then(function(o){if(!b.isConnected)return;b.innerHTML=o.h;var rp=o.root;
 if(rp)rp.then(function(rh){if(!rh||!b.isConnected||b.querySelector(".dictroot"))return;var d=document.createElement("div"),src=b.querySelector(".dictsrc");d.className="dictroot";d.innerHTML=rh;b.insertBefore(d,src)})});
 b.onclick=function(e){var x=e.target.closest&&e.target.closest(".dw2");if(x)wdDict2(b,x)}}
 var ym=$("#wdym");if(ym)dictShort(ym.dataset.w.toLowerCase(),ym.dataset.w).then(function(t){if(ym.isConnected&&t)ym.textContent=t});
@@ -3983,7 +4008,7 @@ async signIn(idf,pw){var a=accts.filter(function(x){return x.email===idf||x.name
 if(!a||(await hash(pw,a.salt))!==a.hash)return {error:"Username, email or password is incorrect."};
 S.user=a.name;store.set("ln_user",a.name);syncLater();syncPlats();syncDm();return {}},
 async signOut(){dmReset();S.user=null;S.later=[];S.plats=[];store.set("ln_user",null)},
-async saveReview(o,r){var x=r;if(r){Object.assign(r,o)}else{x=Object.assign({id:Date.now(),user:S.user,date:new Date().toISOString().slice(0,10)},o);S.reviews.push(x)}save();if(!localEnter(x)&&r)localLeave(r);return {}},
+async saveReview(o,r){var x=r;if(r){Object.assign(r,o)}else{x=Object.assign({id:Date.now(),user:S.user,date:new Date().toISOString().slice(0,10),at:new Date().toISOString()},o);S.reviews.push(x)}save();if(!localEnter(x)&&r)localLeave(r);return {}},
 async delReview(id){S.reviews=S.reviews.filter(function(r){return r.id!=id});save()},
 async setPic(url){var ac=me();if(ac){if(url)ac.pic=url;else delete ac.pic;store.set("ln_accounts",accts)}},
 async setName(n){return {error:"Changing your username isn't available in this preview."}},
@@ -4004,7 +4029,7 @@ async delComment(cid,rid){S.comments[rid]=(S.comments[rid]||[]).filter(function(
 };
 function notifyLocal(kind,rid){var r=S.reviews.filter(function(x){return String(x.id)===String(rid)})[0];if(!r||r.user===S.user)return;var o=acct(r.user);if(!o)return;o.notes=(o.notes||[]).filter(function(n){return kind==="comment"||!(n.by===S.user&&n.kind===kind&&String(n.rid)===String(rid))});o.notes.unshift({by:S.user,date:new Date().toISOString().slice(0,10),read:false,kind:kind,rid:rid});o.notes=o.notes.slice(0,30);store.set("ln_accounts",accts)}
 /* one review row from the database, as the page uses it */
-function revRow(x,name){return {id:x.id,title:x.title,artist:x.artist,type:x.type,art:x.art||"",tid:x.tid,clip:x.clip==null||!isFinite(+x.clip)?null:+x.clip,rating:rnum(x.rating),text:x.body||"",tracks:cleanTracks(x.tracks),user:name,date:String(x.created_at).slice(0,10)}}
+function revRow(x,name){return {id:x.id,title:x.title,artist:x.artist,type:x.type,art:x.art||"",tid:x.tid,clip:x.clip==null||!isFinite(+x.clip)?null:+x.clip,rating:rnum(x.rating),text:x.body||"",tracks:cleanTracks(x.tracks),user:name,date:String(x.created_at).slice(0,10),at:x.created_at}}
 /* the full load: every request goes out at once (one round trip instead of seven).
    It runs when you sign in, when the page opens, and quietly when you come back to the tab; actions don't trigger it. */
 async function loadRemote(){
