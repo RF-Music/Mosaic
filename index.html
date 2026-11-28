@@ -357,6 +357,8 @@ header.top .wm,.brand{background:none;color:var(--ink);line-height:0}
 @keyframes fbo{0%{transform:scaleX(1);fill:color-mix(in srgb,var(--k) 100%,#000)}8.33%{transform:scaleX(0.884);fill:color-mix(in srgb,var(--k) 99%,#000)}16.67%{transform:scaleX(0.789);fill:color-mix(in srgb,var(--k) 98%,#000)}25%{transform:scaleX(0.707);fill:color-mix(in srgb,var(--k) 95%,#000)}33.33%{transform:scaleX(0.634);fill:color-mix(in srgb,var(--k) 91%,#000)}41.67%{transform:scaleX(0.566);fill:color-mix(in srgb,var(--k) 87%,#000)}50%{transform:scaleX(0.5);fill:color-mix(in srgb,var(--k) 81%,#000)}58.33%{transform:scaleX(0.434);fill:color-mix(in srgb,var(--k) 75%,#000)}66.67%{transform:scaleX(0.366);fill:color-mix(in srgb,var(--k) 68%,#000)}75%{transform:scaleX(0.293);fill:color-mix(in srgb,var(--k) 60%,#000)}83.33%{transform:scaleX(0.211);fill:color-mix(in srgb,var(--k) 52%,#000)}91.67%{transform:scaleX(0.116);fill:color-mix(in srgb,var(--k) 43%,#000)}100%{transform:scaleX(0);fill:color-mix(in srgb,var(--k) 35%,#000)}}
 @media (prefers-reduced-motion:reduce){.wmsvg.ola path{animation:none}}
 nav button[aria-current="true"]{border-image:linear-gradient(90deg,var(--pop),var(--violet)) 1}
+/* on the light look the words across the top are black */
+:root[data-theme="light"] nav button{color:#000}
 .btn:not(.ghost):not(.pop):not(.fp):not(.ink){background:linear-gradient(135deg,#7a5cf5,#c04fd8);color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 2px 0 #4b3aa8}
 .btn:not(.ghost):not(.pop):not(.fp):not(.ink):active{box-shadow:inset 0 1px 2px rgba(0,0,0,.25),0 0 0 transparent}
 .btn.ink{background:var(--ink);color:var(--bg);padding:9px 18px;box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 2px 0 color-mix(in srgb,var(--ink) 50%,#000)}
